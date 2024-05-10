@@ -1,0 +1,12 @@
+name: spp_process_discovery
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python
+  - pytorch
+  - pandas
+  - pydoc-markdown
+  - pip
+  - pip:
+    - pm4py
