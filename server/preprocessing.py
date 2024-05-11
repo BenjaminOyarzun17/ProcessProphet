@@ -6,6 +6,7 @@ import pandas as pd
 import pydoc_markdown
 import numpy as np
 import dateutil
+from sklearn.preprocessing import LabelEncoder
 
 
 
@@ -81,12 +82,17 @@ class Preprocessing:
         :param train_percentage: what percentage should be used for training
         :returns: two event logs, one for training and one for training  TODO
         """
-        
+        number_classes = len(self.event_df[self.case_activity_key].unique())
+        le = LabelEncoder() 
         train, test = pm4py.ml.split_train_test(self.event_df, train_percentage, self.case_id_key)
         #: the author uses floats for representing time
         train[self.case_timestamp_key] = train[self.case_timestamp_key].map(lambda x: x.timestamp())
         test[self.case_timestamp_key] = test[self.case_timestamp_key].map(lambda x: x.timestamp())
-        return train, test
+
+        #: we encode the markers with integers to be consistent with the authors implementation
+        train[self.case_activity_key] =  le.fit_transform(train[self.case_activity_key])
+        test[self.case_activity_key] =  le.fit_transform(test[self.case_activity_key])
+        return train, test, number_classes
 
 
 

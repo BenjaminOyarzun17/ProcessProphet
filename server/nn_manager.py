@@ -22,7 +22,7 @@ class Config:
         self.model = "rmtpp" 
         self.importance_weight = "store_true"
         self.verbose_step = 350
-        self.event_class = 7
+        self.event_class = 0
 
 class NNManagement: 
     """
@@ -107,9 +107,10 @@ class NNManagement:
         print(f"epoch {epc}")
         print(f"time_error: {time_error}, PRECISION: {acc}, RECALL: {recall}, F1: {f1}")
 
-    def train(self, train_data, test_data, case_id, timestamp_key, event_key):
+    def train(self, train_data, test_data, case_id, timestamp_key, event_key, no_classes):
         config = Config()
-    
+
+        config.event_class =  no_classes
         """
         con estas dos funciones importa los CSV: (aqui ya estan separados en train y test)
         """
