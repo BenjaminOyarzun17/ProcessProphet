@@ -2,7 +2,9 @@ import torch
 from torch import nn
 from torch.optim import Adam
 import numpy as np
-#from optimization import BertAdam
+from optimization import BertAdam
+
+
 
 class Net(nn.Module):
     """

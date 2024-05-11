@@ -3,7 +3,7 @@ import pm4py
 import os
 import pandas as pd
 import pydoc_markdown
-from ERPP_RMTPP import * 
+from ERPP_RMTPP_torch import * 
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import numpy as np
@@ -31,7 +31,7 @@ class NNManagement:
     """
     def __init__(self):
         """
-        --model defaults to RMTPP
+        --self.model defaults to RMTPP
         params: 
         :param seq_length: --seq_len determines the "b" constant
         that was defined in the paper (see 5.2 parameter learning), 
@@ -84,7 +84,7 @@ class NNManagement:
             """
             gold_times.append(batch[0][:, -1].numpy())
             gold_events.append(batch[1][:, -1].numpy())
-            pred_time, pred_event = model.predict(batch)
+            pred_time, pred_event = self.model.predict(batch)
             time.sleep(7)
 
             pred_times.append(pred_time)
@@ -133,14 +133,14 @@ class NNManagement:
         """
         self.model = Net(config, lossweight=weight)
 
-        model.set_optimizer(total_step=len(self.train_loader) * config.epochs, use_bert=True)
-        model.cuda() #GPU TODO: rev docu
+        self.model.set_optimizer(total_step=len(self.train_loader) * config.epochs, use_bert=True)
+        self.model.cuda() #GPU TODO: rev docu
 
         for epc in range(config.epochs):
-            model.train() #heredado de nn.Module 
+            self.model.train() #heredado de nn.Module 
             range_loss1 = range_loss2 = range_loss = 0
             for i, batch in enumerate(tqdm(self.train_loader)):
-                l1, l2, l = model.train_batch(batch) #funcion definida para entrenar
+                l1, l2, l = self.model.train_batch(batch) #funcion definida para entrenar
                 range_loss1 += l1
                 range_loss2 += l2
                 range_loss += l
