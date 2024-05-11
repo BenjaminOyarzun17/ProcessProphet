@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.optim import Adam
 import numpy as np
-from optimization import BertAdam
+#from optimization import BertAdam
 
 
 
@@ -52,13 +52,17 @@ class Net(nn.Module):
         self.time_linear = nn.Linear(in_features=config.mlp_dim, out_features=1)
         # con esto configura el num de outputs para el tiempo y act function
         self.set_criterion(lossweight) #lossweight es parametro
+        self.optimizer = Adam(self.parameters(), lr=self.config.lr)
 
-    def set_optimizer(self, total_step, use_bert=True):
+    def set_optimizer(self, total_step, use_bert=False):
         if use_bert:
+            pass
+            """
             self.optimizer = BertAdam(params=self.parameters(),
                                       lr=self.config.lr,
                                       warmup=0.1,
                                       t_total=total_step)
+            """
         else:
             self.optimizer = Adam(self.parameters(), lr=self.config.lr)
         """
