@@ -26,7 +26,7 @@ class ATMDataset:
         self.time = list(data[timestamp_key] )
         self.event = list(data[event_key])
         self.config = config
-        self.seq_len = config["seq_len"]
+        self.seq_len = config.seq_len
         self.time_seqs, self.event_seqs = self.generate_sequence()
         self.statistic()
 
