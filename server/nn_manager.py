@@ -10,6 +10,24 @@ import numpy as np
 
 
 
+class Config: 
+    def __init__(self):
+        self.seq_len=3
+        self.emb_dim=10
+        self.hid_dim=32
+        self.mlp_dim= 16
+        self.alpha= 0.05
+        self.dropout= 0.1
+        self.batch_size= 1024
+        self.lr= 1e-3
+        self.epochs= 30
+        self.model = "rmtpp" 
+        self.importance_weight = "store_true"
+        self.verbose_step = 350
+        self.event_class = 7
+
+
+
 
 class NNManagement: 
     """
@@ -34,7 +52,7 @@ class NNManagement:
         :param lr: learning rate
         :param epochs: no of epochs
         """
-        self.seq_length=10
+        self.seq_len=3
         self.emb_dim=10
         self.hid_dim=32
         self.mlp_dim= 16
@@ -43,14 +61,16 @@ class NNManagement:
         self.batch_size= 1024
         self.lr= 1e-3
         self.epochs= 30
-        self.model = None
+        self.model = "rmtpp" 
+        self.importance_weight = "store_true"
+        self.verbose_step = 350
 
     
     def set_training_parameters(self):
         pass
 
 
-    def evaluate(self):
+    def evaluate(self,epc, config):
         self.model.eval()
         pred_times, pred_events = [], []
         gold_times, gold_events = [], []
@@ -60,7 +80,7 @@ class NNManagement:
         """
 
 
-        for i, batch in enumerate(tqdm(test_loader)):
+        for i, batch in enumerate(tqdm(self.test_loader)):
             """
             batch: pair with two tensors, each containing respectively
             the time and event data.  
@@ -74,8 +94,6 @@ class NNManagement:
             gold_events.append(batch[1][:, -1].numpy())
             pred_time, pred_event = model.predict(batch)
             time.sleep(7)
-
-
 
             pred_times.append(pred_time)
             pred_events.append(pred_event)
@@ -93,39 +111,32 @@ class NNManagement:
         """
         con esto calcula las metricas    
         """
-        acc, recall, f1 = clf_metric(pred_events, gold_events, n_class=config.event_class)
+        acc, recall, f1 = clf_metric(pred_events, gold_events, n_class=config["event_class"])
         print(f"epoch {epc}")
         print(f"time_error: {time_error}, PRECISION: {acc}, RECALL: {recall}, F1: {f1}")
 
 
-    def train(self):
-        config = {
-            "seq_length": self.seq_length ,
-            "emb_dim":self.emb_dim,
-            "hid_dim": self.hid_dim,
-            "mlp_dim":self.mlp_dim ,
-            "alpha": self.alpha,
-            "dropout": self.dropout,
-            "batch_size": self.batch_size,
-            "lr":self.lr ,
-            "epochs": self.epochs
-        }
+    def train(self, train_data, test_data, case_id, timestamp_key, event_key):
+        config = Config()
     
         """
         con estas dos funciones importa los CSV: (aqui ya estan separados en train y test)
         """
-        train_set = ATMDataset(config, subset='train')
-        test_set = ATMDataset(config, subset='test')
+        
+
+
+        train_set = ATMDataset(config ,train_data, case_id,   timestamp_key, event_key )
+        test_set = ATMDataset(config , test_data, case_id, timestamp_key, event_key)
 
         """
         dataloader es basicament ela funcion para cargar los datos!
 
         """
-        train_loader = DataLoader(train_set, batch_size=config.batch_size, shuffle=True, collate_fn=ATMDataset.to_features)
-        test_loader = DataLoader(test_set, batch_size=config.batch_size, shuffle=False, collate_fn=ATMDataset.to_features)
+        self.train_loader = DataLoader(train_set, batch_size=config["batch_size"], shuffle=True, collate_fn=ATMDataset.to_features)
+        self.test_loader = DataLoader(test_set, batch_size=config["batch_size"], shuffle=False, collate_fn=ATMDataset.to_features)
 
-        weight = np.ones(config.event_class)
-        if config.importance_weight:
+        weight = np.ones(config["event_class"])
+        if config["importance_weight"]:
             weight = train_set.importance_weight()
             print("importance weight: ", weight)
         """
@@ -133,21 +144,21 @@ class NNManagement:
         """
         self.model = Net(config, lossweight=weight)
 
-        model.set_optimizer(total_step=len(train_loader) * config.epochs, use_bert=True)
+        model.set_optimizer(total_step=len(self.train_loader) * config["epochs"], use_bert=True)
         model.cuda() #GPU TODO: rev docu
 
-        for epc in range(config.epochs):
+        for epc in range(config["epochs"]):
             model.train() #heredado de nn.Module 
             range_loss1 = range_loss2 = range_loss = 0
-            for i, batch in enumerate(tqdm(train_loader)):
+            for i, batch in enumerate(tqdm(self.train_loader)):
                 l1, l2, l = model.train_batch(batch) #funcion definida para entrenar
                 range_loss1 += l1
                 range_loss2 += l2
                 range_loss += l
 
-                if (i + 1) % config.verbose_step == 0:
-                    print("time loss: ", range_loss1 / config.verbose_step)
-                    print("event loss:", range_loss2 / config.verbose_step)
-                    print("total loss:", range_loss / config.verbose_step)
+                if (i + 1) % config["verbose_step"] == 0:
+                    print("time loss: ", range_loss1 / config["verbose_step"])
+                    print("event loss:", range_loss2 / config["verbose_step"])
+                    print("total loss:", range_loss / config["verbose_step"])
                     range_loss1 = range_loss2 = range_loss = 0
-        self.evaluate()
+        self.evaluate(epc, config)
