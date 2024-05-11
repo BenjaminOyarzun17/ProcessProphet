@@ -60,6 +60,10 @@ class NNManagement:
         self.importance_weight = "store_true"
         self.verbose_step = 350
 
+
+    def set_params(self):
+        
+
     def set_training_parameters(self):
         pass
 
