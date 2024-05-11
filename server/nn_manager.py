@@ -117,7 +117,21 @@ class NNManagement:
 
 
     def train(self, train_data, test_data, case_id, timestamp_key, event_key):
-        config = Config()
+        config = {
+            "seq_len": self.seq_len,
+            "emb_dim": self.emb_dim,
+            "hid_dim": self.hid_dim,
+            "mlp_dim": self.mlp_dim,
+            "alpha": self.alpha,
+            "dropout": self.dropout,
+            "batch_size": self.batch_size,
+            "lr": self.lr,
+            "epochs": self.epochs,
+            "model": self.model,
+            "importance_weight": self.importance_weight,
+            "verbose_step": self.verbose_step,
+            "event_class": self.event_class
+        }
     
         """
         con estas dos funciones importa los CSV: (aqui ya estan separados en train y test)
