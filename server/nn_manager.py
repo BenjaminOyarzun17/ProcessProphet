@@ -61,11 +61,18 @@ class NNManagement:
         self.verbose_step = 350
 
 
-    def set_params(self):
-        
-
-    def set_training_parameters(self):
-        pass
+    def set_training_parameters(self, params):
+        self.seq_len = params.get('seq_len')
+        self.emb_dim = params.get('emb_dim')
+        self.hid_dim = params.get('hid_dim')
+        self.mlp_dim = params.get('mlp_dim')
+        self.alpha = params.get('alpha')
+        self.dropout = params.get('dropout')
+        self.batch_size = params.get('batch_size')
+        self.lr = params.get('lr')
+        self.epochs = params.get('epochs')
+        self.importance_weight = params.get('importance_weight')
+        self.verbose_step = params.get('verbose_step')
 
     def evaluate(self,epc, config):
         self.model.eval()
