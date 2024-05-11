@@ -8,8 +8,6 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 import numpy as np
 
-
-
 class Config: 
     def __init__(self):
         self.seq_len=3
@@ -25,9 +23,6 @@ class Config:
         self.importance_weight = "store_true"
         self.verbose_step = 350
         self.event_class = 7
-
-
-
 
 class NNManagement: 
     """
@@ -65,10 +60,8 @@ class NNManagement:
         self.importance_weight = "store_true"
         self.verbose_step = 350
 
-    
     def set_training_parameters(self):
         pass
-
 
     def evaluate(self,epc, config):
         self.model.eval()
@@ -78,7 +71,6 @@ class NNManagement:
         pred son las predicciones
         gold son los targets 
         """
-
 
         for i, batch in enumerate(tqdm(self.test_loader)):
             """
@@ -111,34 +103,17 @@ class NNManagement:
         """
         con esto calcula las metricas    
         """
-        acc, recall, f1 = clf_metric(pred_events, gold_events, n_class=config["event_class"])
+        acc, recall, f1 = clf_metric(pred_events, gold_events, n_class=config.event_class)
         print(f"epoch {epc}")
         print(f"time_error: {time_error}, PRECISION: {acc}, RECALL: {recall}, F1: {f1}")
 
-
     def train(self, train_data, test_data, case_id, timestamp_key, event_key):
-        config = {
-            "seq_len": self.seq_len,
-            "emb_dim": self.emb_dim,
-            "hid_dim": self.hid_dim,
-            "mlp_dim": self.mlp_dim,
-            "alpha": self.alpha,
-            "dropout": self.dropout,
-            "batch_size": self.batch_size,
-            "lr": self.lr,
-            "epochs": self.epochs,
-            "model": self.model,
-            "importance_weight": self.importance_weight,
-            "verbose_step": self.verbose_step,
-            "event_class": self.event_class
-        }
+        config = Config()
     
         """
         con estas dos funciones importa los CSV: (aqui ya estan separados en train y test)
         """
         
-
-
         train_set = ATMDataset(config ,train_data, case_id,   timestamp_key, event_key )
         test_set = ATMDataset(config , test_data, case_id, timestamp_key, event_key)
 
@@ -146,11 +121,11 @@ class NNManagement:
         dataloader es basicament ela funcion para cargar los datos!
 
         """
-        self.train_loader = DataLoader(train_set, batch_size=config["batch_size"], shuffle=True, collate_fn=ATMDataset.to_features)
-        self.test_loader = DataLoader(test_set, batch_size=config["batch_size"], shuffle=False, collate_fn=ATMDataset.to_features)
+        self.train_loader = DataLoader(train_set, batch_size=config.batch_size, shuffle=True, collate_fn=ATMDataset.to_features)
+        self.test_loader = DataLoader(test_set, batch_size=config.batch_size, shuffle=False, collate_fn=ATMDataset.to_features)
 
-        weight = np.ones(config["event_class"])
-        if config["importance_weight"]:
+        weight = np.ones(config.event_class)
+        if config.importance_weight:
             weight = train_set.importance_weight()
             print("importance weight: ", weight)
         """
@@ -158,10 +133,10 @@ class NNManagement:
         """
         self.model = Net(config, lossweight=weight)
 
-        model.set_optimizer(total_step=len(self.train_loader) * config["epochs"], use_bert=True)
+        model.set_optimizer(total_step=len(self.train_loader) * config.epochs, use_bert=True)
         model.cuda() #GPU TODO: rev docu
 
-        for epc in range(config["epochs"]):
+        for epc in range(config.epochs):
             model.train() #heredado de nn.Module 
             range_loss1 = range_loss2 = range_loss = 0
             for i, batch in enumerate(tqdm(self.train_loader)):
@@ -170,9 +145,9 @@ class NNManagement:
                 range_loss2 += l2
                 range_loss += l
 
-                if (i + 1) % config["verbose_step"] == 0:
-                    print("time loss: ", range_loss1 / config["verbose_step"])
-                    print("event loss:", range_loss2 / config["verbose_step"])
-                    print("total loss:", range_loss / config["verbose_step"])
+                if (i + 1) % config.verbose_step == 0:
+                    print("time loss: ", range_loss1 / config.verbose_step)
+                    print("event loss:", range_loss2 / config.verbose_step)
+                    print("total loss:", range_loss / config.verbose_step)
                     range_loss1 = range_loss2 = range_loss = 0
         self.evaluate(epc, config)
