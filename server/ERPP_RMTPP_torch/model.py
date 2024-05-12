@@ -87,11 +87,14 @@ class Net(nn.Module):
     def train_batch(self, batch):
         time_tensor, event_tensor = batch
 
+        print("--"*20)
         #here we make sure to REMOVE THE LABEL from the training input. that is why we do "slicing"
         time_input, time_target = self.dispatch([time_tensor[:, :-1], time_tensor[:, -1]])
         event_input, event_target = self.dispatch([event_tensor[:, :-1], event_tensor[:, -1]])
-
         time_logits, event_logits = self.forward(time_input, event_input)
+        print(time_logits)
+        print(event_logits)
+        print("^^^"*20)
         #calc loss
         loss1 = self.time_criterion(time_logits.view(-1), time_target.view(-1))
         loss2 = self.event_criterion(event_logits.view(-1, self.n_class), event_target.view(-1))
