@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from torch.optim import Adam
+from torch.optim import Adam, SGD
 import numpy as np
 #from optimization import BertAdam
 
@@ -26,20 +26,12 @@ class Net(nn.Module):
 
         self.time_linear = nn.Linear(in_features=config.mlp_dim, out_features=1) #here we calc the time prediction
         self.set_criterion(lossweight) 
-        self.optimizer = Adam(self.parameters(), lr=self.config.lr) #the author uses BertAdam, but we will just use Adam 
+        #self.optimizer = Adam(self.parameters(), lr=self.config.lr) #the author uses BertAdam, but we will just use Adam 
+        self.optimizer = SGD(self.parameters(), lr=self.config.lr) #the author uses BertAdam, but we will just use Adam 
         #TODO: add choice of BertAdam/ SGD
 
     def set_optimizer(self, total_step, use_bert=False):
-        if use_bert:
-            pass
-            """
-            self.optimizer = BertAdam(params=self.parameters(),
-                                      lr=self.config.lr,
-                                      warmup=0.1,
-                                      t_total=total_step)
-            """
-        else:
-            self.optimizer = Adam(self.parameters(), lr=self.config.lr)
+        self.optimizer = Adam(self.parameters(), lr=self.config.lr)
 
 
     def set_criterion(self, weight):
@@ -114,5 +106,17 @@ class Net(nn.Module):
         time_logits, event_logits = self.forward(time_input, event_input)
         
         event_pred = np.argmax(event_logits.detach().cpu().numpy(), axis=-1) #pick the one label with max value
+        time_pred = time_logits.detach().cpu().numpy()
+        return time_pred, event_pred
+
+
+    def predict_get_sorted(self, batch): 
+        time_tensor, event_tensor = batch
+        #make sure to cut out the last event/timestamp from each sequence: 
+        time_input, time_target = self.dispatch([time_tensor[:, :-1], time_tensor[:, -1]])
+        event_input, event_target = self.dispatch([event_tensor[:, :-1], event_tensor[:, -1]])
+        time_logits, event_logits = self.forward(time_input, event_input)
+        
+        event_pred = event_logits.detach().cpu().numpy() #pick the one label with max value
         time_pred = time_logits.detach().cpu().numpy()
         return time_pred, event_pred
