@@ -33,10 +33,10 @@ class Preprocessing:
         the case id, activity key and timestamp keys are well documented in XES
         """
         self.event_log = pm4py.read.read_xes(path)
-        """
-        TODO: connect this with train_split_... 
-        """
-
+        dataframe = pm4py.convert_to_dataframe(self.event_log)
+        dataframe["time:timestamp"]= dataframe["time:timestamp"].map(lambda x: x.timestamp())
+        dataframe.to_csv("../data/dummy.csv",',',columns= ["concept:name", "time:timestamp", "Activity code"], header = True, index_label = ["concept:name", "time:timestamp", "Activity code"] )
+        self.import_event_log_csv("../data/dummy.csv", "concept:name", "time:timestamp", "Activity code", ",")
 
 
 
