@@ -27,26 +27,12 @@ class Config:
 class NNManagement: 
     """
     This is the NNMamangement class. Provided functinality: 
-    - ... tbd
+    - train the model based on the event log. 
+    - test the model based on the event log.
+    - set params. 
+    - TODO: might be extended 
     """
     def __init__(self):
-        """
-        --self.model defaults to RMTPP
-        params: 
-        :param seq_length: --seq_len determines the "b" constant
-        that was defined in the paper (see 5.2 parameter learning), 
-        determines a window size to save the training sequences into 
-        in a tensor. 
-        :param emb_dim: embedding dimension (--emb_dim)
-        :param hid_dim: --hid_dim dimension for the hidden 
-        dimension 
-        :param mlp_dim: --mlp_dim dimension for the mlp (LSTM)
-        :param alpha: --alpha=0.05 
-        :param dropout: dropout parameter (RNN)
-        :param batch_size: batch size
-        :param lr: learning rate
-        :param epochs: no of epochs
-        """
         self.seq_len=3
         self.emb_dim=10
         self.hid_dim=32
@@ -56,12 +42,26 @@ class NNManagement:
         self.batch_size= 1024
         self.lr= 1e-3
         self.epochs= 30
-        self.model = "rmtpp" 
+        self.model = "rmtpp"  #default. the author allows another version, we won't use it.
         self.importance_weight = "store_true"
         self.verbose_step = 350
 
 
     def set_training_parameters(self, params):
+        """
+        Used for setting the training parameters. Note that not all params must be input.
+
+        :param seq_length: --seq_len determines the "b" constant that was defined in the paper (see 5.2 parameter learning)
+        determines a window size to save the training sequences into in a tensor. 
+        :param emb_dim: embedding dimension 
+        :param hid_dim: --hid_dim dimension for the hidden dimension 
+        :param mlp_dim: --mlp_dim dimension for the mlp (LSTM) TODO: revise
+        :param alpha: --alpha=0.05 
+        :param dropout: dropout parameter (RNN)
+        :param batch_size: batch size
+        :param lr: learning rate
+        :param epochs: no of epochs
+        """
         self.seq_len = params.get('seq_len')
         self.emb_dim = params.get('emb_dim')
         self.hid_dim = params.get('hid_dim')
@@ -75,7 +75,7 @@ class NNManagement:
         self.verbose_step = params.get('verbose_step')
 
     def evaluate(self,epc, config):
-        #: main training testing function
+        #: main testing function
         self.model.eval()
         pred_times, pred_events = [], [] #inputs/training data
         gold_times, gold_events = [], [] #targets
@@ -102,8 +102,16 @@ class NNManagement:
         print(f"time_error: {time_error}, PRECISION: {acc}, RECALL: {recall}, F1: {f1}")
 
     def train(self, train_data, test_data, case_id, timestamp_key, event_key, no_classes):
-        config = Config()
+        """
+        This is the main training function 
+        :param train_data: train data df
+        :param test_data: test data df  
+        :param case_id: case id column name in the df
+        :param timestampt_key: timestamp key in the df
+        :param no_classes: number of known labels.
+        """
 
+        config = Config() #in this helper class we save the configuration data
         config.event_class =  no_classes
 
         # we already pass the split data to de ATM loader. ATMDAtaset uses the sliding window for generating the input for training.
