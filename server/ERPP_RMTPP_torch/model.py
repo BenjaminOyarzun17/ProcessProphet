@@ -2,7 +2,6 @@ import torch
 from torch import nn
 from torch.optim import Adam, SGD
 import numpy as np
-#from optimization import BertAdam
 
 
 
@@ -120,3 +119,4 @@ class Net(nn.Module):
         event_pred = event_logits.detach().cpu().numpy() #pick the one label with max value
         time_pred = time_logits.detach().cpu().numpy()
         return time_pred, event_pred
+
