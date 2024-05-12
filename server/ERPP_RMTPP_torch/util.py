@@ -4,24 +4,20 @@ import numpy as np
 import torch
 from collections import Counter
 import math
-import time 
 
-def sigmoid(x):
+
+
+def sigmoid(x): #LOL 2015 vibes?
     return 1 / (1 + math.exp(-x))
 
 
-"""
-usado para el output de label
-"""
-def softmax(x):
+def softmax(x): #for the label ouput
     x = np.exp(x)
     return x / x.sum()
 
 
 class ATMDataset:
     def __init__(self, config, data, case_id, timestamp_key,event_key):
-        
-        
         self.id = list(data[case_id])
         self.time = list(data[timestamp_key] )
         self.event = list(data[event_key])
@@ -32,22 +28,14 @@ class ATMDataset:
 
     def generate_sequence(self):
         MAX_INTERVAL_VARIANCE = 1
-        """
-        tqdm es la progress bar
-        """
-        pbar = tqdm(total=len(self.id) - self.seq_len + 1)
+        pbar = tqdm(total=len(self.id) - self.seq_len + 1) #tqdm is the progress bar
         time_seqs = []
         event_seqs = []
         cur_end = self.seq_len - 1
         """
-        TODO: CREO que lo que esta haciendo es
-        cortar la secuencia en el decimo elemento 
-        de la secuencia y en base a esto hace la prediccion.
-
-        ie: esta preprocesando los datos!
-        """
-        """
-        this is a sliding window algorithm
+        this is a sliding window algorithm to cut each input sequence into sub sequences of the same length
+        TODO: this encoding is MIGHT generate some bias. --> use bitmasking? generate random b between epochs?
+        find a better encoding for sequences!
         """
         while cur_end < len(self.id):
             pbar.update(1)
@@ -61,9 +49,6 @@ class ATMDataset:
             #     if self.subset == "train":
             #         cur_end += 1
             #         continue
-
-
-
             time_seqs.append(self.time[cur_start:cur_end + 1])
             event_seqs.append(self.event[cur_start:cur_end + 1])
             cur_end += 1
@@ -106,13 +91,13 @@ def abs_error(pred, gold):
     return np.mean(np.abs(pred - gold))
 
 
-"""
-con esta funcion al final del testing define: 
-- recall 
-- precision
-- f1 score
-"""
 def clf_metric(pred, gold, n_class):
+    """
+    here we define:
+    - recall 
+    - precision
+    - f1 score
+    """
     gold_count = Counter(gold)
     pred_count = Counter(pred)
     prec = recall = 0

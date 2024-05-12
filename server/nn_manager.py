@@ -75,46 +75,29 @@ class NNManagement:
         self.verbose_step = params.get('verbose_step')
 
     def evaluate(self,epc, config):
+        #: main training testing function
         self.model.eval()
-        pred_times, pred_events = [], []
-        gold_times, gold_events = [], []
-        """
-        pred son las predicciones
-        gold son los targets 
-        """
+        pred_times, pred_events = [], [] #inputs/training data
+        gold_times, gold_events = [], [] #targets
+        
 
         for i, batch in enumerate(tqdm(self.test_loader)):
-            """
-            batch: pair with two tensors, each containing respectively
-            the time and event data.  
-
-            """
-            """
-            extract for each sequence the last time stamp/ the last
-            event
-            """
-            gold_times.append(batch[0][:, -1].numpy())
+            #batch: pair with two tensors, each containing respectively the time and event data.  
+            gold_times.append(batch[0][:, -1].numpy()) # extract for each sequence the last time stamp/ the last event
             gold_events.append(batch[1][:, -1].numpy())
             pred_time, pred_event = self.model.predict(batch)
-            time.sleep(7)
-
+            #save predictions
             pred_times.append(pred_time)
             pred_events.append(pred_event)
+        
+
         pred_times = np.concatenate(pred_times).reshape(-1)
         gold_times = np.concatenate(gold_times).reshape(-1)
         pred_events = np.concatenate(pred_events).reshape(-1)
         gold_events = np.concatenate(gold_events).reshape(-1)
-        time_error = abs_error(pred_times, gold_times) 
-        """
-        simplemente la diferencia de error 
-        TODO: sospecho que esto lo hace con substraccion de matrices --> 
-        ver funcionde numpy 
-        """
+        time_error = abs_error(pred_times, gold_times)  #compute errors
 
-        """
-        con esto calcula las metricas    
-        """
-        acc, recall, f1 = clf_metric(pred_events, gold_events, n_class=config.event_class)
+        acc, recall, f1 = clf_metric(pred_events, gold_events, n_class=config.event_class) #get the metrics
         print(f"epoch {epc}")
         print(f"time_error: {time_error}, PRECISION: {acc}, RECALL: {recall}, F1: {f1}")
 
@@ -122,37 +105,36 @@ class NNManagement:
         config = Config()
 
         config.event_class =  no_classes
-        """
-        con estas dos funciones importa los CSV: (aqui ya estan separados en train y test)
-        """
-        
-        train_set = ATMDataset(config ,train_data, case_id,   timestamp_key, event_key )
+
+        # we already pass the split data to de ATM loader. ATMDAtaset uses the sliding window for generating the input for training.
+        # since we are using tensors for training the sequence lenght remains fixed in each epoch, hence we cannot do "arbitrary length cuts" 
+        # to the training data
+        train_set = ATMDataset(config ,train_data, case_id,   timestamp_key, event_key ) 
         test_set = ATMDataset(config , test_data, case_id, timestamp_key, event_key)
 
-        """
-        dataloader es basicament ela funcion para cargar los datos!
-
-        """
+        # now load the data to torch tensors and generate the batches
         self.train_loader = DataLoader(train_set, batch_size=config.batch_size, shuffle=True, collate_fn=ATMDataset.to_features)
         self.test_loader = DataLoader(test_set, batch_size=config.batch_size, shuffle=False, collate_fn=ATMDataset.to_features)
+
+
 
         weight = np.ones(config.event_class)
         if config.importance_weight:
             weight = train_set.importance_weight()
             print("importance weight: ", weight)
-        """
-        con esto crea una instancia de la net 
-        """
-        self.model = Net(config, lossweight=weight)
+        
+
+        self.model = Net(config, lossweight=weight) #crete a NN instance
 
         self.model.set_optimizer(total_step=len(self.train_loader) * config.epochs, use_bert=True)
-        self.model.cuda() #GPU TODO: rev docu
+        self.model.cuda() #GPU TODO: revise docu
 
-        for epc in range(config.epochs):
-            self.model.train() #heredado de nn.Module 
+
+        for epc in range(config.epochs): #do the epochs
+            self.model.train()  
             range_loss1 = range_loss2 = range_loss = 0
             for i, batch in enumerate(tqdm(self.train_loader)):
-                l1, l2, l = self.model.train_batch(batch) #funcion definida para entrenar
+                l1, l2, l = self.model.train_batch(batch) 
                 range_loss1 += l1
                 range_loss2 += l2
                 range_loss += l
