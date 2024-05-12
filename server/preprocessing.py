@@ -13,10 +13,10 @@ from sklearn.preprocessing import LabelEncoder
 class Preprocessing: 
     """
     This is the preprocessing unit for our server. Provided functionality:
-    - tbd 
+    - adapter for train_split_test: split the event log's data into testing and training data in the right format
+    - adapters for importing event logs: make sure the right format is used
+    - TODO: might be extended
     """
-
-
     def __init__(self):
         #: contains the event log path
         self.event_log_path= None
@@ -26,14 +26,15 @@ class Preprocessing:
         self.case_timestamp_key = None 
         # TODO: invoke import_event_log? (decide)
 
-    
-
-
     def import_event_log_xes(self, path): 
         """
+        Import the event log as xes
         the case id, activity key and timestamp keys are well documented in XES
         """
         self.event_log = pm4py.read.read_xes(path)
+        """
+        TODO: connect this with train_split_... 
+        """
 
 
 
@@ -54,6 +55,7 @@ class Preprocessing:
         # for the RNN: groups the data by id and sorts the entries
         # accorting to time. 
         dataframe = dataframe.groupby(case_id).apply(lambda x: x.sort_values(timestamp_key)).reset_index(drop=True)
+        # we save the df sorted, because its way more useful than the unsorted version.
         self.event_df = dataframe.copy()
         self.event_df[timestamp_key] = pd.to_datetime(self.event_df[timestamp_key])
 
@@ -64,23 +66,16 @@ class Preprocessing:
         self.case_id_key =  case_id
         self.case_activity_key = activity_key 
         self.case_timestamp_key = timestamp_key 
-
         self.event_log = pm4py.convert_to_event_log(dataframe)
-        #dataframe.to_csv("sorted_event_log.csv")
-        """
-        TODO: 
-        - group the data such that: 
-            - all processes with = case id are contiguous
-            - all events that belong to the same 
-            case id are sorted timewise. 
-        - VERY IMPORTANT requirement for the 
-        algorithm's implementation!!
-        """
+
 
     def split_train_test(self, train_percentage):
         """
+        this is an adapter for pm4py's split_train_test so that the data is generated in the right
+        format for the model.
+
         :param train_percentage: what percentage should be used for training
-        :returns: two event logs, one for training and one for training  TODO
+        :returns: two event logs, one for training and one for training (dataframes). the number of classes (for the markers) also returned.
         """
         number_classes = len(self.event_df[self.case_activity_key].unique())
         le = LabelEncoder() 
