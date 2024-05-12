@@ -7,11 +7,15 @@ from ERPP_RMTPP_torch import *
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import numpy as np
+import json
+from exceptions import *
+
+
 
 class Config: 
     def __init__(self):
-        self.seq_len=3
-        self.emb_dim=10
+        self.seq_len=10
+        self.emb_dim= 10
         self.hid_dim=32
         self.mlp_dim= 16
         self.alpha= 0.05
@@ -33,21 +37,12 @@ class NNManagement:
     - TODO: might be extended 
     """
     def __init__(self):
-        self.seq_len=3
-        self.emb_dim=10
-        self.hid_dim=32
-        self.mlp_dim= 16
-        self.alpha= 0.05
-        self.dropout= 0.1
-        self.batch_size= 1024
-        self.lr= 1e-3
-        self.epochs= 30
-        self.model = "rmtpp"  #default. the author allows another version, we won't use it.
-        self.importance_weight = "store_true"
-        self.verbose_step = 350
+        self.config = Config()
+        self.f1 = None
+        self.recall= None
+        self.acc = None
 
-
-    def set_training_parameters(self, params):
+    def set_training_parameters(self,  params):
         """
         Used for setting the training parameters. Note that not all params must be input.
 
@@ -62,17 +57,17 @@ class NNManagement:
         :param lr: learning rate
         :param epochs: no of epochs
         """
-        self.seq_len = params.get('seq_len')
-        self.emb_dim = params.get('emb_dim')
-        self.hid_dim = params.get('hid_dim')
-        self.mlp_dim = params.get('mlp_dim')
-        self.alpha = params.get('alpha')
-        self.dropout = params.get('dropout')
-        self.batch_size = params.get('batch_size')
-        self.lr = params.get('lr')
-        self.epochs = params.get('epochs')
-        self.importance_weight = params.get('importance_weight')
-        self.verbose_step = params.get('verbose_step')
+        self.config.seq_len = params.get('seq_len')
+        self.config.emb_dim = params.get('emb_dim')
+        self.config.hid_dim = params.get('hid_dim')
+        self.config.mlp_dim = params.get('mlp_dim')
+        self.config.alpha = params.get('alpha')
+        self.config.dropout = params.get('dropout')
+        self.config.batch_size = params.get('batch_size')
+        self.config.lr = params.get('lr')
+        self.config.epochs = params.get('epochs')
+        self.config.importance_weight = params.get('importance_weight')
+        self.config.verbose_step = params.get('verbose_step')
 
     def evaluate(self,epc, config):
         #: main testing function
@@ -90,16 +85,32 @@ class NNManagement:
             pred_times.append(pred_time)
             pred_events.append(pred_event)
         
-
+        print(gold_times)
+        print(gold_times)
+        print(pred_times)
+        print(pred_times)
         pred_times = np.concatenate(pred_times).reshape(-1)
         gold_times = np.concatenate(gold_times).reshape(-1)
         pred_events = np.concatenate(pred_events).reshape(-1)
         gold_events = np.concatenate(gold_events).reshape(-1)
         time_error = abs_error(pred_times, gold_times)  #compute errors
 
-        acc, recall, f1 = clf_metric(pred_events, gold_events, n_class=config.event_class) #get the metrics
+        self.acc, self.recall, self.f1 = clf_metric(pred_events, gold_events, n_class=config.event_class) #get the metrics
         print(f"epoch {epc}")
-        print(f"time_error: {time_error}, PRECISION: {acc}, RECALL: {recall}, F1: {f1}")
+        print(f"time_error: {time_error}, PRECISION: {self.acc}, RECALL: {self.recall}, F1: {self.f1}")
+
+    def get_training_statistics(self):
+        if self.acc == None and self.recall == None and self.f1 ==None: 
+            raise ModelNotTrainedYet()
+
+        #: dumps generates a string
+        return json.dumps({
+            "acc":self.acc, 
+            "recall":self.recall,
+            "f1":self.f1
+        })
+
+
 
     def train(self, train_data, test_data, case_id, timestamp_key, event_key, no_classes):
         """
@@ -111,45 +122,50 @@ class NNManagement:
         :param no_classes: number of known labels.
         """
 
-        config = Config() #in this helper class we save the configuration data
-        config.event_class =  no_classes
+        self.config.event_class = no_classes
 
         # we already pass the split data to de ATM loader. ATMDAtaset uses the sliding window for generating the input for training.
         # since we are using tensors for training the sequence lenght remains fixed in each epoch, hence we cannot do "arbitrary length cuts" 
         # to the training data
-        train_set = ATMDataset(config ,train_data, case_id,   timestamp_key, event_key ) 
-        test_set = ATMDataset(config , test_data, case_id, timestamp_key, event_key)
+        train_set = ATMDataset(self.config ,train_data, case_id,   timestamp_key, event_key ) 
+        test_set = ATMDataset(self.config , test_data, case_id, timestamp_key, event_key)
 
         # now load the data to torch tensors and generate the batches
-        self.train_loader = DataLoader(train_set, batch_size=config.batch_size, shuffle=True, collate_fn=ATMDataset.to_features)
-        self.test_loader = DataLoader(test_set, batch_size=config.batch_size, shuffle=False, collate_fn=ATMDataset.to_features)
+        self.train_loader = DataLoader(train_set, batch_size=self.config.batch_size, shuffle=True, collate_fn=ATMDataset.to_features)
+        
+        self.test_loader = DataLoader(test_set, batch_size=self.config.batch_size, shuffle=False, collate_fn=ATMDataset.to_features)
 
 
-
-        weight = np.ones(config.event_class)
-        if config.importance_weight:
+        weight = np.ones(self.config.event_class)
+        if self.config.importance_weight:
             weight = train_set.importance_weight()
             print("importance weight: ", weight)
         
 
-        self.model = Net(config, lossweight=weight) #crete a NN instance
+        self.model = Net(self.config, lossweight=weight) #crete a NN instance
 
-        self.model.set_optimizer(total_step=len(self.train_loader) * config.epochs, use_bert=True)
+        self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs, use_bert=True)
         self.model.cuda() #GPU TODO: revise docu
 
 
-        for epc in range(config.epochs): #do the epochs
+        for epc in range(self.config.epochs): #do the epochs
             self.model.train()  
             range_loss1 = range_loss2 = range_loss = 0
             for i, batch in enumerate(tqdm(self.train_loader)):
+                
                 l1, l2, l = self.model.train_batch(batch) 
                 range_loss1 += l1
                 range_loss2 += l2
                 range_loss += l
 
-                if (i + 1) % config.verbose_step == 0:
-                    print("time loss: ", range_loss1 / config.verbose_step)
-                    print("event loss:", range_loss2 / config.verbose_step)
-                    print("total loss:", range_loss / config.verbose_step)
+                if (i + 1) % self.config.verbose_step == 0:
+                    print("time loss: ", range_loss1 / self.config.verbose_step)
+                    print("event loss:", range_loss2 / self.config.verbose_step)
+                    print("total loss:", range_loss / self.config.verbose_step)
                     range_loss1 = range_loss2 = range_loss = 0
-        self.evaluate(epc, config)
+        
+
+        print("TESTING STARTED:")
+        print("--"*20)
+
+        self.evaluate(epc, self.config)

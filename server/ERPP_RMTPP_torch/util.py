@@ -68,7 +68,11 @@ class ATMDataset:
             time = np.diff(time)
             times.append(time)
             events.append(event)
-        return torch.FloatTensor(times), torch.LongTensor(events)
+        #print("HERE")
+        #print(times, events)
+
+        #return torch.FloatTensor(times), torch.LongTensor(events)
+        return torch.FloatTensor(np.asarray(times)), torch.LongTensor(np.asarray(events))
 
     def statistic(self):
         print("TOTAL SEQs:", len(self.time_seqs))
@@ -98,11 +102,15 @@ def clf_metric(pred, gold, n_class):
     - precision
     - f1 score
     """
+
     gold_count = Counter(gold)
     pred_count = Counter(pred)
+    #print(gold_count)
+    #print(pred_count)
     prec = recall = 0
     pcnt = rcnt = 0
     for i in range(n_class):
+        #print(np.logical_and(pred == gold, pred == i))
         match_count = np.logical_and(pred == gold, pred == i).sum()
         if gold_count[i] != 0:
             prec += match_count / gold_count[i]
@@ -112,6 +120,5 @@ def clf_metric(pred, gold, n_class):
             rcnt += 1
     prec /= pcnt
     recall /= rcnt
-    print(f"pcnt={pcnt}, rcnt={rcnt}")
     f1 = 2 * prec * recall / (prec + recall)
     return prec, recall, f1

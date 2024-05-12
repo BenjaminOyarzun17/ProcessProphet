@@ -7,6 +7,7 @@ import pydoc_markdown
 import numpy as np
 import dateutil
 from sklearn.preprocessing import LabelEncoder
+from exceptions import *
 
 
 
@@ -58,15 +59,15 @@ class Preprocessing:
         # we save the df sorted, because its way more useful than the unsorted version.
         self.event_df = dataframe.copy()
         self.event_df[timestamp_key] = pd.to_datetime(self.event_df[timestamp_key])
-
-        dataframe = pm4py.format_dataframe(dataframe, 
+        print(self.event_df[timestamp_key].dtype)
+        self.event_df = pm4py.format_dataframe(self.event_df, 
                                            case_id=case_id,
                                              activity_key=activity_key,
                                                timestamp_key=timestamp_key)
         self.case_id_key =  case_id
         self.case_activity_key = activity_key 
         self.case_timestamp_key = timestamp_key 
-        self.event_log = pm4py.convert_to_event_log(dataframe)
+        self.event_log = pm4py.convert_to_event_log(self.event_df)
 
 
     def split_train_test(self, train_percentage):
@@ -77,9 +78,16 @@ class Preprocessing:
         :param train_percentage: what percentage should be used for training
         :returns: two event logs, one for training and one for training (dataframes). the number of classes (for the markers) also returned.
         """
+        #TODO: check the correcctness of this function
         number_classes = len(self.event_df[self.case_activity_key].unique())
+        print(self.event_df[self.case_activity_key].unique())
+        print(f"no_classes: {number_classes}")
+        
         le = LabelEncoder() 
         train, test = pm4py.ml.split_train_test(self.event_df, train_percentage, self.case_id_key)
+        if test.shape[0] == 0: 
+            raise TrainPercentageTooHigh()
+
         #: the author uses floats for representing time
         train[self.case_timestamp_key] = train[self.case_timestamp_key].map(lambda x: x.timestamp())
         test[self.case_timestamp_key] = test[self.case_timestamp_key].map(lambda x: x.timestamp())
