@@ -110,6 +110,13 @@ class Preprocessing:
         """
         end_activities = pm4py.get_end_activities(self.event_log, activity_key=self.case_activity_key, case_id_key=self.case_id_key, timestamp_key=self.case_timestamp_key)
         return end_activities
+        
+    def add_unique_start_end_activity(self):
+        """
+        if there is no unique start/ end activity, add an artificial start and end activity
+        """
+        if (len(find_start_activities()) != 1) or (len(find_end_activities(self)) != 1):
+            self.dataframe = pm4py.insert_artificial_start_end(self.event_log, activity_key=self.case_activity_key, case_id_key=self.case_id_key, timestamp_key=self.case_timestamp_key)
 
 
 
