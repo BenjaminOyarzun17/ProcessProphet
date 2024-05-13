@@ -103,6 +103,13 @@ class Preprocessing:
         """
         start_activities = pm4py.stats.get_start_activities(self.event_log, activity_key=self.case_activity_key, case_id_key=self.case_id_key, timestamp_key=self.case_timestamp_key)
         return start_activities
+        
+    def find_end_activities(self):
+        """"
+        find the end activities of all cases for an existing log and return a dict with end activities as keys and value is the count of this activity
+        """
+        end_activities = pm4py.get_end_activities(self.event_log, activity_key=self.case_activity_key, case_id_key=self.case_id_key, timestamp_key=self.case_timestamp_key)
+        return end_activities
 
 
 
