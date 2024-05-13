@@ -117,6 +117,13 @@ class Preprocessing:
         """
         if (len(find_start_activities()) != 1) or (len(find_end_activities(self)) != 1):
             self.dataframe = pm4py.insert_artificial_start_end(self.event_log, activity_key=self.case_activity_key, case_id_key=self.case_id_key, timestamp_key=self.case_timestamp_key)
+            
+    def get_sample_case(self):
+        """
+        returns a sample of a case
+        """
+        sampled_dataframe = pm4py.sample_cases(self.event_log, 1, case_id_key=self.case_id_key)
+        return sampled_dataframe
 
 
 
