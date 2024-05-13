@@ -97,6 +97,13 @@ class Preprocessing:
         test[self.case_activity_key] =  le.fit_transform(test[self.case_activity_key])
         return train, test, number_classes
 
+    def find_start_activities(self):
+        """
+        find the start activities of all cases for an existing log and return a dict with start activities as keys and value is the count of this activity
+        """
+        start_activities = pm4py.stats.get_start_activities(self.event_log, activity_key=self.case_activity_key, case_id_key=self.case_id_key, timestamp_key=self.case_timestamp_key)
+        return start_activities
+
 
 
     def convert_csv_to_pandas(self):
