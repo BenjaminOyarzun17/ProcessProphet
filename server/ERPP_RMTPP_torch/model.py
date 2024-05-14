@@ -9,20 +9,18 @@ class Net(nn.Module):
     def __init__(self, config, lossweight):
         super(Net, self).__init__()
         self.config = config 
-        self.n_class = config.event_class 
+        self.n_class = config.event_class
         self.embedding = nn.Embedding(num_embeddings=config.event_class, embedding_dim=config.emb_dim)
         self.emb_drop = nn.Dropout(p=config.dropout)
         #droputs transform some random entries into zeros. Its used for regularization
-        self.lstm = nn.LSTM(input_size=config.emb_dim + 1,
+        self.lstm = nn.LSTM(input_size=config.emb_dim + 1,         #we add one to the input because we merge the embedding vector with the time input (float)
                             hidden_size=config.hid_dim,
                             batch_first=True,
                             bidirectional=False) #TODO: check batch_first 
-        #we add one to the input because we merge the embedding vector with the time input (float)
-        self.mlp = nn.Linear(in_features=config.hid_dim, out_features=config.mlp_dim) #TODO: check if this is the LSTM gate connection
+        self.mlp =   nn.Linear(in_features=config.hid_dim, out_features=config.mlp_dim) #TODO: check if this is the LSTM gate connection
         self.mlp_drop = nn.Dropout(p=config.dropout)
 
         self.event_linear = nn.Linear(in_features=config.mlp_dim, out_features=config.event_class) #here we generate the output logits for the label
-
         self.time_linear = nn.Linear(in_features=config.mlp_dim, out_features=1) #here we calc the time prediction
         self.set_criterion(lossweight) 
         #self.optimizer = Adam(self.parameters(), lr=self.config.lr) #the author uses BertAdam, but we will just use Adam 
@@ -54,9 +52,14 @@ class Net(nn.Module):
 
 
     def forward(self, input_time, input_events):
+        print("input time shape: ", input_time.shape) #debug
         event_embedding = self.embedding(input_events)
+        print("event embedding: ", event_embedding) #debug
         event_embedding = self.emb_drop(event_embedding)
-        #merge the embed vector with the time input (extra row)
+
+        print("event embedding: ", event_embedding) #debug
+
+        # merge the embed vector with the time input (extra row)
         lstm_input = torch.cat((event_embedding, input_time.unsqueeze(-1)), dim=-1)
         hidden_state, _ = self.lstm(lstm_input) 
 
@@ -64,11 +67,11 @@ class Net(nn.Module):
         mlp_output = torch.tanh(self.mlp(hidden_state[:, -1, :])) 
         mlp_output = self.mlp_drop(mlp_output) 
         """
-        aqui esta basicamente pasando el output por DOS LAYERS DIFERNETS; por separado. 
+        Here we are basically passing the output through TWO DIFFERENT LAYERS separately.
         """
-        event_logits = self.event_linear(mlp_output)  #the ouptut is separated  and passed toa specific act func
-        time_logits = self.time_linear(mlp_output) #the output is separaed and passed to a specific act func
-        return time_logits, event_logits  #get the predictions 
+        event_logits = self.event_linear(mlp_output)  # the output is separated and passed to a specific activation function
+        time_logits = self.time_linear(mlp_output)  # the output is separated and passed to a specific activation function
+        return time_logits, event_logits  # get the predictions 
 
     def dispatch(self, tensors):
         for i in range(len(tensors)):
@@ -82,7 +85,9 @@ class Net(nn.Module):
         #here we make sure to REMOVE THE LABEL from the training input. that is why we do "slicing"
         time_input, time_target = self.dispatch([time_tensor[:, :-1], time_tensor[:, -1]])
         event_input, event_target = self.dispatch([event_tensor[:, :-1], event_tensor[:, -1]])
+        print("time input: ", time_input)
         time_logits, event_logits = self.forward(time_input, event_input)
+        print("time logits: ", time_logits)
         # print(time_logits)
         # print(event_logits)
         # print("^^^"*20)
