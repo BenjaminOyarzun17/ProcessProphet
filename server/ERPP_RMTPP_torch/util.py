@@ -68,8 +68,6 @@ class ATMDataset:
             time = np.diff(time)
             times.append(time)
             events.append(event)
-        #print("HERE")
-        #print(times, events)
 
         #return torch.FloatTensor(times), torch.LongTensor(events)
         return torch.FloatTensor(np.asarray(times)), torch.LongTensor(np.asarray(events))
@@ -105,8 +103,6 @@ def clf_metric(pred, gold, n_class):
 
     gold_count = Counter(gold)
     pred_count = Counter(pred)
-    #print(gold_count)
-    #print(pred_count)
     prec = recall = 0
     pcnt = rcnt = 0
     for i in range(n_class):

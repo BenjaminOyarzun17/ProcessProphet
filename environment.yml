@@ -4,9 +4,12 @@ channels:
   - conda-forge
 dependencies:
   - python
+  - numpy>=1.18.5
   - pytorch
   - pandas
   - pydoc-markdown
   - pip
   - pip:
     - pm4py
+    - scikit-learn
+    - typing_extensions>=3.10.0.0

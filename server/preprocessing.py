@@ -20,11 +20,12 @@ class Preprocessing:
     """
     def __init__(self):
         #: contains the event log path
-        self.event_log_path= None
+        self.event_log_path = None
         self.event_log= None
         self.case_id_key = None 
         self.case_activity_key = None 
         self.case_timestamp_key = None 
+        self.event_df = None
         # TODO: invoke import_event_log? (decide)
 
     def import_event_log_xes(self, path): 
@@ -35,8 +36,9 @@ class Preprocessing:
         self.event_log = pm4py.read.read_xes(path)
         dataframe = pm4py.convert_to_dataframe(self.event_log)
         dataframe["time:timestamp"]= dataframe["time:timestamp"].map(lambda x: x.timestamp())
-        dataframe.to_csv("../data/dummy.csv",',',columns= ["concept:name", "time:timestamp", "Activity code"], header = True, index_label = ["concept:name", "time:timestamp", "Activity code"] )
-        self.import_event_log_csv("../data/dummy.csv", "concept:name", "time:timestamp", "Activity code", ",")
+        self.event_df = dataframe
+        dataframe.to_csv("data/dummy.csv",',',columns= ["concept:name", "time:timestamp", "Activity code"], header = True, index_label = ["concept:name", "time:timestamp", "Activity code"] )
+        self.import_event_log_csv("data/dummy.csv", "concept:name", "time:timestamp", "Activity code", ",")
 
 
 
