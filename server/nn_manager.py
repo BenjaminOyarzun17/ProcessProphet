@@ -85,10 +85,13 @@ class NNManagement:
             pred_times.append(pred_time)
             pred_events.append(pred_event)
         
-        print(gold_times)
-        print(gold_times)
-        print(pred_times)
-        print(pred_times)
+            print(f"time prediction: {pred_time}")
+            print(f"gold time: {batch[0][:, -1].numpy()}")
+            print(f"event prediction: {pred_event}")
+            print(f"gold event: {batch[1][:, -1].numpy()}")
+            print("--"*20)
+
+
         pred_times = np.concatenate(pred_times).reshape(-1)
         gold_times = np.concatenate(gold_times).reshape(-1)
         pred_events = np.concatenate(pred_events).reshape(-1)
@@ -96,7 +99,7 @@ class NNManagement:
         time_error = abs_error(pred_times, gold_times)  #compute errors
 
         self.acc, self.recall, self.f1 = clf_metric(pred_events, gold_events, n_class=config.event_class) #get the metrics
-        print(f"epoch {epc}")
+        # print(f"epoch {epc}")
         print(f"time_error: {time_error}, PRECISION: {self.acc}, RECALL: {self.recall}, F1: {self.f1}")
 
     def get_training_statistics(self):
@@ -139,13 +142,13 @@ class NNManagement:
         weight = np.ones(self.config.event_class)
         if self.config.importance_weight:
             weight = train_set.importance_weight()
-            print("importance weight: ", weight)
+            # print("importance weight: ", weight)
         
 
         self.model = Net(self.config, lossweight=weight) #crete a NN instance
 
         self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs, use_bert=True)
-        self.model.cuda() #GPU TODO: revise docu
+        # self.model.cuda() #GPU TODO: revise docu
 
 
         for epc in range(self.config.epochs): #do the epochs
