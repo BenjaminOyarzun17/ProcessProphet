@@ -122,7 +122,7 @@ class NNManagement:
         :param test_data: test data df  
         :param case_id: case id column name in the df
         :param timestampt_key: timestamp key in the df
-        :param no_classes: number of known labels.
+        :param no_classes: number of known markers.
         """
 
         self.config.event_class = no_classes
