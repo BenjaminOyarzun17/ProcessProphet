@@ -45,18 +45,20 @@ class Preprocessing:
         dataframe = dataframe[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
         dataframe = dataframe.dropna()
         print(dataframe)
+        print(dataframe.dtypes) 
         self.event_df = dataframe
+        print(dataframe.columns)
+        print(dataframe.head(20))
         #dataframe.to_csv("../data/dummy.csv",',',columns= ["concept:name", "time:timestamp", "Activity code"], header = True, index_label = ["concept:name", "time:timestamp", "Activity code"] , index = False)
         #dataframe.to_csv("../data/info.csv",',',columns= dataframe.columns, header = True, index_label = ["concept:name", "time:timestamp", "Activity code"] , index = False)
-        
         self.event_df = pm4py.format_dataframe(self.event_df, 
                                            case_id=case_id,
                                              activity_key=activity_key,
                                              timestamp_key=timestamp_key) #returns formated df.
         
-        self.event_df[self.case_timestamp_key]= self.event_df[self.case_timestamp_key].astype("int64")
         #dataframe.to_csv("../data/dummy.csv",',',columns= [self.case_id_key, self.case_timestamp_key, self.case_activity_key], header = True, index_label = ["concept:name", "time:timestamp", "case:concept:name"] , index = False)
         self.event_log = pm4py.convert_to_event_log(self.event_df) #this returns an event log
+
         dataframe.to_csv("../data/dummy.csv",',',columns= [self.case_id_key, self.case_timestamp_key, self.case_activity_key])
 
 
@@ -115,25 +117,19 @@ class Preprocessing:
         """
         #TODO: check the correcctness of this function
         #: we encode the markers with integers to be consistent with the authors implementation
-        """
-        le = LabelEncoder() 
-        self.event_df[self.case_activity_key] =  le.fit_transform(self.event_df[self.case_activity_key])
-        number_classes = len(le.classes_)
-        le2 = LabelEncoder() 
-        self.event_df[self.case_id_key] =  le2.fit_transform(self.event_df[self.case_id_key])
-        self.event_df.to_csv("after_encoding.csv")
-        """
+       
         self.event_df[self.case_activity_key] = self.event_df[self.case_activity_key].map(self.get_dictionary_values(self.event_df, self.case_activity_key))
         self.event_df[self.case_id_key] = self.event_df[self.case_id_key].map(self.get_dictionary_values(self.event_df, self.case_id_key))
         number_classes = len(self.event_df[self.case_activity_key].unique())
-        
+        self.event_df[self.case_activity_key] =self.event_df[self.case_activity_key].astype("str")
+        self.event_df[self.case_id_key] =self.event_df[self.case_id_key].astype("str")
         #number_classes = len(self.event_df[self.case_activity_key].unique())
         #train[self.case_activity_key] =  le.fit_transform(train[self.case_activity_key])
         #test[self.case_activity_key] =  le.fit_transform(test[self.case_activity_key])
         print(f"no_classes: {number_classes}")
         #print(self.event_df.columns)
         #print(self.event_df[self.case_timestamp_key])
-        
+        print(self.event_df[self.case_activity_key]) 
 
         #self.event_df[self.case_activity_key]  = self.event_df[self.case_activity_key].astype(str)
         #self.event_df[self.case_id_key]  =  self.event_df[self.case_id_key].astype(str)
@@ -152,9 +148,14 @@ class Preprocessing:
 
         #: here we convert the datetime64 into an integer. the authors
         # use an Excel format, but we decide to use integers for simplicity.
-        train[self.case_timestamp_key]=train[self.case_timestamp_key].astype('int64')
-        test[self.case_timestamp_key] = test[self.case_timestamp_key].astype('int64')
+        dt ="float64"
+        train[self.case_timestamp_key]=train[self.case_timestamp_key].astype("int64")/1e17
+        test[self.case_timestamp_key] = test[self.case_timestamp_key].astype("int64")/1e17
 
+        train[self.case_activity_key] =train[self.case_activity_key].astype(dt)
+        train[self.case_id_key] =train[self.case_id_key].astype(dt)
+        test[self.case_activity_key] =test[self.case_activity_key].astype(dt)
+        test[self.case_id_key] =test[self.case_id_key].astype(dt)
         
 
 
