@@ -14,7 +14,7 @@ from exceptions import *
 
 class Config: 
     def __init__(self):
-        self.seq_len=6
+        self.seq_len= 6
         self.emb_dim= 32
         self.hid_dim=32
         self.mlp_dim= 16
@@ -22,7 +22,7 @@ class Config:
         self.dropout= 0.1
         self.batch_size= 300
         self.lr= 1e-3
-        self.epochs= 10 
+        self.epochs=  10
         self.model = "rmtpp" 
         self.importance_weight = "store_true"
         self.verbose_step = 350
@@ -84,6 +84,8 @@ class NNManagement:
             gold_times.append(batch[0][:, -1].numpy()) # extract for each sequence the last time stamp/ the last event
             gold_events.append(batch[1][:, -1].numpy())
             pred_time, pred_event = self.model.predict(batch)
+            #print(pred_time)
+            #print(pred_event)
             #save predictions
             pred_times.append(pred_time)
             pred_events.append(pred_event)
@@ -136,6 +138,7 @@ class NNManagement:
         train_set = ATMDataset(self.config ,train_data, case_id,   timestamp_key, event_key , "train") 
         test_set = ATMDataset(self.config , test_data, case_id, timestamp_key, event_key, "test")
 
+
         # now load the data to torch tensors and generate the batches
         self.train_loader = DataLoader(train_set, batch_size=self.config.batch_size, shuffle=True, collate_fn=ATMDataset.to_features)
         
@@ -147,9 +150,9 @@ class NNManagement:
 
         if self.config.importance_weight:
             weight = train_set.importance_weight(self.absolute_frequency_distribution)
-            print("importance weight: ", weight)
-        print("weight shape  (after importance weight):")
-        print(len(weight))
+            #print("importance weight: ", weight)
+        #print("weight shape  (after importance weight):")
+        #print(len(weight))
         
         self.model = Net(self.config, lossweight=weight) #crete a NN instance
 

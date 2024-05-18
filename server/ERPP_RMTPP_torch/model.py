@@ -58,8 +58,11 @@ class Net(nn.Module):
 
     def forward(self, input_time, input_events):
         #print("input time shape: ", input_time.shape) #debug
+        #print(input_time)
+        #print(input_events)
         event_embedding = self.embedding(input_events)
         #print("event embedding: ", event_embedding) #debug
+        #print(event_embedding)
         event_embedding = self.emb_drop(event_embedding)
 
         #print("event embedding: ", event_embedding) #debug

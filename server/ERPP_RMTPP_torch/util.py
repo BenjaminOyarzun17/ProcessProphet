@@ -24,14 +24,14 @@ class ATMDataset:
             self.id = list(data[case_id])
             self.time = list(data[timestamp_key] )
             self.event = list(data[event_key])
-            data.to_csv(f"our_output_{subset}.txt")
+            data.to_csv(f"our_output_{subset}.csv")
         else:
             data = pandas.read_csv(f"../data/{subset}_day.csv")
             self.subset = subset
             self.id = list(data['id'])
             self.time = list(data['time']) 
             self.event = list(data['event'])
-            data.to_csv(f"their_output_{subset}.txt")
+            data.to_csv(f"their_output_{subset}.csv")
         self.config = config
         self.seq_len = config.seq_len
         self.time_seqs, self.event_seqs = self.generate_sequence()
@@ -56,11 +56,12 @@ class ATMDataset:
                 continue
 
             subseq = self.time[cur_start:cur_end + 1]
+            #print(subseq)
             # if max(subseq) - min(subseq) > MAX_INTERVAL_VARIANCE:
             #     if self.subset == "train":
             #         cur_end += 1
             #         continue
-            time_seqs.append(self.time[cur_start:cur_end + 1])
+            time_seqs.append(subseq)
             event_seqs.append(self.event[cur_start:cur_end + 1])
             cur_end += 1
         return time_seqs, event_seqs
@@ -76,6 +77,7 @@ class ATMDataset:
         times, events = [], []
         for time, event in batch:
             time = np.array([time[0]] + time)
+
             time = np.diff(time)
             times.append(time)
             events.append(event)
@@ -93,11 +95,13 @@ class ATMDataset:
 
     def importance_weight(self, count):
         #count = Counter(self.event) #calc absolute frequencies
-        print(f"counter: {len(count)}")
+        #print(f"counter: {len(count)}")
         #pprint.pprint(count, indent = 1)
         percentage = [count[k] / len(self.event) for k in sorted(count.keys())] #relative frequencies
+        """
         for i, p in enumerate(percentage):
             print(f"event{i} = {p * 100}%")
+        """
         weight = [len(self.event) / count[k] for k in sorted(count.keys())]
         return weight
 
