@@ -1,0 +1,3 @@
+- [x] restablecer cuda
+- [ ] revisar si path train funciona
+- [ ] luego automatizar desde la perspectiva del frontend para asi tener la "cosa entera"

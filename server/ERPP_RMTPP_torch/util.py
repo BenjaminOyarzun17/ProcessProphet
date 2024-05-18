@@ -17,10 +17,19 @@ def softmax(x): #for the label ouput
 
 
 class ATMDataset:
-    def __init__(self, config, data, case_id, timestamp_key,event_key):
-        self.id = list(data[case_id])
-        self.time = list(data[timestamp_key] )
-        self.event = list(data[event_key])
+    def __init__(self, config, data, case_id, timestamp_key,event_key,subset):
+        if config.our_implementation: 
+            self.id = list(data[case_id])
+            self.time = list(data[timestamp_key] )
+            self.event = list(data[event_key])
+            data.to_csv(f"our_output_{subset}.txt")
+        else:
+            data = pandas.read_csv(f"../data/{subset}_day.csv")
+            self.subset = subset
+            self.id = list(data['id'])
+            self.time = list(data['time']) 
+            self.event = list(data['event'])
+            data.to_csv(f"their_output_{subset}.txt")
         self.config = config
         self.seq_len = config.seq_len
         self.time_seqs, self.event_seqs = self.generate_sequence()

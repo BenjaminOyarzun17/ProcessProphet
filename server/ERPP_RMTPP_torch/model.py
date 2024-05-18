@@ -36,9 +36,14 @@ class Net(nn.Module):
         #cross entropy for the markers/label logits
 
         if self.config.model == 'rmtpp':
-            self.intensity_w = nn.Parameter(torch.tensor(0.1, dtype=torch.float))
-            self.intensity_b = nn.Parameter(torch.tensor(0.1, dtype=torch.float))
-            self.time_criterion = self.RMTPPLoss
+            if self.config.cuda: 
+                self.intensity_w = nn.Parameter(torch.tensor(0.1, dtype=torch.float, device='cuda'))
+                self.intensity_b = nn.Parameter(torch.tensor(0.1, dtype=torch.float, device='cuda'))
+                self.time_criterion = self.RMTPPLoss
+            else: 
+                self.intensity_w = nn.Parameter(torch.tensor(0.1, dtype=torch.float))
+                self.intensity_b = nn.Parameter(torch.tensor(0.1, dtype=torch.float))
+                self.time_criterion = self.RMTPPLoss
             # TODO: revise this params
         else:
             self.time_criterion = nn.MSELoss()
@@ -52,12 +57,12 @@ class Net(nn.Module):
 
 
     def forward(self, input_time, input_events):
-        print("input time shape: ", input_time.shape) #debug
+        #print("input time shape: ", input_time.shape) #debug
         event_embedding = self.embedding(input_events)
-        print("event embedding: ", event_embedding) #debug
+        #print("event embedding: ", event_embedding) #debug
         event_embedding = self.emb_drop(event_embedding)
 
-        print("event embedding: ", event_embedding) #debug
+        #print("event embedding: ", event_embedding) #debug
 
         # merge the embed vector with the time input (extra row)
         lstm_input = torch.cat((event_embedding, input_time.unsqueeze(-1)), dim=-1)
@@ -74,9 +79,15 @@ class Net(nn.Module):
         return time_logits, event_logits  # get the predictions 
 
     def dispatch(self, tensors):
-        for i in range(len(tensors)):
-            tensors[i] = tensors[i].contiguous()
+        if self.config.cuda:
+            for i in range(len(tensors)):
+                
+                tensors[i] = tensors[i].cuda().contiguous()
+        else:
+            for i in range(len(tensors)):
+                tensors[i] = tensors[i].contiguous()
         return tensors
+
 
     def train_batch(self, batch):
         time_tensor, event_tensor = batch
@@ -85,9 +96,9 @@ class Net(nn.Module):
         #here we make sure to REMOVE THE LABEL from the training input. that is why we do "slicing"
         time_input, time_target = self.dispatch([time_tensor[:, :-1], time_tensor[:, -1]])
         event_input, event_target = self.dispatch([event_tensor[:, :-1], event_tensor[:, -1]])
-        print("time input: ", time_input)
+        #print("time input: ", time_input)
         time_logits, event_logits = self.forward(time_input, event_input)
-        print("time logits: ", time_logits)
+        #print("time logits: ", time_logits)
         # print(time_logits)
         # print(event_logits)
         # print("^^^"*20)
