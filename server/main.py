@@ -48,6 +48,7 @@ def test_our()    :
     stats_in_json = nn_manager.get_training_statistics()
 
 
+
 def test_their()    :
     preprocessor = Preprocessing()
     is_xes = False
