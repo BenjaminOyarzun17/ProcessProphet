@@ -114,14 +114,13 @@ class Preprocessing:
         format for the model.
 
         :param train_percentage: what percentage should be used for training
-        :returns: two event logs, one for training and one for training (dataframes). the number of classes (for the markers) also returned.
+        :returns: two event logs, one for training and one for training (dataframes). the number of classes (for the markers) also returned. the absolute
+        frequence distribution for each class in the whole event log. 
         """
-        #TODO: check the correcctness of this function
         #: we encode the markers with integers to be consistent with the authors implementation
-       
         self.event_df[self.case_activity_key] = self.event_df[self.case_activity_key].map(self.get_dictionary_values(self.event_df, self.case_activity_key))
         self.event_df[self.case_id_key] = self.event_df[self.case_id_key].map(self.get_dictionary_values(self.event_df, self.case_id_key))
-        number_classes = len(self.event_df[self.case_activity_key].unique())
+        number_classes = len(self.event_df[self.case_activity_key].unique()) #get the number of classes
         self.event_df[self.case_activity_key] =self.event_df[self.case_activity_key].astype("str")
         self.event_df[self.case_id_key] =self.event_df[self.case_id_key].astype("str")
         #number_classes = len(self.event_df[self.case_activity_key].unique())

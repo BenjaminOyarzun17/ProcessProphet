@@ -8,10 +8,7 @@ from nn_manager import *
 class TestImportXESFunction(unittest.TestCase):
     """
     - test order of the rows
-    - test for 3 columns  
     - test datatype of 3 columns
-    - check if 3 col names match with log
-    - Nan entries = 0
     specification: 
     - input: path, 3 column names
     - outputs/effects: 
@@ -19,11 +16,25 @@ class TestImportXESFunction(unittest.TestCase):
         event log object 
         --> could assume it works, so dont test it
     """
-    def test_columns(self):
-        preprocessor= Preprocessing()
+
+    @classmethod
+    def setUpClass(cls):
+        #: run this to import the data once 
+        cls.preprocessor= Preprocessing()
         path = "../data/BPI_Challenge_2019.xes"
-        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
-        dataframe = preprocessor.event_df
+        cls.preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
+
+    def test_no_nan(self):
+        """check if there are no nans"""
+        count = self.preprocessor.event_df.isna().sum().sum()
+        print(count)
+        self.assertEqual(count, 0)
+
+    def test_columns(self):
+        """
+        test if there are three columns and if they match the input names
+        """
+        dataframe = self.preprocessor.event_df
         columns = set(dataframe.columns)
         gold = set(["case:concept:name", "concept:name", "time:timestamp"])
         self.assertSetEqual(gold, columns)
