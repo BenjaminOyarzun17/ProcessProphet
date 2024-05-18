@@ -31,12 +31,15 @@ def test_our()    :
     preprocessor = Preprocessing()
     is_xes =True
     #path =  "../data/train_day_joined.csv"
-   # path = "../data/BPI_Challenge_2019.xes"
-    path = "../data/Hospital_log.xes"
+    path = "../data/BPI_Challenge_2019.xes"
+    #path = "../data/Hospital_log.xes"
     #path = "../data/dummy.csv"
     #path =  "../data/running.csv"
+    preprocessor.xes_helper(path)
+    
     if is_xes:
-        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")
+        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
         print(preprocessor.event_df.head())
     else:
         preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
