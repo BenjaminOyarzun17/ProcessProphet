@@ -31,6 +31,12 @@ class Preprocessing:
         self.event_df = None
         # TODO: invoke import_event_log? (decide)
 
+    def xes_helper(self, path): 
+        log =pm4py.read.read_xes(path)
+        dataframe = pm4py.convert_to_dataframe(log)
+        print("done loading")
+        print(dataframe.columns)
+
     def import_event_log_xes(self, path, case_id, activity_key, timestamp_key): 
         """
         Import the event log as xes
@@ -42,24 +48,19 @@ class Preprocessing:
         
         self.event_log = pm4py.read.read_xes(path)
         dataframe = pm4py.convert_to_dataframe(self.event_log)
-        dataframe = dataframe[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
-        dataframe = dataframe.dropna()
-        print(dataframe)
-        print(dataframe.dtypes) 
+        
         self.event_df = dataframe
-        print(dataframe.columns)
-        print(dataframe.head(20))
-        #dataframe.to_csv("../data/dummy.csv",',',columns= ["concept:name", "time:timestamp", "Activity code"], header = True, index_label = ["concept:name", "time:timestamp", "Activity code"] , index = False)
-        #dataframe.to_csv("../data/info.csv",',',columns= dataframe.columns, header = True, index_label = ["concept:name", "time:timestamp", "Activity code"] , index = False)
+       
         self.event_df = pm4py.format_dataframe(self.event_df, 
                                            case_id=case_id,
                                              activity_key=activity_key,
                                              timestamp_key=timestamp_key) #returns formated df.
         
-        #dataframe.to_csv("../data/dummy.csv",',',columns= [self.case_id_key, self.case_timestamp_key, self.case_activity_key], header = True, index_label = ["concept:name", "time:timestamp", "case:concept:name"] , index = False)
+        self.event_df= self.event_df[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
+        self.event_df= self.event_df.dropna()
         self.event_log = pm4py.convert_to_event_log(self.event_df) #this returns an event log
 
-        dataframe.to_csv("../data/dummy.csv",',',columns= [self.case_id_key, self.case_timestamp_key, self.case_activity_key])
+        #dataframe.to_csv("../data/dummy.csv",',',columns= [self.case_id_key, self.case_timestamp_key, self.case_activity_key])
 
 
 

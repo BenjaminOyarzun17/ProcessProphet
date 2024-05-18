@@ -14,13 +14,13 @@ from exceptions import *
 
 class Config: 
     def __init__(self):
-        self.seq_len= 6
+        self.seq_len= 10
         self.emb_dim= 32
         self.hid_dim=32
         self.mlp_dim= 16
         self.alpha= 0.05
         self.dropout= 0.1
-        self.batch_size= 300
+        self.batch_size= 1024
         self.lr= 1e-3
         self.epochs=  10
         self.model = "rmtpp" 
