@@ -29,20 +29,22 @@ app.register_blueprint(routes)
     
 def test_our()    :
     preprocessor = Preprocessing()
-    is_xes =False
-    path =  "../data/train_day_joined.csv"
-    #path = "../data/BPI_Challenge_2019.xes"
+    is_xes =True
+    #path =  "../data/train_day_joined.csv"
+   # path = "../data/BPI_Challenge_2019.xes"
+    path = "../data/Hospital_log.xes"
     #path = "../data/dummy.csv"
     #path =  "../data/running.csv"
     if is_xes:
-        preprocessor.import_event_log_xes(path)
+        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")
         print(preprocessor.event_df.head())
     else:
         preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
     
     
-    train, test, no_classes = preprocessor.split_train_test(.9)
+    train, test, no_classes, absolute_frequency_distribution = preprocessor.split_train_test(.9)
     nn_manager = NNManagement()
+    nn_manager.absolute_frequency_distribution = absolute_frequency_distribution
     nn_manager.config.our_implementation = True
     nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
     stats_in_json = nn_manager.get_training_statistics()

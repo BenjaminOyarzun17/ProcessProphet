@@ -14,13 +14,13 @@ from exceptions import *
 
 class Config: 
     def __init__(self):
-        self.seq_len=10
+        self.seq_len=6
         self.emb_dim= 32
         self.hid_dim=32
         self.mlp_dim= 16
         self.alpha= 0.05
         self.dropout= 0.1
-        self.batch_size= 1024
+        self.batch_size= 300
         self.lr= 1e-3
         self.epochs= 10 
         self.model = "rmtpp" 
@@ -43,6 +43,7 @@ class NNManagement:
         self.f1 = None
         self.recall= None
         self.acc = None
+        self.absolute_frequency_distribution =None
 
     def set_training_parameters(self,  params):
         """
@@ -142,11 +143,14 @@ class NNManagement:
 
 
         weight = np.ones(self.config.event_class)
-        if self.config.importance_weight:
-            weight = train_set.importance_weight()
-            # print("importance weight: ", weight)
-        
 
+
+        if self.config.importance_weight:
+            weight = train_set.importance_weight(self.absolute_frequency_distribution)
+            print("importance weight: ", weight)
+        print("weight shape  (after importance weight):")
+        print(len(weight))
+        
         self.model = Net(self.config, lossweight=weight) #crete a NN instance
 
         self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs, use_bert=True)

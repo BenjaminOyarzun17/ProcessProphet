@@ -9,6 +9,8 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from exceptions import *
 from datetime import datetime, timezone 
+from collections import Counter
+import pprint
 
 
 
@@ -27,26 +29,36 @@ class Preprocessing:
         self.case_activity_key = None 
         self.case_timestamp_key = None 
         self.event_df = None
-        self.is_xes= False
         # TODO: invoke import_event_log? (decide)
 
-    def import_event_log_xes(self, path): 
+    def import_event_log_xes(self, path, case_id, activity_key, timestamp_key): 
         """
         Import the event log as xes
         the case id, activity key and timestamp keys are well documented in XES
         """
-        self.is_xes = True
+        self.case_id_key =  case_id
+        self.case_activity_key = activity_key 
+        self.case_timestamp_key = timestamp_key 
+        
         self.event_log = pm4py.read.read_xes(path)
         dataframe = pm4py.convert_to_dataframe(self.event_log)
-        dataframe["time:timestamp"]= dataframe["time:timestamp"].map(lambda x: x.timestamp())
+        dataframe = dataframe[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
+        dataframe = dataframe.dropna()
+        print(dataframe)
         self.event_df = dataframe
-        print(dataframe.columns)
-        print(dataframe.head(20))
         #dataframe.to_csv("../data/dummy.csv",',',columns= ["concept:name", "time:timestamp", "Activity code"], header = True, index_label = ["concept:name", "time:timestamp", "Activity code"] , index = False)
         #dataframe.to_csv("../data/info.csv",',',columns= dataframe.columns, header = True, index_label = ["concept:name", "time:timestamp", "Activity code"] , index = False)
-        dataframe.to_csv("../data/dummy.csv",',',columns= ["concept:name", "time:timestamp", "case:concept:name"], header = True, index_label = ["concept:name", "time:timestamp", "case:concept:name"] , index = False)
-        self.import_event_log_csv("../data/dummy.csv", "case:concept:name", "concept:name", "time:timestamp", ",")
         
+        self.event_df = pm4py.format_dataframe(self.event_df, 
+                                           case_id=case_id,
+                                             activity_key=activity_key,
+                                             timestamp_key=timestamp_key) #returns formated df.
+        
+        self.event_df[self.case_timestamp_key]= self.event_df[self.case_timestamp_key].astype("int64")
+        #dataframe.to_csv("../data/dummy.csv",',',columns= [self.case_id_key, self.case_timestamp_key, self.case_activity_key], header = True, index_label = ["concept:name", "time:timestamp", "case:concept:name"] , index = False)
+        self.event_log = pm4py.convert_to_event_log(self.event_df) #this returns an event log
+        dataframe.to_csv("../data/dummy.csv",',',columns= [self.case_id_key, self.case_timestamp_key, self.case_activity_key])
+
 
 
     def import_event_log_csv(self, path, case_id, activity_key, timestamp_key, sep): 
@@ -65,6 +77,9 @@ class Preprocessing:
         self.case_activity_key = activity_key 
         self.case_timestamp_key = timestamp_key 
         dataframe= pd.read_csv(path, sep=sep)
+        dataframe = dataframe[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
+        dataframe = dataframe.dropna()
+        print(dataframe)
         # this line transforms the event log in the required input 
         # for the RNN: groups the data by id and sorts the entries
         # accorting to time. 
@@ -81,9 +96,13 @@ class Preprocessing:
         #self.event_df.to_csv("after_sort.csv")
         self.event_log = pm4py.convert_to_event_log(self.event_df) #this returns an event log
 
+        #self.event_df.to_csv("csv_output_from_import.csv")
 
-
-    
+    def get_dictionary_values(self , df, column):
+        col = df[column].tolist()
+        uniques = set(col)
+        enume = [(label, index) for index, label in enumerate(uniques)]
+        return dict(enume)
 
 
     def split_train_test(self, train_percentage):
@@ -96,24 +115,30 @@ class Preprocessing:
         """
         #TODO: check the correcctness of this function
         #: we encode the markers with integers to be consistent with the authors implementation
+        """
         le = LabelEncoder() 
         self.event_df[self.case_activity_key] =  le.fit_transform(self.event_df[self.case_activity_key])
         number_classes = len(le.classes_)
         le2 = LabelEncoder() 
         self.event_df[self.case_id_key] =  le2.fit_transform(self.event_df[self.case_id_key])
+        self.event_df.to_csv("after_encoding.csv")
+        """
+        self.event_df[self.case_activity_key] = self.event_df[self.case_activity_key].map(self.get_dictionary_values(self.event_df, self.case_activity_key))
+        self.event_df[self.case_id_key] = self.event_df[self.case_id_key].map(self.get_dictionary_values(self.event_df, self.case_id_key))
+        number_classes = len(self.event_df[self.case_activity_key].unique())
+        
         #number_classes = len(self.event_df[self.case_activity_key].unique())
         #train[self.case_activity_key] =  le.fit_transform(train[self.case_activity_key])
         #test[self.case_activity_key] =  le.fit_transform(test[self.case_activity_key])
         print(f"no_classes: {number_classes}")
         #print(self.event_df.columns)
         #print(self.event_df[self.case_timestamp_key])
-        print("before split")
         
 
         #self.event_df[self.case_activity_key]  = self.event_df[self.case_activity_key].astype(str)
         #self.event_df[self.case_id_key]  =  self.event_df[self.case_id_key].astype(str)
 
-
+        absolute_frequency_distribution= Counter(self.event_df[self.case_activity_key].to_list())
 
         train, test = pm4py.ml.split_train_test(self.event_df, train_percentage, self.case_id_key)
         if test.shape[0] == 0: 
@@ -122,7 +147,6 @@ class Preprocessing:
         #train.reset_index(drop =True, inplace= True)
         #test.reset_index(drop =True, inplace= True)
 
-        print(train.head())
         #train[self.case_timestamp_key].to_csv("before_transform.txt")
 
 
@@ -131,20 +155,12 @@ class Preprocessing:
         train[self.case_timestamp_key]=train[self.case_timestamp_key].astype('int64')
         test[self.case_timestamp_key] = test[self.case_timestamp_key].astype('int64')
 
-        if self.is_xes: 
-            try:
-                train = train.drop(["concept:name.1", "time:timestamp.1", "Activity code.1"],axis = 1 )
-                test= test.drop(["concept:name.1", "time:timestamp.1", "Activity code.1"],axis = 1 )
-            except:
-                pass
-
-
-        train[self.case_timestamp_key].to_csv("after_transform.txt")
-        print(train[self.case_timestamp_key].dtype)
-        print(train[self.case_timestamp_key])
         
 
-        return train, test, number_classes
+
+        
+
+        return train, test, number_classes, absolute_frequency_distribution
 
     def find_start_activities(self):
         """

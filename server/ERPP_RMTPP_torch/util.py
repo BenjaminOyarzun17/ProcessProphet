@@ -4,6 +4,8 @@ import numpy as np
 import torch
 from collections import Counter
 import math
+import pprint
+
 
 
 
@@ -89,9 +91,11 @@ class ATMDataset:
         for thr in [0.001, 0.01, 0.1, 1, 10, 100]:
             print(f"<{thr} = {np.mean(intervals < thr)}")
 
-    def importance_weight(self):
-        count = Counter(self.event)
-        percentage = [count[k] / len(self.event) for k in sorted(count.keys())]
+    def importance_weight(self, count):
+        #count = Counter(self.event) #calc absolute frequencies
+        print(f"counter: {len(count)}")
+        #pprint.pprint(count, indent = 1)
+        percentage = [count[k] / len(self.event) for k in sorted(count.keys())] #relative frequencies
         for i, p in enumerate(percentage):
             print(f"event{i} = {p * 100}%")
         weight = [len(self.event) / count[k] for k in sorted(count.keys())]
