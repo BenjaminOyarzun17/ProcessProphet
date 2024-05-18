@@ -22,11 +22,13 @@ class Config:
         self.dropout= 0.1
         self.batch_size= 1024
         self.lr= 1e-3
-        self.epochs= 30
+        self.epochs= 10 
         self.model = "rmtpp" 
         self.importance_weight = "store_true"
         self.verbose_step = 350
         self.event_class = 0
+        self.cuda = True 
+        self.our_implementation = False
 
 class NNManagement: 
     """
@@ -130,8 +132,8 @@ class NNManagement:
         # we already pass the split data to de ATM loader. ATMDAtaset uses the sliding window for generating the input for training.
         # since we are using tensors for training the sequence lenght remains fixed in each epoch, hence we cannot do "arbitrary length cuts" 
         # to the training data
-        train_set = ATMDataset(self.config ,train_data, case_id,   timestamp_key, event_key ) 
-        test_set = ATMDataset(self.config , test_data, case_id, timestamp_key, event_key)
+        train_set = ATMDataset(self.config ,train_data, case_id,   timestamp_key, event_key , "train") 
+        test_set = ATMDataset(self.config , test_data, case_id, timestamp_key, event_key, "test")
 
         # now load the data to torch tensors and generate the batches
         self.train_loader = DataLoader(train_set, batch_size=self.config.batch_size, shuffle=True, collate_fn=ATMDataset.to_features)
@@ -148,7 +150,8 @@ class NNManagement:
         self.model = Net(self.config, lossweight=weight) #crete a NN instance
 
         self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs, use_bert=True)
-        # self.model.cuda() #GPU TODO: revise docu
+        if self.config.cuda: 
+            self.model.cuda() #GPU TODO: revise docu
 
 
         for epc in range(self.config.epochs): #do the epochs

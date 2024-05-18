@@ -9,9 +9,17 @@ class TrainPercentageTooHigh(Exception):
 
 
 
-class ModelNotTrainedYet:
+class ModelNotTrainedYet(Exception):
     def __init__(self):
         self.message= "the model has not been trained yet!"
+
+    def __str__(self):
+        return self.message
+
+
+class TransitionNotDefined(Exception):
+    def __init__(self):
+        self.message= "this transition has not been defined"
 
     def __str__(self):
         return self.message
