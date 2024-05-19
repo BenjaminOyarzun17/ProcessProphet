@@ -49,28 +49,11 @@ class Preprocessing:
         datatime64.
         - event log object: its correctnes is assumed from the pm4py lib and is therefore not tested
         """
-        self.case_id_key =  case_id
-        self.case_activity_key = activity_key 
-        self.case_timestamp_key = timestamp_key 
         
-        self.event_log = pm4py.read.read_xes(path)
-        dataframe = pm4py.convert_to_dataframe(self.event_log)
-        
-        self.event_df = dataframe
-       
-        self.event_df = pm4py.format_dataframe(self.event_df, 
-                                           case_id=case_id,
-                                             activity_key=activity_key,
-                                             timestamp_key=timestamp_key) #returns formated df.
-        
-        self.event_df= self.event_df[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
-        self.event_df= self.event_df.dropna()
-        self.event_log = pm4py.convert_to_event_log(self.event_df) #this returns an event log
-
-        #dataframe.to_csv("../data/dummy.csv",',',columns= [self.case_id_key, self.case_timestamp_key, self.case_activity_key])
-
-
-
+        self.event_df = pm4py.read.read_xes(path)
+        self.event_df = pm4py.convert_to_dataframe(self.event_df)
+        self.import_event_log(case_id, activity_key, timestamp_key)
+    
     def import_event_log_csv(self, path, case_id, activity_key, timestamp_key, sep): 
         """
         this is an adapter for format_dataframe such that 
@@ -82,31 +65,29 @@ class Preprocessing:
         :param timestamp_key: timestamp column name
         :param sep: separator
         """
+        self.event_df= pd.read_csv(path, sep=sep)
+        self.import_event_log(case_id, activity_key, timestamp_key)
 
+    def import_event_log(self, case_id, activity_key, timestamp_key):
         self.case_id_key =  case_id
         self.case_activity_key = activity_key 
         self.case_timestamp_key = timestamp_key 
-        dataframe= pd.read_csv(path, sep=sep)
-        dataframe = dataframe[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
-        dataframe = dataframe.dropna()
-        print(dataframe)
-        # this line transforms the event log in the required input 
-        # for the RNN: groups the data by id and sorts the entries
-        # accorting to time. 
-        dataframe =  dataframe.sort_values(by=[case_id, timestamp_key])
-        #dataframe = dataframe.groupby(case_id).apply(lambda x: x.sort_values(timestamp_key)).reset_index(drop=True)
-        # we save the df sorted, because its way more useful than the unsorted version.
-        self.event_df = dataframe.copy()
-        self.event_df[timestamp_key] = pd.to_datetime(self.event_df[timestamp_key])
+        #: returns a formated dataframe that can work with other pm4py functions
         self.event_df = pm4py.format_dataframe(self.event_df, 
-                                           case_id=case_id,
-                                             activity_key=activity_key,
-                                             timestamp_key=timestamp_key) #returns formated df.
+                                           case_id=self.case_id_key,
+                                             activity_key=self.case_activity_key,
+                                             timestamp_key=self.case_timestamp_key) #returns formated df.
+        
+        #: convert_to_event_log requires string format for case_id and marker
+        self.event_df[self.case_id_key] = self.event_df[self.case_id_key].astype("string")
+        self.event_df[self.case_activity_key] = self.event_df[self.case_activity_key].astype("string")
+        self.event_log = pm4py.convert_to_event_log(self.event_df, self.case_id_key) #this returns an event log
+        #: filter out all the other generated columns
+        self.event_df= self.event_df[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
+        self.event_df= self.event_df.dropna()
 
-        #self.event_df.to_csv("after_sort.csv")
-        self.event_log = pm4py.convert_to_event_log(self.event_df) #this returns an event log
-        print(self.event_df.dtypes)
-        #self.event_df.to_csv("csv_output_from_import.csv")
+
+
 
     def get_dictionary_values(self , df, column):
         col = df[column].tolist()
@@ -200,12 +181,9 @@ class Preprocessing:
 
 
 
-    def convert_csv_to_pandas(self):
-        pass
     def prepare_train_data(self):
         pass
-    def split_event_log(self):
-        pass
+    
     def set_training_parameters(self):
         pass
 
