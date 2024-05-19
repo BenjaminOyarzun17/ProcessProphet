@@ -24,6 +24,10 @@ def test_data_loader():
         print("b: ", b.shape)
 
 
+
+
+
+
 app = Flask(__name__)
 app.register_blueprint(routes)
     
@@ -50,8 +54,7 @@ def test_our()    :
     nn_manager.config.our_implementation = True
     nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
     stats_in_json = nn_manager.get_training_statistics()
-
-
+    nn_manager.export_nn_model()
 
 def test_their()    :
     preprocessor = Preprocessing()

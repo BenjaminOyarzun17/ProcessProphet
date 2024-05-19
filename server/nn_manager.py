@@ -22,12 +22,12 @@ class Config:
         self.dropout= 0.1
         self.batch_size= 1024
         self.lr= 1e-3
-        self.epochs=  2
+        self.epochs=  3
         self.model = "rmtpp" 
         self.importance_weight = "store_true"
         self.verbose_step = 350
         self.event_class = 0
-        self.cuda = True 
+        self.cuda = True
         self.our_implementation = False
 
 class NNManagement: 
@@ -84,9 +84,7 @@ class NNManagement:
             gold_times.append(batch[0][:, -1].numpy()) # extract for each sequence the last time stamp/ the last event
             gold_events.append(batch[1][:, -1].numpy())
             pred_time, pred_event = self.model.predict(batch)
-            #print(pred_time)
-            #print(pred_event)
-            #save predictions
+           
             pred_times.append(pred_time)
             pred_events.append(pred_event)
         
@@ -101,11 +99,11 @@ class NNManagement:
         gold_times = np.concatenate(gold_times).reshape(-1)
         pred_events = np.concatenate(pred_events).reshape(-1)
         gold_events = np.concatenate(gold_events).reshape(-1)
-        time_error = abs_error(pred_times, gold_times)  #compute errors
+        self.time_error = abs_error(pred_times, gold_times)  #compute errors
 
         self.acc, self.recall, self.f1 = clf_metric(pred_events, gold_events, n_class=config.event_class) #get the metrics
         # print(f"epoch {epc}")
-        print(f"time_error: {time_error}, PRECISION: {self.acc}, RECALL: {self.recall}, F1: {self.f1}")
+        print(f"time_error: {self.time_error}, PRECISION: {self.acc}, RECALL: {self.recall}, F1: {self.f1}")
 
     def get_training_statistics(self):
         if self.acc == None and self.recall == None and self.f1 ==None: 
@@ -118,6 +116,9 @@ class NNManagement:
             "f1":self.f1
         })
 
+    def export_nn_model(self):
+        model_scripted = torch.jit.script(self.model) # Export to TorchScript
+        model_scripted.save('model.pt') 
 
 
     def train(self, train_data, test_data, case_id, timestamp_key, event_key, no_classes):
@@ -156,7 +157,7 @@ class NNManagement:
         
         self.model = Net(self.config, lossweight=weight) #crete a NN instance
 
-        self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs, use_bert=True)
+        self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs, use_bert=True) #TODO: fix use bert (doesnt exist)
         if self.config.cuda: 
             self.model.cuda() #GPU TODO: revise docu
 

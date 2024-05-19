@@ -123,14 +123,7 @@ class Net(nn.Module):
         event_input, event_target = self.dispatch([event_tensor[:, :-1], event_tensor[:, -1]])
         time_logits, event_logits = self.forward(time_input, event_input)
         event_pred=  event_logits.detach().cpu().numpy()
-        print(type(event_pred))
-        print(event_pred.shape)
-        print(event_pred.tolist())
-        print(event_pred)
         event_pred = np.argmax(event_pred, axis=-1) #for each label find the index that maximizes the pred.
-        print(type(event_pred))
-        print(event_pred.tolist())
-        print(event_pred)
         time_pred = time_logits.detach().cpu().numpy()
         #print(event_pred.sort(axis= -1))
         return time_pred, event_pred

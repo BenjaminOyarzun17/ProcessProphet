@@ -11,6 +11,7 @@ from exceptions import *
 from datetime import datetime, timezone 
 from collections import Counter
 import pprint
+import datetime as dt
 
 
 
@@ -29,6 +30,8 @@ class Preprocessing:
         self.case_activity_key = None 
         self.case_timestamp_key = None 
         self.event_df = None
+        self.no_classes=0
+        self.absolute_frequency_distribution = None
         # TODO: invoke import_event_log? (decide)
 
     def xes_helper(self, path): 
@@ -107,6 +110,7 @@ class Preprocessing:
         frequence distribution for each class in the whole event log. 
         """
         #: we encode the markers with integers to be consistent with the authors implementation
+        #: we encode the markers with integers to be consistent with the authors implementation
         self.event_df[self.case_activity_key] = self.event_df[self.case_activity_key].map(self.get_dictionary_values(self.event_df, self.case_activity_key))
         self.event_df[self.case_id_key] = self.event_df[self.case_id_key].map(self.get_dictionary_values(self.event_df, self.case_id_key))
         number_classes = len(self.event_df[self.case_activity_key].unique()) #get the number of classes
@@ -119,9 +123,6 @@ class Preprocessing:
         #print(self.event_df.columns)
         #print(self.event_df[self.case_timestamp_key])
         print(self.event_df[self.case_activity_key]) 
-
-        #self.event_df[self.case_activity_key]  = self.event_df[self.case_activity_key].astype(str)
-        #self.event_df[self.case_id_key]  =  self.event_df[self.case_id_key].astype(str)
 
         absolute_frequency_distribution= Counter(self.event_df[self.case_activity_key].to_list())
 
@@ -137,22 +138,43 @@ class Preprocessing:
 
         #: here we convert the datetime64 into an integer. the authors
         # use an Excel format, but we decide to use integers for simplicity.
-        dt ="float64"
         #train[self.case_timestamp_key]=train[self.case_timestamp_key].astype("int64")/1e17
         #test[self.case_timestamp_key] = test[self.case_timestamp_key].astype("int64")/1e17
-        train[self.case_timestamp_key]=train[self.case_timestamp_key].astype("int64")
-        test[self.case_timestamp_key] = test[self.case_timestamp_key].astype("int64")
-
-        train[self.case_activity_key] =train[self.case_activity_key].astype(dt)
-        train[self.case_id_key] =train[self.case_id_key].astype(dt)
-        test[self.case_activity_key] =test[self.case_activity_key].astype(dt)
-        test[self.case_id_key] =test[self.case_id_key].astype(dt)
         
+        train[self.case_timestamp_key]=train[self.case_timestamp_key].dt.tz_localize(None)
+        test[self.case_timestamp_key] = test[self.case_timestamp_key].dt.tz_localize(None)
+        print(test[self.case_timestamp_key].iloc[:30])
+        train[self.case_timestamp_key]=train[self.case_timestamp_key].astype(int)
+        test[self.case_timestamp_key] = test[self.case_timestamp_key].astype(int)
+        print(test[self.case_timestamp_key].iloc[:30])
+        #print(train[self.case_timestamp_key].iloc[:30])
+        exponent = self.determine_exponent_avg(test)
+        train[self.case_timestamp_key]=train[self.case_timestamp_key]/(10**exponent)
+        test[self.case_timestamp_key] = test[self.case_timestamp_key]/(10**exponent)
+        print(exponent)
+        #train[self.case_timestamp_key]=train[self.case_timestamp_key].astype("int64")/(10**exponent)
+        #test[self.case_timestamp_key] = test[self.case_timestamp_key].astype("int64")/(10**exponent)
+        print(train[self.case_timestamp_key].iloc[:30])
 
-
-        
-
+        form ="float64"
+        train[self.case_activity_key] =train[self.case_activity_key].astype(form)
+        train[self.case_id_key] =train[self.case_id_key].astype(form)
+        test[self.case_activity_key] =test[self.case_activity_key].astype(form)
+        test[self.case_id_key] =test[self.case_id_key].astype(form)
         return train, test, number_classes, absolute_frequency_distribution
+
+
+    def determine_exponent_avg(self, time_df):
+        """
+        determine the position whereo put the comma in the 
+        timestamp t
+        """
+        sum = 0 
+        total = len(time_df[self.case_timestamp_key])
+        for timestamp in time_df[self.case_timestamp_key]:
+            sum += len(str(timestamp))
+        #return (sum)//total
+        return (sum)//total 
 
     def find_start_activities(self):
         """
@@ -192,3 +214,6 @@ class Preprocessing:
 
     def check_path(self): 
         pass
+
+
+
