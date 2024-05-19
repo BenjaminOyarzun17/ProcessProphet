@@ -122,9 +122,17 @@ class Net(nn.Module):
         time_input, time_target = self.dispatch([time_tensor[:, :-1], time_tensor[:, -1]])
         event_input, event_target = self.dispatch([event_tensor[:, :-1], event_tensor[:, -1]])
         time_logits, event_logits = self.forward(time_input, event_input)
-        
-        event_pred = np.argmax(event_logits.detach().cpu().numpy(), axis=-1) #pick the one label with max value
+        event_pred=  event_logits.detach().cpu().numpy()
+        print(type(event_pred))
+        print(event_pred.shape)
+        print(event_pred.tolist())
+        print(event_pred)
+        event_pred = np.argmax(event_pred, axis=-1) #for each label find the index that maximizes the pred.
+        print(type(event_pred))
+        print(event_pred.tolist())
+        print(event_pred)
         time_pred = time_logits.detach().cpu().numpy()
+        #print(event_pred.sort(axis= -1))
         return time_pred, event_pred
 
 
@@ -135,7 +143,15 @@ class Net(nn.Module):
         event_input, event_target = self.dispatch([event_tensor[:, :-1], event_tensor[:, -1]])
         time_logits, event_logits = self.forward(time_input, event_input)
         
-        event_pred = event_logits.detach().cpu().numpy() #pick the one label with max value
-        time_pred = time_logits.detach().cpu().numpy()
-        return time_pred, event_pred
+        event_pred = event_logits.detach().cpu().numpy().tolist()
+        event_pred_with_indices= []
+        for index,  prediction_list in enumerate(event_pred): 
+            index_list= []
+            for event_index, prediction in enumerate(prediction_list):
+                index_list.append((prediction, event_index))
+                index_list.sort()
+            event_pred_with_indices.append(index_list)
+            index_list.sort()
+        time_pred = time_logits.detach().cpu().tolist()
+        return time_pred, event_pred_with_indices
 
