@@ -81,6 +81,7 @@ class Preprocessing:
         #: convert_to_event_log requires string format for case_id and marker
         self.event_df[self.case_id_key] = self.event_df[self.case_id_key].astype("string")
         self.event_df[self.case_activity_key] = self.event_df[self.case_activity_key].astype("string")
+        self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].astype("datetime64[ns, UTC]")
         self.event_log = pm4py.convert_to_event_log(self.event_df, self.case_id_key) #this returns an event log
         #: filter out all the other generated columns
         self.event_df= self.event_df[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
@@ -137,8 +138,10 @@ class Preprocessing:
         #: here we convert the datetime64 into an integer. the authors
         # use an Excel format, but we decide to use integers for simplicity.
         dt ="float64"
-        train[self.case_timestamp_key]=train[self.case_timestamp_key].astype("int64")/1e17
-        test[self.case_timestamp_key] = test[self.case_timestamp_key].astype("int64")/1e17
+        #train[self.case_timestamp_key]=train[self.case_timestamp_key].astype("int64")/1e17
+        #test[self.case_timestamp_key] = test[self.case_timestamp_key].astype("int64")/1e17
+        train[self.case_timestamp_key]=train[self.case_timestamp_key].astype("int64")
+        test[self.case_timestamp_key] = test[self.case_timestamp_key].astype("int64")
 
         train[self.case_activity_key] =train[self.case_activity_key].astype(dt)
         train[self.case_id_key] =train[self.case_id_key].astype(dt)
