@@ -39,8 +39,15 @@ class Preprocessing:
 
     def import_event_log_xes(self, path, case_id, activity_key, timestamp_key): 
         """
-        Import the event log as xes
-        the case id, activity key and timestamp keys are well documented in XES
+        :param path: path where the xes file is found
+        :param case_id: column name for the case id column.
+        :param activity_key: column name for the marker column 
+        :param timestamp_key: column name for the timestamp column
+        effects:  
+        - event_df dataframe is generated. The rows are grouped by case id and sorted by time.
+        - the generated dataframe has 3 columns two of type string (case id, label) and one of type
+        datatime64.
+        - event log object: its correctnes is assumed from the pm4py lib and is therefore not tested
         """
         self.case_id_key =  case_id
         self.case_activity_key = activity_key 
@@ -98,7 +105,7 @@ class Preprocessing:
 
         #self.event_df.to_csv("after_sort.csv")
         self.event_log = pm4py.convert_to_event_log(self.event_df) #this returns an event log
-
+        print(self.event_df.dtypes)
         #self.event_df.to_csv("csv_output_from_import.csv")
 
     def get_dictionary_values(self , df, column):
