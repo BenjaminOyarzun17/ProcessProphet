@@ -145,6 +145,53 @@ class TestImportCSVFunction(unittest.TestCase):
     def test_correct_subfolder(self):
         pass #: TODO (waiting for CLI)
 
+    """
+    missing tests: 
+    - check if Counter does contain all the classes
+    - check if all the classes have been counted
+    - check correspondance between the encoded caseids and the origonal versions
+    -   ditto for encoded markers 
+    """
+
+class TestSplitTrainTest(unittest.TestCase):
+    """
+    correctness criteria: 
+    -  check if raise TrainPercentageTooHigh is generated for a very small  
+    event log; also test it for train_percentage = 1
+    - TODO: check the NaN solution correctness (the right exponent selection) or
+    any other implemented solution
+    - check that all columns are of type float
+
+    specification: 
+    - input: train percentage
+
+    - out/sideeffects 
+    """
+    pass
+
+
+class TestTrainEvaluate(unittest.TestCase):
+    """
+    tests: 
+    - check if there are no nan's while training /
+    as output of the predictions
+    - check if train/test are empty, raise an exception.
+    - raise an exception if cols dont exist. 
+    - 
+
+    specification: 
+    - input: 
+        - traindata, testdata, all 3 col names,no_classes
+
+    - output/sideeffects:
+        - no classes is set
+        - nn is trained and tested
+        - nn model is saved in the class 
+        - acc, recall, f1 are saved in class
+
+    """
+
+
 
 if __name__ == "__main__":
     unittest.main()
