@@ -8,6 +8,7 @@ dependencies:
   - pytorch
   - pandas
   - pydoc-markdown
+  - flask
   - pip
   - pip:
     - pm4py
