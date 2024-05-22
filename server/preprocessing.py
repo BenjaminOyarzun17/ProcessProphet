@@ -100,6 +100,69 @@ class Preprocessing:
         enume = [(label, index) for index, label in enumerate(uniques)]
         return dict(enume)
 
+    def generate_sequence(self):
+        MAX_INTERVAL_VARIANCE = 1
+        pbar = tqdm(total=len(self.id) - self.seq_len + 1) #tqdm is the progress bar
+        time_seqs = []
+        event_seqs = []
+        cur_end = self.seq_len - 1
+        """
+        this is a sliding window algorithm to cut each input sequence into sub sequences of the same length
+        TODO: this encoding is MIGHT generate some bias. --> use bitmasking? generate random b between epochs?
+        find a better encoding for sequences!
+        """
+        while cur_end < len(self.id):
+            pbar.update(1)
+            cur_start = cur_end - self.seq_len + 1
+            if self.id[cur_start] != self.id[cur_end]:
+                cur_end += 1
+                continue
+
+            subseq = self.time[cur_start:cur_end + 1]
+            #print(subseq)
+            # if max(subseq) - min(subseq) > MAX_INTERVAL_VARIANCE:
+            #     if self.subset == "train":
+            #         cur_end += 1
+            #         continue
+            time_seqs.append(subseq)
+            event_seqs.append(self.event[cur_start:cur_end + 1])
+            cur_end += 1
+        return time_seqs, event_seqs
+
+    @staticmethod
+    def to_features(batch):
+        times, events = [], []
+        for time, event in batch:
+            time = np.array([time[0]] + time)
+
+            time = np.diff(time)
+            times.append(time)
+            events.append(event)
+
+        #return torch.FloatTensor(times), torch.LongTensor(events)
+        return torch.FloatTensor(np.asarray(times)), torch.LongTensor(np.asarray(events))
+
+    def statistic(self):
+        print("TOTAL SEQs:", len(self.time_seqs))
+        # for i in range(10):
+        #     print(self.time_seqs[i], "\n", self.event_seqs[i])
+        intervals = np.diff(np.array(self.time))
+        for thr in [0.001, 0.01, 0.1, 1, 10, 100]:
+            print(f"<{thr} = {np.mean(intervals < thr)}")
+
+    def importance_weight(self, count):
+        #count = Counter(self.event) #calc absolute frequencies
+        #print(f"counter: {len(count)}")
+        #pprint.pprint(count, indent = 1)
+        percentage = [count[k] / len(self.event) for k in sorted(count.keys())] #relative frequencies
+        """
+        for i, p in enumerate(percentage):
+            print(f"event{i} = {p * 100}%")
+        """
+        weight = [len(self.event) / count[k] for k in sorted(count.keys())]
+        return weight
+
+
 
     def split_train_test(self, train_percentage):
         """
@@ -146,7 +209,8 @@ class Preprocessing:
         test[self.case_timestamp_key] = test[self.case_timestamp_key].dt.tz_localize(None)
         print(test[self.case_timestamp_key].iloc[:30])
         train[self.case_timestamp_key]=train[self.case_timestamp_key].astype(int)
-        test[self.case_timestamp_key] = test[self.case_timestamp_key].astype(int)
+        test[self.case_timestamp_key] = test[self.case_timestamp_key].astype(int) 
+        #: generates an integer in posix standard. 
         print(test[self.case_timestamp_key].iloc[:30])
         #print(train[self.case_timestamp_key].iloc[:30])
         exponent = test[self.case_timestamp_key].mean()
@@ -166,6 +230,19 @@ class Preprocessing:
         return train, test, number_classes, absolute_frequency_distribution
 
 
+<<<<<<< HEAD
+=======
+    def determine_exponent_avg(self, time_df):
+        """
+        determine the position whereo put the comma in the 
+        timestamp t
+        """
+        sum = 0 
+        total = len(time_df[self.case_timestamp_key])
+        for timestamp in time_df[self.case_timestamp_key]:
+            sum += len(str(timestamp))
+        return (sum)//total 
+>>>>>>> 889990d (small fix in preprocessing)
 
     def find_start_activities(self):
         """
