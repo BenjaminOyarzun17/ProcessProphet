@@ -148,7 +148,7 @@ class Preprocessing:
         test[self.case_timestamp_key] = test[self.case_timestamp_key].astype(int)
         print(test[self.case_timestamp_key].iloc[:30])
         #print(train[self.case_timestamp_key].iloc[:30])
-        exponent = self.determine_exponent_avg(test)
+        exponent = test[self.case_timestamp_key].mean()
         train[self.case_timestamp_key]=train[self.case_timestamp_key]/(10**exponent)
         test[self.case_timestamp_key] = test[self.case_timestamp_key]/(10**exponent)
         print(exponent)
@@ -164,17 +164,6 @@ class Preprocessing:
         return train, test, number_classes, absolute_frequency_distribution
 
 
-    def determine_exponent_avg(self, time_df):
-        """
-        determine the position whereo put the comma in the 
-        timestamp t
-        """
-        sum = 0 
-        total = len(time_df[self.case_timestamp_key])
-        for timestamp in time_df[self.case_timestamp_key]:
-            sum += len(str(timestamp))
-        #return (sum)//total
-        return (sum)//total 
 
     def find_start_activities(self):
         """
