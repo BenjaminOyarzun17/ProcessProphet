@@ -4,7 +4,7 @@ from flask import Flask
 from server_routes import routes
 import time
 import logging
-from ray import tune
+#from ray import tune
 from functools import partial
 
 
@@ -120,7 +120,7 @@ def test_embed():
         logging.info(f"dimension used: {dim}")
         logging.info(stats_in_json)
 
-
+"""
 def test_grid_search():
 
     preprocessor = Preprocessing()
@@ -160,7 +160,7 @@ def test_grid_search():
     )
     print("best params: ", analysis.best_config)
 
-
+"""
 
 
 
@@ -183,8 +183,8 @@ def test_their()    :
     stats_in_json = nn_manager.get_training_statistics()
 
 if __name__=="__main__": 
-    test_embed() 
-    #test_our()
+    #test_embed() 
+    test_our()
     #test_their()
     #nn_manager.model.predict_get_sorted(pass)
     

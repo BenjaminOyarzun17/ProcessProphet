@@ -9,7 +9,7 @@ from tqdm import tqdm
 import numpy as np
 import json
 from exceptions import *
-from ray import tune
+#from ray import tune
 
 
 class Config: 
@@ -184,16 +184,14 @@ class NNManagement:
         print("--"*20)
 
         self.evaluate(epc, self.config)
-
+"""
     def train_for_ray(self, train_data, test_data, case_id, timestamp_key, event_key, no_classes):
-        """
         This is the main training function 
         :param train_data: train data df
         :param test_data: test data df  
         :param case_id: case id column name in the df
         :param timestampt_key: timestamp key in the df
         :param no_classes: number of known markers.
-        """
 
         self.config.event_class = no_classes
 
@@ -248,3 +246,5 @@ class NNManagement:
         print("--"*20)
         #TODO: here we can grab the best params and then evaluate!
         #self.evaluate(epc, self.config)
+
+"""
