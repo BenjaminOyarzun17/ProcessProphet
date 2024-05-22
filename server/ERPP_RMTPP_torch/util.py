@@ -9,45 +9,42 @@ import pprint
 
 
 
-def sigmoid(x): #LOL 2015 vibes?
+def sigmoid(x): 
     return 1 / (1 + math.exp(-x))
 
 
-def softmax(x): #for the label ouput
-    x = np.exp(x)
-    return x / x.sum()
-
 
 class ATMDataset:
-    def __init__(self, config, data, case_id, timestamp_key,event_key,subset):
-        if config.our_implementation: 
-            self.id = list(data[case_id])
-            self.time = list(data[timestamp_key] )
-            self.event = list(data[event_key])
-            data.to_csv(f"our_output_{subset}.csv")
-        else:
-            data = pandas.read_csv(f"../data/{subset}_day.csv")
-            self.subset = subset
-            self.id = list(data['id'])
-            self.time = list(data['time']) 
-            self.event = list(data['event'])
-            data.to_csv(f"their_output_{subset}.csv")
+    """
+    helper class for the neural network that
+    is in charge of doing the sliding window algorithm
+    over the sequences and get the time differences
+    in the timestamp column of the data. 
+
+    it can be seen as a wrapper that does some further 
+    preprocessing that is very especific to the NN.        
+    """
+    def __init__(self, config, data, case_id, timestamp_key,event_key):
+        self.id = list(data[case_id])
+        self.time = list(data[timestamp_key] )
+        self.event = list(data[event_key])
+        
         self.config = config
         self.seq_len = config.seq_len
         self.time_seqs, self.event_seqs = self.generate_sequence()
         self.statistic()
 
     def generate_sequence(self):
+        """
+        use the sliding window algorithm so that the sequences
+        fit in the NN. 
+        """
         MAX_INTERVAL_VARIANCE = 1
         pbar = tqdm(total=len(self.id) - self.seq_len + 1) #tqdm is the progress bar
         time_seqs = []
         event_seqs = []
         cur_end = self.seq_len - 1
-        """
-        this is a sliding window algorithm to cut each input sequence into sub sequences of the same length
-        TODO: this encoding is MIGHT generate some bias. --> use bitmasking? generate random b between epochs?
-        find a better encoding for sequences!
-        """
+        #: this is a sliding window algorithm to cut each input sequence into sub sequences of the same length
         while cur_end < len(self.id):
             pbar.update(1)
             cur_start = cur_end - self.seq_len + 1
@@ -74,6 +71,10 @@ class ATMDataset:
 
     @staticmethod
     def to_features(batch):
+        """
+        :return: two tensors, one containing the time differences
+        between adjacent time stamps and the other one the events.  
+        """
         times, events = [], []
         for time, event in batch:
             time = np.array([time[0]] + time)
@@ -87,20 +88,13 @@ class ATMDataset:
 
     def statistic(self):
         print("TOTAL SEQs:", len(self.time_seqs))
-        # for i in range(10):
-        #     print(self.time_seqs[i], "\n", self.event_seqs[i])
         intervals = np.diff(np.array(self.time))
         for thr in [0.001, 0.01, 0.1, 1, 10, 100]:
             print(f"<{thr} = {np.mean(intervals < thr)}")
 
     def importance_weight(self, count):
-        #count = Counter(self.event) #calc absolute frequencies
-        #print(f"counter: {len(count)}")
-        #pprint.pprint(count, indent = 1)
-        percentage = [count[k] / len(self.event) for k in sorted(count.keys())] #relative frequencies
         """
-        for i, p in enumerate(percentage):
-            print(f"event{i} = {p * 100}%")
+        used for CrossEntropyLoss 
         """
         weight = [len(self.event) / count[k] for k in sorted(count.keys())]
         return weight
@@ -112,12 +106,12 @@ def abs_error(pred, gold):
 
 def clf_metric(pred, gold, n_class):
     """
-    here we define:
+    compute test metrics.
+    :return:
     - recall 
     - precision
     - f1 score
     """
-
     gold_count = Counter(gold)
     pred_count = Counter(pred)
     prec = recall = 0

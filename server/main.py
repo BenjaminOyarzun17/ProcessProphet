@@ -6,6 +6,7 @@ import time
 import logging
 #from ray import tune
 from functools import partial
+from sklearn import RandomSearchCV
 
 
 
@@ -38,12 +39,12 @@ app.register_blueprint(routes)
     
 def test_our()    :
     preprocessor = Preprocessing()
-    is_xes = True
-    #path =  "../data/train_day_joined.csv"
-    path = "../data/BPI_Challenge_2019.xes"
-    #path = "../data/Hospital_log.xes"
-    #path = "../data/dummy.csv"
-    #path =  "../data/running.csv"
+    is_xes = False
+    path =  "data/train_day_joined.csv"
+    #path = "data/BPI_Challenge_2019.xes"
+    #path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
     
     if is_xes:
         #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
@@ -55,7 +56,7 @@ def test_our()    :
     
     train, test, no_classes, absolute_frequency_distribution = preprocessor.split_train_test(.9)
     nn_manager = NNManagement()
-    nn_manager.absolute_frequency_distribution = absolute_frequency_distribution
+    nn_manager.config.absolute_frequency_distribution = absolute_frequency_distribution
     nn_manager.config.our_implementation = True
     nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
     stats_in_json = nn_manager.get_training_statistics()
@@ -64,11 +65,11 @@ def test_our()    :
 def test_embed():
     preprocessor = Preprocessing()
     is_xes = True
-    #path =  "../data/train_day_joined.csv"
-    path = "../data/BPI_Challenge_2019.xes"
-    #path = "../data/Hospital_log.xes"
-    #path = "../data/dummy.csv"
-    #path =  "../data/running.csv"
+    #path =  "data/train_day_joined.csv"
+    path = "data/BPI_Challenge_2019.xes"
+    #path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
      
     if is_xes:
         #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
@@ -80,48 +81,17 @@ def test_embed():
 
     for emb_dim in range (50, 1100, 50):
         nn_manager = NNManagement()
-        nn_manager.absolute_frequency_distribution = absolute_frequency_distribution
+        nn_manager.config.absolute_frequency_distribution = absolute_frequency_distribution
         nn_manager.config.our_implementation = True
         nn_manager.config.emb_dim = emb_dim
         nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
         stats_in_json = nn_manager.get_training_statistics()
-        logging.basicConfig(filename='embed.log', filemode='a')
+        logging.basicConfig(filename='logs/embed.log', filemode='a')
         logging.info(f"dimension used: {emb_dim}")
         logging.info(stats_in_json)
 
-def test_embed():
-    preprocessor = Preprocessing()
-    is_xes =True
-    #path =  "../data/train_day_joined.csv"
-    path = "../data/BPI_Challenge_2019.xes"
-    #path = "../data/Hospital_log.xes"
-    #path = "../data/dummy.csv"
-    #path =  "../data/running.csv"
-     
-    if is_xes:
-        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
-        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
-        print(preprocessor.event_df.head())
-    else:
-        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
-    train, test, no_classes, absolute_frequency_distribution = preprocessor.split_train_test(.9)
 
-    logging.basicConfig(filename='embed.log', level=logging.INFO,  format='%(message)s'  ) 
-    logging.info(f"no. classes: {no_classes}")
-    for dim in range (1200, 2000, 200):
-        nn_manager = NNManagement()
-        nn_manager.absolute_frequency_distribution = absolute_frequency_distribution
-        nn_manager.config.our_implementation = True
-        nn_manager.config.emb_dim = dim
-        nn_manager.config.hid_dim= dim
-        nn_manager.config.mlp_dim = dim//2
-        nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
-        stats_in_json = nn_manager.get_training_statistics()
-        logging.info(f"dimension used: {dim}")
-        logging.info(stats_in_json)
-
-"""
-def test_grid_search():
+def test_random_search():
 
     preprocessor = Preprocessing()
     is_xes =True
@@ -140,7 +110,7 @@ def test_grid_search():
     train, test, no_classes, absolute_frequency_distribution = preprocessor.split_train_test(.9)
 
     nn_manager = NNManagement()
-    nn_manager.absolute_frequency_distribution = absolute_frequency_distribution
+    nn_manager.config.absolute_frequency_distribution = absolute_frequency_distribution
     nn_manager.config.our_implementation = True
     nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
     #stats_in_json = nn_manager.get_training_statistics()
@@ -160,27 +130,7 @@ def test_grid_search():
     )
     print("best params: ", analysis.best_config)
 
-"""
 
-
-
-def test_their()    :
-    preprocessor = Preprocessing()
-    is_xes = False
-    path =  "../data/train_day_joined.csv"
-    if is_xes:
-        preprocessor.import_event_log_xes(path)
-        print(preprocessor.event_df.head())
-    else:
-        preprocessor.import_event_log_csv(path 
-                                        , "case_id", "activity", "timestamp", ',')
-    
-    
-    train, test, no_classes = preprocessor.split_train_test(.9)
-    nn_manager = NNManagement()
-    nn_manager.config.our_implementation = False
-    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
-    stats_in_json = nn_manager.get_training_statistics()
 
 if __name__=="__main__": 
     #test_embed() 

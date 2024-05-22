@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """PyTorch optimization for BERT model."""
-
 import math
 import torch
 from torch.optim import Optimizer

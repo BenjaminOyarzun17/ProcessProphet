@@ -20,7 +20,7 @@ class Preprocessing:
     """
     This is the preprocessing unit for our server. Provided functionality:
     - adapter for train_split_test: split the event log's data into testing and training data in the right format
-    - adapters for importing event logs: make sure the right format is used
+    - adapters for importing event logs: make sure the right format is used for the RNN
     - TODO: might be extended
     """
     def __init__(self):
@@ -73,6 +73,13 @@ class Preprocessing:
         self.import_event_log(case_id, activity_key, timestamp_key)
 
     def import_event_log(self, case_id, activity_key, timestamp_key):
+        """
+        helper function for import_event_log_csv and import_event_log_xes. 
+        - genereates an EventLog object so that other pm4py functions can use it
+        - remove all columns other than the three main ones
+        - remove all NaN entries
+        - format a dataframe using pm4py 
+        """
         self.case_id_key =  case_id
         self.case_activity_key = activity_key 
         self.case_timestamp_key = timestamp_key 
@@ -86,82 +93,23 @@ class Preprocessing:
         self.event_df[self.case_id_key] = self.event_df[self.case_id_key].astype("string")
         self.event_df[self.case_activity_key] = self.event_df[self.case_activity_key].astype("string")
         self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].astype("datetime64[ns, UTC]")
+
         self.event_log = pm4py.convert_to_event_log(self.event_df, self.case_id_key) #this returns an event log
         #: filter out all the other generated columns
         self.event_df= self.event_df[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
         self.event_df= self.event_df.dropna()
 
 
-
-
-    def get_dictionary_values(self , df, column):
+    def string_to_index(self , df, column):
+        """
+        translate each marker into a specific integer index.  
+        """
         col = df[column].tolist()
         uniques = set(col)
         enume = [(label, index) for index, label in enumerate(uniques)]
         return dict(enume)
 
-    def generate_sequence(self):
-        MAX_INTERVAL_VARIANCE = 1
-        pbar = tqdm(total=len(self.id) - self.seq_len + 1) #tqdm is the progress bar
-        time_seqs = []
-        event_seqs = []
-        cur_end = self.seq_len - 1
-        """
-        this is a sliding window algorithm to cut each input sequence into sub sequences of the same length
-        TODO: this encoding is MIGHT generate some bias. --> use bitmasking? generate random b between epochs?
-        find a better encoding for sequences!
-        """
-        while cur_end < len(self.id):
-            pbar.update(1)
-            cur_start = cur_end - self.seq_len + 1
-            if self.id[cur_start] != self.id[cur_end]:
-                cur_end += 1
-                continue
-
-            subseq = self.time[cur_start:cur_end + 1]
-            #print(subseq)
-            # if max(subseq) - min(subseq) > MAX_INTERVAL_VARIANCE:
-            #     if self.subset == "train":
-            #         cur_end += 1
-            #         continue
-            time_seqs.append(subseq)
-            event_seqs.append(self.event[cur_start:cur_end + 1])
-            cur_end += 1
-        return time_seqs, event_seqs
-
-    @staticmethod
-    def to_features(batch):
-        times, events = [], []
-        for time, event in batch:
-            time = np.array([time[0]] + time)
-
-            time = np.diff(time)
-            times.append(time)
-            events.append(event)
-
-        #return torch.FloatTensor(times), torch.LongTensor(events)
-        return torch.FloatTensor(np.asarray(times)), torch.LongTensor(np.asarray(events))
-
-    def statistic(self):
-        print("TOTAL SEQs:", len(self.time_seqs))
-        # for i in range(10):
-        #     print(self.time_seqs[i], "\n", self.event_seqs[i])
-        intervals = np.diff(np.array(self.time))
-        for thr in [0.001, 0.01, 0.1, 1, 10, 100]:
-            print(f"<{thr} = {np.mean(intervals < thr)}")
-
-    def importance_weight(self, count):
-        #count = Counter(self.event) #calc absolute frequencies
-        #print(f"counter: {len(count)}")
-        #pprint.pprint(count, indent = 1)
-        percentage = [count[k] / len(self.event) for k in sorted(count.keys())] #relative frequencies
-        """
-        for i, p in enumerate(percentage):
-            print(f"event{i} = {p * 100}%")
-        """
-        weight = [len(self.event) / count[k] for k in sorted(count.keys())]
-        return weight
-
+    
 
 
     def split_train_test(self, train_percentage):
@@ -174,40 +122,35 @@ class Preprocessing:
         frequence distribution for each class in the whole event log. 
         """
         #: we encode the markers with integers to be consistent with the authors implementation
-        #: we encode the markers with integers to be consistent with the authors implementation
-        self.event_df[self.case_activity_key] = self.event_df[self.case_activity_key].map(self.get_dictionary_values(self.event_df, self.case_activity_key))
-        self.event_df[self.case_id_key] = self.event_df[self.case_id_key].map(self.get_dictionary_values(self.event_df, self.case_id_key))
-        number_classes = len(self.event_df[self.case_activity_key].unique()) #get the number of classes
+        le1 = LabelEncoder()
+        le2 = LabelEncoder()
+        self.event_df[self.case_activity_key] = le1.fit_transform(self.event_df[self.case_activity_key])
+        self.event_df[self.case_id_key] = le2.fit_transform(self.event_df[self.case_id_key])
+
+
+        #: get the number of classes
+        number_classes = len(self.event_df[self.case_activity_key].unique()) 
+        #: trasnform back into strings, its necessary for pm4py
         self.event_df[self.case_activity_key] =self.event_df[self.case_activity_key].astype("str")
         self.event_df[self.case_id_key] =self.event_df[self.case_id_key].astype("str")
-        #number_classes = len(self.event_df[self.case_activity_key].unique())
-        #train[self.case_activity_key] =  le.fit_transform(train[self.case_activity_key])
-        #test[self.case_activity_key] =  le.fit_transform(test[self.case_activity_key])
         print(f"no_classes: {number_classes}")
-        #print(self.event_df.columns)
-        #print(self.event_df[self.case_timestamp_key])
-        print(self.event_df[self.case_activity_key]) 
 
+        #: compute abs. freq. distribution for the activities. its necessary for CrossEntropyLoss
         absolute_frequency_distribution= Counter(self.event_df[self.case_activity_key].to_list())
 
+        #: do the split
         train, test = pm4py.ml.split_train_test(self.event_df, train_percentage, self.case_id_key)
         if test.shape[0] == 0: 
             raise TrainPercentageTooHigh()
-        
-        #train.reset_index(drop =True, inplace= True)
-        #test.reset_index(drop =True, inplace= True)
-
-        #train[self.case_timestamp_key].to_csv("before_transform.txt")
 
 
-        #: here we convert the datetime64 into an integer. the authors
-        # use an Excel format, but we decide to use integers for simplicity.
-        #train[self.case_timestamp_key]=train[self.case_timestamp_key].astype("int64")/1e17
-        #test[self.case_timestamp_key] = test[self.case_timestamp_key].astype("int64")/1e17
-        
+        #: remove the timezone information. we are not using it for simplicity.
         train[self.case_timestamp_key]=train[self.case_timestamp_key].dt.tz_localize(None)
         test[self.case_timestamp_key] = test[self.case_timestamp_key].dt.tz_localize(None)
-        print(test[self.case_timestamp_key].iloc[:30])
+
+
+        #: here we convert the datetime64 (ISO standard) into an integer in POSIX standard. the authors
+        # use an Excel format, but we decide to use integers for simplicity.
         train[self.case_timestamp_key]=train[self.case_timestamp_key].astype(int)
         test[self.case_timestamp_key] = test[self.case_timestamp_key].astype(int) 
         #: generates an integer in posix standard. 
@@ -218,31 +161,19 @@ class Preprocessing:
         test[self.case_timestamp_key] = test[self.case_timestamp_key]/(10**exponent)
 
         print(exponent)
+
         train[self.case_timestamp_key]=train[self.case_timestamp_key].astype("int64")/(10**exponent)
         test[self.case_timestamp_key] = test[self.case_timestamp_key].astype("int64")/(10**exponent)
-        print(train[self.case_timestamp_key].iloc[:30])
 
-        form ="float64"
-        train[self.case_activity_key] =train[self.case_activity_key].astype(form)
-        train[self.case_id_key] =train[self.case_id_key].astype(form)
-        test[self.case_activity_key] =test[self.case_activity_key].astype(form)
-        test[self.case_id_key] =test[self.case_id_key].astype(form)
+        #: transform the case id and markers back into float
+        train[self.case_activity_key] =train[self.case_activity_key].astype("float64")
+        train[self.case_id_key] =train[self.case_id_key].astype("float64")
+        test[self.case_activity_key] =test[self.case_activity_key].astype("float64")
+        test[self.case_id_key] =test[self.case_id_key].astype("float64")
         return train, test, number_classes, absolute_frequency_distribution
 
 
-<<<<<<< HEAD
-=======
-    def determine_exponent_avg(self, time_df):
-        """
-        determine the position whereo put the comma in the 
-        timestamp t
-        """
-        sum = 0 
-        total = len(time_df[self.case_timestamp_key])
-        for timestamp in time_df[self.case_timestamp_key]:
-            sum += len(str(timestamp))
-        return (sum)//total 
->>>>>>> 889990d (small fix in preprocessing)
+
 
     def find_start_activities(self):
         """
@@ -262,7 +193,7 @@ class Preprocessing:
         """
         if there is no unique start/ end activity, add an artificial start and end activity
         """
-        if (len(find_start_activities()) != 1) or (len(find_end_activities(self)) != 1):
+        if (len(self.find_start_activities()) != 1) or (len(self.find_end_activities(self)) != 1):
             self.dataframe = pm4py.insert_artificial_start_end(self.event_log, activity_key=self.case_activity_key, case_id_key=self.case_id_key, timestamp_key=self.case_timestamp_key)
             
     def get_sample_case(self):
