@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from collections import Counter
 import pprint
 import datetime as dt
+from ERPP_RMTPP_torch import sigmoid
 
 
 
@@ -151,9 +152,10 @@ class Preprocessing:
         exponent = test[self.case_timestamp_key].mean()
         train[self.case_timestamp_key]=train[self.case_timestamp_key]/(10**exponent)
         test[self.case_timestamp_key] = test[self.case_timestamp_key]/(10**exponent)
+
         print(exponent)
-        #train[self.case_timestamp_key]=train[self.case_timestamp_key].astype("int64")/(10**exponent)
-        #test[self.case_timestamp_key] = test[self.case_timestamp_key].astype("int64")/(10**exponent)
+        train[self.case_timestamp_key]=train[self.case_timestamp_key].astype("int64")/(10**exponent)
+        test[self.case_timestamp_key] = test[self.case_timestamp_key].astype("int64")/(10**exponent)
         print(train[self.case_timestamp_key].iloc[:30])
 
         form ="float64"
