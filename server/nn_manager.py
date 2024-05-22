@@ -93,12 +93,14 @@ class NNManagement:
             pred_times.append(pred_time)
             pred_events.append(pred_event)
 
+            """
             logging.basicConfig(filename='logs/training_loop_output.log', filemode='a')
             logging.info(f"batch number:{pred_time}")
             logging.info(f"time prediction: {pred_time}")
             logging.info(f"gold time: {batch[0][:, -1].numpy()}")
             logging.info(f"event prediction: {pred_event}")
             logging.info(f"gold event: {batch[1][:, -1].numpy()}")
+            """
            
 
 

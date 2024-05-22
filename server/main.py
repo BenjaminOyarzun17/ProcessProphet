@@ -6,8 +6,7 @@ import time
 import logging
 #from ray import tune
 from functools import partial
-from random import random
-
+import random
 
 
 
@@ -93,6 +92,7 @@ def test_embed():
 
 def test_grid_search():
 
+    logging.basicConfig(filename='logs/grid_search.log', level=logging.INFO)
     preprocessor = Preprocessing()
     is_xes  =False
     path =  "data/train_day_joined.csv"
@@ -131,8 +131,10 @@ def test_grid_search():
                 if nn_manager.acc> acc: 
                     acc = nn_manager.acc
                     current_params= (i,j,k)
-                    print(f"current best acc {acc}") 
-                    print(f"current best params {current_params}") 
+                    logging.info("best accuracy: ")
+                    logging.info(acc)
+                    logging.info("best current: ")
+                    logging.info(current_params)
 
     print(f"best acc {acc}") 
     print(f"best params {current_params}") 
@@ -140,7 +142,7 @@ def test_grid_search():
 
  
 def test_random_search():
-
+    logging.basicConfig(filename='logs/random_search.log', level=logging.INFO)
     preprocessor = Preprocessing()
     is_xes  =False
     path =  "data/train_day_joined.csv"
@@ -179,9 +181,11 @@ def test_random_search():
         nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
         if nn_manager.acc> acc: 
             acc = nn_manager.acc
-            current_params= (a,b,c,)
-            print(f"current best acc {acc}") 
-            print(f"current best params {current_params}") 
+            current_params= (a,b,c )
+            logging.info("best accuracy: ")
+            logging.info(acc)
+            logging.info("best current: ")
+            logging.info(current_params)
 
     print(f"best acc {acc}") 
     print(f"best params {current_params}") 
@@ -190,7 +194,7 @@ def test_random_search():
 if __name__=="__main__": 
     #test_embed() 
     #test_their()
-    test_grid_search()
+    test_random_search()
     #nn_manager.model.predict_get_sorted(pass)
     
     #app.run()
