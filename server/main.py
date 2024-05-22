@@ -6,7 +6,7 @@ import time
 import logging
 #from ray import tune
 from functools import partial
-from sklearn import RandomSearchCV
+from random import random
 
 
 
@@ -91,15 +91,15 @@ def test_embed():
         logging.info(stats_in_json)
 
 
-def test_random_search():
+def test_grid_search():
 
     preprocessor = Preprocessing()
-    is_xes =True
-    #path =  "../data/train_day_joined.csv"
-    path = "../data/BPI_Challenge_2019.xes"
-    #path = "../data/Hospital_log.xes"
-    #path = "../data/dummy.csv"
-    #path =  "../data/running.csv"
+    is_xes  =False
+    path =  "data/train_day_joined.csv"
+    #path = "data/BPI_Challenge_2019.xes"
+    #path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
      
     if is_xes:
         #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
@@ -109,33 +109,88 @@ def test_random_search():
         preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
     train, test, no_classes, absolute_frequency_distribution = preprocessor.split_train_test(.9)
 
-    nn_manager = NNManagement()
-    nn_manager.config.absolute_frequency_distribution = absolute_frequency_distribution
-    nn_manager.config.our_implementation = True
-    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
     #stats_in_json = nn_manager.get_training_statistics()
     # Define the hyperparameter search space
-    search_space = {
-        "hidden_dim": tune.grid_search([500, 750, 1000, 1500 , 2000]),
-        "lstm_dim": tune.grid_search([500, 750, 1000, 1500 , 2000]),
-        "emb_dim": tune.grid_search([500, 750, 1000, 1500 , 2000])
+    sp= {
+        "hidden_dim": [500, 2000, 500],
+        "lstm_dim": [500, 2000,  500],
+        "emb_dim": [500, 2000, 500]
     }
+    nn_manager = NNManagement()
+    acc = 0
+    current_params = ()
+    for i in range(sp["hidden_dim"][0], sp["hidden_dim"][1], sp["hidden_dim"][2]): 
+        nn_manager.config.hid_dim =i 
+        for j in range(sp["lstm_dim"][0], sp["lstm_dim"][1], sp["lstm_dim"][2]): 
+            nn_manager.config.lstm_dim=j
+            for k in range(sp["emb_dim"][0], sp["emb_dim"][1], sp["emb_dim"][2]):
+                nn_manager.config.emb_dim=k
+                nn_manager.config.absolute_frequency_distribution = absolute_frequency_distribution
+                nn_manager.config.our_implementation = True
+                nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
+                if nn_manager.acc> acc: 
+                    acc = nn_manager.acc
+                    current_params= (i,j,k)
+                    print(f"current best acc {acc}") 
+                    print(f"current best params {current_params}") 
 
-    # Run the grid search
-    analysis = tune.run(
-        partial(nn_manager.train, train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes),
-        config=search_space,
-        resources_per_trial={"cpu": 0, "gpu": 1},  
-        num_samples=1
-    )
-    print("best params: ", analysis.best_config)
+    print(f"best acc {acc}") 
+    print(f"best params {current_params}") 
+    return (acc, current_params)
 
+ 
+def test_random_search():
 
+    preprocessor = Preprocessing()
+    is_xes  =False
+    path =  "data/train_day_joined.csv"
+    #path = "data/BPI_Challenge_2019.xes"
+    #path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
+     
+    if is_xes:
+        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
+        print(preprocessor.event_df.head())
+    else:
+        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
+    train, test, no_classes, absolute_frequency_distribution = preprocessor.split_train_test(.9)
+
+    #stats_in_json = nn_manager.get_training_statistics()
+    # Define the hyperparameter search space
+    sp= {
+        "hidden_dim": [500, 2000],
+        "lstm_dim": [500, 2000],
+        "emb_dim": [500, 2000]
+    }
+    nn_manager = NNManagement()
+    acc = 0
+    current_params = ()
+    iterations = 10
+    nn_manager.config.absolute_frequency_distribution = absolute_frequency_distribution
+    for i in range(iterations): 
+        a=random.randint(sp["hidden_dim"][0], sp["hidden_dim"][1])
+        b=random.randint(sp["lstm_dim"][0], sp["lstm_dim"][1])
+        c=  random.randint(sp["emb_dim"][0], sp["emb_dim"][1])
+        nn_manager.config.hid_dim = a
+        nn_manager.config.emb_dim= b
+        nn_manager.config.lstm_dim=c
+        nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
+        if nn_manager.acc> acc: 
+            acc = nn_manager.acc
+            current_params= (a,b,c,)
+            print(f"current best acc {acc}") 
+            print(f"current best params {current_params}") 
+
+    print(f"best acc {acc}") 
+    print(f"best params {current_params}") 
+    return (acc, current_params)
 
 if __name__=="__main__": 
     #test_embed() 
-    test_our()
     #test_their()
+    test_grid_search()
     #nn_manager.model.predict_get_sorted(pass)
     
     #app.run()
