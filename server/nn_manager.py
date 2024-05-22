@@ -9,8 +9,8 @@ from tqdm import tqdm
 import numpy as np
 import json
 from exceptions import *
-#from ray import tune
-
+import logging
+from collections import Counter
 
 class Config: 
     def __init__(self):
@@ -28,7 +28,7 @@ class Config:
         self.verbose_step = 350
         self.event_class = 0
         self.cuda = True
-        self.our_implementation = False
+        self.absolute_frequency_distribution = Counter()
 
 class NNManagement: 
     """
@@ -73,7 +73,11 @@ class NNManagement:
         self.config.importance_weight = params.get('importance_weight')
         self.config.verbose_step = params.get('verbose_step')
 
-    def evaluate(self,epc, config):
+    def evaluate(self, config):
+        """
+        this is the testing function for the model. 
+        it prints out the time_error, precision, recall and f1 score.
+        """
         #: main testing function
         self.model.eval()
         pred_times, pred_events = [], [] #inputs/training data
@@ -88,12 +92,14 @@ class NNManagement:
            
             pred_times.append(pred_time)
             pred_events.append(pred_event)
-        
-            print(f"time prediction: {pred_time}")
-            print(f"gold time: {batch[0][:, -1].numpy()}")
-            print(f"event prediction: {pred_event}")
-            print(f"gold event: {batch[1][:, -1].numpy()}")
-            print("--"*20)
+
+            logging.basicConfig(filename='logs/training_loop_output.log', filemode='a')
+            logging.info(f"batch number:{pred_time}")
+            logging.info(f"time prediction: {pred_time}")
+            logging.info(f"gold time: {batch[0][:, -1].numpy()}")
+            logging.info(f"event prediction: {pred_event}")
+            logging.info(f"gold event: {batch[1][:, -1].numpy()}")
+           
 
 
         pred_times = np.concatenate(pred_times).reshape(-1)
@@ -103,10 +109,14 @@ class NNManagement:
         self.time_error = abs_error(pred_times, gold_times)  #compute errors
 
         self.acc, self.recall, self.f1 = clf_metric(pred_events, gold_events, n_class=config.event_class) #get the metrics
-        # print(f"epoch {epc}")
+        
         print(f"time_error: {self.time_error}, PRECISION: {self.acc}, RECALL: {self.recall}, F1: {self.f1}")
 
     def get_training_statistics(self):
+        """
+        :return: the accuracy, recall and f1 score 
+        as a json object in string format. 
+        """
         if self.acc == None and self.recall == None and self.f1 ==None: 
             raise ModelNotTrainedYet()
 
@@ -118,6 +128,10 @@ class NNManagement:
         })
 
     def export_nn_model(self):
+        """
+        generates the .pt file containing the generated
+        model. 
+        """
         model_scripted = torch.jit.script(self.model) # Export to TorchScript
         model_scripted.save('model.pt') 
 
@@ -135,32 +149,29 @@ class NNManagement:
         self.config.event_class = no_classes
 
         # we already pass the split data to de ATM loader. ATMDAtaset uses the sliding window for generating the input for training.
-        # since we are using tensors for training the sequence lenght remains fixed in each epoch, hence we cannot do "arbitrary length cuts" 
+        # since we are using tensors for training the sequence length remains fixed in each epoch, hence we cannot do "arbitrary length cuts" 
         # to the training data
-        train_set = ATMDataset(self.config ,train_data, case_id,   timestamp_key, event_key , "train") 
-        test_set = ATMDataset(self.config , test_data, case_id, timestamp_key, event_key, "test")
+        train_set = ATMDataset(self.config ,train_data, case_id,   timestamp_key, event_key ) 
+        test_set = ATMDataset(self.config , test_data, case_id, timestamp_key, event_key)
 
 
-        # now load the data to torch tensors and generate the batches
+        # now load the data to torch tensors and generate the batches. also 
+       
         self.train_loader = DataLoader(train_set, batch_size=self.config.batch_size, shuffle=True, collate_fn=ATMDataset.to_features)
         
         self.test_loader = DataLoader(test_set, batch_size=self.config.batch_size, shuffle=False, collate_fn=ATMDataset.to_features)
 
-
+        #: initialize a matrix to store the importance weights
+        # that will be passed to the CrossEntropyLoss object. 
         weight = np.ones(self.config.event_class)
-
-
         if self.config.importance_weight:
-            weight = train_set.importance_weight(self.absolute_frequency_distribution)
-            #print("importance weight: ", weight)
-        #print("weight shape  (after importance weight):")
-        #print(len(weight))
+            weight = train_set.importance_weight(self.config.absolute_frequency_distribution)
         
         self.model = Net(self.config, lossweight=weight) #crete a NN instance
+        self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs) #TODO: fix use bert (doesnt exist)
 
-        self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs, use_bert=True) #TODO: fix use bert (doesnt exist)
         if self.config.cuda: 
-            self.model.cuda() #GPU TODO: revise docu
+            self.model.cuda() #GPU 
 
 
         for epc in range(self.config.epochs): #do the epochs
@@ -183,15 +194,16 @@ class NNManagement:
         print("TESTING STARTED:")
         print("--"*20)
 
-        self.evaluate(epc, self.config)
-"""
-    def train_for_ray(self, train_data, test_data, case_id, timestamp_key, event_key, no_classes):
+        self.evaluate( self.config)
+    def train_for_random_search(self, train_data, test_data, case_id, timestamp_key, event_key, no_classes):
+        """
         This is the main training function 
         :param train_data: train data df
         :param test_data: test data df  
         :param case_id: case id column name in the df
         :param timestampt_key: timestamp key in the df
         :param no_classes: number of known markers.
+        """
 
         self.config.event_class = no_classes
 
@@ -246,5 +258,3 @@ class NNManagement:
         print("--"*20)
         #TODO: here we can grab the best params and then evaluate!
         #self.evaluate(epc, self.config)
-
-"""
