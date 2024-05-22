@@ -9,7 +9,7 @@ from tqdm import tqdm
 import numpy as np
 import json
 from exceptions import *
-
+from ray import tune
 
 
 class Config: 
@@ -22,7 +22,7 @@ class Config:
         self.dropout= 0.1
         self.batch_size= 1024
         self.lr= 1e-3
-        self.epochs=  3
+        self.epochs=  15
         self.model = "rmtpp" 
         self.importance_weight = "store_true"
         self.verbose_step = 350
@@ -44,6 +44,7 @@ class NNManagement:
         self.recall= None
         self.acc = None
         self.absolute_frequency_distribution =None
+        self.time_error = None
 
     def set_training_parameters(self,  params):
         """
@@ -183,3 +184,67 @@ class NNManagement:
         print("--"*20)
 
         self.evaluate(epc, self.config)
+
+    def train_for_ray(self, train_data, test_data, case_id, timestamp_key, event_key, no_classes):
+        """
+        This is the main training function 
+        :param train_data: train data df
+        :param test_data: test data df  
+        :param case_id: case id column name in the df
+        :param timestampt_key: timestamp key in the df
+        :param no_classes: number of known markers.
+        """
+
+        self.config.event_class = no_classes
+
+        # we already pass the split data to de ATM loader. ATMDAtaset uses the sliding window for generating the input for training.
+        # since we are using tensors for training the sequence lenght remains fixed in each epoch, hence we cannot do "arbitrary length cuts" 
+        # to the training data
+        train_set = ATMDataset(self.config ,train_data, case_id,   timestamp_key, event_key , "train") 
+        test_set = ATMDataset(self.config , test_data, case_id, timestamp_key, event_key, "test")
+
+
+        # now load the data to torch tensors and generate the batches
+        self.train_loader = DataLoader(train_set, batch_size=self.config.batch_size, shuffle=True, collate_fn=ATMDataset.to_features)
+        
+        self.test_loader = DataLoader(test_set, batch_size=self.config.batch_size, shuffle=False, collate_fn=ATMDataset.to_features)
+
+
+        weight = np.ones(self.config.event_class)
+
+
+        if self.config.importance_weight:
+            weight = train_set.importance_weight(self.absolute_frequency_distribution)
+            #print("importance weight: ", weight)
+        #print("weight shape  (after importance weight):")
+        #print(len(weight))
+        
+        self.model = Net(self.config, lossweight=weight) #crete a NN instance
+
+        self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs, use_bert=True) #TODO: fix use bert (doesnt exist)
+        if self.config.cuda: 
+            self.model.cuda() #GPU TODO: revise docu
+
+
+        for epc in range(self.config.epochs): #do the epochs
+            self.model.train()  
+            range_loss1 = range_loss2 = range_loss = 0
+            for i, batch in enumerate(tqdm(self.train_loader)):
+                
+                l1, l2, l = self.model.train_batch(batch) 
+                range_loss1 += l1
+                range_loss2 += l2
+                range_loss += l
+
+                if (i + 1) % self.config.verbose_step == 0:
+                    print("time loss: ", range_loss1 / self.config.verbose_step)
+                    print("event loss:", range_loss2 / self.config.verbose_step)
+                    print("total loss:", range_loss / self.config.verbose_step)
+                    range_loss1 = range_loss2 = range_loss = 0
+            tune.report(loss= range_loss)
+
+
+        print("TESTING STARTED:")
+        print("--"*20)
+        #TODO: here we can grab the best params and then evaluate!
+        #self.evaluate(epc, self.config)
