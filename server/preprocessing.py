@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from collections import Counter
 import pprint
 import datetime as dt
+import random
 from ERPP_RMTPP_torch import sigmoid
 
 
@@ -31,7 +32,7 @@ class Preprocessing:
         self.case_activity_key = None 
         self.case_timestamp_key = None 
         self.event_df = None
-        self.no_classes=0
+        self.number_classes=0
         self.absolute_frequency_distribution = None
         # TODO: invoke import_event_log? (decide)
 
@@ -99,6 +100,12 @@ class Preprocessing:
         self.event_df= self.event_df[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
         self.event_df= self.event_df.dropna()
 
+        self.encode_df_columns()
+
+        print(self.event_df.head(10))
+
+
+
 
     def string_to_index(self , df, column):
         """
@@ -110,16 +117,11 @@ class Preprocessing:
         return dict(enume)
 
     
-
-
-    def split_train_test(self, train_percentage):
+    def encode_df_columns(self):
         """
-        this is an adapter for pm4py's split_train_test so that the data is generated in the right
-        format for the model.
-
-        :param train_percentage: what percentage should be used for training
-        :returns: two event logs, one for training and one for training (dataframes). the number of classes (for the markers) also returned. the absolute
-        frequence distribution for each class in the whole event log. 
+        - encode the markers and case id's with integers (label encoding)
+        - encode the timestamps
+        - returns nothing, but modifies self.event_df
         """
         #: we encode the markers with integers (label encoding) to be consistent with the authors implementation
         le1, le2 = LabelEncoder(), LabelEncoder()
@@ -134,38 +136,54 @@ class Preprocessing:
         print(f"no_classes: {number_classes}")
 
         #: compute abs. freq. distribution for the activities. its necessary for CrossEntropyLoss
-        absolute_frequency_distribution= Counter(self.event_df[self.case_activity_key].to_list())
+        self.absolute_frequency_distribution= Counter(self.event_df[self.case_activity_key].to_list())
 
-        #: do the split
-        train, test = pm4py.ml.split_train_test(self.event_df, train_percentage, self.case_id_key)
-        if test.shape[0] == 0: 
-            raise TrainPercentageTooHigh()
-
-        #: remove the timezone information. we are not using it for simplicity.
-        train[self.case_timestamp_key]=train[self.case_timestamp_key].dt.tz_localize(None)
-        test[self.case_timestamp_key] = test[self.case_timestamp_key].dt.tz_localize(None)
-
+        self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].dt.tz_localize(None)
 
         #: here we convert the datetime64 (ISO standard) into an integer in POSIX standard. the authors
         # use an Excel format, but we decide to use integers for simplicity.
-        train[self.case_timestamp_key]=train[self.case_timestamp_key].astype(int)
-        test[self.case_timestamp_key] = test[self.case_timestamp_key].astype(int) 
+        self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].astype(int)
+
         #: generates an integer in posix standard. 
-        print(test[self.case_timestamp_key].iloc[:30])
-        #print(train[self.case_timestamp_key].iloc[:30])
-        exponent = test[self.case_timestamp_key].mean()
-        train[self.case_timestamp_key]=train[self.case_timestamp_key]/(10**exponent)
-        test[self.case_timestamp_key] = test[self.case_timestamp_key]/(10**exponent)
+        print(self.event_df[self.case_timestamp_key].iloc[:30])
+        exponent = self.event_df[self.case_timestamp_key].mean()
+        self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key] / (10 ** exponent)
 
-        train[self.case_timestamp_key]=train[self.case_timestamp_key].astype("int64")/(10**exponent)
-        test[self.case_timestamp_key] = test[self.case_timestamp_key].astype("int64")/(10**exponent)
+        self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].astype("int64") / (10 ** exponent)
 
-        #: transform the case id and markers back into float
-        train[self.case_activity_key] =train[self.case_activity_key].astype("float64")
-        train[self.case_id_key] =train[self.case_id_key].astype("float64")
-        test[self.case_activity_key] =test[self.case_activity_key].astype("float64")
-        test[self.case_id_key] =test[self.case_id_key].astype("float64")
-        return train, test, number_classes, absolute_frequency_distribution
+        # #: transform the case id and markers back into float
+        self.event_df[self.case_activity_key] = self.event_df[self.case_activity_key].astype("float64")
+        self.event_df[self.case_id_key] = self.event_df[self.case_id_key].astype("float64")
+
+
+    def split_train_test(self, train_percentage):
+        """
+        this is an adapter for pm4py's split_train_test so that the data is generated in the right
+        format for the model.
+
+        :param train_percentage: what percentage should be used for training
+        :returns: two event logs, one for training and one for training (dataframes). the number of classes (for the markers) also returned. the absolute
+        frequence distribution for each class in the whole event log. 
+        """
+
+        cases = self.event_df[self.case_id_key].unique().tolist()
+        train_cases = set()
+        test_cases = set()
+        for c in cases:
+            r = random.random()
+            if r <= train_percentage:
+                train_cases.add(c)
+            else:
+                test_cases.add(c)
+        train_df = self.event_df[self.event_df[self.case_id_key].isin(train_cases)]
+        test_df = self.event_df[self.event_df[self.case_id_key].isin(test_cases)]
+
+        if test_df.shape[0] == 0: 
+            raise TrainPercentageTooHigh()
+
+        return train_df, test_df
+
+
 
 
 
