@@ -196,10 +196,46 @@ def test_single_prediction():
   
 
 
+def test_multiple_prediction():
+    preprocessor = Preprocessing()
+    is_xes  =False
+    path =  "data/train_day_joined.csv"
+    #path = "data/BPI_Challenge_2019.xes"
+    #path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
+     
+    if is_xes:
+        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
+    else:
+        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
+    train, test = preprocessor.split_train_test(.9)
+
+    nn_manager = NNManagement()
+    # select cuda or not
+    nn_manager.config.cuda = True 
+    nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
+    nn_manager.config.our_implementation = True
+    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
+
+    pm = PredictionManager()
+    pm.model = nn_manager.model
+    dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
+    pm.multiple_prediction(
+        1,
+        1,
+        dummy,
+        preprocessor.case_id_key,
+        preprocessor.case_activity_key, 
+        preprocessor.case_timestamp_key, 
+        nn_manager.config, 
+    )
+
 if __name__=="__main__": 
     #test_embed() 
     #test_our()
     #test_random_search(2)
-    test_single_prediction()
+    test_multiple_prediction()
     #nn_manager.model.predict_get_sorted(pass)
     #app.run()

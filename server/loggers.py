@@ -4,6 +4,11 @@ for debugging purposes.
 """
 import logging
 
+logger_multiple_prediction= logging.getLogger('multiple_prediction')
+logger_multiple_prediction.setLevel(logging.DEBUG)
+fh_multiple_prediction= logging.FileHandler('logs/multiple_prediction.log')
+fh_multiple_prediction.setLevel(logging.DEBUG)
+logger_multiple_prediction.addHandler(fh_multiple_prediction)
 
 
 logger_single_prediction= logging.getLogger('single_prediction')
