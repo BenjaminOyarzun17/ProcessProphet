@@ -186,8 +186,6 @@ class Preprocessing:
 
 
 
-
-
     def find_start_activities(self):
         """
         find the start activities of all cases for an existing log and return a dict with start activities as keys and value is the count of this activity

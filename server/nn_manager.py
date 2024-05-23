@@ -27,7 +27,7 @@ class Config:
         self.importance_weight = "store_true"
         self.verbose_step = 350
         self.event_class = 0
-        self.cuda = True
+        self.cuda = False
         self.absolute_frequency_distribution = Counter()
 
 class NNManagement: 
