@@ -8,7 +8,7 @@ import logging
 from functools import partial
 import random
 from loggers import logger_grid_search, logger_random_search
-
+from prediction_manager import PredictionManager
 
 
 
@@ -106,7 +106,6 @@ def test_grid_search():
     if is_xes:
         #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
         preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
-        print(preprocessor.event_df.head())
     else:
         preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
     train, test, no_classes, absolute_frequency_distribution = preprocessor.split_train_test(.9)
@@ -137,17 +136,41 @@ def test_grid_search():
                     logger_grid_search.debug(acc)
                     logger_grid_search.debug("best current: ")
                     logger_grid_search.debug(current_params)
+    
 
-    print(f"best acc {acc}") 
-    print(f"best params {current_params}") 
+    logger_grid_search.debug(f"best acc {acc} ")
+    logger_grid_search.debug(f"best params {current_params}")
     return (acc, current_params)
 
- 
-def test_random_search():
+
+def test_single_prediction():
+
     preprocessor = Preprocessing()
     is_xes  =False
     path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
+    #path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
+     
+    if is_xes:
+        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
+    else:
+        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
+    train, test, no_classes, absolute_frequency_distribution = preprocessor.split_train_test(.9)
+    pm = PredictionManager()
+    for i in range(3):
+        pm.get_dummy_process(train, preprocessor.case_id_key)
+    #stats_in_json = nn_manager.get_training_statistics()
+    # Define the hyperparameter search space
+  
+    
+def test_random_search(iterations):
+    preprocessor = Preprocessing()
+    is_xes  =True
+    #path =  "data/train_day_joined.csv"
+    path = "data/BPI_Challenge_2019.xes"
     #path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
@@ -170,7 +193,6 @@ def test_random_search():
     nn_manager = NNManagement()
     acc = 0
     current_params = ()
-    iterations = 3
     nn_manager.config.absolute_frequency_distribution = absolute_frequency_distribution
     for i in range(iterations): 
         a=random.randint(sp["hidden_dim"][0], sp["hidden_dim"][1])
@@ -195,7 +217,7 @@ def test_random_search():
 if __name__=="__main__": 
     #test_embed() 
     #test_their()
-    #test_random_search()
+    #test_random_search(2)
+    test_single_prediction()
     #nn_manager.model.predict_get_sorted(pass)
-    test_our()
     #app.run()

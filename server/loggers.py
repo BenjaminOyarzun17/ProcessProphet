@@ -6,6 +6,31 @@ import logging
 
 
 
+
+
+logger_import_event_log= logging.getLogger('import_event_log')
+logger_import_event_log.setLevel(logging.DEBUG)
+fh_import_event_log= logging.FileHandler('logs/import_event_log.log')
+fh_import_event_log.setLevel(logging.DEBUG)
+logger_import_event_log.addHandler(fh_import_event_log)
+
+
+
+logger_get_dummy_process= logging.getLogger('get_dummy_process')
+logger_get_dummy_process.setLevel(logging.DEBUG)
+fh_get_dummy_process= logging.FileHandler('logs/get_dummy_process.log')
+fh_get_dummy_process.setLevel(logging.DEBUG)
+logger_get_dummy_process.addHandler(fh_get_dummy_process)
+
+
+
+logger_split_train_test= logging.getLogger('split_train_test')
+logger_split_train_test.setLevel(logging.DEBUG)
+fh_split_train_test= logging.FileHandler('logs/split_train_test.log')
+fh_split_train_test.setLevel(logging.DEBUG)
+logger_split_train_test.addHandler(fh_split_train_test)
+
+
 logger_grid_search= logging.getLogger('grid_search')
 logger_grid_search.setLevel(logging.DEBUG)
 fh_grid_search= logging.FileHandler('logs/grid_search.log')

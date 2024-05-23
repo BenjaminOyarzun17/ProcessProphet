@@ -12,6 +12,8 @@ from collections import Counter
 import pprint
 import pm4py
 
+import datetime as dt
+from loggers import logger_import_event_log, logger_split_train_test
 
 
 
@@ -47,12 +49,11 @@ class Preprocessing:
         :param activity_key: column name for the marker column 
         :param timestamp_key: column name for the timestamp column
         effects:  
-        - event_df dataframe is generated. The rows are grouped by case id and sorted by time.
+        - event_df dataframe is generated. 
         - the generated dataframe has 3 columns two of type string (case id, label) and one of type
         datatime64.
         - event log object: its correctnes is assumed from the pm4py lib and is therefore not tested
         """
-        
         self.event_df = pm4py.read.read_xes(path)
         self.event_df = pm4py.convert_to_dataframe(self.event_df)
         self.import_event_log(case_id, activity_key, timestamp_key)
@@ -78,6 +79,8 @@ class Preprocessing:
         - remove all columns other than the three main ones
         - remove all NaN entries
         - format a dataframe using pm4py 
+        effects: 
+        - rows sorted by case id and timestamp
         """
         self.case_id_key =  case_id
         self.case_activity_key = activity_key 
@@ -87,7 +90,9 @@ class Preprocessing:
                                            case_id=self.case_id_key,
                                              activity_key=self.case_activity_key,
                                              timestamp_key=self.case_timestamp_key) #returns formated df.
-        
+
+
+
         #: convert_to_event_log requires string format for case_id and marker
         self.event_df[self.case_id_key] = self.event_df[self.case_id_key].astype("string")
         self.event_df[self.case_activity_key] = self.event_df[self.case_activity_key].astype("string")
@@ -97,6 +102,11 @@ class Preprocessing:
         #: filter out all the other generated columns
         self.event_df= self.event_df[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
         self.event_df= self.event_df.dropna()
+        
+        #: sort the rows by group id and timestamp key
+        self.event_df =  self.event_df.sort_values(by=[case_id, timestamp_key])
+
+        logger_import_event_log.debug(self.event_df.iloc[:30])
 
         self.encode_df_columns()
 
@@ -177,7 +187,6 @@ class Preprocessing:
             raise TrainPercentageTooHigh()
 
         return train, test
-
 
 
 
