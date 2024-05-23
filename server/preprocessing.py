@@ -1,19 +1,17 @@
 
 #import dateutil.parser
 #import dateutil
-import pm4py
-import os
+from exceptions import TrainPercentageTooHigh
+
+import random
 import pandas as pd
+import datetime as dt
 import pydoc_markdown
-import numpy as np
 from sklearn.preprocessing import LabelEncoder
-from exceptions import *
-from datetime import datetime, timezone 
 from collections import Counter
 import pprint
-import datetime as dt
-import random
-from ERPP_RMTPP_torch import sigmoid
+import pm4py
+
 
 
 
@@ -101,9 +99,6 @@ class Preprocessing:
         self.event_df= self.event_df.dropna()
 
         self.encode_df_columns()
-
-        print(self.event_df.head(10))
-
 
 
 
@@ -204,7 +199,7 @@ class Preprocessing:
         """
         if there is no unique start/ end activity, add an artificial start and end activity
         """
-        if (len(self.find_start_activities()) != 1) or (len(self.find_end_activities(self)) != 1):
+        if (len(self.find_start_activities()) != 1) or (len(self.find_end_activities()) != 1):
             self.dataframe = pm4py.insert_artificial_start_end(self.event_log, activity_key=self.case_activity_key, case_id_key=self.case_id_key, timestamp_key=self.case_timestamp_key)
             
     def get_sample_case(self):
