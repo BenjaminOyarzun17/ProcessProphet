@@ -7,6 +7,13 @@ class TrainPercentageTooHigh(Exception):
     def __str__(self):
         return self.message
 
+class SeqLengthTooHigh(Exception):
+    def __init__(self):
+        self.message= "the given sequence length is too high."
+
+    def __str__(self):
+        return self.message
+
 
 class ProcessTooShort(Exception):
     def __init__(self):

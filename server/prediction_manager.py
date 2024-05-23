@@ -1,16 +1,19 @@
 from loggers import logger_get_dummy_process,logger_single_prediction , logger_multiple_prediction
-from exceptions import ProcessTooShort
+from exceptions import ProcessTooShort, SeqLengthTooHigh
 from preprocessing import Preprocessing
 from ERPP_RMTPP_torch import * 
 from torch.utils.data import DataLoader
 import pandas as pd
 import pprint 
+import json
 
 
 
 
 class PredictionManager: 
     def __init__(self):
+        #TODO: it might be more convenient to store a config object 
+        # so that not so much copying is necessary
         self.model = None
         self.input_df = None
         self.encoded_df = None
@@ -22,9 +25,16 @@ class PredictionManager:
         self.decoded_paths= []
         self.case_id_le = None
         self.activity_le = None
+        self.seq_len = None
+
+
+
 
 
     def get_dummy_process(self, df, case_id_column):
+        """
+        just used for testing
+        """
         random_case_id = df[case_id_column].sample(n = 1).values[0]
         dummy = df[df[case_id_column]==random_case_id]
         n_rows = dummy.shape[0]
@@ -34,39 +44,16 @@ class PredictionManager:
         logger_get_dummy_process.debug(dummy.iloc[:10]) 
 
         return dummy.iloc[:n_rows-1]
-        #return dummy.iloc[:10]
 
 
 
-    def single_prediction_csv(self, path, case_id, activity_key, timestamp_key, config, sep):
-        """
-        make one prediction given a csv file path 
-        """
-        preprocessor = Preprocessing()
-        preprocessor.import_event_log_csv(path, case_id, activity_key, timestamp_key, sep)
-        self.encoded_df= preprocessor.event_df 
-        self.activity_key = activity_key
-        self.case_id_key = case_id
-        self.timestamp_key = timestamp_key
-        self.current_case_id= self.encoded_df[self.case_id_key].sample(n = 1).values[0]
-        self.single_prediction(config )
-
-    def single_prediction_xes(self, path, case_id, activity_key, timestamp_key, config):
-        """
-        make one prediction given a xes file path 
-        """
-        preprocessor = Preprocessing()
-        preprocessor.import_event_log_xes(path, case_id, activity_key, timestamp_key )
-        self.encoded_df= preprocessor.event_df 
-        self.activity_key = activity_key
-        self.case_id_key = case_id
-        self.timestamp_key = timestamp_key
-        self.current_case_id= self.encoded_df[self.case_id_key].sample(n = 1).values[0]
-        self.single_prediction(config )
+    
 
     def single_prediction_dataframe(self, df, case_id, activity_key, timestamp_key, config):
         """
-        make one prediction given a dataframe 
+        make one prediction given a dataframe. 
+        preprocessor is in charge of doing the
+        reading/importing from csv, xes, commandline, etc...
         """
         preprocessor = Preprocessing()
         preprocessor.import_event_log_dataframe(df, case_id, activity_key, timestamp_key )
@@ -133,6 +120,20 @@ class PredictionManager:
 
             self.decoded_paths.append(decoded_path)
         
+    def jsonify_paths(self): 
+        ans = {
+            "paths": []
+        }
+        for time, (per, event) in self.decoded_paths :
+            ans["paths"].append(
+                {
+                    "time": time, 
+                    "event": event, 
+                    "percentage": per
+                }
+            )
+
+        return json.dumps(ans)
 
 
     def backtracking_prediction_tree(self, c_t, c_e, c_d, depth, degree,current_path , config):
@@ -152,13 +153,18 @@ class PredictionManager:
             self.pop_from_log()
     
     def get_sorted_wrapper(self, config ):
-        step1= ATMDataset(config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key)
-        #: batch size set to one to have one sample per batch.
-        step2 = DataLoader(step1, batch_size=1, shuffle=False, collate_fn=ATMDataset.to_features)
-        #: TODO check whether the number of rows in 
+        
+        #: check whether the number of rows in 
         # self.encoded_df <= seq_len. otherwise the
         # processed data by dataloader/atmdataset 
         # output empty lists... 
+        if self.seq_len>= len(self.encoded_df):
+            raise SeqLengthTooHigh()
+
+        step1= ATMDataset(config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key)
+        #: batch size set to one to have one sample per batch.
+        step2 = DataLoader(step1, batch_size=1, shuffle=False, collate_fn=ATMDataset.to_features)
+
         pred_times, pred_events = [], []
         for i, batch in enumerate(step2):   
             logger_multiple_prediction.debug("batch:")
@@ -171,7 +177,7 @@ class PredictionManager:
         logger_multiple_prediction.debug("predicted event:")
         logger_multiple_prediction.debug(pred_events)
 
-        pred_times= pred_times[-1][-1] #we are only interested in the last one.
+        pred_times= pred_times[-1][-1] #we are only interested in the last one; unpack the batch
         pred_events = pred_events[-1][-1]
 
         logger_multiple_prediction.debug("predicted time:")
@@ -191,23 +197,13 @@ class PredictionManager:
     def pop_from_log(self): 
         self.encoded_df = self.encoded_df.iloc[:-1]
 
-    def multiple_prediction_csv(self):
-        """
-        make multiple predictions given a csv
-        """
-        pass
-
-
-
-    def multiple_prediction_xes(self, depth, degree, df, case_id, activity_key, timestamp_key, config):
-        """
-        make multiple predictions given an xes
-        """
-        pass
+ 
 
     def multiple_prediction_dataframe(self, depth, degree, df, case_id, activity_key, timestamp_key, config):
         """
         make multiple predictions given a dataframe
+        preprocessor is in charge of doing the
+        reading/importing from csv, xes, commandline, etc...
         """
         preprocessor = Preprocessing()
         preprocessor.import_event_log_dataframe(df, case_id, activity_key, timestamp_key )
