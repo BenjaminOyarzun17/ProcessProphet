@@ -198,7 +198,7 @@ def test_single_prediction():
 
 def test_multiple_prediction():
     preprocessor = Preprocessing()
-    is_xes  =False
+    is_xes  =True
     path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
     #path = "data/Hospital_log.xes"
@@ -221,10 +221,12 @@ def test_multiple_prediction():
 
     pm = PredictionManager()
     pm.model = nn_manager.model
+    pm.case_id_le = preprocessor.case_id_le
+    pm.activity_le = preprocessor.activity_le
     dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
     pm.multiple_prediction_dataframe(
-        1, 
-        7, 
+        2, 
+        2, 
         dummy, 
         preprocessor.case_id_key, 
         preprocessor.case_activity_key, 

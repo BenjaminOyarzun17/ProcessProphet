@@ -34,6 +34,8 @@ class Preprocessing:
         self.event_df = None
         self.number_classes=0
         self.absolute_frequency_distribution = None
+        self.case_id_le = None
+        self.activity_le = None
         # TODO: invoke import_event_log? (decide)
 
     def xes_helper(self, path): 
@@ -143,9 +145,9 @@ class Preprocessing:
         - returns nothing, but modifies self.event_df
         """
         #: we encode the markers with integers (label encoding) to be consistent with the authors implementation
-        le1, le2 = LabelEncoder(), LabelEncoder()
-        self.event_df[self.case_activity_key] = le1.fit_transform(self.event_df[self.case_activity_key])
-        self.event_df[self.case_id_key] = le2.fit_transform(self.event_df[self.case_id_key])
+        self.activity_le, self.case_id_le= LabelEncoder(), LabelEncoder()
+        self.event_df[self.case_activity_key] = self.activity_le.fit_transform(self.event_df[self.case_activity_key])
+        self.event_df[self.case_id_key] = self.case_id_le.fit_transform(self.event_df[self.case_id_key])
 
         #: get the number of classes
         self.number_classes = len(self.event_df[self.case_activity_key].unique()) 
