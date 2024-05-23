@@ -142,9 +142,8 @@ class Net(nn.Module):
             index_list= []
             for event_index, prediction in enumerate(softmax(logit_list)):
                 index_list.append((prediction, event_index))
-            index_list.sort()
+            index_list.sort(reverse=True)
             event_pred_with_indices.append(index_list)
-            index_list.sort()
         time_pred = time_logits.detach().cpu().tolist()
         return time_pred, event_pred_with_indices
 
