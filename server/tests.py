@@ -14,7 +14,7 @@ class TestImportXESFunction(unittest.TestCase):
     def setUpClass(cls):
         #: run this to import the data once 
         cls.preprocessor= Preprocessing()
-        path = "../data/Hospital_log.xes" #its smaller, use preferrably.
+        path = "data/Hospital_log.xes" #its smaller, use preferrably.
         cls.preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")
 
     def test_no_nan(self):
@@ -82,7 +82,7 @@ class TestImportCSVFunction(unittest.TestCase):
     def setUpClass(cls):
         #: run this to import the data once 
         cls.preprocessor= Preprocessing()
-        path = "../data/running-example.csv" #its smaller, use preferrably.
+        path = "data/running-example.csv" #its smaller, use preferrably.
         cls.preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ";")
 
     def test_no_nan(self):
