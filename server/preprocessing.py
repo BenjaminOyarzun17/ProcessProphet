@@ -1,18 +1,17 @@
 
 #import dateutil.parser
 #import dateutil
-import pm4py
-import os
+from exceptions import TrainPercentageTooHigh
+
+import random
 import pandas as pd
+import datetime as dt
 import pydoc_markdown
-import numpy as np
 from sklearn.preprocessing import LabelEncoder
-from exceptions import *
-from datetime import datetime, timezone 
 from collections import Counter
 import pprint
-import datetime as dt
-from ERPP_RMTPP_torch import sigmoid
+import pm4py
+
 
 
 
@@ -31,7 +30,7 @@ class Preprocessing:
         self.case_activity_key = None 
         self.case_timestamp_key = None 
         self.event_df = None
-        self.no_classes=0
+        self.number_classes=0
         self.absolute_frequency_distribution = None
         # TODO: invoke import_event_log? (decide)
 
@@ -99,6 +98,9 @@ class Preprocessing:
         self.event_df= self.event_df[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
         self.event_df= self.event_df.dropna()
 
+        self.encode_df_columns()
+
+
 
     def string_to_index(self , df, column):
         """
@@ -110,67 +112,71 @@ class Preprocessing:
         return dict(enume)
 
     
+    def encode_df_columns(self):
+        """
+        - encode the markers and case id's with integers (label encoding)
+        - encode the timestamps
+        - returns nothing, but modifies self.event_df
+        """
+        #: we encode the markers with integers (label encoding) to be consistent with the authors implementation
+        le1, le2 = LabelEncoder(), LabelEncoder()
+        self.event_df[self.case_activity_key] = le1.fit_transform(self.event_df[self.case_activity_key])
+        self.event_df[self.case_id_key] = le2.fit_transform(self.event_df[self.case_id_key])
+
+        #: get the number of classes
+        self.number_classes = len(self.event_df[self.case_activity_key].unique()) 
+        #: trasnform back into strings, its necessary for pm4py
+        self.event_df[self.case_activity_key] =self.event_df[self.case_activity_key].astype("str")
+        self.event_df[self.case_id_key] =self.event_df[self.case_id_key].astype("str")
+
+        #: compute abs. freq. distribution for the activities. its necessary for CrossEntropyLoss
+        self.absolute_frequency_distribution= Counter(self.event_df[self.case_activity_key].to_list())
+
+        # remove timezone information
+        self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].dt.tz_localize(None)
+
+        #: here we convert the datetime64 (ISO standard) into an integer in POSIX standard. the authors
+        # use an Excel format, but we decide to use integers for simplicity.
+        self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].astype(int)
+
+        #: generates an integer in posix standard. 
+        exponent = self.event_df[self.case_timestamp_key].astype(str).apply(lambda x: len(x)).mean()
+        self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key] / (10 ** exponent)
+
+        self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].astype("int64") / (10 ** exponent)
+
+        # #: transform the case id and markers back into float
+        self.event_df[self.case_activity_key] = self.event_df[self.case_activity_key].astype("float64")
+        self.event_df[self.case_id_key] = self.event_df[self.case_id_key].astype("float64")
 
 
     def split_train_test(self, train_percentage):
         """
-        this is an adapter for pm4py's split_train_test so that the data is generated in the right
-        format for the model.
+        This is a helper function for splitting the event log into training and testing data.
+        The code is based on the pm4py ml.split_train_test function, but contains only the implementation for pd.dataframes.
+        We don't use the pm4py implementation because it requires the timestamp to be in datetime format, which is not the case for our implementation.
 
         :param train_percentage: what percentage should be used for training
         :returns: two event logs, one for training and one for training (dataframes). the number of classes (for the markers) also returned. the absolute
         frequence distribution for each class in the whole event log. 
         """
-        #: we encode the markers with integers to be consistent with the authors implementation
-        le1 = LabelEncoder()
-        le2 = LabelEncoder()
-        self.event_df[self.case_activity_key] = le1.fit_transform(self.event_df[self.case_activity_key])
-        self.event_df[self.case_id_key] = le2.fit_transform(self.event_df[self.case_id_key])
 
+        cases = self.event_df[self.case_id_key].unique().tolist()
+        train_cases = set()
+        test_cases = set()
+        for c in cases:
+            r = random.random()
+            if r <= train_percentage:
+                train_cases.add(c)
+            else:
+                test_cases.add(c)
+        train = self.event_df[self.event_df[self.case_id_key].isin(train_cases)]
+        test = self.event_df[self.event_df[self.case_id_key].isin(test_cases)]
 
-        #: get the number of classes
-        number_classes = len(self.event_df[self.case_activity_key].unique()) 
-        #: trasnform back into strings, its necessary for pm4py
-        self.event_df[self.case_activity_key] =self.event_df[self.case_activity_key].astype("str")
-        self.event_df[self.case_id_key] =self.event_df[self.case_id_key].astype("str")
-        print(f"no_classes: {number_classes}")
-
-        #: compute abs. freq. distribution for the activities. its necessary for CrossEntropyLoss
-        absolute_frequency_distribution= Counter(self.event_df[self.case_activity_key].to_list())
-
-        #: do the split
-        train, test = pm4py.ml.split_train_test(self.event_df, train_percentage, self.case_id_key)
         if test.shape[0] == 0: 
             raise TrainPercentageTooHigh()
 
-
-        #: remove the timezone information. we are not using it for simplicity.
-        train[self.case_timestamp_key]=train[self.case_timestamp_key].dt.tz_localize(None)
-        test[self.case_timestamp_key] = test[self.case_timestamp_key].dt.tz_localize(None)
-
-
-        #: here we convert the datetime64 (ISO standard) into an integer in POSIX standard. the authors
-        # use an Excel format, but we decide to use integers for simplicity.
-        train[self.case_timestamp_key]=train[self.case_timestamp_key].astype(int)
-        test[self.case_timestamp_key] = test[self.case_timestamp_key].astype(int) 
-        #: generates an integer in posix standard. 
-        print(test[self.case_timestamp_key].iloc[:30])
-        #print(train[self.case_timestamp_key].iloc[:30])
-        exponent = test[self.case_timestamp_key].mean()
-        train[self.case_timestamp_key]=train[self.case_timestamp_key]/(10**exponent)
-        test[self.case_timestamp_key] = test[self.case_timestamp_key]/(10**exponent)
-
-        print(exponent)
-
-        train[self.case_timestamp_key]=train[self.case_timestamp_key].astype("int64")/(10**exponent)
-        test[self.case_timestamp_key] = test[self.case_timestamp_key].astype("int64")/(10**exponent)
-
-        #: transform the case id and markers back into float
-        train[self.case_activity_key] =train[self.case_activity_key].astype("float64")
-        train[self.case_id_key] =train[self.case_id_key].astype("float64")
-        test[self.case_activity_key] =test[self.case_activity_key].astype("float64")
-        test[self.case_id_key] =test[self.case_id_key].astype("float64")
-        return train, test, number_classes, absolute_frequency_distribution
+        return train, test
 
 
 
@@ -193,7 +199,7 @@ class Preprocessing:
         """
         if there is no unique start/ end activity, add an artificial start and end activity
         """
-        if (len(self.find_start_activities()) != 1) or (len(self.find_end_activities(self)) != 1):
+        if (len(self.find_start_activities()) != 1) or (len(self.find_end_activities()) != 1):
             self.dataframe = pm4py.insert_artificial_start_end(self.event_log, activity_key=self.case_activity_key, case_id_key=self.case_id_key, timestamp_key=self.case_timestamp_key)
             
     def get_sample_case(self):
