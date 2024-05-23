@@ -129,15 +129,15 @@ class Preprocessing:
         self.event_df[self.case_id_key] = le2.fit_transform(self.event_df[self.case_id_key])
 
         #: get the number of classes
-        number_classes = len(self.event_df[self.case_activity_key].unique()) 
+        self.number_classes = len(self.event_df[self.case_activity_key].unique()) 
         #: trasnform back into strings, its necessary for pm4py
         self.event_df[self.case_activity_key] =self.event_df[self.case_activity_key].astype("str")
         self.event_df[self.case_id_key] =self.event_df[self.case_id_key].astype("str")
-        print(f"no_classes: {number_classes}")
 
         #: compute abs. freq. distribution for the activities. its necessary for CrossEntropyLoss
         self.absolute_frequency_distribution= Counter(self.event_df[self.case_activity_key].to_list())
 
+        # remove timezone information
         self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].dt.tz_localize(None)
 
         #: here we convert the datetime64 (ISO standard) into an integer in POSIX standard. the authors
@@ -145,8 +145,7 @@ class Preprocessing:
         self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].astype(int)
 
         #: generates an integer in posix standard. 
-        print(self.event_df[self.case_timestamp_key].iloc[:30])
-        exponent = self.event_df[self.case_timestamp_key].mean()
+        exponent = self.event_df[self.case_timestamp_key].astype(str).apply(lambda x: len(x)).mean()
         self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key] / (10 ** exponent)
 
         self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].astype("int64") / (10 ** exponent)
@@ -158,8 +157,9 @@ class Preprocessing:
 
     def split_train_test(self, train_percentage):
         """
-        this is an adapter for pm4py's split_train_test so that the data is generated in the right
-        format for the model.
+        This is a helper function for splitting the event log into training and testing data.
+        The code is based on the pm4py ml.split_train_test function, but contains only the implementation for pd.dataframes.
+        We don't use the pm4py implementation because it requires the timestamp to be in datetime format, which is not the case for our implementation.
 
         :param train_percentage: what percentage should be used for training
         :returns: two event logs, one for training and one for training (dataframes). the number of classes (for the markers) also returned. the absolute
@@ -175,13 +175,13 @@ class Preprocessing:
                 train_cases.add(c)
             else:
                 test_cases.add(c)
-        train_df = self.event_df[self.event_df[self.case_id_key].isin(train_cases)]
-        test_df = self.event_df[self.event_df[self.case_id_key].isin(test_cases)]
+        train = self.event_df[self.event_df[self.case_id_key].isin(train_cases)]
+        test = self.event_df[self.event_df[self.case_id_key].isin(test_cases)]
 
-        if test_df.shape[0] == 0: 
+        if test.shape[0] == 0: 
             raise TrainPercentageTooHigh()
 
-        return train_df, test_df
+        return train, test
 
 
 
