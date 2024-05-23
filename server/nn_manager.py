@@ -191,7 +191,5 @@ class NNManagement:
                     range_loss1 = range_loss2 = range_loss = 0
         
 
-        print("TESTING STARTED:")
-        print("--"*20)
 
         self.evaluate( self.config)
