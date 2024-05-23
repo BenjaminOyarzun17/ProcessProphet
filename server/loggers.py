@@ -4,6 +4,14 @@ for debugging purposes.
 """
 import logging
 
+logger_generate_predictive_log= logging.getLogger('generate_predictive_log')
+logger_generate_predictive_log.setLevel(logging.DEBUG)
+fh_generate_predictive_log= logging.FileHandler('logs/generate_predictive_log.log')
+fh_generate_predictive_log.setLevel(logging.DEBUG)
+logger_generate_predictive_log.addHandler(fh_generate_predictive_log)
+
+
+
 
 logger_multiple_prediction= logging.getLogger('multiple_prediction')
 logger_multiple_prediction.setLevel(logging.DEBUG)

@@ -191,15 +191,17 @@ def test_single_prediction():
     nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
 
     pm = PredictionManager()
+    pm.config = nn_manager.config
     pm.model = nn_manager.model
     dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
     pm.single_prediction_dataframe(dummy, preprocessor.case_id_key, preprocessor.case_activity_key, preprocessor.case_timestamp_key, nn_manager.config)
+
   
 
 
 def test_multiple_prediction():
     preprocessor = Preprocessing()
-    is_xes  =True
+    is_xes  = False
     path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
     #path = "data/Hospital_log.xes"
@@ -224,6 +226,7 @@ def test_multiple_prediction():
     pm.model = nn_manager.model
     pm.case_id_le = preprocessor.case_id_le
     pm.activity_le = preprocessor.activity_le
+    pm.seq_len = nn_manager.config.seq_len
     dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
     pm.multiple_prediction_dataframe(
         2, 
@@ -237,9 +240,9 @@ def test_multiple_prediction():
 
 
 
-def test__process_model_manager():
+def test_process_model_manager():
     preprocessor = Preprocessing()
-    is_xes  =True
+    is_xes  =False
     path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
     #path = "data/Hospital_log.xes"
@@ -260,12 +263,15 @@ def test__process_model_manager():
     nn_manager.config.our_implementation = True
     nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
     pmm = ProcessModelManager()
+    pmm.case_id_le = preprocessor.case_id_le
+    pmm.activity_le = preprocessor.activity_le
     pmm.model = nn_manager.model
-    pmm.model = preprocessor.event_df
+    pmm.event_df = preprocessor.event_df
     pmm.case_activity_key = preprocessor.case_activity_key
     pmm.case_id_key =preprocessor.case_id_key
     pmm.case_timestamp_key =preprocessor.case_timestamp_key
-    
+    pmm.config = nn_manager.config
+    pmm.generate_predictive_log()
 
 
 
@@ -274,6 +280,6 @@ if __name__=="__main__":
     #test_our()
     #test_random_search(2)
     #test_single_prediction()
-    test_multiple_prediction()
+    test_process_model_manager()
     #nn_manager.model.predict_get_sorted(pass)
     #app.run()
