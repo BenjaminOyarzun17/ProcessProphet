@@ -168,9 +168,9 @@ def test_random_search(iterations):
 
 def test_single_prediction():
     preprocessor = Preprocessing()
-    is_xes  =True
-    #path =  "data/train_day_joined.csv"
-    path = "data/BPI_Challenge_2019.xes"
+    is_xes  =False
+    path =  "data/train_day_joined.csv"
+    #path = "data/BPI_Challenge_2019.xes"
     #path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
@@ -192,14 +192,14 @@ def test_single_prediction():
     pm = PredictionManager()
     pm.model = nn_manager.model
     dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
-    pm.single_prediction_dataframe(dummy, preprocessor.case_id_key, preprocessor.case_activity_key, preprocessor.case_timestamp_key )
+    pm.single_prediction_dataframe(dummy, preprocessor.case_id_key, preprocessor.case_activity_key, preprocessor.case_timestamp_key, nn_manager.config)
   
 
 
 if __name__=="__main__": 
     #test_embed() 
-    test_our()
+    #test_our()
     #test_random_search(2)
-    #test_single_prediction()
+    test_single_prediction()
     #nn_manager.model.predict_get_sorted(pass)
     #app.run()

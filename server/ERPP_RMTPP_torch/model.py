@@ -107,7 +107,6 @@ class Net(nn.Module):
         the second list the index (encoded marker) of the event that has the
         highest probability.
         """
-
         time_tensor, event_tensor = batch
         #make sure to cut out the last event/timestamp from each sequence: 
         time_input, time_target = self.dispatch([time_tensor[:, :-1], time_tensor[:, -1]])

@@ -75,6 +75,7 @@ class ATMDataset:
         :return: two tensors, one containing the time differences
         between adjacent time stamps and the other one the events.  
         """
+        #print(batch)
         times, events = [], []
         for time, event in batch:
             time = np.array([time[0]] + time)
