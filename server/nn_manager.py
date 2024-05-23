@@ -11,6 +11,7 @@ import json
 from exceptions import *
 import logging
 from collections import Counter
+from loggers import logger_evaluate
 
 class Config: 
     def __init__(self):
@@ -93,14 +94,11 @@ class NNManagement:
             pred_times.append(pred_time)
             pred_events.append(pred_event)
 
-            """
-            logging.basicConfig(filename='logs/training_loop_output.log', filemode='a')
-            logging.info(f"batch number:{pred_time}")
-            logging.info(f"time prediction: {pred_time}")
-            logging.info(f"gold time: {batch[0][:, -1].numpy()}")
-            logging.info(f"event prediction: {pred_event}")
-            logging.info(f"gold event: {batch[1][:, -1].numpy()}")
-            """
+            logger_evaluate.debug(f"batch number:{pred_time}")
+            logger_evaluate.debug(f"time prediction: {pred_time}")
+            logger_evaluate.debug(f"gold time: {batch[0][:, -1].numpy()}")
+            logger_evaluate.debug(f"event prediction: {pred_event}")
+            logger_evaluate.debug(f"gold event: {batch[1][:, -1].numpy()}")
            
 
 
