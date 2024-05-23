@@ -46,7 +46,6 @@ class PredictionManager:
         return dummy.iloc[:n_rows-1]
 
 
-
     
 
     def single_prediction_dataframe(self, df, case_id, activity_key, timestamp_key, config):
