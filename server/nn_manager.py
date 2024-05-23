@@ -23,7 +23,7 @@ class Config:
         self.dropout= 0.1
         self.batch_size= 1024
         self.lr= 1e-3
-        self.epochs=  3
+        self.epochs= 1 
         self.model = "rmtpp" 
         self.importance_weight = "store_true"
         self.verbose_step = 350
