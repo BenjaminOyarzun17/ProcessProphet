@@ -38,11 +38,11 @@ def test_data_loader():
 app = Flask(__name__)
 app.register_blueprint(routes)
     
-def test_our()    :
+def test_our():
     preprocessor = Preprocessing()
-    is_xes = True
-    #path =  "data/train_day_joined.csv"
-    path = "data/BPI_Challenge_2019.xes"
+    is_xes = False
+    path =  "data/train_day_joined.csv"
+    #path = "data/BPI_Challenge_2019.xes"
     #path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
@@ -196,6 +196,7 @@ def test_single_prediction():
     dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
     pm.single_prediction_dataframe(dummy, preprocessor.case_id_key, preprocessor.case_activity_key, preprocessor.case_timestamp_key, nn_manager.config)
 
+
   
 
 
@@ -274,12 +275,53 @@ def test_process_model_manager():
     pmm.generate_predictive_log()
 
 
+def test_import_model():
+    preprocessor = Preprocessing()
+    is_xes  = False
+    
+    path =  "data/train_day_joined.csv"
+    #path = "data/BPI_Challenge_2019.xes"
+    #path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
+     
+    if is_xes:
+        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
+    else:
+        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
+
+
+    nn_manager = NNManagement()
+    nn_manager.import_nn_model("model.pt")
+    nn_manager.config.cuda = True 
+    nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
+    nn_manager.config.our_implementation = True
+
+    pm = PredictionManager()
+    pm.model = nn_manager.model
+    pm.case_id_le = preprocessor.case_id_le
+    pm.activity_le = preprocessor.activity_le
+    pm.seq_len = nn_manager.config.seq_len
+    dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
+    pm.multiple_prediction_dataframe(
+        2, 
+        2, 
+        dummy, 
+        preprocessor.case_id_key, 
+        preprocessor.case_activity_key, 
+        preprocessor.case_timestamp_key, 
+        nn_manager.config
+    )
+
+
 
 if __name__=="__main__": 
     #test_embed() 
     #test_our()
+    test_import_model()
     #test_random_search(2)
     #test_single_prediction()
-    test_process_model_manager()
+    #test_process_model_manager()
     #nn_manager.model.predict_get_sorted(pass)
     #app.run()
