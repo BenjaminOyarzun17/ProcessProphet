@@ -110,7 +110,7 @@ def test_grid_search():
     train, test, no_classes, absolute_frequency_distribution = preprocessor.split_train_test(.9)
 
     #stats_in_json = nn_manager.get_training_statistics()
-    # Define the hyperparameter search space
+    # Define the hyperparameter search space [lower_bound, upper_bound, step_size]
     sp= {
         "hidden_dim": [500, 2000, 500],
         "lstm_dim": [500, 2000,  500],

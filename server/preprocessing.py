@@ -121,12 +121,10 @@ class Preprocessing:
         :returns: two event logs, one for training and one for training (dataframes). the number of classes (for the markers) also returned. the absolute
         frequence distribution for each class in the whole event log. 
         """
-        #: we encode the markers with integers to be consistent with the authors implementation
-        le1 = LabelEncoder()
-        le2 = LabelEncoder()
+        #: we encode the markers with integers (label encoding) to be consistent with the authors implementation
+        le1, le2 = LabelEncoder(), LabelEncoder()
         self.event_df[self.case_activity_key] = le1.fit_transform(self.event_df[self.case_activity_key])
         self.event_df[self.case_id_key] = le2.fit_transform(self.event_df[self.case_id_key])
-
 
         #: get the number of classes
         number_classes = len(self.event_df[self.case_activity_key].unique()) 
@@ -143,7 +141,6 @@ class Preprocessing:
         if test.shape[0] == 0: 
             raise TrainPercentageTooHigh()
 
-
         #: remove the timezone information. we are not using it for simplicity.
         train[self.case_timestamp_key]=train[self.case_timestamp_key].dt.tz_localize(None)
         test[self.case_timestamp_key] = test[self.case_timestamp_key].dt.tz_localize(None)
@@ -159,8 +156,6 @@ class Preprocessing:
         exponent = test[self.case_timestamp_key].mean()
         train[self.case_timestamp_key]=train[self.case_timestamp_key]/(10**exponent)
         test[self.case_timestamp_key] = test[self.case_timestamp_key]/(10**exponent)
-
-        print(exponent)
 
         train[self.case_timestamp_key]=train[self.case_timestamp_key].astype("int64")/(10**exponent)
         test[self.case_timestamp_key] = test[self.case_timestamp_key].astype("int64")/(10**exponent)
