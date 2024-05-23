@@ -107,11 +107,11 @@ class PredictionManager:
         for path in self.paths: 
             encoded_events = [event_index for _, (_, event_index) in path]
             encoded_events = list(map(int, encoded_events))
-            print("encoded events:")
-            print(encoded_events)
+            #print("encoded events:")
+            #print(encoded_events)
             decoded_events = self.activity_le.inverse_transform(encoded_events)
             decoded_path= [(time, (prob, event)) for (time, (prob, _)), event in zip(path, decoded_events) ]
-            print(decoded_path)
+            #print(decoded_path)
 
 
 
@@ -136,13 +136,17 @@ class PredictionManager:
     def backtracking_prediction_tree(self, c_t, c_e, c_d, depth, degree,current_path , config):
         """
         use backtracking to generate all the paths from the given 
-        last timestamp and marker.
+        last timestamp and marker considering the input degree as a threshold 
+        and the maximum depth for the generated tree.
         """
         if c_d >= depth: 
+            # base case
             self.paths.append(list(current_path))
             return
         p_t, p_events = self.get_sorted_wrapper( config )
-        for p_e in p_events[:degree]: 
+        for p_e in p_events[:degree]:
+            # filter branching degree ; the list is already sorted
+            # therefore the "degree" most probable are taken
             self.append_to_log(p_t[0], p_e[1]) 
             current_path.append((p_t, p_e))
             self.backtracking_prediction_tree(p_t[0], p_e[1], c_d+1, depth, degree, list(current_path), config)    

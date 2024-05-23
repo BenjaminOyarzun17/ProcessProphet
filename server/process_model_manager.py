@@ -7,7 +7,6 @@ from loggers import logger_generate_predictive_log
 
 
 class ProcessModelManager:
-
     def __init__(self):
         self.predictive_df= None
         self.model = None 
@@ -21,8 +20,17 @@ class ProcessModelManager:
 
 
     def generate_predictive_log(self): 
-        #logger_generate_predictive_log.debug(self.event_df)        
-        #logger_generate_predictive_log.debug(self.case_id_key)        
+        """
+        this function creates the predictive event log in a dataframe. 
+        we go over all case id's in the event log, and cut each
+        sequence in the last three events. this is done for the following 
+        reasons: 
+        - bigger values for the cut generate longer prediction times
+        hence slower performance. 
+        - it doesnt make sense to make too long predictions in terms of
+        sequence length, since the probability will always be significantly smaller.   
+        after doing the predictions, the cut cases are extended with the predictions. 
+        """
         case_id_counts = self.event_df[self.case_id_key].value_counts()
         cuts = []
         self.predictive_df = {
@@ -33,13 +41,13 @@ class ProcessModelManager:
         self.predictive_df = pd.DataFrame(self.predictive_df)
         input_sequences = []
         cuts = {}
-        for case_id in case_id_counts.index:
+        for i, case_id in enumerate(case_id_counts.index):
             count = case_id_counts.loc[case_id]
             cut = random.randint(1, count)
-            cut = count-min(2, cut)
+            cut = count-min(3, cut)
             sequence = self.event_df[self.event_df[self.case_id_key]==case_id]  
-            sequence = sequence.iloc[:cut+1]
-            if len(sequence) <= self.config.seq_len: 
+            sequence = sequence.iloc[:cut]
+            if len(sequence) <= self.config.seq_len or i>10: 
                 continue
             cuts[case_id]= (count, cut, count-cut)
             input_sequences.append(sequence)
@@ -53,7 +61,7 @@ class ProcessModelManager:
         lenths = [len(seq) for seq in input_sequences]
         for i in lenths: 
             if i<=self.config.seq_len: 
-                print("found")
+                print("found too short sequence")
                 return
 
         for sequence in input_sequences: 
