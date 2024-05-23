@@ -41,8 +41,8 @@ def test_our()    :
     preprocessor = Preprocessing()
     is_xes = True
     #path =  "data/train_day_joined.csv"
-    #path = "data/BPI_Challenge_2019.xes"
-    path = "data/Hospital_log.xes"
+    path = "data/BPI_Challenge_2019.xes"
+    #path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
 
@@ -58,40 +58,12 @@ def test_our()    :
     train, test = preprocessor.split_train_test(.7)
     nn_manager = NNManagement()
     # select cuda or not
-    nn_manager.config.cuda = False
+    nn_manager.config.cuda = True 
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.our_implementation = True
     nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
     stats_in_json = nn_manager.get_training_statistics()
     nn_manager.export_nn_model()
-
-def test_embed():
-    preprocessor = Preprocessing()
-    is_xes = True
-    #path =  "data/train_day_joined.csv"
-    path = "data/BPI_Challenge_2019.xes"
-    #path = "data/Hospital_log.xes"
-    #path = "data/dummy.csv"
-    #path =  "data/running.csv"
-     
-    if is_xes:
-        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
-        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
-        print(preprocessor.event_df.head())
-    else:
-        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
-    train, test, no_classes, absolute_frequency_distribution = preprocessor.split_train_test(.9)
-
-    for emb_dim in range (50, 1100, 50):
-        nn_manager = NNManagement()
-        nn_manager.config.absolute_frequency_distribution = absolute_frequency_distribution
-        nn_manager.config.our_implementation = True
-        nn_manager.config.emb_dim = emb_dim
-        nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
-        stats_in_json = nn_manager.get_training_statistics()
-        logger_grid_search.debug(f"dimension used: {emb_dim}")
-        logger_grid_search.debug(stats_in_json)
-
 
 def test_grid_search():
 
@@ -126,9 +98,9 @@ def test_grid_search():
             nn_manager.config.lstm_dim=j
             for k in range(sp["emb_dim"][0], sp["emb_dim"][1], sp["emb_dim"][2]):
                 nn_manager.config.emb_dim=k
-                nn_manager.config.absolute_frequency_distribution = absolute_frequency_distribution
+                nn_manager.config.absolute_frequency_distribution =  preprocessor.absolute_frequency_distribution
                 nn_manager.config.our_implementation = True
-                nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
+                nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, number_classes)
                 if nn_manager.acc> acc: 
                     acc = nn_manager.acc
                     current_params= (i,j,k)
@@ -143,28 +115,6 @@ def test_grid_search():
     return (acc, current_params)
 
 
-def test_single_prediction():
-
-    preprocessor = Preprocessing()
-    is_xes  =False
-    path =  "data/train_day_joined.csv"
-    #path = "data/BPI_Challenge_2019.xes"
-    #path = "data/Hospital_log.xes"
-    #path = "data/dummy.csv"
-    #path =  "data/running.csv"
-     
-    if is_xes:
-        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
-        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
-    else:
-        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
-    train, test, no_classes, absolute_frequency_distribution = preprocessor.split_train_test(.9)
-    pm = PredictionManager()
-    for i in range(3):
-        pm.get_dummy_process(train, preprocessor.case_id_key)
-    #stats_in_json = nn_manager.get_training_statistics()
-    # Define the hyperparameter search space
-  
     
 def test_random_search(iterations):
     preprocessor = Preprocessing()
@@ -181,7 +131,7 @@ def test_random_search(iterations):
         print(preprocessor.event_df.head())
     else:
         preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
-    train, test, no_classes, absolute_frequency_distribution = preprocessor.split_train_test(.9)
+    train, test = preprocessor.split_train_test(.9)
 
     #stats_in_json = nn_manager.get_training_statistics()
     # Define the hyperparameter search space
@@ -214,10 +164,42 @@ def test_random_search(iterations):
     print(f"best params {current_params}") 
     return (acc, current_params)
 
+
+
+def test_single_prediction():
+    preprocessor = Preprocessing()
+    is_xes  =True
+    #path =  "data/train_day_joined.csv"
+    path = "data/BPI_Challenge_2019.xes"
+    #path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
+     
+    if is_xes:
+        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
+    else:
+        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
+    train, test = preprocessor.split_train_test(.9)
+
+    nn_manager = NNManagement()
+    # select cuda or not
+    nn_manager.config.cuda = True 
+    nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
+    nn_manager.config.our_implementation = True
+    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
+
+    pm = PredictionManager()
+    pm.model = nn_manager.model
+    dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
+    pm.single_prediction_dataframe(dummy, preprocessor.case_id_key, preprocessor.case_activity_key, preprocessor.case_timestamp_key )
+  
+
+
 if __name__=="__main__": 
     #test_embed() 
-    #test_their()
+    test_our()
     #test_random_search(2)
-    test_single_prediction()
+    #test_single_prediction()
     #nn_manager.model.predict_get_sorted(pass)
     #app.run()

@@ -6,6 +6,12 @@ import logging
 
 
 
+logger_single_prediction= logging.getLogger('single_prediction')
+logger_single_prediction.setLevel(logging.DEBUG)
+fh_single_prediction= logging.FileHandler('logs/single_prediction.log')
+fh_single_prediction.setLevel(logging.DEBUG)
+logger_single_prediction.addHandler(fh_single_prediction)
+
 
 
 logger_import_event_log= logging.getLogger('import_event_log')

@@ -8,6 +8,12 @@ class TrainPercentageTooHigh(Exception):
         return self.message
 
 
+class ProcessTooShort(Exception):
+    def __init__(self):
+        self.message= "the  input process is too short "
+
+    def __str__(self):
+        return self.message
 
 class ModelNotTrainedYet(Exception):
     def __init__(self):

@@ -1,18 +1,23 @@
-from loggers import logger_get_dummy_process
-
+from loggers import logger_get_dummy_process,logger_single_prediction 
+from exceptions import ProcessTooShort
+from preprocessing import Preprocessing
 
 
 
 
 class PredictionManager: 
     def __init__(self):
-        pass
+        self.model = None
 
 
     def get_dummy_process(self, df, case_id_column):
         random_case_id = df[case_id_column].sample(n = 1).values[0]
         dummy = df[df[case_id_column]==random_case_id]
+        n_rows = dummy.rows[0]
+        if n_rows == 1:
+            raise ProcessTooShort()
         logger_get_dummy_process.debug(dummy) 
+        return dummy.iloc[:n_rows-1]
 
 
 
@@ -28,11 +33,21 @@ class PredictionManager:
         """
         pass
 
-    def single_prediction_dataframe(self):
+    def single_prediction_dataframe(self, df, case_id, activity_key, timestamp_key):
         """
         make one prediction given a dataframe 
         """
-        pass
+        preprocessor = Preprocessing()
+        preprocessor.import_event_log_dataframe(df, case_id, activity_key, timestamp_key )
+        preprocessor.encode_df_columns()
+        time, event = self.model.predict()
+        logger_single_prediction.debug("predicted time:")
+        logger_single_prediction.debug(time)
+        logger_single_prediction.debug("predicted event:")
+        logger_single_prediction.debug(event)
+        return time, event 
+        
+
 
     def single_prediction(self):
         """

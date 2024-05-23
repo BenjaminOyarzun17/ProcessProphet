@@ -72,6 +72,20 @@ class Preprocessing:
         self.event_df= pd.read_csv(path, sep=sep)
         self.import_event_log(case_id, activity_key, timestamp_key)
 
+    def import_event_log_dataframe(self,df,  case_id, activity_key, timestamp_key):
+        """
+        this is an adapter for format_dataframe such that 
+        the event data can be properly used by the rnn model. 
+
+        :param path: path to the event log
+        :param case_id: case id column name
+        :param activity_key: activity column name
+        :param timestamp_key: timestamp column name
+        """
+        self.event_df = df
+        self.import_event_log(case_id, activity_key, timestamp_key)
+
+
     def import_event_log(self, case_id, activity_key, timestamp_key):
         """
         helper function for import_event_log_csv and import_event_log_xes. 
