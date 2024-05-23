@@ -7,6 +7,7 @@ import logging
 #from ray import tune
 from functools import partial
 import random
+from loggers import logger_grid_search, logger_random_search
 
 
 
@@ -85,14 +86,12 @@ def test_embed():
         nn_manager.config.emb_dim = emb_dim
         nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
         stats_in_json = nn_manager.get_training_statistics()
-        logging.basicConfig(filename='logs/embed.log', filemode='a')
-        logging.info(f"dimension used: {emb_dim}")
-        logging.info(stats_in_json)
+        logger_grid_search.debug(f"dimension used: {emb_dim}")
+        logger_grid_search.debug(stats_in_json)
 
 
 def test_grid_search():
 
-    logging.basicConfig(filename='logs/grid_search.log', level=logging.INFO)
     preprocessor = Preprocessing()
     is_xes  =False
     path =  "data/train_day_joined.csv"
@@ -131,10 +130,10 @@ def test_grid_search():
                 if nn_manager.acc> acc: 
                     acc = nn_manager.acc
                     current_params= (i,j,k)
-                    logging.info("best accuracy: ")
-                    logging.info(acc)
-                    logging.info("best current: ")
-                    logging.info(current_params)
+                    logger_grid_search.debug("best accuracy: ")
+                    logger_grid_search.debug(acc)
+                    logger_grid_search.debug("best current: ")
+                    logger_grid_search.debug(current_params)
 
     print(f"best acc {acc}") 
     print(f"best params {current_params}") 
@@ -142,7 +141,6 @@ def test_grid_search():
 
  
 def test_random_search():
-    logging.basicConfig(filename='logs/random_search.log', level=logging.INFO)
     preprocessor = Preprocessing()
     is_xes  =False
     path =  "data/train_day_joined.csv"
@@ -169,7 +167,7 @@ def test_random_search():
     nn_manager = NNManagement()
     acc = 0
     current_params = ()
-    iterations = 10
+    iterations = 3
     nn_manager.config.absolute_frequency_distribution = absolute_frequency_distribution
     for i in range(iterations): 
         a=random.randint(sp["hidden_dim"][0], sp["hidden_dim"][1])
