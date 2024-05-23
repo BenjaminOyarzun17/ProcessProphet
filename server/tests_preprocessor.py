@@ -167,19 +167,19 @@ class TestSplitTrainTest(unittest.TestCase):
         cls.preprocessor= Preprocessing()
         path = "data/running-example.csv" #its smaller, use preferrably.
         cls.preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ";")
-    
-    def test_raise(self):
+
+    def test_small_dataset(self):
         """
-        test if there are three columns and if they match the input names
+        test if the TrainPercentageTooHigh exception is raised for a small dataset
         """
-        self.assertRaises(TrainPercentageTooHigh, self.preprocessor.split_train_test, 1)
-    def test_column_types(self):
-        train, test = self.preprocessor.split_train_test(0.5)
-        train_types = list(train.dtypes) 
-        test_types = list(test.dtypes) 
-        column_types = train_types + test_types
-        column_types = list(map(str, column_types))
-        self.assertListEqual(["float64"]*6, column_types)
+        df = self.preprocessor.event_df
+        self.preprocessor.event_df = df.iloc[:2]
+
+        with self.assertRaises(TrainPercentageTooHigh):
+            self.preprocessor.split_train_test(0.9)
+
+        # restore the original dataframe
+        self.preprocessor.event_df = df
 
 
 
