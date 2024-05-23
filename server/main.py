@@ -39,12 +39,13 @@ app.register_blueprint(routes)
     
 def test_our()    :
     preprocessor = Preprocessing()
-    is_xes = False
-    path =  "data/train_day_joined.csv"
+    is_xes = True
+    #path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
-    #path = "data/Hospital_log.xes"
+    path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
+
     
     if is_xes:
         #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
@@ -54,11 +55,13 @@ def test_our()    :
         preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
     
     
-    train, test, no_classes, absolute_frequency_distribution = preprocessor.split_train_test(.9)
+    train, test = preprocessor.split_train_test(.7)
     nn_manager = NNManagement()
-    nn_manager.config.absolute_frequency_distribution = absolute_frequency_distribution
+    # select cuda or not
+    nn_manager.config.cuda = False
+    nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.our_implementation = True
-    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
+    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
     stats_in_json = nn_manager.get_training_statistics()
     nn_manager.export_nn_model()
 
@@ -109,7 +112,7 @@ def test_grid_search():
     train, test, no_classes, absolute_frequency_distribution = preprocessor.split_train_test(.9)
 
     #stats_in_json = nn_manager.get_training_statistics()
-    # Define the hyperparameter search space
+    # Define the hyperparameter search space [lower_bound, upper_bound, step_size]
     sp= {
         "hidden_dim": [500, 2000, 500],
         "lstm_dim": [500, 2000,  500],
@@ -192,7 +195,7 @@ def test_random_search():
 if __name__=="__main__": 
     #test_embed() 
     #test_their()
-    test_random_search()
+    #test_random_search()
     #nn_manager.model.predict_get_sorted(pass)
-    
+    test_our()
     #app.run()
