@@ -24,7 +24,7 @@ class Config:
         self.batch_size= 1024
         self.lr= 1e-3
         self.epochs= 1 
-        self.model = "rmtpp" 
+        self.model =None 
         self.importance_weight = "store_true"
         self.verbose_step = 350
         self.event_class = 0
@@ -46,6 +46,8 @@ class NNManagement:
         self.acc = None
         self.absolute_frequency_distribution =None
         self.time_error = None
+
+
 
     def set_training_parameters(self,  params):
         """
@@ -127,13 +129,27 @@ class NNManagement:
             "f1":self.f1
         })
 
+    def import_nn_model(self, path):
+        """
+        imports a .pt file
+        """
+
+        weight = np.ones(self.config.event_class)
+        if self.config.importance_weight:
+            weight = train_set.importance_weight(self.config.absolute_frequency_distribution)
+        self.model = Net(self.config, lossweight={}) #crete a NN instance
+        self.model.load_state_dict(torch.load(path))
+        print(type(self.model))
+        self.model.eval() # relevant for droput layers.
+
+
     def export_nn_model(self):
         """
         generates the .pt file containing the generated
         model. 
         """
-        model_scripted = torch.jit.script(self.model) # Export to TorchScript
-        model_scripted.save('model.pt') 
+        torch.save(self.model.state_dict(), "model.pt") 
+
 
 
     def train(self, train_data, test_data, case_id, timestamp_key, event_key, no_classes):
