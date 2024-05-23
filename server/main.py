@@ -54,7 +54,7 @@ def test_our()    :
         preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
     
     
-    train, test = preprocessor.split_train_test(.9)
+    train, test = preprocessor.split_train_test(.7)
     nn_manager = NNManagement()
     # select cuda or not
     nn_manager.config.cuda = False
