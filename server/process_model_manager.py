@@ -1,6 +1,9 @@
 
 import pm4py
-import prediction_manager
+from prediction_manager import PredictionManager
+import random
+import pandas as pd
+from loggers import logger_generate_predictive_log
 
 
 class ProcessModelManager:
@@ -9,26 +12,94 @@ class ProcessModelManager:
         self.predictive_df= None
         self.model = None 
         self.event_df = None
-
         self.case_activity_key =None 
         self.case_id_key =None 
         self.case_timestamp_key=None 
+        self.case_id_le =None
+        self.activity_le = None
+        self.config = None
+
+
     def generate_predictive_log(self): 
-        """
-        1. get all unique case ids
-            -> preprocessor?
-            -> nn_manager?
-            -> pred manager?
-        2. for each case id get the length of the sequence
-        3. for each case id do a random cut 
-        and remember the number of desired predictions
-            3.1 add the cut prefix to a df
-        4. do the predictions (path)  and append
-        them to the log
-            -> composition with pred manager.
-        5. export the csv or save in an event log (pm4py). 
-        """
-        pass
+        #logger_generate_predictive_log.debug(self.event_df)        
+        #logger_generate_predictive_log.debug(self.case_id_key)        
+        case_id_counts = self.event_df[self.case_id_key].value_counts()
+        cuts = []
+        self.predictive_df = {
+            self.case_id_key:[],
+            self.case_activity_key:[],
+            self.case_timestamp_key:[]
+        }
+        self.predictive_df = pd.DataFrame(self.predictive_df)
+        input_sequences = []
+        cuts = {}
+        for case_id in case_id_counts.index:
+            count = case_id_counts.loc[case_id]
+            cut = random.randint(1, count)
+            cut = count-min(2, cut)
+            sequence = self.event_df[self.event_df[self.case_id_key]==case_id]  
+            sequence = sequence.iloc[:cut+1]
+            if len(sequence) <= self.config.seq_len: 
+                continue
+            cuts[case_id]= (count, cut, count-cut)
+            input_sequences.append(sequence)
+            self.predictive_df= pd.concat([self.predictive_df, sequence], ignore_index = True)
+        
+        #logger_generate_predictive_log.debug("cuts:")        
+        #logger_generate_predictive_log.debug(cuts)        
+        logger_generate_predictive_log.debug("no of input sequences:")        
+        logger_generate_predictive_log.debug(len(input_sequences))        
+        
+        lenths = [len(seq) for seq in input_sequences]
+        for i in lenths: 
+            if i<=self.config.seq_len: 
+                print("found")
+                return
+
+        for sequence in input_sequences: 
+            pm= PredictionManager()
+            case_id = sequence[self.case_id_key].iloc[1]
+            pm.model = self.model
+            pm.case_id_le = self.case_id_le
+            pm.activity_le = self.activity_le
+            pm.seq_len = self.config.seq_len
+            pm.multiple_prediction_dataframe(
+                cuts[case_id][2],
+                1,
+                sequence, 
+                self.case_activity_key  ,
+                self.case_id_key  ,
+                self.case_timestamp_key,
+                self.config
+            )
+            prediction = pm.decoded_paths[0] #might break
+            logger_generate_predictive_log.debug("prediction len:")        
+            logger_generate_predictive_log.debug(len(prediction))
+            logger_generate_predictive_log.debug("prediction:")        
+            try:
+                logger_generate_predictive_log.debug(prediction[:20])
+            except:
+                pass 
+            extension = {
+                self.case_id_key:[],
+                self.case_activity_key:[],
+                self.case_timestamp_key:[]
+            }
+            for time, (pred, event) in prediction: 
+                extension[self.case_id_key] = case_id
+                extension[self.case_activity_key]= event
+                extension[self.case_timestamp_key]= time
+            
+            extension = pd.DataFrame(extension)
+            #logger_generate_predictive_log.debug("extension:")        
+            #logger_generate_predictive_log.debug(extension)        
+            self.predictive_df= pd.concat([self.predictive_df, extension], ignore_index = True)
+
+        logger_generate_predictive_log.debug("generated df:")        
+        logger_generate_predictive_log.debug(self.predictive_df.head(20))        
+    
+
+
 
     def heuristic_miner(self):
         pass

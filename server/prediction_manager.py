@@ -93,23 +93,21 @@ class PredictionManager:
         :param degree: how many predictions on each step are to be considered.
         :param config: TODO 
         """
-        logger_multiple_prediction.debug("dummies:")
-        logger_multiple_prediction.debug(self.encoded_df)
+        #logger_multiple_prediction.debug("dummies:")
+        #logger_multiple_prediction.debug(self.encoded_df)
         c_t =self.encoded_df[self.timestamp_key].iloc[-1]
         c_e =self.encoded_df[self.activity_key].iloc[-1]
         self.backtracking_prediction_tree(c_t, c_e, 0,depth, degree,[(c_t, (1, c_e))],   config) 
         self.decode_paths()
-        pp = pprint.PrettyPrinter(indent = 4)
-        pp.pprint(self.decoded_paths)
-        logger_multiple_prediction.debug("paths:")
-        logger_multiple_prediction.debug(self.paths)
+        #logger_multiple_prediction.debug("paths:")
+        #logger_multiple_prediction.debug(self.paths)
 
     def decode_paths(self): #TODO: decode time
         self.decoded_paths = []
         for path in self.paths: 
-
             encoded_events = [event_index for _, (_, event_index) in path]
             encoded_events = list(map(int, encoded_events))
+            print("encoded events:")
             print(encoded_events)
             decoded_events = self.activity_le.inverse_transform(encoded_events)
             decoded_path= [(time, (prob, event)) for (time, (prob, _)), event in zip(path, decoded_events) ]
@@ -166,23 +164,23 @@ class PredictionManager:
 
         pred_times, pred_events = [], []
         for i, batch in enumerate(step2):   
-            logger_multiple_prediction.debug("batch:")
-            logger_multiple_prediction.debug(pred_times)
+            #logger_multiple_prediction.debug("batch:")
+            #logger_multiple_prediction.debug(pred_times)
             pred_time, pred_event = self.model.predict_sorted(batch)
             pred_times.append(pred_time)
             pred_events.append(pred_event)
-        logger_multiple_prediction.debug("predicted time:")
-        logger_multiple_prediction.debug(pred_times)
-        logger_multiple_prediction.debug("predicted event:")
-        logger_multiple_prediction.debug(pred_events)
+        #logger_multiple_prediction.debug("predicted time:")
+        #logger_multiple_prediction.debug(pred_times)
+        #logger_multiple_prediction.debug("predicted event:")
+        #logger_multiple_prediction.debug(pred_events)
 
         pred_times= pred_times[-1][-1] #we are only interested in the last one; unpack the batch
         pred_events = pred_events[-1][-1]
 
-        logger_multiple_prediction.debug("predicted time:")
-        logger_multiple_prediction.debug(pred_times)
-        logger_multiple_prediction.debug("predicted event:")
-        logger_multiple_prediction.debug(pred_events)
+        #logger_multiple_prediction.debug("predicted time:")
+        #logger_multiple_prediction.debug(pred_times)
+        #logger_multiple_prediction.debug("predicted event:")
+        #logger_multiple_prediction.debug(pred_events)
 
         return pred_times, pred_events
     def append_to_log(self,time, event): 
