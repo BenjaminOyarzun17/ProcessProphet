@@ -222,20 +222,21 @@ def test_multiple_prediction():
     pm = PredictionManager()
     pm.model = nn_manager.model
     dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
-    pm.multiple_prediction(
-        1,
-        1,
-        dummy,
-        preprocessor.case_id_key,
+    pm.multiple_prediction_dataframe(
+        1, 
+        7, 
+        dummy, 
+        preprocessor.case_id_key, 
         preprocessor.case_activity_key, 
         preprocessor.case_timestamp_key, 
-        nn_manager.config, 
+        nn_manager.config
     )
 
 if __name__=="__main__": 
     #test_embed() 
     #test_our()
     #test_random_search(2)
+    #test_single_prediction()
     test_multiple_prediction()
     #nn_manager.model.predict_get_sorted(pass)
     #app.run()
