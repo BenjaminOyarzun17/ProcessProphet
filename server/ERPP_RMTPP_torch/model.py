@@ -97,7 +97,7 @@ class Net(nn.Module):
         return loss1.item(), loss2.item(), loss.item()
 
     
-    def predict(self, batch):
+    def predict(self, batch, pm_active = False):
         """
         make a prediction
         :param batch: a batch containing possible more than 
@@ -114,6 +114,10 @@ class Net(nn.Module):
         time_logits, event_logits = self.forward(time_input, event_input)
         event_pred=  event_logits.detach().cpu().numpy()
         event_pred = np.argmax(event_pred, axis=-1) #for each label find the index that maximizes the pred.
+        if pm_active: 
+            #TODO: return also the prob in case that pmm_active set 
+            # to true (in the context of pred management)
+            pass
         time_pred = time_logits.detach().cpu().numpy()
         return time_pred, event_pred
 

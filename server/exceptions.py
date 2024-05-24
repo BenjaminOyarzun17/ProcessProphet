@@ -7,6 +7,14 @@ class TrainPercentageTooHigh(Exception):
     def __str__(self):
         return self.message
 
+
+class NotOneCaseId(Exception):
+    def __init__(self):
+        self.message= "the df use as input does not have one unique case id value."
+
+    def __str__(self):
+        return self.message
+
 class SeqLengthTooHigh(Exception):
     def __init__(self):
         self.message= "the given sequence length is too high."
