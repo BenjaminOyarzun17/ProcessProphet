@@ -9,16 +9,17 @@ from tqdm import tqdm
 import time as tim
 
 class ProcessModelManager:
-    def __init__(self):
+    def __init__(self,event_df, model, config, case_activity_key, case_id_key, case_timestamp_key  ):
+        #: it is assumed that the model already exists.
+        self.model =model  #genertaed model
+        self.case_activity_key = case_activity_key
+        self.case_id_key = case_id_key
+        self.case_timestamp_key= case_timestamp_key 
+        self.config =config  #config of the nn
+        self.event_df =event_df  #the df use for preprocessing and training 
+
+
         self.predictive_df= None
-        self.model = None 
-        self.event_df = None
-        self.case_activity_key =None 
-        self.case_id_key =None 
-        self.case_timestamp_key=None 
-        self.case_id_le =None
-        self.activity_le = None
-        self.config = None
 
 
     def generate_predictive_log(self): 
@@ -71,8 +72,8 @@ class ProcessModelManager:
             pm= PredictionManager()
             case_id = sequence[self.case_id_key].iloc[1]
             pm.model = self.model
-            pm.case_id_le = self.case_id_le
-            pm.activity_le = self.activity_le
+            pm.case_id_le = self.config.case_id_le
+            pm.activity_le = self.config.activity_le
             pm.seq_len = self.config.seq_len
             pm.multiple_prediction_dataframe(
                 cuts[case_id][2],

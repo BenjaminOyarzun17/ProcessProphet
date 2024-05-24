@@ -101,7 +101,7 @@ def test_grid_search():
                 nn_manager.config.emb_dim=k
                 nn_manager.config.absolute_frequency_distribution =  preprocessor.absolute_frequency_distribution
                 nn_manager.config.our_implementation = True
-                nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, number_classes)
+                nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
                 if nn_manager.acc> acc: 
                     acc = nn_manager.acc
                     current_params= (i,j,k)
@@ -144,7 +144,7 @@ def test_random_search(iterations):
     nn_manager = NNManagement()
     acc = 0
     current_params = ()
-    nn_manager.config.absolute_frequency_distribution = absolute_frequency_distribution
+    nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     for i in range(iterations): 
         a=random.randint(sp["hidden_dim"][0], sp["hidden_dim"][1])
         b=random.randint(sp["lstm_dim"][0], sp["lstm_dim"][1])
@@ -152,7 +152,7 @@ def test_random_search(iterations):
         nn_manager.config.hid_dim = a
         nn_manager.config.emb_dim= b
         nn_manager.config.lstm_dim=c
-        nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, no_classes)
+        nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.no_classes)
         if nn_manager.acc> acc: 
             acc = nn_manager.acc
             current_params= (a,b,c )
@@ -190,7 +190,13 @@ def test_single_prediction():
     nn_manager.config.our_implementation = True
     nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
 
-    pm = PredictionManager()
+    pm = PredictionManager(
+        nn_manager.model, 
+        preprocessor.case_id_key, 
+        preprocessor.case_activity_key, 
+        preprocessor.case_timestamp_key, 
+        nn_manager.config
+    )
     pm.config = nn_manager.config
     pm.model = nn_manager.model
     dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
@@ -221,22 +227,16 @@ def test_multiple_prediction():
     nn_manager.config.cuda = True 
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.our_implementation = True
+    nn_manager.config.activity_le = preprocessor.activity_le
+    nn_manager.config.case_id_le = preprocessor.case_id_le
     nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
 
-    pm = PredictionManager()
-    pm.model = nn_manager.model
-    pm.case_id_le = preprocessor.case_id_le
-    pm.activity_le = preprocessor.activity_le
-    pm.seq_len = nn_manager.config.seq_len
     dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
+    pm = PredictionManager( nn_manager.model, preprocessor.case_id_key, preprocessor.case_activity_key, preprocessor.case_timestamp_key, nn_manager.config)
     pm.multiple_prediction_dataframe(
         2, 
         2, 
-        dummy, 
-        preprocessor.case_id_key, 
-        preprocessor.case_activity_key, 
-        preprocessor.case_timestamp_key, 
-        nn_manager.config
+        dummy  
     )
 
 
@@ -263,15 +263,18 @@ def test_process_model_manager():
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.our_implementation = True
     nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
-    pmm = ProcessModelManager()
-    pmm.case_id_le = preprocessor.case_id_le
-    pmm.activity_le = preprocessor.activity_le
-    pmm.model = nn_manager.model
-    pmm.event_df = preprocessor.event_df
-    pmm.case_activity_key = preprocessor.case_activity_key
-    pmm.case_id_key =preprocessor.case_id_key
-    pmm.case_timestamp_key =preprocessor.case_timestamp_key
-    pmm.config = nn_manager.config
+    nn_manager.config.activity_le = preprocessor.activity_le
+    nn_manager.config.case_id_le = preprocessor.case_id_le
+    
+
+    pmm = ProcessModelManager(
+        preprocessor.event_df, 
+        nn_manager.model, 
+        nn_manager.config,
+        preprocessor.case_activity_key,
+        preprocessor.case_id_key,
+        preprocessor.case_timestamp_key
+    )
     pmm.generate_predictive_log()
 
 
@@ -298,12 +301,16 @@ def test_import_model():
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.our_implementation = True
 
-    pm = PredictionManager()
-    pm.model = nn_manager.model
-    pm.case_id_le = preprocessor.case_id_le
-    pm.activity_le = preprocessor.activity_le
-    pm.seq_len = nn_manager.config.seq_len
+    pm = PredictionManager(
+        nn_manager.model, 
+        preprocessor.case_id_key, 
+        preprocessor.case_activity_key, 
+        preprocessor.case_timestamp_key, 
+        nn_manager.config
+    )
+
     dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
+
     pm.multiple_prediction_dataframe(
         2, 
         2, 
