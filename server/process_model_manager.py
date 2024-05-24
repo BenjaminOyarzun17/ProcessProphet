@@ -122,7 +122,8 @@ class ProcessModelManager:
         pm4py.view_petri_net(inductive_petri_net, initial_marking, final_marking, format='svg')
         
     def alpha_miner(self):
-        pass
+        alpha_petri_net, initial_marking, final_marking = pm4py.pm4py.discover_petri_net_alpha(self.predictive_df)
+        pm4py.view_petri_net(alpha_petri_net_petri_net, initial_marking, final_marking, format='svg')
 
     def correlation_miner(self):
         pass
