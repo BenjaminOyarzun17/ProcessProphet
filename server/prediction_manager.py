@@ -1,5 +1,5 @@
 from loggers import logger_get_dummy_process,logger_single_prediction , logger_multiple_prediction
-from exceptions import ProcessTooShort, SeqLengthTooHigh
+from exceptions import ProcessTooShort, SeqLengthTooHigh, NotOneCaseId
 from preprocessing import Preprocessing
 from ERPP_RMTPP_torch import * 
 from torch.utils.data import DataLoader
@@ -17,15 +17,13 @@ class PredictionManager:
         #TODO: it might be more convenient to store a config object 
         # so that not so much copying is necessary
         
-        
         #: we assume there is an already existing model
         self.model =model 
-        self.case_id_key = case_id_key
+        self.case_id_key = case_id_key # we assume the three important columns are known
         self.activity_key = activity_key
         self.timestamp_key = timestamp_key
         self.config = config
         
-        self.input_df =None 
         self.current_case_id = None
         self.paths = []
         self.decoded_paths= []
@@ -50,21 +48,21 @@ class PredictionManager:
         return dummy.iloc[:n_rows-1]
 
 
+    def check_input_uniqueness(self):
+        return len(self.encoded_df[self.case_id_key].unique()) == 1
     
 
-    def single_prediction_dataframe(self, df, case_id, activity_key, timestamp_key):
+    def single_prediction_dataframe(self, df):
         """
         make one prediction given a dataframe. 
         preprocessor is in charge of doing the
         reading/importing from csv, xes, commandline, etc...
         """
         preprocessor = Preprocessing()
-        preprocessor.import_event_log_dataframe(df, case_id, activity_key, timestamp_key )
-        encoded_df= preprocessor.event_df 
+        preprocessor.import_event_log_dataframe(df, self.case_id_key, self.activity_key, self.timestamp_key)
         self.encoded_df= preprocessor.event_df 
-        self.activity_key = activity_key
-        self.case_id_key = case_id
-        self.timestamp_key = timestamp_key
+        if not self.check_input_uniqueness():
+            raise NotOneCaseId()
         self.current_case_id= self.encoded_df[self.case_id_key].sample(n = 1).values[0]
         self.single_prediction()
 
@@ -76,17 +74,34 @@ class PredictionManager:
         step1= ATMDataset(self.config,self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key)
         #: batch size set to one to have one sample per batch.
         step2 = DataLoader(step1, batch_size=len(step1.time_seqs), shuffle=False, collate_fn=ATMDataset.to_features)
+
         pred_times, pred_events = [], []
         for i, batch in enumerate(step2):   
-            pred_time, pred_event = self.model.predict(batch)
+            pred_time, pred_event = self.model.predict(batch, pm_active = True)
             pred_times.append(pred_time)
             pred_events.append(pred_event)
-        #logger_single_prediction.debug("predicted time:")
-        #logger_single_prediction.debug(pred_times)
-        #logger_single_prediction.debug("predicted event:")
-        #logger_single_prediction.debug(pred_events)
-        return pred_times, pred_events
+        time_pred = pred_times[-1][-1][-1]
+        event_pred = pred_events[-1][-1] 
+        logger_single_prediction.debug("predicted time:")
+        logger_single_prediction.debug(time_pred)
+        logger_single_prediction.debug("predicted event:")
+        logger_single_prediction.debug(event_pred)
+        return time_pred,  event_pred
 
+    def jsonify_single(self, time_pred, event_pred, prob): 
+        """
+        note that we just save the
+        probability of the last pair (time, event) in the path, 
+        since the nn calculates lambda*(t), which is 
+        the probability of the last predicted event happening
+        in the predicted time t. 
+        """
+        ans = {
+            "timestamp": time_pred, 
+            "event": self.config.activity_le.inverse_transform(event_pred),
+            "prob": prob
+        }
+        json.dumps(ans)
 
 
     def multiple_prediction(self, depth, degree): 
@@ -145,7 +160,6 @@ class PredictionManager:
             raise SeqLengthTooHigh()
 
         
-        #step2 = DataLoader((self.recursive_time_seqs, self.recursive_event_seqs), batch_size=len(self.recursive_time_seqs), shuffle=False, collate_fn=ATMDataset.to_features)
         self.recursive_atm.event_seqs = self.recursive_event_seqs
         self.recursive_atm.time_seqs = self.recursive_time_seqs
         step2 = DataLoader(self.recursive_atm, batch_size=len(self.recursive_atm.event_seqs), shuffle=False, collate_fn=ATMDataset.to_features)
@@ -203,7 +217,7 @@ class PredictionManager:
         """
         note that we just save the
         probability of the last pair (time, event) in the path, 
-        since the NN calculates lambda*(t), which is 
+        since the nn calculates lambda*(t), which is 
         the probability of the last predicted event happening
         in the predicted time t. 
         """
