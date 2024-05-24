@@ -34,11 +34,11 @@ class ATMDataset:
         self.in_recursive_call = in_recursive_call #variable used for multiple predictions
         if  not self.in_recursive_call:
             self.time_seqs, self.event_seqs = self.generate_sequence()
+            self.statistic()
         else: 
             self.time_seqs, self.event_seqs = self.sliding_window()
             self.first_time_stamp = self.time[0]
 
-        self.statistic()
 
   
     def sliding_window(self):
