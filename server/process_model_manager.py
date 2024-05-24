@@ -3,8 +3,10 @@ import pm4py
 from prediction_manager import PredictionManager
 import random
 import pandas as pd
-from loggers import logger_generate_predictive_log
+from loggers import logger_generate_predictive_log, logger_multiple_prediction
+from tqdm import tqdm
 
+import time as tim
 
 class ProcessModelManager:
     def __init__(self):
@@ -31,6 +33,7 @@ class ProcessModelManager:
         sequence length, since the probability will always be significantly smaller.   
         after doing the predictions, the cut cases are extended with the predictions. 
         """
+        st= tim.time()
         case_id_counts = self.event_df[self.case_id_key].value_counts()
         cuts = []
         self.predictive_df = {
@@ -47,7 +50,7 @@ class ProcessModelManager:
             cut = count-min(3, cut)
             sequence = self.event_df[self.event_df[self.case_id_key]==case_id]  
             sequence = sequence.iloc[:cut]
-            if len(sequence) <= self.config.seq_len or i>10: 
+            if len(sequence) <= self.config.seq_len: 
                 continue
             cuts[case_id]= (count, cut, count-cut)
             input_sequences.append(sequence)
@@ -63,8 +66,10 @@ class ProcessModelManager:
             if i<=self.config.seq_len: 
                 print("found too short sequence")
                 return
-
-        for sequence in input_sequences: 
+        print("minimal length:")
+        print(min(lenths))
+        
+        for i, sequence in enumerate(input_sequences) : 
             pm= PredictionManager()
             case_id = sequence[self.case_id_key].iloc[1]
             pm.model = self.model
@@ -80,14 +85,11 @@ class ProcessModelManager:
                 self.case_timestamp_key,
                 self.config
             )
+
             prediction = pm.decoded_paths[0] #might break
-            logger_generate_predictive_log.debug("prediction len:")        
-            logger_generate_predictive_log.debug(len(prediction))
-            logger_generate_predictive_log.debug("prediction:")        
-            try:
-                logger_generate_predictive_log.debug(prediction[:20])
-            except:
-                pass 
+            #logger_generate_predictive_log.debug("prediction len:")        
+            #logger_generate_predictive_log.debug(len(prediction))
+            #logger_generate_predictive_log.debug("prediction:")        
             extension = {
                 self.case_id_key:[],
                 self.case_activity_key:[],
@@ -106,6 +108,9 @@ class ProcessModelManager:
         logger_generate_predictive_log.debug("generated df:")        
         logger_generate_predictive_log.debug(self.predictive_df.head(20))        
     
+        et= tim.time()
+        logger_generate_predictive_log.debug("pred df creation duration:")        
+        logger_generate_predictive_log.debug(et-st)
 
 
 

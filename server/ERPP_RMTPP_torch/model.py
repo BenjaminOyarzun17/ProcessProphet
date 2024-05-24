@@ -61,7 +61,7 @@ class Net(nn.Module):
         hidden_state, _ = self.lstm(lstm_input) 
 
         # hidden_state = torch.cat((hidden_state, input_time.unsqueeze(-1)), dim=-1) THIS WAS COMMENTED FROM BEFORE
-        mlp_output = torch.tanh(self.mlp(hidden_state[:, -1, :])) 
+        mlp_output = torch.tanh(self.mlp(hidden_state[:, -1, :]))  #multi layer perceptorn output
         mlp_output = self.mlp_drop(mlp_output) 
         #Here we are basically passing the output through TWO DIFFERENT LAYERS separately.
         event_logits = self.event_linear(mlp_output)  # the output is separated and passed to a specific activation function
