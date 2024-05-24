@@ -30,6 +30,8 @@ class Config:
         self.event_class = 0
         self.cuda = False
         self.absolute_frequency_distribution = Counter()
+        self.case_id_le = None
+        self.activity_le = None
 
 class NNManagement: 
     """
@@ -165,7 +167,6 @@ class NNManagement:
         train_set = ATMDataset(self.config ,train_data, case_id,   timestamp_key, event_key ) 
         test_set = ATMDataset(self.config , test_data, case_id, timestamp_key, event_key)
 
-        time_seqs_values = [set(l) for l in test_set.time_seqs]
 
         # now load the data to torch tensors and generate the batches. also 
        

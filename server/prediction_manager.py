@@ -13,21 +13,23 @@ from collections import deque
 
 
 class PredictionManager: 
-    def __init__(self):
+    def __init__(self, model, case_id_key, activity_key, timestamp_key, config ):
         #TODO: it might be more convenient to store a config object 
         # so that not so much copying is necessary
-        self.model = None
-        self.input_df = None
-        self.encoded_df = None
-        self.case_id_key = None
-        self.activity_key = None
-        self.timestamp_key = None
+        
+        
+        #: we assume there is an already existing model
+        self.model =model 
+        self.case_id_key = case_id_key
+        self.activity_key = activity_key
+        self.timestamp_key = timestamp_key
+        self.config = config
+        
+        self.input_df =None 
         self.current_case_id = None
         self.paths = []
         self.decoded_paths= []
-        self.case_id_le = None
-        self.activity_le = None
-        self.seq_len = None
+        self.encoded_df = None
 
 
 
@@ -50,7 +52,7 @@ class PredictionManager:
 
     
 
-    def single_prediction_dataframe(self, df, case_id, activity_key, timestamp_key, config):
+    def single_prediction_dataframe(self, df, case_id, activity_key, timestamp_key):
         """
         make one prediction given a dataframe. 
         preprocessor is in charge of doing the
@@ -64,14 +66,14 @@ class PredictionManager:
         self.case_id_key = case_id
         self.timestamp_key = timestamp_key
         self.current_case_id= self.encoded_df[self.case_id_key].sample(n = 1).values[0]
-        self.single_prediction(config )
+        self.single_prediction()
 
 
-    def single_prediction(self,  config ):
+    def single_prediction(self):
         """
         make one prediction 
         """
-        step1= ATMDataset(config,self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key)
+        step1= ATMDataset(self.config,self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key)
         #: batch size set to one to have one sample per batch.
         step2 = DataLoader(step1, batch_size=len(step1.time_seqs), shuffle=False, collate_fn=ATMDataset.to_features)
         pred_times, pred_events = [], []
@@ -87,7 +89,7 @@ class PredictionManager:
 
 
 
-    def multiple_prediction(self, depth, degree,  config): 
+    def multiple_prediction(self, depth, degree): 
         """
         get a list of possible paths starting at the last 
         timestamp and event pair.  
@@ -101,11 +103,11 @@ class PredictionManager:
         c_e =self.encoded_df[self.activity_key].iloc[-1]
 
 
-        self.recursive_atm= ATMDataset(config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
+        self.recursive_atm= ATMDataset(self.config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
         self.recursive_time_seqs = self.recursive_atm.time_seqs
         self.recursive_event_seqs = self.recursive_atm.event_seqs
 
-        self.backtracking_prediction_tree(c_t, c_e, 0,depth, degree,[(c_t, (1, c_e))],   config) 
+        self.backtracking_prediction_tree(c_t, c_e, 0,depth, degree,[(c_t, (1, c_e))]) 
         
 
         self.decode_paths()
@@ -113,7 +115,7 @@ class PredictionManager:
         #logger_multiple_prediction.debug(self.paths)
 
 
-    def backtracking_prediction_tree(self, c_t, c_e, c_d, depth, degree,current_path , config):
+    def backtracking_prediction_tree(self, c_t, c_e, c_d, depth, degree,current_path):
         """
         use backtracking to generate all the paths from the given 
         last timestamp and marker considering the input degree as a threshold 
@@ -123,23 +125,23 @@ class PredictionManager:
             # base case
             self.paths.append(list(current_path))
             return
-        p_t, p_events = self.get_sorted_wrapper( config, c_t, c_e )
+        p_t, p_events = self.get_sorted_wrapper(c_t, c_e )
         for p_e in p_events[:degree]:
             # filter branching degree ; the list is already sorted
             # therefore the "degree" most probable are taken
             self.append_to_log(p_t[0], p_e[1]) 
             current_path.append((p_t, p_e))
-            self.backtracking_prediction_tree(p_t[0], p_e[1], c_d+1, depth, degree, list(current_path), config)    
+            self.backtracking_prediction_tree(p_t[0], p_e[1], c_d+1, depth, degree, list(current_path))    
             current_path.pop() 
             self.pop_from_log()
     
-    def get_sorted_wrapper(self, config,c_t, c_e  ):
+    def get_sorted_wrapper(self,c_t, c_e  ):
         
         #: check whether the number of rows in 
         # self.encoded_df <= seq_len. otherwise the
         # processed data by dataloader/atmdataset 
         # output empty lists... 
-        if self.seq_len>= len(self.encoded_df):
+        if self.config.seq_len>= len(self.encoded_df):
             raise SeqLengthTooHigh()
 
         
@@ -191,7 +193,7 @@ class PredictionManager:
             encoded_events = list(map(int, encoded_events))
             #print("encoded events:")
             #print(encoded_events)
-            decoded_events = self.activity_le.inverse_transform(encoded_events)
+            decoded_events = self.config.activity_le.inverse_transform(encoded_events)
             decoded_path= [(time, (prob, event)) for (time, (prob, _)), event in zip(path, decoded_events) ]
             #print(decoded_path)
             self.decoded_paths.append(decoded_path)
@@ -223,18 +225,18 @@ class PredictionManager:
             ans["paths"].append(current_path)
         return json.dumps(ans)
 
-    def multiple_prediction_dataframe(self, depth, degree, df, case_id, activity_key, timestamp_key, config):
+    def multiple_prediction_dataframe(self, depth, degree, df):
         """
         make multiple predictions given a dataframe
         preprocessor is in charge of doing the
         reading/importing from csv, xes, commandline, etc...
+
+        it is assumed that the event log contains only one case id.
         """
         preprocessor = Preprocessing()
-        preprocessor.import_event_log_dataframe(df, case_id, activity_key, timestamp_key )
-        self.activity_key = activity_key
-        self.case_id_key = case_id
-        self.timestamp_key = timestamp_key
+        preprocessor.import_event_log_dataframe(df, self.case_id_key, self.activity_key, self.timestamp_key)
+        
         self.encoded_df= preprocessor.event_df 
         self.current_case_id= self.encoded_df[self.case_id_key].sample(n = 1).values[0]
-        self.multiple_prediction(depth, degree,  config )
+        self.multiple_prediction(depth, degree)
 
