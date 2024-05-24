@@ -114,11 +114,13 @@ class ProcessModelManager:
 
 
     def heuristic_miner(self):
-        heuristic_net, initial_marking, final_marking = pm4py.discover_petri_net_heuristics(self.predictive_df)
-        pm4py.view_petri_net(heuristic_net, initial_marking, final_marking, format='svg')
+        heuristic_petri_net, initial_marking, final_marking = pm4py.discover_petri_net_heuristics(self.predictive_df) # might need to add parameters
+        pm4py.view_petri_net(heuristic_petri_net, initial_marking, final_marking, format='svg')
 
     def inductive_miner(self):
-        pass
+        inductive_petri_net, initial_marking, final_marking = pm4py.pm4py.discover_petri_net_inductive(self.predictive_df)
+        pm4py.view_petri_net(inductive_petri_net, initial_marking, final_marking, format='svg')
+        
     def alpha_miner(self):
         pass
 
