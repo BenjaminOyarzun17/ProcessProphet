@@ -135,4 +135,4 @@ class ProcessModelManager:
 
     def prefix_tree_miner(self):
         prefix_tree_petri_net, initial_marking, final_marking = pm4py.pm4py.discover_prefix_tree(self.predictive_df)
-        pm4py.view_petri_net(prefix_tree_petri_net_petri_net_petri_net, initial_marking, final_marking, format='svg')
+        pm4py.view_prefix_tree(prefix_tree_petri_net, format='svg')
