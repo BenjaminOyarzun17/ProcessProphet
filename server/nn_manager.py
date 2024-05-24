@@ -95,19 +95,14 @@ class NNManagement:
             pred_times.append(pred_time)
             pred_events.append(pred_event)
 
-            logger_evaluate.debug(f"batch number:{pred_time}")
-            logger_evaluate.debug(f"time prediction: {pred_time}")
-            logger_evaluate.debug(f"gold time: {batch[0][:, -1].numpy()}")
-            logger_evaluate.debug(f"event prediction: {pred_event}")
-            logger_evaluate.debug(f"gold event: {batch[1][:, -1].numpy()}")
            
-
 
         pred_times = np.concatenate(pred_times).reshape(-1)
         gold_times = np.concatenate(gold_times).reshape(-1)
         pred_events = np.concatenate(pred_events).reshape(-1)
         gold_events = np.concatenate(gold_events).reshape(-1)
         self.time_error = abs_error(pred_times, gold_times)  #compute errors
+
 
         self.acc, self.recall, self.f1 = clf_metric(pred_events, gold_events, n_class=config.event_class) #get the metrics
         
@@ -166,9 +161,11 @@ class NNManagement:
         # we already pass the split data to de ATM loader. ATMDAtaset uses the sliding window for generating the input for training.
         # since we are using tensors for training the sequence length remains fixed in each epoch, hence we cannot do "arbitrary length cuts" 
         # to the training data
+
         train_set = ATMDataset(self.config ,train_data, case_id,   timestamp_key, event_key ) 
         test_set = ATMDataset(self.config , test_data, case_id, timestamp_key, event_key)
 
+        time_seqs_values = [set(l) for l in test_set.time_seqs]
 
         # now load the data to torch tensors and generate the batches. also 
        

@@ -318,10 +318,10 @@ def test_import_model():
 
 if __name__=="__main__": 
     #test_embed() 
-    #test_our()
+    test_our()
     #test_import_model()
     #test_random_search(2)
     #test_single_prediction()
-    test_process_model_manager()
+    #test_process_model_manager()
     #nn_manager.model.predict_get_sorted(pass)
     #app.run()
