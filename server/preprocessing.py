@@ -217,7 +217,11 @@ class Preprocessing:
         find the end activities of all cases for an existing log and return a dict with end activities as keys and value is the count of this activity
         """
         end_activities = pm4py.get_end_activities(self.event_log, activity_key=self.case_activity_key, case_id_key=self.case_id_key, timestamp_key=self.case_timestamp_key)
-        return end_activities
+        activities = self.event_df[self.case_activity_key].unique()
+        end_activity_lookup = {activity:False  for activity in activities}
+        for activity in activities:
+            end_activity_lookup[activity]= True
+        return end_activity_lookup 
         
     def add_unique_start_end_activity(self):
         """
