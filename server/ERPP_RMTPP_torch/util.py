@@ -2,7 +2,7 @@ import pandas
 from tqdm import tqdm
 import numpy as np
 import torch
-from collections import Counter
+from collections import Counter, deque
 import math
 import pprint
 
@@ -24,15 +24,39 @@ class ATMDataset:
     it can be seen as a wrapper that does some further 
     preprocessing that is very especific to the NN.        
     """
-    def __init__(self, config, data, case_id, timestamp_key,event_key):
+    def __init__(self, config, data, case_id, timestamp_key,event_key,in_recursive_call=False,  *args):
         self.id = list(data[case_id])
         self.time = list(data[timestamp_key] )
         self.event = list(data[event_key])
-        
+
         self.config = config
         self.seq_len = config.seq_len
-        self.time_seqs, self.event_seqs = self.generate_sequence()
+        self.in_recursive_call = in_recursive_call #variable used for multiple predictions
+        if  not self.in_recursive_call:
+            self.time_seqs, self.event_seqs = self.generate_sequence()
+        else: 
+            self.time_seqs, self.event_seqs = self.sliding_window()
+            self.first_time_stamp = self.time[0]
+
         self.statistic()
+
+  
+    def sliding_window(self):
+        event_windows = []
+        time_windows = []
+        event_window = deque(self.event[:self.seq_len])
+        time_window = deque(self.time[:self.seq_len])
+        event_windows.append(list(event_window))
+        time_windows.append(list(time_window))
+        end_idx = self.seq_len
+        for i in range(end_idx, len(self.time)):
+            event_window.popleft()
+            event_window.append(self.event[end_idx])
+            time_window.popleft()
+            time_window.append(self.time[end_idx])
+            time_windows.append(list(time_window))
+            event_windows.append(list(event_window))
+        return time_windows, event_windows
 
     def generate_sequence(self):
         """

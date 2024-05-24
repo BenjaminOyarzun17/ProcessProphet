@@ -92,7 +92,6 @@ class NNManagement:
             gold_times.append(batch[0][:, -1].numpy()) # extract for each sequence the last time stamp/ the last event
             gold_events.append(batch[1][:, -1].numpy())
             pred_time, pred_event = self.model.predict(batch)
-           
             pred_times.append(pred_time)
             pred_events.append(pred_event)
 

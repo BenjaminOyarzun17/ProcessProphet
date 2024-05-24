@@ -6,6 +6,8 @@ from torch.utils.data import DataLoader
 import pandas as pd
 import pprint 
 import json
+import time
+from collections import deque
 
 
 
@@ -71,16 +73,16 @@ class PredictionManager:
         """
         step1= ATMDataset(config,self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key)
         #: batch size set to one to have one sample per batch.
-        step2 = DataLoader(step1, batch_size=1, shuffle=False, collate_fn=ATMDataset.to_features)
+        step2 = DataLoader(step1, batch_size=len(step1.time_seqs), shuffle=False, collate_fn=ATMDataset.to_features)
         pred_times, pred_events = [], []
         for i, batch in enumerate(step2):   
             pred_time, pred_event = self.model.predict(batch)
             pred_times.append(pred_time)
             pred_events.append(pred_event)
-        logger_single_prediction.debug("predicted time:")
-        logger_single_prediction.debug(pred_times)
-        logger_single_prediction.debug("predicted event:")
-        logger_single_prediction.debug(pred_events)
+        #logger_single_prediction.debug("predicted time:")
+        #logger_single_prediction.debug(pred_times)
+        #logger_single_prediction.debug("predicted event:")
+        #logger_single_prediction.debug(pred_events)
         return pred_times, pred_events
 
 
@@ -97,40 +99,22 @@ class PredictionManager:
         #logger_multiple_prediction.debug(self.encoded_df)
         c_t =self.encoded_df[self.timestamp_key].iloc[-1]
         c_e =self.encoded_df[self.activity_key].iloc[-1]
+
+
+        logger_multiple_prediction.debug("length before window")
+        logger_multiple_prediction.debug(len(self.encoded_df))
+        self.recursive_atm= ATMDataset(config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
+        self.recursive_time_seqs = self.recursive_atm.time_seqs
+        self.recursive_event_seqs = self.recursive_atm.event_seqs
+
+        logger_multiple_prediction.debug("original length")
+        logger_multiple_prediction.debug(len(self.recursive_time_seqs))
         self.backtracking_prediction_tree(c_t, c_e, 0,depth, degree,[(c_t, (1, c_e))],   config) 
+        
+
         self.decode_paths()
         #logger_multiple_prediction.debug("paths:")
         #logger_multiple_prediction.debug(self.paths)
-
-    def decode_paths(self): #TODO: decode time
-        self.decoded_paths = []
-        for path in self.paths: 
-            encoded_events = [event_index for _, (_, event_index) in path]
-            encoded_events = list(map(int, encoded_events))
-            #print("encoded events:")
-            #print(encoded_events)
-            decoded_events = self.activity_le.inverse_transform(encoded_events)
-            decoded_path= [(time, (prob, event)) for (time, (prob, _)), event in zip(path, decoded_events) ]
-            #print(decoded_path)
-
-
-
-            self.decoded_paths.append(decoded_path)
-        
-    def jsonify_paths(self): 
-        ans = {
-            "paths": []
-        }
-        for time, (per, event) in self.decoded_paths :
-            ans["paths"].append(
-                {
-                    "time": time, 
-                    "event": event, 
-                    "percentage": per
-                }
-            )
-
-        return json.dumps(ans)
 
 
     def backtracking_prediction_tree(self, c_t, c_e, c_d, depth, degree,current_path , config):
@@ -143,7 +127,7 @@ class PredictionManager:
             # base case
             self.paths.append(list(current_path))
             return
-        p_t, p_events = self.get_sorted_wrapper( config )
+        p_t, p_events = self.get_sorted_wrapper( config, c_t, c_e )
         for p_e in p_events[:degree]:
             # filter branching degree ; the list is already sorted
             # therefore the "degree" most probable are taken
@@ -153,7 +137,7 @@ class PredictionManager:
             current_path.pop() 
             self.pop_from_log()
     
-    def get_sorted_wrapper(self, config ):
+    def get_sorted_wrapper(self, config,c_t, c_e  ):
         
         #: check whether the number of rows in 
         # self.encoded_df <= seq_len. otherwise the
@@ -162,21 +146,19 @@ class PredictionManager:
         if self.seq_len>= len(self.encoded_df):
             raise SeqLengthTooHigh()
 
-        step1= ATMDataset(config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key)
-        #: batch size set to one to have one sample per batch.
-        step2 = DataLoader(step1, batch_size=1, shuffle=False, collate_fn=ATMDataset.to_features)
+        
+        #step2 = DataLoader((self.recursive_time_seqs, self.recursive_event_seqs), batch_size=len(self.recursive_time_seqs), shuffle=False, collate_fn=ATMDataset.to_features)
+        self.recursive_atm.event_seqs = self.recursive_event_seqs
+        self.recursive_atm.time_seqs = self.recursive_time_seqs
+        step2 = DataLoader(self.recursive_atm, batch_size=len(self.recursive_atm.event_seqs), shuffle=False, collate_fn=ATMDataset.to_features)
+      
 
         pred_times, pred_events = [], []
+        
         for i, batch in enumerate(step2):   
-            #logger_multiple_prediction.debug("batch:")
-            #logger_multiple_prediction.debug(pred_times)
             pred_time, pred_event = self.model.predict_sorted(batch)
             pred_times.append(pred_time)
             pred_events.append(pred_event)
-        #logger_multiple_prediction.debug("predicted time:")
-        #logger_multiple_prediction.debug(pred_times)
-        #logger_multiple_prediction.debug("predicted event:")
-        #logger_multiple_prediction.debug(pred_events)
 
         pred_times= pred_times[-1][-1] #we are only interested in the last one; unpack the batch
         pred_events = pred_events[-1][-1]
@@ -188,17 +170,64 @@ class PredictionManager:
 
         return pred_times, pred_events
     def append_to_log(self,time, event): 
-        extra = {
-                self.case_id_key:self.current_case_id, 
-                self.timestamp_key:time, 
-                self.activity_key:event, 
-            }
-        self.encoded_df.loc[len(self.encoded_df)] = extra
-
+        last_time_seq = list(self.recursive_time_seqs[-1])
+        last_event_seq = list(self.recursive_event_seqs[-1])
+        new_time_seq = last_time_seq[1:]
+        new_event_seq = last_event_seq[1:]
+        new_time_seq.append(time)
+        new_event_seq.append(event)
+        self.recursive_time_seqs.append(new_time_seq)
+        self.recursive_event_seqs.append(new_event_seq)
+        logger_multiple_prediction.debug("after append")
+        logger_multiple_prediction.debug(len(self.recursive_time_seqs))
+       
     def pop_from_log(self): 
-        self.encoded_df = self.encoded_df.iloc[:-1]
+       
+        self.recursive_time_seqs.pop()
+        self.recursive_event_seqs.pop()
+        logger_multiple_prediction.debug("after pop:")
+        logger_multiple_prediction.debug(len(self.recursive_time_seqs))
+    
 
+
+    def decode_paths(self): #TODO: decode time
+        self.decoded_paths = []
+        for path in self.paths: 
+            encoded_events = [event_index for _, (_, event_index) in path]
+            encoded_events = list(map(int, encoded_events))
+            #print("encoded events:")
+            #print(encoded_events)
+            decoded_events = self.activity_le.inverse_transform(encoded_events)
+            decoded_path= [(time, (prob, event)) for (time, (prob, _)), event in zip(path, decoded_events) ]
+            #print(decoded_path)
+            self.decoded_paths.append(decoded_path)
+        
  
+    def jsonify_paths(self): 
+        """
+        note that we just save the
+        probability of the last pair (time, event) in the path, 
+        since the NN calculates lambda*(t), which is 
+        the probability of the last predicted event happening
+        in the predicted time t. 
+        """
+        ans = {
+            "paths": []
+        }
+        for path in self.decoded_paths :
+            current_path = {
+                'pairs':[], 
+                'percentage': path[-1][1][1]
+            }
+            for time, (per, event) in path:
+                current_path["pairs"].append(
+                    {
+                        "time": time, 
+                        "event": event, 
+                    }
+                )
+            ans["paths"].append(current_path)
+        return json.dumps(ans)
 
     def multiple_prediction_dataframe(self, depth, degree, df, case_id, activity_key, timestamp_key, config):
         """
