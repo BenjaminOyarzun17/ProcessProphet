@@ -66,10 +66,8 @@ class ProcessModelManager:
             if i<=self.config.seq_len: 
                 print("found too short sequence")
                 return
-        print("minimal length:")
-        print(min(lenths))
         
-        for i, sequence in enumerate(input_sequences) : 
+        for i, sequence in enumerate(tqdm(input_sequences)): 
             pm= PredictionManager()
             case_id = sequence[self.case_id_key].iloc[1]
             pm.model = self.model

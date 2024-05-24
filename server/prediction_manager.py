@@ -101,14 +101,10 @@ class PredictionManager:
         c_e =self.encoded_df[self.activity_key].iloc[-1]
 
 
-        logger_multiple_prediction.debug("length before window")
-        logger_multiple_prediction.debug(len(self.encoded_df))
         self.recursive_atm= ATMDataset(config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
         self.recursive_time_seqs = self.recursive_atm.time_seqs
         self.recursive_event_seqs = self.recursive_atm.event_seqs
 
-        logger_multiple_prediction.debug("original length")
-        logger_multiple_prediction.debug(len(self.recursive_time_seqs))
         self.backtracking_prediction_tree(c_t, c_e, 0,depth, degree,[(c_t, (1, c_e))],   config) 
         
 
@@ -178,15 +174,13 @@ class PredictionManager:
         new_event_seq.append(event)
         self.recursive_time_seqs.append(new_time_seq)
         self.recursive_event_seqs.append(new_event_seq)
-        logger_multiple_prediction.debug("after append")
-        logger_multiple_prediction.debug(len(self.recursive_time_seqs))
        
     def pop_from_log(self): 
-       
+        """
+        self.encoded_df = self.encoded_df.iloc[:-1]
+        """
         self.recursive_time_seqs.pop()
         self.recursive_event_seqs.pop()
-        logger_multiple_prediction.debug("after pop:")
-        logger_multiple_prediction.debug(len(self.recursive_time_seqs))
     
 
 
