@@ -125,8 +125,12 @@ class ProcessModelManager:
         alpha_petri_net, initial_marking, final_marking = pm4py.pm4py.discover_petri_net_alpha(self.predictive_df)
         pm4py.view_petri_net(alpha_petri_net_petri_net, initial_marking, final_marking, format='svg')
 
+    '''
+    might be irrelevant as we require to always have a case_identifier in the log input 
+    -> correlation miner only useful if we do not have or know the case_identifier
     def correlation_miner(self):
         pass
+    '''
 
 
     def prefix_tree_miner(self):
