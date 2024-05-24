@@ -20,6 +20,10 @@ class ProcessModelManager:
 
 
         self.predictive_df= None
+        # variables to store PM model for further Conformance checking
+        self.initial_marking = None
+        self.final_marking = None
+        self.petri_net = None
 
 
     def generate_predictive_log(self): 
@@ -114,25 +118,27 @@ class ProcessModelManager:
 
 
     def heuristic_miner(self):
-        heuristic_petri_net, initial_marking, final_marking = pm4py.discover_petri_net_heuristics(self.predictive_df) # might need to add parameters
-        pm4py.view_petri_net(heuristic_petri_net, initial_marking, final_marking, format='svg')
+        self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_heuristics(self.predictive_df)
+        pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
 
     def inductive_miner(self):
-        inductive_petri_net, initial_marking, final_marking = pm4py.pm4py.discover_petri_net_inductive(self.predictive_df)
-        pm4py.view_petri_net(inductive_petri_net, initial_marking, final_marking, format='svg')
-        
+        self.petri_net, self.initial_marking, self.final_marking = pm4py.pm4py.discover_petri_net_inductive(self.predictive_df)
+        pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
+
     def alpha_miner(self):
-        alpha_petri_net, initial_marking, final_marking = pm4py.pm4py.discover_petri_net_alpha(self.predictive_df)
-        pm4py.view_petri_net(alpha_petri_net_petri_net, initial_marking, final_marking, format='svg')
-
-    '''
-    might be irrelevant as we require to always have a case_identifier in the log input 
-    -> correlation miner only useful if we do not have or know the case_identifier
-    def correlation_miner(self):
-        pass
-    '''
-
+        self.petri_net, self.initial_marking, self.final_marking = pm4py.pm4py.discover_petri_net_alpha(self.predictive_df)
+        pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
 
     def prefix_tree_miner(self):
-        prefix_tree_petri_net, initial_marking, final_marking = pm4py.pm4py.discover_prefix_tree(self.predictive_df)
-        pm4py.view_prefix_tree(prefix_tree_petri_net, format='svg')
+        self.petri_net, self.initial_marking, self.final_marking = pm4py.pm4py.discover_prefix_tree(self.predictive_df)
+        pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
+
+        '''
+        might be irrelevant as we require to always have a case_identifier in the log input 
+        -> correlation miner only useful if we do not have or know the case_identifier
+        def correlation_miner(self):
+        pass
+        '''
+
+    def conformance_checking_token_based_replay(self):
+        replayed_traces = pm4py.conformance_diagnostics_token_based_replay(self.predictive_df, self.petri_net, self.initial_marking, self.final_marking)
