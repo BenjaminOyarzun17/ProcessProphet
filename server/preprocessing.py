@@ -13,7 +13,7 @@ import pprint
 import pm4py
 
 import datetime as dt
-from loggers import logger_import_event_log, logger_split_train_test
+from loggers import logger_import_event_log, logger_split_train_test, logger_evaluate
 
 
 
@@ -169,12 +169,10 @@ class Preprocessing:
         exponent = self.event_df[self.case_timestamp_key].astype(str).apply(lambda x: len(x)).mean()
         self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key] / (10 ** exponent)
 
-        self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].astype("int64") / (10 ** exponent)
 
         # #: transform the case id and markers back into float
         self.event_df[self.case_activity_key] = self.event_df[self.case_activity_key].astype("float64")
         self.event_df[self.case_id_key] = self.event_df[self.case_id_key].astype("float64")
-
 
     def split_train_test(self, train_percentage):
         """
@@ -201,6 +199,7 @@ class Preprocessing:
 
         if test.shape[0] == 0: 
             raise TrainPercentageTooHigh()
+
 
         return train, test
 
