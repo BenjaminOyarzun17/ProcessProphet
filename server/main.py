@@ -17,28 +17,6 @@ from process_model_manager import ProcessModelManager
 
 
 
-def test_data_loader():
-    preprocessor = Preprocessing()
-    preprocessor.import_event_log_csv("data/test_day.csv"
-                                        , "case_id", "activity", "timestamp", ',')
-    
-    nn_manager = NNManagement()
-    train, test, no_classes = preprocessor.split_train_test(.9)
-    
-    train_set = ATMDataset(nn_manager.config ,train, preprocessor.case_id_key,   preprocessor.case_timestamp_key, preprocessor.case_activity_key) 
-
-    train_loader = DataLoader(train_set, batch_size=nn_manager.config.batch_size, shuffle=True, collate_fn=ATMDataset.to_features)
-
-    for i, batch in enumerate(train_loader):
-        a, b = batch
-        print(a.shape)
-        print("b: ", b.shape)
-
-
-
-
-
-
 app = Flask(__name__)
 app.register_blueprint(routes)
 
@@ -416,6 +394,46 @@ def test_import_model():
     )
 
 
+def test_alpha_miner():
+
+    preprocessor = Preprocessing()
+    is_xes  = True
+    #path =  "data/train_day_joined.csv"
+    #path = "data/BPI_Challenge_2019.xes"
+    path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
+     
+    if is_xes:
+        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
+    else:
+        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
+    train, test = preprocessor.split_train_test(.9)
+
+    nn_manager = NNManagement()
+    # select cuda or not
+    nn_manager.config.cuda = True 
+    nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
+    nn_manager.config.our_implementation = True
+    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
+    nn_manager.config.activity_le = preprocessor.activity_le
+    nn_manager.config.case_id_le = preprocessor.case_id_le
+    nn_manager.config.exponent = preprocessor.exponent
+    
+    pmm = ProcessModelManager(
+        preprocessor.event_df, 
+        nn_manager.model, 
+        nn_manager.config,
+        preprocessor.case_activity_key,
+        preprocessor.case_id_key,
+        preprocessor.case_timestamp_key
+    )
+    pmm.end_activities = preprocessor.find_end_activities()
+    #pmm.generate_predictive_log_random_cut_until_end(100)
+    pmm.generate_predictive_log_random_cut(100)
+    #pmm.alpha_miner()
+    pmm.heuristic_miner()
 
 if __name__=="__main__": 
     #test_our()
@@ -423,6 +441,7 @@ if __name__=="__main__":
     #test_random_search(2)
     #test_single_prediction()
     #test_process_model_manager_random_cut()
-    test_process_model_manager_random_cut_nontstop()
+    #test_process_model_manager_random_cut_nontstop()
     #test_end_activities()
     #app.run()
+    test_alpha_miner()

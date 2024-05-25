@@ -15,11 +15,7 @@ from collections import deque
 
 class PredictionManager: 
     def __init__(self, model, case_id_key, activity_key, timestamp_key, config ):
-        #TODO: it might be more convenient to store a config object 
-        # so that not so much copying is necessary
-        
-        #: we assume there is an already existing model
-        self.model =model 
+        self.model =model  #: we assume there is an already existing model
         self.case_id_key = case_id_key # we assume the three important columns are known
         self.activity_key = activity_key
         self.timestamp_key = timestamp_key
@@ -211,7 +207,7 @@ class PredictionManager:
             # base case
             self.paths.append(list(current_path))
             return
-        p_t, p_events = self.get_sorted_wrapper(c_t, c_e )
+        p_t, p_events = self.get_sorted_wrapper( )
         for p_e in p_events[:degree]:
             # filter branching degree ; the list is already sorted
             # therefore the "degree" most probable are taken

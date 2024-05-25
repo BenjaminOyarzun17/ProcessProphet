@@ -36,6 +36,7 @@ class Preprocessing:
         self.absolute_frequency_distribution = None
         self.case_id_le = None
         self.activity_le = None
+        self.exponent = None
         # TODO: invoke import_event_log? (decide)
 
     def xes_helper(self, path): 
@@ -114,7 +115,15 @@ class Preprocessing:
         self.event_df[self.case_activity_key] = self.event_df[self.case_activity_key].astype("string")
         self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].astype("datetime64[ns, UTC]")
 
+
+
+
         self.event_log = pm4py.convert_to_event_log(self.event_df, self.case_id_key) #this returns an event log
+
+
+        #: add unique start/end _activity
+        self.add_unique_start_end_activity()
+
         #: filter out all the other generated columns
         self.event_df= self.event_df[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
         self.event_df= self.event_df.dropna()
@@ -166,8 +175,8 @@ class Preprocessing:
         self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].astype(int)
 
         #: generates an integer in posix standard. 
-        exponent = self.event_df[self.case_timestamp_key].astype(str).apply(lambda x: len(x)).mean()
-        self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key] / (10 ** exponent)
+        self.exponent = self.event_df[self.case_timestamp_key].astype(str).apply(lambda x: len(x)).mean()
+        self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key] / (10 ** self.exponent)
 
 
         # #: transform the case id and markers back into float
@@ -228,7 +237,13 @@ class Preprocessing:
         if there is no unique start/ end activity, add an artificial start and end activity
         """
         if (len(self.find_start_activities()) != 1) or (len(self.find_end_activities()) != 1):
-            self.dataframe = pm4py.insert_artificial_start_end(self.event_log, activity_key=self.case_activity_key, case_id_key=self.case_id_key, timestamp_key=self.case_timestamp_key)
+            processed_log= pm4py.insert_artificial_start_end(
+                self.event_log, 
+                activity_key=self.case_activity_key, 
+                case_id_key=self.case_id_key, 
+                timestamp_key=self.case_timestamp_key
+            )
+            self.event_df =pm4py.convert_to_dataframe(processed_log) 
             
     def get_sample_case(self):
         """
