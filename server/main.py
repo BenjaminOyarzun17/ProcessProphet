@@ -13,6 +13,10 @@ from process_model_manager import ProcessModelManager
 
 
 
+
+
+
+
 def test_data_loader():
     preprocessor = Preprocessing()
     preprocessor.import_event_log_csv("data/test_day.csv"
@@ -37,7 +41,26 @@ def test_data_loader():
 
 app = Flask(__name__)
 app.register_blueprint(routes)
-    
+
+
+
+def test_end_activities():
+    preprocessor = Preprocessing()
+    is_xes = False
+    path =  "data/train_day_joined.csv"
+    #path = "data/BPI_Challenge_2019.xes"
+    #path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
+    if is_xes:
+        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
+        print(preprocessor.event_df.head())
+    else:
+        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
+    print(preprocessor.find_end_activities())
+
+ 
 def test_our():
     preprocessor = Preprocessing()
     is_xes = False
@@ -239,9 +262,80 @@ def test_multiple_prediction():
         dummy  
     )
 
+def test_process_model_manager_random_cut_nontstop():
+    preprocessor = Preprocessing()
+    is_xes  = False
+    path =  "data/train_day_joined.csv"
+    #path = "data/BPI_Challenge_2019.xes"
+    #path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
+     
+    if is_xes:
+        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
+    else:
+        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
+    train, test = preprocessor.split_train_test(.9)
+
+    nn_manager = NNManagement()
+    # select cuda or not
+    nn_manager.config.cuda = True 
+    nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
+    nn_manager.config.our_implementation = True
+    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
+    nn_manager.config.activity_le = preprocessor.activity_le
+    nn_manager.config.case_id_le = preprocessor.case_id_le
+    
+    pmm = ProcessModelManager(
+        preprocessor.event_df, 
+        nn_manager.model, 
+        nn_manager.config,
+        preprocessor.case_activity_key,
+        preprocessor.case_id_key,
+        preprocessor.case_timestamp_key
+    )
+    pmm.end_activities = preprocessor.find_end_activities()
+    pmm.generate_predictive_log_random_cut_until_end(100)
 
 
-def test_process_model_manager():
+def test_process_model_manager_random_cut():
+    preprocessor = Preprocessing()
+    is_xes  = True
+    #path =  "data/train_day_joined.csv"
+    #path = "data/BPI_Challenge_2019.xes"
+    path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
+     
+    if is_xes:
+        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
+    else:
+        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
+    train, test = preprocessor.split_train_test(.9)
+
+    nn_manager = NNManagement()
+    # select cuda or not
+    nn_manager.config.cuda = True 
+    nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
+    nn_manager.config.our_implementation = True
+    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
+    nn_manager.config.activity_le = preprocessor.activity_le
+    nn_manager.config.case_id_le = preprocessor.case_id_le
+    
+    pmm = ProcessModelManager(
+        preprocessor.event_df, 
+        nn_manager.model, 
+        nn_manager.config,
+        preprocessor.case_activity_key,
+        preprocessor.case_id_key,
+        preprocessor.case_timestamp_key
+    )
+    pmm.generate_predictive_log_random_cut(100)
+
+
+def test_process_model_manager_tail_cut():
     preprocessor = Preprocessing()
     is_xes  =False
     path =  "data/train_day_joined.csv"
@@ -275,7 +369,7 @@ def test_process_model_manager():
         preprocessor.case_id_key,
         preprocessor.case_timestamp_key
     )
-    pmm.generate_predictive_log()
+    pmm.generate_predictive_log_tail_cut()
 
 
 def test_import_model():
@@ -324,11 +418,11 @@ def test_import_model():
 
 
 if __name__=="__main__": 
-    #test_embed() 
     #test_our()
     #test_import_model()
     #test_random_search(2)
-    test_single_prediction()
-    #test_process_model_manager()
-    #nn_manager.model.predict_get_sorted(pass)
+    #test_single_prediction()
+    #test_process_model_manager_random_cut()
+    test_process_model_manager_random_cut_nontstop()
+    #test_end_activities()
     #app.run()
