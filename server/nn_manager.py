@@ -34,6 +34,7 @@ class Config:
         self.activity_le = None
         self.exponent = None
         self.number_classes = 0
+        self.weight= None
 
 class NNManagement: 
     """
@@ -162,6 +163,7 @@ class NNManagement:
     def random_search(self,train,test,  search_parameters, iterations, case_id_key, timestamp_key, case_activity_key ): 
         acc = 0
         best_model = None
+        self.load_data(train, test, case_id_key, timestamp_key, case_activity_key)
         for i in range(iterations): 
             a=random.randint(search_parameters["hidden_dim"][0], search_parameters["hidden_dim"][1])
             b=random.randint(search_parameters["lstm_dim"][0], search_parameters["lstm_dim"][1])
@@ -169,7 +171,7 @@ class NNManagement:
             self.config.hid_dim = a
             self.config.emb_dim= b
             self.config.mlp_dim=c
-            self.train(train, test, case_id_key, timestamp_key, case_activity_key)
+            self.train()
             if self.acc> acc: 
                 self.config.hid_dim = a
                 self.config.emb_dim= b
@@ -182,6 +184,7 @@ class NNManagement:
     def grid_search(self,train,test,  search_parameters, case_id_key, timestamp_key, case_activity_key ): 
         acc = 0
         best_model = None
+        self.load_data(train, test, case_id_key, timestamp_key, case_activity_key)
         for i in range(search_parameters["hidden_dim"][0], search_parameters["hidden_dim"][1], search_parameters["hidden_dim"][2]): 
                 self.config.hid_dim =i 
                 for j in range(search_parameters["lstm_dim"][0], search_parameters["lstm_dim"][1], search_parameters["lstm_dim"][2]): 
@@ -189,16 +192,29 @@ class NNManagement:
                     for k in range(search_parameters["emb_dim"][0], search_parameters["emb_dim"][1], search_parameters["emb_dim"][2]):
                         self.config.emb_dim=k
                         self.config.our_implementation = True
-                        self.train(train, test, case_id_key, timestamp_key, case_activity_key)
+                        self.train()
                         best_model = self.model
                         if self.acc> acc: 
                             acc = self.acc
         self.model = best_model
         print(f"best acc: {acc}")
     
+    def load_data(self,train_data, test_data, case_id, timestamp_key, event_key ):
+        train_set = ATMDataset(self.config ,train_data, case_id,   timestamp_key, event_key ) 
+        test_set = ATMDataset(self.config , test_data, case_id, timestamp_key, event_key)
+        # now load the data to torch tensors and generate the batches. also 
+        self.train_loader = DataLoader(train_set, batch_size=self.config.batch_size, shuffle=True, collate_fn=ATMDataset.to_features)
+        self.test_loader = DataLoader(test_set, batch_size=self.config.batch_size, shuffle=False, collate_fn=ATMDataset.to_features)
+
+        #: initialize a matrix to store the importance weights
+        # that will be passed to the CrossEntropyLoss object. 
+        self.weight = np.ones(self.config.number_classes)
+        if self.config.importance_weight:
+            self.weight = train_set.importance_weight(self.config.absolute_frequency_distribution)
         
 
-    def train(self, train_data, test_data, case_id, timestamp_key, event_key):
+
+    def train(self):
         """
         This is the main training function 
         :param train_data: train data df
@@ -210,19 +226,7 @@ class NNManagement:
         # we already pass the split data to de ATM loader. ATMDAtaset uses the sliding window for generating the input for training.
         # since we are using tensors for training the sequence length remains fixed in each epoch, hence we cannot do "arbitrary length cuts" 
         # to the training data
-        train_set = ATMDataset(self.config ,train_data, case_id,   timestamp_key, event_key ) 
-        test_set = ATMDataset(self.config , test_data, case_id, timestamp_key, event_key)
-        # now load the data to torch tensors and generate the batches. also 
-        self.train_loader = DataLoader(train_set, batch_size=self.config.batch_size, shuffle=True, collate_fn=ATMDataset.to_features)
-        self.test_loader = DataLoader(test_set, batch_size=self.config.batch_size, shuffle=False, collate_fn=ATMDataset.to_features)
-
-        #: initialize a matrix to store the importance weights
-        # that will be passed to the CrossEntropyLoss object. 
-        weight = np.ones(self.config.number_classes)
-        if self.config.importance_weight:
-            weight = train_set.importance_weight(self.config.absolute_frequency_distribution)
-        
-        self.model = Net(self.config, lossweight=weight) #crete a NN instance
+        self.model = Net(self.config, lossweight=self.weight) #crete a NN instance
         self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs) #TODO: fix use bert (doesnt exist)
 
 
