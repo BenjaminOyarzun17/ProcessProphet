@@ -248,6 +248,8 @@ class ProcessModelManager:
                 continue
             cuts[case_id]= (count, cut, count-cut)
             input_sequences.append(sequence)
+
+            sequence = self.decode_sequence(sequence)
             self.predictive_df= pd.concat([self.predictive_df, sequence], ignore_index = True)
         
         #logger_generate_predictive_log.debug("cuts:")        
@@ -280,7 +282,6 @@ class ProcessModelManager:
                 sequence, 
                 linear = True
             )
-
             prediction = pm.decoded_paths[0] #might break
             #logger_generate_predictive_log.debug("prediction len:")        
             #logger_generate_predictive_log.debug(len(prediction))
@@ -307,6 +308,27 @@ class ProcessModelManager:
         logger_generate_predictive_log.debug("pred df creation duration:")        
         logger_generate_predictive_log.debug(et-st)
 
+    def decode_sequence(self, sequence):
+        sequence[self.case_activity_key] = self.config.activity_le.inverse_transform(sequence[self.case_activity_key].astype(int))
+        return sequence
+
+
+    def handle_nat(self, group):
+        last_valid_idx = group[self.case_timestamp_key].last_valid_index()
+        if last_valid_idx is None:
+            return group
+        last_valid_timestamp= group.loc[last_valid_idx, self.case_timestamp_key]
+        
+        nat_indices = group.index[group[self.case_timestamp_key].isna()]
+        for i, idx in enumerate(nat_indices):
+            group.at[idx, self.case_timestamp_key] = last_valid_timestamp+ pd.Timedelta(days=i + 1)
+    
+        return group     
+
+
+
+
+
     def decode_df(self):
 
         logger_generate_predictive_log.debug("numbers of nan before decode")        
@@ -315,42 +337,58 @@ class ProcessModelManager:
         logger_generate_predictive_log.debug(self.predictive_df.tail(20))        
         self.predictive_df[self.case_activity_key] = self.predictive_df[self.case_activity_key].astype("str")
         self.predictive_df[self.case_id_key] = self.predictive_df[self.case_activity_key].astype("str")
+        #: note that this operation is lossy and might generate NaT. 
         self.predictive_df[self.case_timestamp_key] = self.predictive_df[self.case_timestamp_key]*(10**self.config.exponent)
         self.predictive_df[self.case_timestamp_key] = self.predictive_df[self.case_timestamp_key].astype("datetime64[ns]")
-        """
-        TODO: all time predictions >=1 ARE NOT CORRECT.  (not convertible)
-        - either catch them an raise an error
-        - drop them 
-        - or find another solution
-        """
 
-        logger_generate_predictive_log.debug("number of nan after decode")        
-        logger_generate_predictive_log.debug(self.predictive_df.isna().sum())        
-        self.predictive_df = self.predictive_df.dropna() #just for now
+        self.predictive_df= self.predictive_df.groupby(self.case_id_key, group_keys=False).apply(self.handle_nat)
+
         self.predictive_df.to_csv("logs/predicted_df")
-        logger_generate_predictive_log.debug(self.predictive_df.head(20))        
-        logger_generate_predictive_log.debug(self.predictive_df.tail(20))        
 
 
-    def heuristic_miner(self):
+    def heuristic_miner(self, dependency_threshold=0.5, and_threshold=0.65, loop_two_threshold=0.5):
         self.decode_df()
-        self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_heuristics(self.predictive_df, activity_key=self.case_activity_key,timestamp_key=self.case_timestamp_key,case_id_key= self.case_id_key)
+        self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_heuristics(
+            self.predictive_df,
+            dependency_threshold, 
+            and_threshold, 
+            loop_two_threshold, 
+            activity_key=self.case_activity_key,
+            timestamp_key=self.case_timestamp_key,
+            case_id_key= self.case_id_key
+        )
         #pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
         pm4py.view_petri_net(self.petri_net, format='svg')
 
-    def inductive_miner(self):
+    def inductive_miner(self,  noise_threshold=0):
         self.decode_df()
-        self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_inductive(self.predictive_df, self.case_activity_key,self.case_timestamp_key, self.case_id_key)
+        self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_inductive(
+            self.predictive_df,
+            noise_threshold, 
+            self.case_activity_key,
+            self.case_timestamp_key,
+            self.case_id_key
+        )
         pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
 
     def alpha_miner(self):
         self.decode_df()
-        self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_alpha(self.predictive_df, self.case_activity_key,self.case_timestamp_key, self.case_id_key)
+        self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_alpha(
+            self.predictive_df,
+            self.case_activity_key,
+            self.case_timestamp_key, 
+            self.case_id_key
+        )
         pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
 
     def prefix_tree_miner(self):
         self.decode_df()
-        self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_prefix_tree(self.predictive_df, self.case_activity_key,self.case_timestamp_key, self.case_id_key)
+        self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_prefix_tree(
+            self.predictive_df,
+            self.case_activity_key,
+            self.case_timestamp_key,
+            self.case_id_key
+        )
         pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
 
         '''
