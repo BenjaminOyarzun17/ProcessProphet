@@ -5,6 +5,7 @@ import random
 import pandas as pd
 from loggers import logger_generate_predictive_log, logger_multiple_prediction
 from tqdm import tqdm
+from exceptions import CutTooLarge, CutLengthZero
 
 import time as tim
 
@@ -25,19 +26,8 @@ class ProcessModelManager:
         self.final_marking = None
         self.petri_net = None
 
+    def initialize_variables(self):
 
-
-    def generate_predictive_log_random_cut_until_end(self, max_len, upper = 30): 
-        """
-        this function creates the predictive event log in a dataframe. 
-        we go over all case id's in the event log, and cut each
-        sequence in a random index. 
-        an upper bound can be selected for the max sequence length
-        to reduce runtime.
-        after this, we try to complet the cut trace until a 
-        final activity is predicted.  
-        """
-        st= tim.time()
         case_id_counts = self.event_df[self.case_id_key].value_counts()
         cuts = []
         self.predictive_df = {
@@ -45,9 +35,11 @@ class ProcessModelManager:
             self.case_activity_key:[],
             self.case_timestamp_key:[]
         }
-        self.predictive_df = pd.DataFrame(self.predictive_df)
         input_sequences = []
         cuts = {}
+        return case_id_counts, cuts, input_sequences, cuts
+
+    def random_cutter(self, case_id_counts, max_len, cuts, input_sequences):
         for i, case_id in enumerate(case_id_counts.index):
             count = case_id_counts.loc[case_id]
             sequence = self.event_df[self.event_df[self.case_id_key]==case_id]  
@@ -58,14 +50,10 @@ class ProcessModelManager:
             cuts[case_id]= (count, cut, count-cut)
             input_sequences.append(sequence)
             self.predictive_df= pd.concat([self.predictive_df, sequence], ignore_index = True)
-        
-        
-        lenths = [len(seq) for seq in input_sequences]
-        for i in lenths: 
-            if i<=self.config.seq_len: 
-                print("found too short sequence")
-                return
-        
+        return case_id_counts, cuts, input_sequences 
+
+    def fill_up_log(self, upper , non_stop , random_cuts , cut_length , input_sequences, cuts):
+
         for i, sequence in enumerate(tqdm(input_sequences)): 
             pm= PredictionManager(
                 self.model, 
@@ -74,24 +62,21 @@ class ProcessModelManager:
                 self.case_timestamp_key, 
                 self.config
             )
+            case_id = sequence[self.case_id_key].iloc[1]
+            pm.model = self.model
+            pm.case_id_le = self.config.case_id_le
+            pm.activity_le = self.config.activity_le
+            pm.seq_len = self.config.seq_len
             pm.end_activities = self.end_activities
-            case_id = sequence[self.case_id_key].iloc[1]
-            pm.model = self.model
-            pm.case_id_le = self.config.case_id_le
-            pm.activity_le = self.config.activity_le
-            pm.seq_len = self.config.seq_len
             pm.multiple_prediction_dataframe(
                 cuts[case_id][2],
                 1,
                 sequence, 
-                linear = True, 
-                non_stop = True ,
-                upper = upper 
+                linear = True ,  
+                non_stop=non_stop,
+                upper = upper, 
             )
             prediction = pm.decoded_paths[0] #might break
-            #logger_generate_predictive_log.debug("prediction len:")        
-            #logger_generate_predictive_log.debug(len(prediction))
-            #logger_generate_predictive_log.debug("prediction:")        
             extension = {
                 self.case_id_key:[],
                 self.case_activity_key:[],
@@ -109,6 +94,37 @@ class ProcessModelManager:
             #logger_generate_predictive_log.debug(extension)        
             self.predictive_df= pd.concat([self.predictive_df, extension], ignore_index = True)
 
+
+
+    def generate_predictive_log(self, max_len= 15, upper = 30, non_stop = False, random_cuts = False, cut_length = 0): 
+        """
+       
+
+        max len: max length for the cut sequences ie max sequence input size length.
+        upper:  upperbound for the non stop random cutter ie how long to run before reaching end state. 
+
+        for tail cuts: set cut_length value and set random_cuts to false
+        for random cuts with cut memory: random_cuts to true and non_stop to false
+        for random cuts nonstop: random_cuts to true and non_stop totrue 
+        
+        """
+        st= tim.time()
+        
+        case_id_counts, cuts, input_sequences, cuts = self.initialize_variables()
+
+        self.predictive_df = pd.DataFrame(self.predictive_df)
+        if random_cuts: 
+            case_id_counts,cuts, input_sequences= self.random_cutter(case_id_counts, max_len,cuts,  input_sequences)
+        else: 
+            if cut_length ==0: 
+                raise CutLengthZero()
+            case_id_counts,cuts, input_sequences= self.tail_cutter(case_id_counts, cut_length,cuts,  input_sequences)
+            
+        
+        self.check_too_short(input_sequences)
+
+        self.fill_up_log( upper , non_stop , random_cuts , cut_length , input_sequences, cuts)
+
         logger_generate_predictive_log.debug("generated df:")        
         logger_generate_predictive_log.debug(self.predictive_df.head(20))        
     
@@ -118,130 +134,19 @@ class ProcessModelManager:
 
 
 
-
-
-
-    def generate_predictive_log_random_cut(self, upper_bound): 
-        """
-        this function creates the predictive event log in a dataframe. 
-        we go over all case id's in the event log, and cut each
-        sequence in some random index bigger than seq length. 
-        for performance reasons the user can choose an  upper bound
-        for the selected traces. 
-        """
-        st= tim.time()
-        case_id_counts = self.event_df[self.case_id_key].value_counts()
-        cuts = []
-        self.predictive_df = {
-            self.case_id_key:[],
-            self.case_activity_key:[],
-            self.case_timestamp_key:[]
-        }
-        self.predictive_df = pd.DataFrame(self.predictive_df)
-        input_sequences = []
-        cuts = {}
-        for i, case_id in enumerate(case_id_counts.index):
-            count = case_id_counts.loc[case_id]
-            sequence = self.event_df[self.event_df[self.case_id_key]==case_id]  
-            if count<=self.config.seq_len or count>upper_bound:
-                continue
-            cut = random.randint(self.config.seq_len+1, count)
-            sequence = sequence.iloc[:cut]
-            cuts[case_id]= (count, cut, count-cut)
-            input_sequences.append(sequence)
-            self.predictive_df= pd.concat([self.predictive_df, sequence], ignore_index = True)
-        
-        #logger_generate_predictive_log.debug("cuts:")        
-        #logger_generate_predictive_log.debug(cuts)        
-        logger_generate_predictive_log.debug("no of input sequences:")        
-        logger_generate_predictive_log.debug(len(input_sequences))        
-        
-        lenths = [len(seq) for seq in input_sequences]
+    def check_too_short(self, sequences):
+        lenths = [len(seq) for seq in sequences]
         for i in lenths: 
             if i<=self.config.seq_len: 
                 print("found too short sequence")
-                return
-        
-        for i, sequence in enumerate(tqdm(input_sequences)): 
-            pm= PredictionManager(
-                self.model, 
-                self.case_id_key, 
-                self.case_activity_key, 
-                self.case_timestamp_key, 
-                self.config
-            )
-            case_id = sequence[self.case_id_key].iloc[1]
-            pm.model = self.model
-            pm.case_id_le = self.config.case_id_le
-            pm.activity_le = self.config.activity_le
-            pm.seq_len = self.config.seq_len
-            pm.multiple_prediction_dataframe(
-                cuts[case_id][2],
-                1,
-                sequence, 
-                linear = True  
-            )
-            prediction = pm.decoded_paths[0] #might break
-            #logger_generate_predictive_log.debug("prediction len:")        
-            #logger_generate_predictive_log.debug(len(prediction))
-            #logger_generate_predictive_log.debug("prediction:")        
-            extension = {
-                self.case_id_key:[],
-                self.case_activity_key:[],
-                self.case_timestamp_key:[]
-            }
-            for time, (pred, event) in prediction: 
-                extension[self.case_id_key] = [case_id]
-                extension[self.case_activity_key]= [event]
-                extension[self.case_timestamp_key]= [time]
-            
-            #logger_generate_predictive_log.debug("extension:")        
-            #logger_generate_predictive_log.debug(extension)        
-            extension = pd.DataFrame(extension)
-            #logger_generate_predictive_log.debug("extension:")        
-            #logger_generate_predictive_log.debug(extension)        
-            self.predictive_df= pd.concat([self.predictive_df, extension], ignore_index = True)
+                raise CutTooLarge()
 
-        logger_generate_predictive_log.debug("generated df:")        
-        logger_generate_predictive_log.debug(self.predictive_df.head(20))        
-    
-        et= tim.time()
-        logger_generate_predictive_log.debug("pred df creation duration:")        
-        logger_generate_predictive_log.debug(et-st)
+    def tail_cutter(self, case_id_counts, cut_length, cuts, input_sequences):
 
-
-
-
-
-
-
-    def generate_predictive_log_tail_cut(self): 
-        """
-        this function creates the predictive event log in a dataframe. 
-        we go over all case id's in the event log, and cut each
-        sequence in the last three events. this is done for the following 
-        reasons: 
-        - bigger values for the cut generate longer prediction times
-        hence slower performance. 
-        - it doesnt make sense to make too long predictions in terms of
-        sequence length, since the probability will always be significantly smaller.   
-        after doing the predictions, the cut cases are extended with the predictions. 
-        """
-        st= tim.time()
-        case_id_counts = self.event_df[self.case_id_key].value_counts()
-        cuts = []
-        self.predictive_df = {
-            self.case_id_key:[],
-            self.case_activity_key:[],
-            self.case_timestamp_key:[]
-        }
-        self.predictive_df = pd.DataFrame(self.predictive_df)
-        input_sequences = []
-        cuts = {}
         for i, case_id in enumerate(case_id_counts.index):
             count = case_id_counts.loc[case_id]
             cut = random.randint(1, count)
-            cut = count-min(3, cut)
+            cut = count-min(cut_length, cut)
             sequence = self.event_df[self.event_df[self.case_id_key]==case_id]  
             sequence = sequence.iloc[:cut]
             if len(sequence) <= self.config.seq_len: 
@@ -251,62 +156,10 @@ class ProcessModelManager:
 
             sequence = self.decode_sequence(sequence)
             self.predictive_df= pd.concat([self.predictive_df, sequence], ignore_index = True)
-        
-        #logger_generate_predictive_log.debug("cuts:")        
-        #logger_generate_predictive_log.debug(cuts)        
-        logger_generate_predictive_log.debug("no of input sequences:")        
-        logger_generate_predictive_log.debug(len(input_sequences))        
-        
-        lenths = [len(seq) for seq in input_sequences]
-        for i in lenths: 
-            if i<=self.config.seq_len: 
-                print("found too short sequence")
-                return
-        
-        for i, sequence in enumerate(tqdm(input_sequences)): 
-            pm= PredictionManager(
-                model = self.model, 
-                case_id_key= self.case_id_key, 
-                activity_key= self.case_activity_key,
-                timestamp_key=self.case_timestamp_key,
-                config = self.config
-            )
-            case_id = sequence[self.case_id_key].iloc[1]
-            pm.model = self.model
-            pm.case_id_le = self.config.case_id_le
-            pm.activity_le = self.config.activity_le
-            pm.seq_len = self.config.seq_len
-            pm.multiple_prediction_dataframe(
-                cuts[case_id][2],
-                1,
-                sequence, 
-                linear = True
-            )
-            prediction = pm.decoded_paths[0] #might break
-            #logger_generate_predictive_log.debug("prediction len:")        
-            #logger_generate_predictive_log.debug(len(prediction))
-            #logger_generate_predictive_log.debug("prediction:")        
-            extension = {
-                self.case_id_key:[],
-                self.case_activity_key:[],
-                self.case_timestamp_key:[]
-            }
-            for time, (pred, event) in prediction: 
-                extension[self.case_id_key] = [case_id]
-                extension[self.case_activity_key]= [event]
-                extension[self.case_timestamp_key]= [time]
-            
-            extension = pd.DataFrame(extension)
-            #logger_generate_predictive_log.debug("extension:")        
-            #logger_generate_predictive_log.debug(extension)        
-            self.predictive_df= pd.concat([self.predictive_df, extension], ignore_index = True)
 
-        logger_generate_predictive_log.debug("generated df:")        
-        logger_generate_predictive_log.debug(self.predictive_df.head(20))        
+        return case_id_counts, cuts, input_sequences 
+
     
-        et= tim.time()
-        logger_generate_predictive_log.debug("pred df creation duration:")        
-        logger_generate_predictive_log.debug(et-st)
 
     def decode_sequence(self, sequence):
         sequence[self.case_activity_key] = self.config.activity_le.inverse_transform(sequence[self.case_activity_key].astype(int))

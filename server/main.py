@@ -251,7 +251,7 @@ def test_process_model_manager_random_cut_nontstop():
         preprocessor.case_timestamp_key
     )
     pmm.end_activities = preprocessor.find_end_activities()
-    pmm.generate_predictive_log_random_cut_until_end(100)
+    pmm.generate_predictive_log(non_stop=True, upper =30, random_cuts=True)
 
 
 def test_process_model_manager_random_cut():
@@ -289,7 +289,7 @@ def test_process_model_manager_random_cut():
         preprocessor.case_id_key,
         preprocessor.case_timestamp_key
     )
-    pmm.generate_predictive_log_random_cut(100)
+    pmm.generate_predictive_log(non_stop=False, upper =100, random_cuts=True)
 
 
 def test_process_model_manager_tail_cut():
@@ -328,8 +328,8 @@ def test_process_model_manager_tail_cut():
         preprocessor.case_id_key,
         preprocessor.case_timestamp_key
     )
-    pmm.generate_predictive_log_tail_cut()
 
+    pmm.generate_predictive_log(non_stop=False, random_cuts=False, cut_length = 3)
 
 
 def test_alpha_miner():
@@ -477,10 +477,11 @@ if __name__=="__main__":
     #test_random_search(2)
     #test_grid_search()
     #test_single_prediction()
-    test_multiple_prediction()
+    #test_multiple_prediction()
     #test_process_model_manager_random_cut()
     #test_process_model_manager_random_cut_nontstop()
+    #test_process_model_manager_random_cut()
     #test_end_activities()
-    #test_process_model_manager_tail_cut()
+    test_process_model_manager_tail_cut()
     #app.run()
     #test_heuristic()

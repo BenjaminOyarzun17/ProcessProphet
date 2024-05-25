@@ -8,6 +8,24 @@ class TrainPercentageTooHigh(Exception):
         return self.message
 
 
+class CutLengthZero(Exception):
+    def __init__(self):
+        self.message= "cut length zero while attempting tail cut"
+
+    def __str__(self):
+        return self.message
+
+
+
+class CutTooLarge(Exception):
+    def __init__(self):
+        self.message= "a cut was done that generated a partial sequence shorter than seq len"
+
+    def __str__(self):
+        return self.message
+
+
+
 class NotOneCaseId(Exception):
     def __init__(self):
         self.message= "the df use as input does not have one unique case id value."

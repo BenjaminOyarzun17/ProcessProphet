@@ -322,6 +322,9 @@ class PredictionManager:
         self.encoded_df= preprocessor.event_df 
         self.current_case_id= self.encoded_df[self.case_id_key].sample(n = 1).values[0]
         if not linear: 
+            """
+            case backtracking needed 
+            """
             self.multiple_prediction(depth, degree)
         else: 
             """
