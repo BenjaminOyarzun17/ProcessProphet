@@ -7,8 +7,8 @@ class Net(nn.Module):
     def __init__(self, config, lossweight ):
         super(Net, self).__init__()
         self.config = config 
-        self.n_class = config.event_class
-        self.embedding = nn.Embedding(num_embeddings=config.event_class, embedding_dim=config.emb_dim)
+        self.n_class = config.number_classes
+        self.embedding = nn.Embedding(num_embeddings=config.number_classes, embedding_dim=config.emb_dim)
         self.emb_drop = nn.Dropout(p=config.dropout)
         #droputs transform some random entries into zeros. Its used for regularization
         self.lstm = nn.LSTM(input_size=config.emb_dim + 1,         #we add one to the input because we merge the embedding vector with the time input (float)
@@ -18,7 +18,7 @@ class Net(nn.Module):
         self.mlp =   nn.Linear(in_features=config.hid_dim, out_features=config.mlp_dim) #TODO: check if this is the LSTM gate connection
         self.mlp_drop = nn.Dropout(p=config.dropout)
 
-        self.event_linear = nn.Linear(in_features=config.mlp_dim, out_features=config.event_class) #here we generate the output logits for the label
+        self.event_linear = nn.Linear(in_features=config.mlp_dim, out_features=config.number_classes) #here we generate the output logits for the label
         self.time_linear = nn.Linear(in_features=config.mlp_dim, out_features=1) #here we calc the time prediction
         self.set_criterion(lossweight) 
         self.lossweight = lossweight

@@ -12,6 +12,7 @@ from exceptions import *
 import logging
 from collections import Counter
 from loggers import logger_evaluate
+import random
 
 class Config: 
     def __init__(self):
@@ -27,12 +28,12 @@ class Config:
         self.model =None 
         self.importance_weight = "store_true"
         self.verbose_step = 350
-        self.event_class = 0
         self.cuda = False
         self.absolute_frequency_distribution = Counter()
         self.case_id_le = None
         self.activity_le = None
         self.exponent = None
+        self.number_classes = 0
 
 class NNManagement: 
     """
@@ -107,7 +108,7 @@ class NNManagement:
         self.time_error = abs_error(pred_times, gold_times)  #compute errors
 
 
-        self.acc, self.recall, self.f1 = clf_metric(pred_events, gold_events, n_class=config.event_class) #get the metrics
+        self.acc, self.recall, self.f1 = clf_metric(pred_events, gold_events, n_class=config.number_classes) #get the metrics
         
         print(f"time_error: {self.time_error}, PRECISION: {self.acc}, RECALL: {self.recall}, F1: {self.f1}")
 
@@ -152,15 +153,52 @@ class NNManagement:
         optimizer state dict
         """
         torch.save({
-        'model_state_dict': self.model.state_dict(),
-        'optimizer_state_dict': self.model.optimizer.state_dict(),
-        'config': self.model.config, 
-        'lossweight': self.model.lossweight
+            'model_state_dict': self.model.state_dict(),
+            'optimizer_state_dict': self.model.optimizer.state_dict(),
+            'config': self.model.config, 
+            'lossweight': self.model.lossweight
         }, "model.pt")
 
+    def random_search(self,train,test,  search_parameters, iterations, case_id_key, timestamp_key, case_activity_key ): 
+        acc = 0
+        best_model = None
+        for i in range(iterations): 
+            a=random.randint(search_parameters["hidden_dim"][0], search_parameters["hidden_dim"][1])
+            b=random.randint(search_parameters["lstm_dim"][0], search_parameters["lstm_dim"][1])
+            c=  random.randint(search_parameters["emb_dim"][0], search_parameters["emb_dim"][1])
+            self.config.hid_dim = a
+            self.config.emb_dim= b
+            self.config.mlp_dim=c
+            self.train(train, test, case_id_key, timestamp_key, case_activity_key)
+            if self.acc> acc: 
+                self.config.hid_dim = a
+                self.config.emb_dim= b
+                self.config.mlp_dim=c
+                acc = self.acc
+                best_model = self.model
+        self.model = best_model
+        print(f"best accuracy: {acc}")
 
+    def grid_search(self,train,test,  search_parameters, case_id_key, timestamp_key, case_activity_key ): 
+        acc = 0
+        best_model = None
+        for i in range(search_parameters["hidden_dim"][0], search_parameters["hidden_dim"][1], search_parameters["hidden_dim"][2]): 
+                self.config.hid_dim =i 
+                for j in range(search_parameters["lstm_dim"][0], search_parameters["lstm_dim"][1], search_parameters["lstm_dim"][2]): 
+                    self.config.mlp_dim=j
+                    for k in range(search_parameters["emb_dim"][0], search_parameters["emb_dim"][1], search_parameters["emb_dim"][2]):
+                        self.config.emb_dim=k
+                        self.config.our_implementation = True
+                        self.train(train, test, case_id_key, timestamp_key, case_activity_key)
+                        best_model = self.model
+                        if self.acc> acc: 
+                            acc = self.acc
+        self.model = best_model
+        print(f"best acc: {acc}")
+    
+        
 
-    def train(self, train_data, test_data, case_id, timestamp_key, event_key, no_classes):
+    def train(self, train_data, test_data, case_id, timestamp_key, event_key):
         """
         This is the main training function 
         :param train_data: train data df
@@ -169,35 +207,27 @@ class NNManagement:
         :param timestampt_key: timestamp key in the df
         :param no_classes: number of known markers.
         """
-
-        self.config.event_class = no_classes
-
         # we already pass the split data to de ATM loader. ATMDAtaset uses the sliding window for generating the input for training.
         # since we are using tensors for training the sequence length remains fixed in each epoch, hence we cannot do "arbitrary length cuts" 
         # to the training data
-
         train_set = ATMDataset(self.config ,train_data, case_id,   timestamp_key, event_key ) 
         test_set = ATMDataset(self.config , test_data, case_id, timestamp_key, event_key)
-
-
         # now load the data to torch tensors and generate the batches. also 
-       
         self.train_loader = DataLoader(train_set, batch_size=self.config.batch_size, shuffle=True, collate_fn=ATMDataset.to_features)
-        
         self.test_loader = DataLoader(test_set, batch_size=self.config.batch_size, shuffle=False, collate_fn=ATMDataset.to_features)
 
         #: initialize a matrix to store the importance weights
         # that will be passed to the CrossEntropyLoss object. 
-        weight = np.ones(self.config.event_class)
+        weight = np.ones(self.config.number_classes)
         if self.config.importance_weight:
             weight = train_set.importance_weight(self.config.absolute_frequency_distribution)
         
         self.model = Net(self.config, lossweight=weight) #crete a NN instance
         self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs) #TODO: fix use bert (doesnt exist)
 
+
         if self.config.cuda: 
             self.model.cuda() #GPU 
-
 
         for epc in range(self.config.epochs): #do the epochs
             self.model.train()  
