@@ -78,7 +78,6 @@ class PredictionManager:
 
         pred_times, pred_events = [], []
         for i, batch in enumerate(step2):   
-        
             logger_multiple_prediction.debug("batch:")
             logger_multiple_prediction.debug(batch[0].shape)
             logger_multiple_prediction.debug(batch[1].shape)
@@ -189,6 +188,7 @@ class PredictionManager:
         self.recursive_time_seqs = self.recursive_atm.time_seqs
         self.recursive_event_seqs = self.recursive_atm.event_seqs
 
+        self.recursive_time_diffs= self.get_differences()
         self.backtracking_prediction_tree(c_t, c_e, 0,depth, degree,[(c_t, (1, c_e))]) 
         
 
@@ -268,8 +268,7 @@ class PredictionManager:
         """
         self.recursive_time_seqs.pop()
         self.recursive_event_seqs.pop()
-    
-
+        self.recursive_time_diffs= np.delete(self.recursive_time_diffs, len(self.recursive_time_diffs)-1, axis = 0) 
 
     def decode_paths(self): #TODO: decode time
         self.decoded_paths = []

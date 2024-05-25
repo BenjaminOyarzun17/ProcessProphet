@@ -207,8 +207,8 @@ def test_multiple_prediction():
     nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
     nn_manager.train()
 
-    dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
     pm = PredictionManager( nn_manager.model, preprocessor.case_id_key, preprocessor.case_activity_key, preprocessor.case_timestamp_key, nn_manager.config)
+    dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
     pm.multiple_prediction_dataframe(
         2, 
         2, 
@@ -474,9 +474,10 @@ def test_import_model():
 if __name__=="__main__": 
     #test_our()
     #test_import_model()
-    test_random_search(2)
+    #test_random_search(2)
     #test_grid_search()
     #test_single_prediction()
+    test_multiple_prediction()
     #test_process_model_manager_random_cut()
     #test_process_model_manager_random_cut_nontstop()
     #test_end_activities()
