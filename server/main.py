@@ -416,6 +416,10 @@ def test_alpha_miner():
     nn_manager.config.cuda = True 
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.our_implementation = True
+    nn_manager.config.epochs = 15
+    nn_manager.config.emb_dim =1000
+    nn_manager.config.hid_dim =1000
+    nn_manager.config.mlp_dim =1000
     nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
     nn_manager.config.activity_le = preprocessor.activity_le
     nn_manager.config.case_id_le = preprocessor.case_id_le
@@ -435,6 +439,45 @@ def test_alpha_miner():
     #pmm.alpha_miner()
     pmm.heuristic_miner()
 
+def test_heuristic():
+    preprocessor = Preprocessing()
+    is_xes  = True
+    #path =  "data/train_day_joined.csv"
+    path = "data/BPI_Challenge_2019.xes"
+    #path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
+     
+    if is_xes:
+        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
+    else:
+        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
+    train, test = preprocessor.split_train_test(.9)
+
+    nn_manager = NNManagement()
+    # select cuda or not
+    nn_manager.config.cuda = True 
+    nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
+    nn_manager.config.our_implementation = True
+    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
+    nn_manager.config.activity_le = preprocessor.activity_le
+    nn_manager.config.case_id_le = preprocessor.case_id_le
+    nn_manager.config.exponent = preprocessor.exponent
+
+    pmm = ProcessModelManager(
+        preprocessor.event_df, 
+        nn_manager.model, 
+        nn_manager.config,
+        preprocessor.case_activity_key,
+        preprocessor.case_id_key,
+        preprocessor.case_timestamp_key
+    )
+    
+    pmm.generate_predictive_log_tail_cut()
+
+    pmm.heuristic_miner()
+
 if __name__=="__main__": 
     #test_our()
     #test_import_model()
@@ -443,5 +486,6 @@ if __name__=="__main__":
     #test_process_model_manager_random_cut()
     #test_process_model_manager_random_cut_nontstop()
     #test_end_activities()
+    #test_process_model_manager_tail_cut()
     #app.run()
-    test_alpha_miner()
+    test_heuristic()
