@@ -2,7 +2,7 @@ import unittest
 from preprocessing import *
 from nn_manager import *
 import numpy as np
-
+import exceptions
 
 
 class TestImportXESFunction(unittest.TestCase):
@@ -26,7 +26,7 @@ class TestImportXESFunction(unittest.TestCase):
     def test_column_types(self):
         column_types = list(self.preprocessor.event_df.dtypes) 
         column_types = list(map(str, column_types))
-        self.assertListEqual(["string", "string", "datetime64[ns, UTC]"], column_types)
+        self.assertListEqual(["float64"]*3 , column_types)
 
    
     def test_row_order(self):
@@ -94,7 +94,7 @@ class TestImportCSVFunction(unittest.TestCase):
     def test_column_types(self):
         column_types = list(self.preprocessor.event_df.dtypes) 
         column_types = list(map(str, column_types))
-        self.assertListEqual(["string", "string", "datetime64[ns, UTC]"], column_types)
+        self.assertListEqual(["float64"]*3 , column_types)
 
    
     def test_row_order(self):
@@ -155,41 +155,34 @@ class TestImportCSVFunction(unittest.TestCase):
 
 class TestSplitTrainTest(unittest.TestCase):
     """
-    correctness criteria: 
-    -  check if raise TrainPercentageTooHigh is generated for a very small  
-    event log; also test it for train_percentage = 1
-    - TODO: check the NaN solution correctness (the right exponent selection) or
-    any other implemented solution
-    - check that all columns are of type float
 
     specification: 
     - input: train percentage
 
     - out/sideeffects 
     """
-    pass
+    @classmethod
+    def setUpClass(cls):
+        #: run this to import the data once 
+        cls.preprocessor= Preprocessing()
+        path = "data/running-example.csv" #its smaller, use preferrably.
+        cls.preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ";")
+    
+    def test_raise(self):
+        """
+        test if there are three columns and if they match the input names
+        """
+        self.assertRaises(TrainPercentageTooHigh, self.preprocessor.split_train_test, 1)
+    def test_column_types(self):
+        train, test = self.preprocessor.split_train_test(0.5)
+        train_types = list(train.dtypes) 
+        test_types = list(test.dtypes) 
+        column_types = train_types + test_types
+        column_types = list(map(str, column_types))
+        self.assertListEqual(["float64"]*6, column_types)
 
 
-class TestTrainEvaluate(unittest.TestCase):
-    """
-    tests: 
-    - check if there are no nan's while training /
-    as output of the predictions
-    - check if train/test are empty, raise an exception.
-    - raise an exception if cols dont exist. 
-    - 
 
-    specification: 
-    - input: 
-        - traindata, testdata, all 3 col names,no_classes
-
-    - output/sideeffects:
-        - no classes is set
-        - nn is trained and tested
-        - nn model is saved in the class 
-        - acc, recall, f1 are saved in class
-
-    """
 
 
 
