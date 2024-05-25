@@ -398,9 +398,9 @@ def test_alpha_miner():
 
     preprocessor = Preprocessing()
     is_xes  = True
-    #path =  "data/train_day_joined.csv"
+    path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
-    path = "data/Hospital_log.xes"
+    #path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
      
@@ -416,10 +416,12 @@ def test_alpha_miner():
     nn_manager.config.cuda = True 
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.our_implementation = True
+    """
     nn_manager.config.epochs = 15
     nn_manager.config.emb_dim =1000
     nn_manager.config.hid_dim =1000
     nn_manager.config.mlp_dim =1000
+    """
     nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key, preprocessor.number_classes)
     nn_manager.config.activity_le = preprocessor.activity_le
     nn_manager.config.case_id_le = preprocessor.case_id_le
