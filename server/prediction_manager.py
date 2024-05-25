@@ -4,6 +4,7 @@ from preprocessing import Preprocessing
 from ERPP_RMTPP_torch import * 
 from torch.utils.data import DataLoader
 import pandas as pd
+import numpy as np
 import pprint 
 import json
 import time
@@ -28,6 +29,10 @@ class PredictionManager:
         self.paths = []
         self.decoded_paths= []
         self.encoded_df = None
+        self.recursive_event_seqs = []
+        self.recursive_time_seqs = []
+        self.recursive_time_diffs= []
+        self.end_activities= {}
 
 
 
@@ -77,6 +82,10 @@ class PredictionManager:
 
         pred_times, pred_events = [], []
         for i, batch in enumerate(step2):   
+        
+            logger_multiple_prediction.debug("batch:")
+            logger_multiple_prediction.debug(batch[0].shape)
+            logger_multiple_prediction.debug(batch[1].shape)
             pred_time, pred_event = self.model.predict(batch, pm_active = True)
             pred_times.append(pred_time)
             pred_events.append(pred_event)
@@ -103,6 +112,68 @@ class PredictionManager:
         }
         json.dumps(ans)
 
+
+
+    def get_differences(self):
+        local = []
+        for seq in self.recursive_time_seqs:
+            seq = np.insert(seq, 0, seq[0])
+            seq= np.diff(seq)
+            local.append(seq)
+        return np.array(local)
+
+
+    def append_one_difference_array(self, lst):
+        time = np.array([lst[0]]+ lst)
+        time = np.diff(time)
+        self.recursive_time_diffs= np.append(self.recursive_time_diffs, [time], axis = 0)
+        
+    def multiple_prediction_linear(self, depth, nonstop ,upper): 
+        """
+        this is a special case of multiple prediction
+        where the degree= 1. we avoid backtracking and recursion for
+        efficiency reasons.  
+        """
+        c_t =self.encoded_df[self.timestamp_key].iloc[-1]
+        c_e =self.encoded_df[self.activity_key].iloc[-1]
+
+        self.recursive_atm= ATMDataset(self.config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
+        self.recursive_time_seqs = self.recursive_atm.time_seqs
+        self.recursive_event_seqs = self.recursive_atm.event_seqs
+        self.recursive_time_diffs= self.get_differences()
+        if nonstop:
+            self.linear_iterative_predictor_non_stop(c_t, c_e, upper) 
+        else:
+            self.linear_iterative_predictor(depth, c_t, c_e) 
+        self.decode_paths()
+
+    def linear_iterative_predictor_non_stop(self, start_time, start_event, upper): 
+
+        c_t = start_time
+        c_e = start_event
+        path = [(c_t , (1,c_e))]
+        i = 0
+        while not self.end_activities[c_e] and i<upper:
+            p_t, p_events = self.get_sorted_wrapper()
+            p_pair = p_events[0]
+            path.append((p_t[0], (p_pair[0], p_pair[1] )))
+            self.append_to_log(p_t[0], p_pair[1])
+            c_t = p_t[0]
+            c_e = p_pair[0]
+            i+=1
+        self.paths.append(path)
+    
+
+    def linear_iterative_predictor(self, depth, start_time, start_event): 
+        c_t = start_time
+        c_e = start_event
+        path = [(c_t , (1,c_e))]
+        for i in range(depth): 
+            p_t, p_events = self.get_sorted_wrapper()
+            p_pair = p_events[0]
+            path.append((p_t[0], (p_pair[0], p_pair[1] )))
+            self.append_to_log(p_t[0], p_pair[1])
+        self.paths.append(path)
 
     def multiple_prediction(self, depth, degree): 
         """
@@ -150,7 +221,7 @@ class PredictionManager:
             current_path.pop() 
             self.pop_from_log()
     
-    def get_sorted_wrapper(self,c_t, c_e  ):
+    def get_sorted_wrapper(self):
         
         #: check whether the number of rows in 
         # self.encoded_df <= seq_len. otherwise the
@@ -162,15 +233,18 @@ class PredictionManager:
         
         self.recursive_atm.event_seqs = self.recursive_event_seqs
         self.recursive_atm.time_seqs = self.recursive_time_seqs
-        step2 = DataLoader(self.recursive_atm, batch_size=len(self.recursive_atm.event_seqs), shuffle=False, collate_fn=ATMDataset.to_features)
-      
+
+
+       #step2 = DataLoader(self.recursive_atm, batch_size=len(self.recursive_atm.event_seqs), shuffle=False, collate_fn=ATMDataset.to_features)
+
+        batch = ( torch.tensor(self.recursive_time_diffs,dtype=torch.float32), torch.tensor(self.recursive_event_seqs, dtype=torch.int64)) 
+
 
         pred_times, pred_events = [], []
         
-        for i, batch in enumerate(step2):   
-            pred_time, pred_event = self.model.predict_sorted(batch)
-            pred_times.append(pred_time)
-            pred_events.append(pred_event)
+        pred_time, pred_event = self.model.predict_sorted(batch)
+        pred_times.append(pred_time)
+        pred_events.append(pred_event)
 
         pred_times= pred_times[-1][-1] #we are only interested in the last one; unpack the batch
         pred_events = pred_events[-1][-1]
@@ -190,6 +264,7 @@ class PredictionManager:
         new_event_seq.append(event)
         self.recursive_time_seqs.append(new_time_seq)
         self.recursive_event_seqs.append(new_event_seq)
+        self.append_one_difference_array(new_time_seq)
        
     def pop_from_log(self): 
         """
@@ -239,12 +314,11 @@ class PredictionManager:
             ans["paths"].append(current_path)
         return json.dumps(ans)
 
-    def multiple_prediction_dataframe(self, depth, degree, df):
+    def multiple_prediction_dataframe(self, depth, degree, df, linear=False, non_stop = False, upper = 30):
         """
         make multiple predictions given a dataframe
         preprocessor is in charge of doing the
         reading/importing from csv, xes, commandline, etc...
-
         it is assumed that the event log contains only one case id.
         """
         preprocessor = Preprocessing()
@@ -252,5 +326,8 @@ class PredictionManager:
         
         self.encoded_df= preprocessor.event_df 
         self.current_case_id= self.encoded_df[self.case_id_key].sample(n = 1).values[0]
-        self.multiple_prediction(depth, degree)
+        if not linear: 
+            self.multiple_prediction(depth, degree)
+        else: 
+            self.multiple_prediction_linear(depth, non_stop, upper)
 
