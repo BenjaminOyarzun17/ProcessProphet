@@ -64,7 +64,9 @@ def test_our():
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.our_implementation = True
     nn_manager.config.number_classes = preprocessor.number_classes
-    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.train()
+    nn_manager.train()
     stats_in_json = nn_manager.get_training_statistics()
     nn_manager.export_nn_model()
 
@@ -159,7 +161,8 @@ def test_single_prediction():
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.our_implementation = True
     nn_manager.config.number_classes = preprocessor.number_classes
-    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.train()
 
     pm = PredictionManager(
         nn_manager.model, 
@@ -201,7 +204,8 @@ def test_multiple_prediction():
     nn_manager.config.activity_le = preprocessor.activity_le
     nn_manager.config.case_id_le = preprocessor.case_id_le
     nn_manager.config.number_classes = preprocessor.number_classes
-    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.train()
 
     dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
     pm = PredictionManager( nn_manager.model, preprocessor.case_id_key, preprocessor.case_activity_key, preprocessor.case_timestamp_key, nn_manager.config)
@@ -233,7 +237,8 @@ def test_process_model_manager_random_cut_nontstop():
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.our_implementation = True
     nn_manager.config.number_classes = preprocessor.number_classes
-    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.train()
     nn_manager.config.activity_le = preprocessor.activity_le
     nn_manager.config.case_id_le = preprocessor.case_id_le
     
@@ -271,7 +276,8 @@ def test_process_model_manager_random_cut():
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.our_implementation = True
     nn_manager.config.number_classes = preprocessor.number_classes
-    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.train()
     nn_manager.config.activity_le = preprocessor.activity_le
     nn_manager.config.case_id_le = preprocessor.case_id_le
     
@@ -308,7 +314,8 @@ def test_process_model_manager_tail_cut():
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.our_implementation = True
     nn_manager.config.number_classes = preprocessor.number_classes
-    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.train()
     nn_manager.config.activity_le = preprocessor.activity_le
     nn_manager.config.case_id_le = preprocessor.case_id_le
     
@@ -354,7 +361,8 @@ def test_alpha_miner():
     nn_manager.config.mlp_dim =1000
     """
     nn_manager.config.number_classes = preprocessor.number_classes
-    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.train()
     nn_manager.config.activity_le = preprocessor.activity_le
     nn_manager.config.case_id_le = preprocessor.case_id_le
     nn_manager.config.exponent = preprocessor.exponent
@@ -395,7 +403,8 @@ def test_heuristic():
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.our_implementation = True
     nn_manager.config.number_classes = preprocessor.number_classes
-    nn_manager.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager.train()
     nn_manager.config.activity_le = preprocessor.activity_le
     nn_manager.config.case_id_le = preprocessor.case_id_le
     nn_manager.config.exponent = preprocessor.exponent
@@ -435,7 +444,8 @@ def test_import_model():
     nn_manager1.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager1.config.our_implementation = True
     nn_manager1.config.number_classes = preprocessor.number_classes
-    nn_manager1.train(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager1.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+    nn_manager1.train()
     nn_manager1.config.activity_le = preprocessor.activity_le
     nn_manager1.config.case_id_le = preprocessor.case_id_le
 
