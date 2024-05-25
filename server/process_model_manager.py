@@ -277,7 +277,8 @@ class ProcessModelManager:
             pm.multiple_prediction_dataframe(
                 cuts[case_id][2],
                 1,
-                sequence
+                sequence, 
+                linear = True
             )
 
             prediction = pm.decoded_paths[0] #might break
@@ -290,9 +291,9 @@ class ProcessModelManager:
                 self.case_timestamp_key:[]
             }
             for time, (pred, event) in prediction: 
-                extension[self.case_id_key] = case_id
-                extension[self.case_activity_key]= event
-                extension[self.case_timestamp_key]= time
+                extension[self.case_id_key] = [case_id]
+                extension[self.case_activity_key]= [event]
+                extension[self.case_timestamp_key]= [time]
             
             extension = pd.DataFrame(extension)
             #logger_generate_predictive_log.debug("extension:")        
@@ -307,17 +308,35 @@ class ProcessModelManager:
         logger_generate_predictive_log.debug(et-st)
 
     def decode_df(self):
+
+        logger_generate_predictive_log.debug("numbers of nan before decode")        
+        logger_generate_predictive_log.debug(self.predictive_df.isna().sum())        
+        logger_generate_predictive_log.debug(self.predictive_df.head(20))        
+        logger_generate_predictive_log.debug(self.predictive_df.tail(20))        
         self.predictive_df[self.case_activity_key] = self.predictive_df[self.case_activity_key].astype("str")
         self.predictive_df[self.case_id_key] = self.predictive_df[self.case_activity_key].astype("str")
         self.predictive_df[self.case_timestamp_key] = self.predictive_df[self.case_timestamp_key]*(10**self.config.exponent)
         self.predictive_df[self.case_timestamp_key] = self.predictive_df[self.case_timestamp_key].astype("datetime64[ns]")
+        """
+        TODO: all time predictions >=1 ARE NOT CORRECT.  (not convertible)
+        - either catch them an raise an error
+        - drop them 
+        - or find another solution
+        """
 
+        logger_generate_predictive_log.debug("number of nan after decode")        
+        logger_generate_predictive_log.debug(self.predictive_df.isna().sum())        
+        self.predictive_df = self.predictive_df.dropna() #just for now
         self.predictive_df.to_csv("logs/predicted_df")
+        logger_generate_predictive_log.debug(self.predictive_df.head(20))        
+        logger_generate_predictive_log.debug(self.predictive_df.tail(20))        
+
 
     def heuristic_miner(self):
         self.decode_df()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_heuristics(self.predictive_df, activity_key=self.case_activity_key,timestamp_key=self.case_timestamp_key,case_id_key= self.case_id_key)
-        pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
+        #pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
+        pm4py.view_petri_net(self.petri_net, format='svg')
 
     def inductive_miner(self):
         self.decode_df()

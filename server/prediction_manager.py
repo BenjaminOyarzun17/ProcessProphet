@@ -325,5 +325,11 @@ class PredictionManager:
         if not linear: 
             self.multiple_prediction(depth, degree)
         else: 
+            """
+            the linear version is only being used for
+            the iterative use of the multiple prediction generation.
+            it mostly contains optimizations that are only 
+            tought for the iterative generation prediction 
+            """
             self.multiple_prediction_linear(depth, non_stop, upper)
 
