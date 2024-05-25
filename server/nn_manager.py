@@ -130,13 +130,16 @@ class NNManagement:
         """
         imports a .pt file
         """
-
-        weight = np.ones(self.config.event_class)
-        if self.config.importance_weight:
-            weight = train_set.importance_weight(self.config.absolute_frequency_distribution)
-        self.model = Net(self.config, lossweight={}) #crete a NN instance
-        self.model.load_state_dict(torch.load(path))
-        print(type(self.model))
+        saved_model_contents = torch.load(path)
+        config = saved_model_contents['config']
+        lossweight = saved_model_contents['lossweight']
+        self.model = Net(config, lossweight)
+        if config.cuda: 
+            self.model.to("cuda")
+        else:
+            self.model.to("cpu")
+        self.model.load_state_dict(saved_model_contents['model_state_dict'])
+        self.model.optimizer.load_state_dict(saved_model_contents['optimizer_state_dict'])
         self.model.eval() # relevant for droput layers.
 
 
@@ -144,8 +147,16 @@ class NNManagement:
         """
         generates the .pt file containing the generated
         model. 
+
+        model state dict contains
+        optimizer state dict
         """
-        torch.save(self.model.state_dict(), "model.pt") 
+        torch.save({
+        'model_state_dict': self.model.state_dict(),
+        'optimizer_state_dict': self.model.optimizer.state_dict(),
+        'config': self.model.config, 
+        'lossweight': self.model.lossweight
+        }, "model.pt")
 
 
 
