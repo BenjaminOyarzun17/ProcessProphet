@@ -32,6 +32,7 @@ class Config:
         self.absolute_frequency_distribution = Counter()
         self.case_id_le = None
         self.activity_le = None
+        self.exponent = None
 
 class NNManagement: 
     """

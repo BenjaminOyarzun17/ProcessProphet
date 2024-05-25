@@ -262,7 +262,13 @@ class ProcessModelManager:
                 return
         
         for i, sequence in enumerate(tqdm(input_sequences)): 
-            pm= PredictionManager()
+            pm= PredictionManager(
+                model = self.model, 
+                case_id_key= self.case_id_key, 
+                activity_key= self.case_activity_key,
+                timestamp_key=self.case_timestamp_key,
+                config = self.config
+            )
             case_id = sequence[self.case_id_key].iloc[1]
             pm.model = self.model
             pm.case_id_le = self.config.case_id_le
@@ -271,11 +277,7 @@ class ProcessModelManager:
             pm.multiple_prediction_dataframe(
                 cuts[case_id][2],
                 1,
-                sequence, 
-                self.case_activity_key  ,
-                self.case_id_key  ,
-                self.case_timestamp_key,
-                self.config
+                sequence
             )
 
             prediction = pm.decoded_paths[0] #might break
@@ -304,22 +306,32 @@ class ProcessModelManager:
         logger_generate_predictive_log.debug("pred df creation duration:")        
         logger_generate_predictive_log.debug(et-st)
 
+    def decode_df(self):
+        self.predictive_df[self.case_activity_key] = self.predictive_df[self.case_activity_key].astype("str")
+        self.predictive_df[self.case_id_key] = self.predictive_df[self.case_activity_key].astype("str")
+        self.predictive_df[self.case_timestamp_key] = self.predictive_df[self.case_timestamp_key]*(10**self.config.exponent)
+        self.predictive_df[self.case_timestamp_key] = self.predictive_df[self.case_timestamp_key].astype("datetime64[ns]")
 
+        self.predictive_df.to_csv("logs/predicted_df")
 
     def heuristic_miner(self):
-        self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_heuristics(self.predictive_df)
+        self.decode_df()
+        self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_heuristics(self.predictive_df, activity_key=self.case_activity_key,timestamp_key=self.case_timestamp_key,case_id_key= self.case_id_key)
         pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
 
     def inductive_miner(self):
-        self.petri_net, self.initial_marking, self.final_marking = pm4py.pm4py.discover_petri_net_inductive(self.predictive_df)
+        self.decode_df()
+        self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_inductive(self.predictive_df, self.case_activity_key,self.case_timestamp_key, self.case_id_key)
         pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
 
     def alpha_miner(self):
-        self.petri_net, self.initial_marking, self.final_marking = pm4py.pm4py.discover_petri_net_alpha(self.predictive_df)
+        self.decode_df()
+        self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_alpha(self.predictive_df, self.case_activity_key,self.case_timestamp_key, self.case_id_key)
         pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
 
     def prefix_tree_miner(self):
-        self.petri_net, self.initial_marking, self.final_marking = pm4py.pm4py.discover_prefix_tree(self.predictive_df)
+        self.decode_df()
+        self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_prefix_tree(self.predictive_df, self.case_activity_key,self.case_timestamp_key, self.case_id_key)
         pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
 
         '''
