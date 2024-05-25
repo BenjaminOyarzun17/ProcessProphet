@@ -4,7 +4,7 @@ from torch.optim import Adam
 import numpy as np
 
 class Net(nn.Module):
-    def __init__(self, config, lossweight):
+    def __init__(self, config, lossweight ):
         super(Net, self).__init__()
         self.config = config 
         self.n_class = config.event_class
@@ -21,6 +21,7 @@ class Net(nn.Module):
         self.event_linear = nn.Linear(in_features=config.mlp_dim, out_features=config.event_class) #here we generate the output logits for the label
         self.time_linear = nn.Linear(in_features=config.mlp_dim, out_features=1) #here we calc the time prediction
         self.set_criterion(lossweight) 
+        self.lossweight = lossweight
         self.optimizer = Adam(self.parameters(), lr=self.config.lr) #the author uses BertAdam, but we will just use Adam 
 
     def set_optimizer(self, total_step):
