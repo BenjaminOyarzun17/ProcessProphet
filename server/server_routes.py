@@ -21,11 +21,51 @@ def single_prediction():
     required parameters: 
     - model
     - config? 
-    -  
-    
+    - import partial sequence (df)  --> path al log.
     """
+    if request.method == 'GET':
+        request_config = request.args.to_dict()
+        is_xes = True if request_config["is_xes"]=="True" else False
 
+        case_id= str(request_config["case_id"])
+        activity= str(request_config["activity_key"])
+        timestamp= str(request_config["timestamp_key"])
+        path_to_log = str(request_config["path_to_log"])
+        preprocessor = Preprocessing()
 
+        if is_xes:
+            #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+            preprocessor.import_event_log_xes(path_to_log , case_id, activity, timestamp)# bpi 2019
+        else:
+            preprocessor.import_event_log_csv(path_to_log , case_id, activity, timestamp, ',')
+
+        input_df = preprocessor.event_df
+
+        cuda = True if request_config["cuda"]=="True" else False
+
+        path_to_model = str(request_config["path_to_model"])
+
+        config = Config()
+        dic =  json.loads(request_config.get("config"))
+        config.load_config(dic)
+
+        nn_manager = NNManagement(config)
+        nn_manager.import_nn_model(path_to_model)
+        pm = PredictionManager(
+            nn_manager.model, 
+            case_id, 
+            activity,
+            timestamp, 
+            config
+        )
+
+        time, event = pm.single_prediction_dataframe(input_df)
+        print(time)
+        print(event)
+        return jsonify({
+            "predicted_time":float(time), 
+            "predicted_event":int(event)
+        })
 
 
 @routes.route('/random_search', methods = ["GET"])
@@ -57,6 +97,7 @@ def random_search():
         nn_manager.config.number_classes = preprocessor.number_classes
         nn_manager.config.case_id_le = preprocessor.case_id_le
         nn_manager.config.activity_le = preprocessor.activity_le
+        nn_manager.config.exponent = preprocessor.exponent
 
         nn_manager.random_search(
             train,
@@ -70,9 +111,9 @@ def random_search():
 
         config = nn_manager.config.asdict()
 
-        nn_manager.export_nn_model()
+        model_path = request_config["model_name"]
+        nn_manager.export_nn_model(model_path)
 
-        model_path = "model.pt"
         with open(model_path, 'rb') as f:
             model_data = f.read()
         response = make_response(model_data)
@@ -121,14 +162,15 @@ def grid_search():
         nn_manager.config.number_classes = preprocessor.number_classes
         nn_manager.config.case_id_le = preprocessor.case_id_le
         nn_manager.config.activity_le = preprocessor.activity_le
+        nn_manager.config.exponent = preprocessor.exponent
 
         nn_manager.grid_search(train, test, sp, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
 
         config = nn_manager.config.asdict()
 
-        nn_manager.export_nn_model()
+        model_path = request_config["model_name"]
+        nn_manager.export_nn_model(model_path)
 
-        model_path = "model.pt"
         with open(model_path, 'rb') as f:
             model_data = f.read()
         response = make_response(model_data)
@@ -167,10 +209,10 @@ def train_nn():
         is_xes = True if request_config["is_xes"]=="True" else False
         cuda = True if request_config["cuda"]=="True" else False
         path_to_log = str(request_config["path_to_log"])
-        path_to_log = "/home/benja/Desktop/SPP-process-discovery/data/train_day_joined.csv"       
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
+        model_name= str(request_config["model_name"])
 
         config = Config()
         #config = config.load_config(request_config["config"])
@@ -185,6 +227,7 @@ def train_nn():
         nn_manager.config.number_classes = preprocessor.number_classes
         nn_manager.config.case_id_le = preprocessor.case_id_le
         nn_manager.config.activity_le = preprocessor.activity_le
+        nn_manager.config.exponent = preprocessor.exponent
 
         nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
         nn_manager.train()
@@ -192,10 +235,10 @@ def train_nn():
         training_stats = nn_manager.get_training_statistics()
         config = nn_manager.config.asdict()
 
-        nn_manager.export_nn_model()
+        nn_manager.export_nn_model(model_name)
 
-        model_path = "model.pt"
-        with open(model_path, 'rb') as f:
+        
+        with open(model_name, 'rb') as f:
             model_data = f.read()
         response = make_response(model_data)
 
