@@ -39,6 +39,15 @@ class Preprocessing:
         self.exponent = None
         # TODO: invoke import_event_log? (decide)
 
+
+    def handle_import(self,is_xes, path, case_id, timestamp, activity, sep = ","):
+        if is_xes: 
+            self.import_event_log_xes(path, case_id, activity, timestamp)
+        else: 
+            self.import_event_log_csv(path, case_id, activity, timestamp, sep)
+
+
+
     def xes_helper(self, path): 
         log =pm4py.read.read_xes(path)
         dataframe = pm4py.convert_to_dataframe(log)
@@ -193,6 +202,8 @@ class Preprocessing:
         :returns: two event logs, one for training and one for training (dataframes). the number of classes (for the markers) also returned. the absolute
         frequence distribution for each class in the whole event log. 
         """
+        if train_percentage>=1 or train_percentage<=0: 
+            raise TrainPercentageTooHigh()
 
         cases = self.event_df[self.case_id_key].unique().tolist()
         train_cases = set()

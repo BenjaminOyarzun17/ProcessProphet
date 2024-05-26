@@ -1,7 +1,8 @@
-from flask import Blueprint, request
-from state import *
+from flask import Blueprint, request, send_file, make_response
 from preprocessing import * 
 from nn_manager import *
+from process_model_manager  import *
+from prediction_manager import *
 
 routes =Blueprint("Routes", __name__)
 
@@ -12,10 +13,6 @@ ok = {"status":"OK"}
 def start():
     return ok
 
-
-@routes.route('/start_session')
-def start_session():
-    return ok
 
 
 
@@ -32,39 +29,51 @@ def train_nn():
     :param path: path to the event log. just used if is_xes is False
     :param case_id: case id column name. just used if is_xes is False
     :param activity_key: activity column name. just used if is_xes is False
+    :para  cuda: use cuda.
     """
     if request.method == 'GET':
         request_config = request.args.to_dict()
         is_xes = True if request_config["is_xes"]=="True" else False
+        cuda = True if request_config["cuda"]=="True" else False
         path_to_log = str(request_config["path_to_log"])
         path_to_log = "/home/benja/Desktop/SPP-process-discovery/data/train_day_joined.csv"       
+        case_id= str(request_config["case_id"])
+        activity= str(request_config["activity_key"])
+        timestamp= str(request_config["timestamp_key"])
+
+        config = Config()
+        #config = config.load_config(request_config["config"])
+
         preprocessor = Preprocessing()
-        nn_manager = NNManagement()
-        #preprocessor.check_path(path_to_log)
-        print(request_config)
-        if is_xes:
-            preprocessor.import_event_log_xes(path_to_log)
-        else: 
-            preprocessor.import_event_log_csv(
-                path_to_log,
-                request_config["case_id"], 
-                request_config["activity_key"] ,
-                request_config["timestamp_key"],
-                request_config["sep"])
+        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
+        train, test= preprocessor.split_train_test(float(request_config["split"]))
 
-        train, test, no_classes = preprocessor.split_train_test(.9)
-        nn_manager.train(
-            train,
-            test,
-            preprocessor.case_id_key,
-            preprocessor.case_timestamp_key,
-            preprocessor.case_activity_key,
-            no_classes
-        )
+        nn_manager= NNManagement() 
+        nn_manager.config.cuda = cuda
+        nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
+        nn_manager.config.number_classes = preprocessor.number_classes
+
+
+        nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+        nn_manager.train()
+
+
         stats_in_json = nn_manager.get_training_statistics()
-        return stats_in_json
-         
+        nn_manager.export_nn_model()
 
+
+        model_path = "model.pt"
+        with open(model_path, 'rb') as f:
+            model_data = f.read()
+        response = make_response(model_data)
+
+
+        response.headers.set('Content-Type', 'application/octet-stream') # announce file included
+        response.headers.set('Content-Disposition', 'attachment', filename='model.pt') 
+        response.headers.set('X-Metadata', stats_in_json) #include json metadata
+
+
+        return stats_in_json
 
 
 
