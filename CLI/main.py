@@ -5,6 +5,12 @@ import pprint
 
 
 
+
+
+
+
+
+
 def test_train():
     models_base_path = "CLI/models/"
     model_name = "my_cool_model.pt"
@@ -37,8 +43,44 @@ def test_train():
     return statistics, config
 
 
+def test_predictive_process_model_generator(
+        config,
+        path_to_model, 
+        path_to_log, 
+        new_log_path, 
+        selected_model, 
+        petri_net_path, 
+        mining_algo_config
+    ):
 
-def test_predictive_model_generator(
+    params = {
+        "is_xes": False, 
+        "path_to_log": path_to_log, 
+        "sep": ",", 
+        "case_id": "case_id", 
+        "activity_key": "activity", 
+        "timestamp_key": "timestamp", 
+        "cuda": True, 
+        "path_to_model": path_to_model, 
+        "config": json.dumps(config), 
+        "new_log_path": new_log_path, 
+        "selected_model":selected_model, 
+        "petri_net_path":petri_net_path, 
+        "mining_algo_config": json.dumps(mining_algo_config)
+    }
+
+
+    response = requests.get(
+        "http://localhost:5000/generate_predictive_process_model", 
+        params = params,
+        timeout =6000
+    )
+    return json.loads(response.text)
+
+
+
+
+def test_predictive_log_generator(
         config,
         path_to_model, 
         path_to_log, 
@@ -125,13 +167,24 @@ if __name__=="__main__":
     statistics, config = test_train()
     #test_single_prediction(config, "CLI/models/my_cool_model.pt", "CLI/input_logs/dummy.csv")
     #print(test_multiple_prediction(config, "CLI/models/my_cool_model.pt", "CLI/input_logs/dummy.csv", 2,2))
-    test_predictive_model_generator(
+    """
+    test_predictive_log_generator(
         config, 
-        "CLI/models/my_cool_mode.pt", 
+        "CLI/models/my_cool_model.pt", 
         "data/train_day_joined.csv", 
         True, 
         30, 
         True, 
         3, 
         "CLI/predictive_logs/my_cool_predictive_log.csv"
+    )
+    """
+    test_predictive_process_model_generator(
+        config, 
+        "CLI/models/my_cool_model.pt", 
+        "data/train_day_joined.csv", 
+        "CLI/predictive_logs/my_cool_predictive_log.csv", 
+        "alpha_miner", 
+        "CLI/petri_nets/alpha.pnml", 
+        {}
     )

@@ -196,8 +196,11 @@ class ProcessModelManager:
 
         self.predictive_df.to_csv("logs/predicted_df")
 
+    def import_predictive_df(self, path):
+        self.predictive_df = pd.read_csv(path, sep = ",")
 
-    def heuristic_miner(self, dependency_threshold=0.5, and_threshold=0.65, loop_two_threshold=0.5):
+
+    def heuristic_miner(self,path,  dependency_threshold=0.5, and_threshold=0.65, loop_two_threshold=0.5):
         self.decode_df()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_heuristics(
             self.predictive_df,
@@ -209,9 +212,11 @@ class ProcessModelManager:
             case_id_key= self.case_id_key
         )
         #pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
-        pm4py.view_petri_net(self.petri_net, format='svg')
+        #pm4py.view_petri_net(self.petri_net, format='svg')
+        pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking, file_path=path)
 
-    def inductive_miner(self,  noise_threshold=0):
+
+    def inductive_miner(self, path,   noise_threshold=0):
         self.decode_df()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_inductive(
             self.predictive_df,
@@ -220,9 +225,10 @@ class ProcessModelManager:
             self.case_timestamp_key,
             self.case_id_key
         )
-        pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
+        #pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
+        pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking, file_path=path)
 
-    def alpha_miner(self):
+    def alpha_miner(self, path):
         self.decode_df()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_alpha(
             self.predictive_df,
@@ -230,9 +236,10 @@ class ProcessModelManager:
             self.case_timestamp_key, 
             self.case_id_key
         )
-        pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
+        #pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
+        pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking , file_path=path)
 
-    def prefix_tree_miner(self):
+    def prefix_tree_miner(self, path):
         self.decode_df()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_prefix_tree(
             self.predictive_df,
@@ -240,7 +247,8 @@ class ProcessModelManager:
             self.case_timestamp_key,
             self.case_id_key
         )
-        pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
+        #pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
+        pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking , file_path=path)
 
         '''
         might be irrelevant as we require to always have a case_identifier in the log input 

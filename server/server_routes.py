@@ -15,6 +15,68 @@ def start():
 
 
 
+@routes.route('/generate_predictive_process_model', methods = ["GET"])
+def generate_predictive_process_model():
+    
+    if request.method == 'GET':
+        request_config = request.args.to_dict()
+        is_xes = True if request_config["is_xes"]=="True" else False
+        case_id= str(request_config["case_id"])
+        activity= str(request_config["activity_key"])
+        timestamp= str(request_config["timestamp_key"])
+        path_to_log = str(request_config["path_to_log"])
+        path_to_model = str(request_config["path_to_model"])
+        cuda = True if request_config["cuda"]=="True" else False
+        dic =  json.loads(request_config.get("config"))
+        new_log_path=  request_config.get("new_log_path")
+        selected_model  =  str(request_config.get("selected_model"))
+        petri_net_path  =  str(request_config.get("petri_net_path"))
+
+        minig_algo_config=  json.loads(request_config.get("mining_algo_config"))
+
+
+        preprocessor = Preprocessing()
+        if is_xes:
+            #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+            preprocessor.import_event_log_xes(path_to_log , case_id, activity, timestamp)# bpi 2019
+        else:
+            preprocessor.import_event_log_csv(path_to_log , case_id, activity, timestamp, ',')
+
+        config = Config()
+        config.load_config(dic)
+        nn_manager = NNManagement(config)
+        nn_manager.import_nn_model(path_to_model)
+
+        pmm = ProcessModelManager(
+            preprocessor.event_df, 
+            nn_manager.model, 
+            nn_manager.config,
+            preprocessor.case_activity_key,
+            preprocessor.case_id_key,
+            preprocessor.case_timestamp_key
+        )
+        pmm.end_activities = preprocessor.find_end_activities()
+        pmm.import_predictive_df(new_log_path)
+        match selected_model: 
+            case "alpha_miner":
+                pmm.alpha_miner(petri_net_path)
+            case "heuristic_miner":
+                pmm.heuristic_miner(
+                    petri_net_path, 
+                    minig_algo_config["dependency_threshold"], 
+                    minig_algo_config["and_threshold"], 
+                    minig_algo_config["loop_two_threshold"]
+                )
+            case "inductive_miner":
+                pmm.inductive_miner(petri_net_path, minig_algo_config["noise_threshold"])
+            case "prefix_tree_miner":
+                pmm.prefix_tree_miner(petri_net_path)
+
+
+        
+        return ok #they are already encoded
+
+
 
 
 @routes.route('/generate_predictive_log', methods = ["GET"])
