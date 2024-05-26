@@ -12,3 +12,4 @@
 *.pt
 /CLI/input_logs
 /CLI/models
+/CLI/predictive_logs
