@@ -16,14 +16,77 @@ def start():
 
 
 
+
+@routes.route('/generate_predictive_log', methods = ["GET"])
+def generate_predictive_log():
+    
+    if request.method == 'GET':
+        request_config = request.args.to_dict()
+        is_xes = True if request_config["is_xes"]=="True" else False
+        
+
+        case_id= str(request_config["case_id"])
+        activity= str(request_config["activity_key"])
+        timestamp= str(request_config["timestamp_key"])
+        path_to_log = str(request_config["path_to_log"])
+        path_to_model = str(request_config["path_to_model"])
+        cuda = True if request_config["cuda"]=="True" else False
+        non_stop = bool(request_config["non_stop"])
+        upper = int(request_config["upper"])
+        random_cuts =bool(request_config["random_cuts"])
+        cut_length = int(request_config["cut_length"])
+        dic =  json.loads(request_config.get("config"))
+        new_log_path=  request_config.get("new_log_path")
+
+
+        preprocessor = Preprocessing()
+        if is_xes:
+            #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+            preprocessor.import_event_log_xes(path_to_log , case_id, activity, timestamp)# bpi 2019
+        else:
+            preprocessor.import_event_log_csv(path_to_log , case_id, activity, timestamp, ',')
+
+
+        config = Config()
+        config.load_config(dic)
+
+        nn_manager = NNManagement(config)
+        nn_manager.import_nn_model(path_to_model)
+
+        pmm = ProcessModelManager(
+            preprocessor.event_df, 
+            nn_manager.model, 
+            nn_manager.config,
+            preprocessor.case_activity_key,
+            preprocessor.case_id_key,
+            preprocessor.case_timestamp_key
+        )
+        pmm.end_activities = preprocessor.find_end_activities()
+
+
+
+        #: TODO: check the combinations for the bool attributes, some combinations 
+        # are not well defined.
+        pmm.generate_predictive_log(non_stop=non_stop, upper =upper, random_cuts=random_cuts,cut_length=cut_length, new_log_path = new_log_path )
+
+        
+        print("event log generated")
+        
+        
+        return ok #they are already encoded
+
+
+
+
+
+
+
+
+
+
+
 @routes.route('/multiple_prediction', methods = ["GET"])
 def multiple_prediction():
-    """
-    required parameters: 
-    - model
-    - config? 
-    - import partial sequence (df)  --> path al log.
-    """
     if request.method == 'GET':
         request_config = request.args.to_dict()
         is_xes = True if request_config["is_xes"]=="True" else False
@@ -74,12 +137,6 @@ def multiple_prediction():
 
 @routes.route('/single_prediction', methods = ["GET"])
 def single_prediction():
-    """
-    required parameters: 
-    - model
-    - config? 
-    - import partial sequence (df)  --> path al log.
-    """
     if request.method == 'GET':
         request_config = request.args.to_dict()
         is_xes = True if request_config["is_xes"]=="True" else False

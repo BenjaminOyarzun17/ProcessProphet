@@ -96,10 +96,8 @@ class ProcessModelManager:
 
 
 
-    def generate_predictive_log(self, max_len= 15, upper = 30, non_stop = False, random_cuts = False, cut_length = 0): 
+    def generate_predictive_log(self, new_log_path, max_len= 15, upper = 30, non_stop = False, random_cuts = False, cut_length = 0): 
         """
-       
-
         max len: max length for the cut sequences ie max sequence input size length.
         upper:  upperbound for the non stop random cutter ie how long to run before reaching end state. 
 
@@ -131,7 +129,7 @@ class ProcessModelManager:
         et= tim.time()
         logger_generate_predictive_log.debug("pred df creation duration:")        
         logger_generate_predictive_log.debug(et-st)
-
+        self.predictive_df.to_csv(new_log_path, sep = ",")
 
 
     def check_too_short(self, sequences):
