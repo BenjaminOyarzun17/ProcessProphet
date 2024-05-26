@@ -10,3 +10,5 @@
 *.csv
 *.xes
 *.pt
+/CLI/input_logs
+/CLI/models

@@ -13,6 +13,7 @@ import logging
 from collections import Counter
 from loggers import logger_evaluate
 import random
+import pprint
 from sklearn.preprocessing import LabelEncoder
 
 class Config: 
@@ -189,7 +190,7 @@ class NNManagement:
         self.model.eval() # relevant for droput layers.
 
 
-    def export_nn_model(self):
+    def export_nn_model(self, name):
         """
         generates the .pt file containing the generated
         model. 
@@ -202,7 +203,7 @@ class NNManagement:
             'optimizer_state_dict': self.model.optimizer.state_dict(),
             'config': self.model.config, 
             'lossweight': self.model.lossweight
-        }, "model.pt")
+        }, name)
 
     def random_search(self,train,test,  search_parameters, iterations, case_id_key, timestamp_key, case_activity_key ): 
         acc = 0

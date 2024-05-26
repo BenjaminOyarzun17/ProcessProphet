@@ -21,6 +21,27 @@ app = Flask(__name__)
 app.register_blueprint(routes)
 
 
+def dummy():
+    preprocessor = Preprocessing()
+    is_xes = False
+    path =  "data/train_day_joined.csv"
+    #path = "data/BPI_Challenge_2019.xes"
+    #path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
+    if is_xes:
+        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
+        print(preprocessor.event_df.head())
+    else:
+        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
+
+    pm = PredictionManager(None, "case_id", "activity", "timestamp", None)
+
+    dummy  = pm.get_dummy_process(preprocessor.event_df,"case_id" )
+    dummy.to_csv("CLI/input_logs/dummy.csv",sep = ',' )
+
+
 
 def test_end_activities():
     preprocessor = Preprocessing()
@@ -166,8 +187,6 @@ def test_single_prediction():
         preprocessor.case_timestamp_key, 
         nn_manager.config
     )
-    pm.config = nn_manager.config
-    pm.model = nn_manager.model
     dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
     print(pm.single_prediction_dataframe(dummy))
 
@@ -472,4 +491,5 @@ if __name__=="__main__":
     #test_end_activities()
     #test_process_model_manager_tail_cut()
     #test_heuristic()
+    #dummy()
     app.run()

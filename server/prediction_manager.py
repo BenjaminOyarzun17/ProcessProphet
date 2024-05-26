@@ -43,10 +43,8 @@ class PredictionManager:
         n_rows = dummy.shape[0]
         if n_rows == 1:
             raise ProcessTooShort()
-        logger_get_dummy_process.debug(dummy) 
-        logger_get_dummy_process.debug(dummy.iloc[:10]) 
 
-        return dummy.iloc[:n_rows-1]
+        return dummy.iloc[:n_rows-10]
 
 
     def check_input_uniqueness(self):
@@ -65,7 +63,7 @@ class PredictionManager:
         if not self.check_input_uniqueness():
             raise NotOneCaseId()
         self.current_case_id= self.encoded_df[self.case_id_key].sample(n = 1).values[0]
-        self.single_prediction()
+        return self.single_prediction()
 
 
     def single_prediction(self):
@@ -86,10 +84,7 @@ class PredictionManager:
             pred_events.append(pred_event)
         time_pred = pred_times[-1][-1][-1]
         event_pred = pred_events[-1][-1] 
-        logger_single_prediction.debug("predicted time:")
-        logger_single_prediction.debug(time_pred)
-        logger_single_prediction.debug("predicted event:")
-        logger_single_prediction.debug(event_pred)
+        
         return time_pred,  event_pred
 
     def jsonify_single(self, time_pred, event_pred, prob): 
