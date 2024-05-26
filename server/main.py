@@ -62,10 +62,8 @@ def test_our():
     # select cuda or not
     nn_manager.config.cuda = True 
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
-    nn_manager.config.our_implementation = True
     nn_manager.config.number_classes = preprocessor.number_classes
     nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
-    nn_manager.train()
     nn_manager.train()
     stats_in_json = nn_manager.get_training_statistics()
     nn_manager.export_nn_model()
@@ -98,7 +96,6 @@ def test_grid_search():
     nn_manager = NNManagement()
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.cuda = True 
-    nn_manager.config.our_implementation = True
     nn_manager.config.number_classes = preprocessor.number_classes
     nn_manager.grid_search(train, test, sp, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
     
@@ -132,7 +129,6 @@ def test_random_search(iterations):
     nn_manager = NNManagement()
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.cuda = True 
-    nn_manager.config.our_implementation = True
     nn_manager.config.number_classes = preprocessor.number_classes
     nn_manager.random_search(train, test, sp, iterations, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
 
@@ -159,7 +155,6 @@ def test_single_prediction():
     # select cuda or not
     nn_manager.config.cuda = True 
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
-    nn_manager.config.our_implementation = True
     nn_manager.config.number_classes = preprocessor.number_classes
     nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
     nn_manager.train()
@@ -200,7 +195,6 @@ def test_multiple_prediction():
     # select cuda or not
     nn_manager.config.cuda = True 
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
-    nn_manager.config.our_implementation = True
     nn_manager.config.activity_le = preprocessor.activity_le
     nn_manager.config.case_id_le = preprocessor.case_id_le
     nn_manager.config.number_classes = preprocessor.number_classes
@@ -235,7 +229,6 @@ def test_process_model_manager_random_cut_nontstop():
     # select cuda or not
     nn_manager.config.cuda = True 
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
-    nn_manager.config.our_implementation = True
     nn_manager.config.number_classes = preprocessor.number_classes
     nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
     nn_manager.train()
@@ -274,7 +267,6 @@ def test_process_model_manager_random_cut():
     # select cuda or not
     nn_manager.config.cuda = True 
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
-    nn_manager.config.our_implementation = True
     nn_manager.config.number_classes = preprocessor.number_classes
     nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
     nn_manager.train()
@@ -312,7 +304,6 @@ def test_process_model_manager_tail_cut():
     # select cuda or not
     nn_manager.config.cuda = True 
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
-    nn_manager.config.our_implementation = True
     nn_manager.config.number_classes = preprocessor.number_classes
     nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
     nn_manager.train()
@@ -353,7 +344,6 @@ def test_alpha_miner():
     # select cuda or not
     nn_manager.config.cuda = True 
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
-    nn_manager.config.our_implementation = True
     """
     nn_manager.config.epochs = 15
     nn_manager.config.emb_dim =1000
@@ -401,7 +391,6 @@ def test_heuristic():
     # select cuda or not
     nn_manager.config.cuda = True 
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
-    nn_manager.config.our_implementation = True
     nn_manager.config.number_classes = preprocessor.number_classes
     nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
     nn_manager.train()
@@ -442,7 +431,6 @@ def test_import_model():
     nn_manager1 = NNManagement()
     nn_manager1.config.cuda = True 
     nn_manager1.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
-    nn_manager1.config.our_implementation = True
     nn_manager1.config.number_classes = preprocessor.number_classes
     nn_manager1.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
     nn_manager1.train()
@@ -482,6 +470,6 @@ if __name__=="__main__":
     #test_process_model_manager_random_cut_nontstop()
     #test_process_model_manager_random_cut()
     #test_end_activities()
-    test_process_model_manager_tail_cut()
-    #app.run()
+    #test_process_model_manager_tail_cut()
     #test_heuristic()
+    app.run()

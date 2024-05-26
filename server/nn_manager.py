@@ -13,6 +13,7 @@ import logging
 from collections import Counter
 from loggers import logger_evaluate
 import random
+from sklearn.preprocessing import LabelEncoder
 
 class Config: 
     def __init__(self):
@@ -25,7 +26,6 @@ class Config:
         self.batch_size= 1024
         self.lr= 1e-3
         self.epochs= 1 
-        self.model =None 
         self.importance_weight = "store_true"
         self.verbose_step = 350
         self.cuda = False
@@ -34,7 +34,52 @@ class Config:
         self.activity_le = None
         self.exponent = None
         self.number_classes = 0
-        self.weight= None
+    def asdict(self):
+        return {
+            "seq_len": self.seq_len,
+            "emb_dim": self.emb_dim,
+            "hid_dim": self.hid_dim,
+            "mlp_dim": self.mlp_dim,
+            "alpha": self.alpha,
+            "dropout": self.dropout,
+            "batch_size": self.batch_size,
+            "lr": self.lr,
+            "epochs": self.epochs,
+            "importance_weight": self.importance_weight,
+            "verbose_step": self.verbose_step,
+            "cuda": self.cuda,
+            "absolute_frequency_distribution": dict(self.absolute_frequency_distribution),
+            "case_id_le": self.encoder_to_dict(self.case_id_le),
+            "activity_le": self.encoder_to_dict(self.activity_le),
+            "exponent": self.exponent,
+            "number_classes": self.number_classes,
+        }
+    def load_config(self, dic):
+        self.seq_len=int(dic["seq_len"])
+        self.emb_dim=int(dic["emb_dim"])
+        self.hid_dim=int(dic["hid_dim"])
+        self.mlp_dim=int(dic["mlp_dim"])
+        self.alpha=float(dic["alpha"])
+        self.dropout=float(dic["dropout"])
+        self.batch_size=dic["batch_size"]
+        self.lr=float(dic["lr"])
+        self.epochs=int(dic["epochs"])
+        self.importance_weight =dic["importance_weight"] #string
+        self.verbose_step = int(dic["verbose_step"])
+        self.cuda = True if dic["cuda"]=="True" else False
+        self.absolute_frequency_distribution = Counter(["absolute_frequency_distribution"])
+        self.case_id_le = self.dict_to_encoder(dic["case_id_le"])
+        self.activity_le = self.dict_to_encoder(dic["activity_le"])
+        self.exponent =int(dic["exponent"])
+        self.number_classes =int(dic["number_classes"])
+
+    def encoder_to_dict(self, encoder):
+        return {label:index for index, label in enumerate(encoder.classes)} 
+
+    def dict_to_encoder(self, dic):
+        encoder = LabelEncoder()
+        encoder.classes_ = np.array(list(dic.keys()))
+        return encoder
 
 class NNManagement: 
     """
@@ -44,12 +89,11 @@ class NNManagement:
     - set params. 
     - TODO: might be extended 
     """
-    def __init__(self):
-        self.config = Config()
+    def __init__(self, config):
+        self.config = Config() if config == None else config
         self.f1 = None
         self.recall= None
         self.acc = None
-        self.absolute_frequency_distribution =None
         self.time_error = None
 
 
