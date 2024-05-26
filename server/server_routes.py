@@ -15,6 +15,63 @@ def start():
 
 
 
+
+@routes.route('/multiple_prediction', methods = ["GET"])
+def multiple_prediction():
+    """
+    required parameters: 
+    - model
+    - config? 
+    - import partial sequence (df)  --> path al log.
+    """
+    if request.method == 'GET':
+        request_config = request.args.to_dict()
+        is_xes = True if request_config["is_xes"]=="True" else False
+
+        depth = int(request_config["depth"])
+        degree = int(request_config["degree"])
+        case_id= str(request_config["case_id"])
+        activity= str(request_config["activity_key"])
+        timestamp= str(request_config["timestamp_key"])
+        path_to_log = str(request_config["path_to_log"])
+        preprocessor = Preprocessing()
+
+        if is_xes:
+            #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
+            preprocessor.import_event_log_xes(path_to_log , case_id, activity, timestamp)# bpi 2019
+        else:
+            preprocessor.import_event_log_csv(path_to_log , case_id, activity, timestamp, ',')
+
+        input_df = preprocessor.event_df
+
+        cuda = True if request_config["cuda"]=="True" else False
+
+        path_to_model = str(request_config["path_to_model"])
+
+        config = Config()
+        dic =  json.loads(request_config.get("config"))
+        config.load_config(dic)
+
+        nn_manager = NNManagement(config)
+        nn_manager.import_nn_model(path_to_model)
+        pm = PredictionManager(
+            nn_manager.model, 
+            case_id, 
+            activity,
+            timestamp, 
+            config
+        )
+
+        pm.multiple_prediction_dataframe(
+            depth, 
+            degree, 
+            input_df
+        )
+        paths = pm.jsonify_paths()
+        
+        return paths #they are already encoded
+
+
 @routes.route('/single_prediction', methods = ["GET"])
 def single_prediction():
     """

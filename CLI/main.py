@@ -36,9 +36,36 @@ def test_train():
 
     return statistics, config
 
+
+
+
+def test_multiple_prediction(config, path_to_model, path_to_log, depth, degree):
+    params = {
+        "is_xes": False, 
+        "path_to_log": path_to_log, 
+        "sep": ",", 
+        "case_id": "case_id", 
+        "activity_key": "activity", 
+        "timestamp_key": "timestamp", 
+        "cuda": True, 
+        "split": 0.9, 
+        "path_to_model": path_to_model, 
+        "config": json.dumps(config), 
+        "depth": depth,
+        "degree":degree 
+    }
+
+
+    response = requests.get(
+        "http://localhost:5000/multiple_prediction", 
+        params = params,
+        timeout =6000
+    )
+    print(response.status_code)
+    return json.loads(response.text)
+
+
 def test_single_prediction(config, path_to_model, path_to_log):
-    print(type(config))
-    pprint.pprint(config, indent = 2)
     params = {
         "is_xes": False, 
         "path_to_log": path_to_log, 
@@ -58,10 +85,9 @@ def test_single_prediction(config, path_to_model, path_to_log):
         params = params,
         timeout =6000
     )
-    print(response.status_code)
-    print(response.headers)
-    print(json.loads(response.text))
+    return json.loads(response.text)
 
 if __name__=="__main__":
     statistics, config = test_train()
-    test_single_prediction(config, "CLI/models/my_cool_model.pt", "CLI/input_logs/dummy.csv")
+    #test_single_prediction(config, "CLI/models/my_cool_model.pt", "CLI/input_logs/dummy.csv")
+    print(test_multiple_prediction(config, "CLI/models/my_cool_model.pt", "CLI/input_logs/dummy.csv", 2,2))
