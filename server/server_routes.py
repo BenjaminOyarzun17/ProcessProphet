@@ -1,4 +1,4 @@
-from flask import Blueprint, request, send_file, make_response
+from flask import Blueprint, request, send_file, make_response, jsonify
 from preprocessing import * 
 from nn_manager import *
 from process_model_manager  import *
@@ -15,6 +15,15 @@ def start():
 
 
 
+@routes.route('/single_prediction', methods = ["GET"])
+def single_prediction():
+    """
+    required parameters: 
+    - model
+    - config? 
+    -  
+    
+    """
 
 
 
@@ -48,32 +57,37 @@ def train_nn():
         preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
         train, test= preprocessor.split_train_test(float(request_config["split"]))
 
-        nn_manager= NNManagement() 
+        nn_manager= NNManagement(None) 
         nn_manager.config.cuda = cuda
         nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
         nn_manager.config.number_classes = preprocessor.number_classes
-
+        nn_manager.config.case_id_le = preprocessor.case_id_le
+        nn_manager.config.activity_le = preprocessor.activity_le
 
         nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
         nn_manager.train()
 
+        training_stats = nn_manager.get_training_statistics()
+        config = nn_manager.config.asdict()
 
-        stats_in_json = nn_manager.get_training_statistics()
         nn_manager.export_nn_model()
-
 
         model_path = "model.pt"
         with open(model_path, 'rb') as f:
             model_data = f.read()
         response = make_response(model_data)
 
+        metadata = json.dumps({
+            "training_statistics": training_stats, 
+            "config": config
+        })
 
+        # TODO: it might be convenient to also send the nn_mnager config.
         response.headers.set('Content-Type', 'application/octet-stream') # announce file included
         response.headers.set('Content-Disposition', 'attachment', filename='model.pt') 
-        response.headers.set('X-Metadata', stats_in_json) #include json metadata
+        response.headers.set('X-Metadata', metadata) #include json metadata
 
-
-        return stats_in_json
+        return response 
 
 
 
