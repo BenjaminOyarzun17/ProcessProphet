@@ -74,7 +74,7 @@ class Config:
         self.number_classes =int(dic["number_classes"])
 
     def encoder_to_dict(self, encoder):
-        return {label:index for index, label in enumerate(encoder.classes)} 
+        return {label:index for index, label in enumerate(encoder.classes_)} 
 
     def dict_to_encoder(self, dic):
         encoder = LabelEncoder()
@@ -166,11 +166,11 @@ class NNManagement:
             raise ModelNotTrainedYet()
 
         #: dumps generates a string
-        return json.dumps({
+        return {
             "acc":self.acc, 
             "recall":self.recall,
             "f1":self.f1
-        })
+        }
 
     def import_nn_model(self, path):
         """
