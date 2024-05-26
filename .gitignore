@@ -7,3 +7,6 @@
 /server/*.txt
 /server/*.csv
 /logs
+*.csv
+*.xes
+*.pt

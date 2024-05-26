@@ -27,6 +27,128 @@ def single_prediction():
 
 
 
+
+@routes.route('/random_search', methods = ["GET"])
+def random_search():
+    """
+    """
+    if request.method == 'GET':
+        request_config = request.args.to_dict()
+        is_xes = True if request_config["is_xes"]=="True" else False
+        cuda = True if request_config["cuda"]=="True" else False
+        path_to_log = str(request_config["path_to_log"])
+        path_to_log = "/home/benja/Desktop/SPP-process-discovery/data/train_day_joined.csv"       
+        case_id= str(request_config["case_id"])
+        activity= str(request_config["activity_key"])
+        timestamp= str(request_config["timestamp_key"])
+        sp = json.loads(request_config["search_params"])
+        iterations= json.loads(request_config["iterations"])
+
+        config = Config()
+        #config = config.load_config(request_config["config"])
+
+        preprocessor = Preprocessing()
+        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
+        train, test= preprocessor.split_train_test(float(request_config["split"]))
+
+        nn_manager= NNManagement(None) 
+        nn_manager.config.cuda = cuda
+        nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
+        nn_manager.config.number_classes = preprocessor.number_classes
+        nn_manager.config.case_id_le = preprocessor.case_id_le
+        nn_manager.config.activity_le = preprocessor.activity_le
+
+        nn_manager.random_search(
+            train,
+            test, 
+            sp, 
+            iterations, 
+            preprocessor.case_id_key, 
+            preprocessor.case_timestamp_key, 
+            preprocessor.case_activity_key
+        )
+
+        config = nn_manager.config.asdict()
+
+        nn_manager.export_nn_model()
+
+        model_path = "model.pt"
+        with open(model_path, 'rb') as f:
+            model_data = f.read()
+        response = make_response(model_data)
+
+        metadata = json.dumps({
+            "config": config
+        })
+
+        # TODO: it might be convenient to also send the nn_mnager config.
+        response.headers.set('Content-Type', 'application/octet-stream') # announce file included
+        response.headers.set('Content-Disposition', 'attachment', filename='model.pt') 
+        response.headers.set('X-Metadata', metadata) #include json metadata
+
+        return response 
+
+
+
+
+
+
+@routes.route('/grid_search', methods = ["GET"])
+def grid_search():
+    """
+    """
+    if request.method == 'GET':
+        request_config = request.args.to_dict()
+        is_xes = True if request_config["is_xes"]=="True" else False
+        cuda = True if request_config["cuda"]=="True" else False
+        path_to_log = str(request_config["path_to_log"])
+        path_to_log = "/home/benja/Desktop/SPP-process-discovery/data/train_day_joined.csv"       
+        case_id= str(request_config["case_id"])
+        activity= str(request_config["activity_key"])
+        timestamp= str(request_config["timestamp_key"])
+        sp = json.loads(request_config["search_params"])
+
+        config = Config()
+        #config = config.load_config(request_config["config"])
+
+        preprocessor = Preprocessing()
+        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
+        train, test= preprocessor.split_train_test(float(request_config["split"]))
+
+        nn_manager= NNManagement(None) 
+        nn_manager.config.cuda = cuda
+        nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
+        nn_manager.config.number_classes = preprocessor.number_classes
+        nn_manager.config.case_id_le = preprocessor.case_id_le
+        nn_manager.config.activity_le = preprocessor.activity_le
+
+        nn_manager.grid_search(train, test, sp, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+
+        config = nn_manager.config.asdict()
+
+        nn_manager.export_nn_model()
+
+        model_path = "model.pt"
+        with open(model_path, 'rb') as f:
+            model_data = f.read()
+        response = make_response(model_data)
+
+        metadata = json.dumps({
+            "config": config
+        })
+
+        # TODO: it might be convenient to also send the nn_mnager config.
+        response.headers.set('Content-Type', 'application/octet-stream') # announce file included
+        response.headers.set('Content-Disposition', 'attachment', filename='model.pt') 
+        response.headers.set('X-Metadata', metadata) #include json metadata
+
+        return response 
+
+
+
+
+
+
 @routes.route('/train_nn', methods = ["GET"])
 def train_nn():
     """
