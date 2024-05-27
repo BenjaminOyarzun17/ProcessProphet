@@ -27,7 +27,9 @@ class ProcessModelManager:
         self.petri_net = None
 
     def initialize_variables(self):
-
+        """
+        initialize variabels for predictive log generator
+        """
         case_id_counts = self.event_df[self.case_id_key].value_counts()
         cuts = []
         self.predictive_df = {
@@ -40,10 +42,18 @@ class ProcessModelManager:
         return case_id_counts, cuts, input_sequences, cuts
 
     def random_cutter(self, case_id_counts, max_len, cuts, input_sequences):
+        """
+        cuts the each sequence contained in input sequences at random indices. 
+        :param cuts: the cut index and cut length are preserved
+        :param case_id_counts: number of rows for each case_id
+        :max_len: max length that the input sequence can have. can be set to improve runtime 
+        TODO: allow INF for max_len
+        :param input_sequences: list of sequences to be cut. 
+        """
         for i, case_id in enumerate(case_id_counts.index):
             count = case_id_counts.loc[case_id]
             sequence = self.event_df[self.event_df[self.case_id_key]==case_id]  
-            if count<=self.config.seq_len or max_len>100:
+            if count<=self.config.seq_len or count>max_len:
                 continue
             cut = random.randint(self.config.seq_len+1, count)
             sequence = sequence.iloc[:cut]
@@ -53,21 +63,23 @@ class ProcessModelManager:
         return case_id_counts, cuts, input_sequences 
 
     def fill_up_log(self, upper , non_stop , random_cuts , cut_length , input_sequences, cuts):
+        """
+        do the predictions for each cut sequence and extend the event log so that 
+        it now constains the predictions. 
+        """
+        #: initialize prediction manager.
+        pm= PredictionManager(
+            self.model, 
+            self.case_id_key, 
+            self.case_activity_key, 
+            self.case_timestamp_key, 
+            self.config
+        )
+        pm.end_activities = self.end_activities
 
         for i, sequence in enumerate(tqdm(input_sequences)): 
-            pm= PredictionManager(
-                self.model, 
-                self.case_id_key, 
-                self.case_activity_key, 
-                self.case_timestamp_key, 
-                self.config
-            )
             case_id = sequence[self.case_id_key].iloc[1]
-            pm.model = self.model
-            pm.case_id_le = self.config.case_id_le
-            pm.activity_le = self.config.activity_le
-            pm.seq_len = self.config.seq_len
-            pm.end_activities = self.end_activities
+            #: do the predictions in the corresponding mode
             pm.multiple_prediction_dataframe(
                 cuts[case_id][2],
                 1,
@@ -76,35 +88,38 @@ class ProcessModelManager:
                 non_stop=non_stop,
                 upper = upper, 
             )
-            prediction = pm.decoded_paths[0] #might break
+            prediction = pm.decoded_paths[0] 
             extension = {
                 self.case_id_key:[],
                 self.case_activity_key:[],
                 self.case_timestamp_key:[]
             }
+            #: arrange the predictions in the extension dictionary
             for time, (pred, event) in prediction: 
                 extension[self.case_id_key] = [case_id]
                 extension[self.case_activity_key]= [event]
                 extension[self.case_timestamp_key]= [time]
             
-            #logger_generate_predictive_log.debug("extension:")        
-            #logger_generate_predictive_log.debug(extension)        
+            #: transform extension to dtaframe and extend the predictive df now with the predictions
             extension = pd.DataFrame(extension)
-            #logger_generate_predictive_log.debug("extension:")        
-            #logger_generate_predictive_log.debug(extension)        
             self.predictive_df= pd.concat([self.predictive_df, extension], ignore_index = True)
 
 
 
     def generate_predictive_log(self, new_log_path, max_len= 15, upper = 30, non_stop = False, random_cuts = False, cut_length = 0): 
         """
-        max len: max length for the cut sequences ie max sequence input size length.
-        upper:  upperbound for the non stop random cutter ie how long to run before reaching end state. 
+        generates a predictive log. each process is cut at some given index, and the model is used to 
+        reconstruct the rest of the process. there are so far three possible modi for cutting and prediction generation:  
+        - for tail cuts: set cut_length value and set random_cuts to false
+        - for random cuts with cut memory: random_cuts to true and non_stop to false
+        - for random cuts nonstop: random_cuts to true and non_stop totrue 
 
-        for tail cuts: set cut_length value and set random_cuts to false
-        for random cuts with cut memory: random_cuts to true and non_stop to false
-        for random cuts nonstop: random_cuts to true and non_stop totrue 
-        
+        :param max len: max length for the cut sequences ie max sequence input size length.
+        :param upper:  upperbound for the non stop random cutter ie how long to run before reaching end state. 
+        :param non_stop: must be set to true if the predictions are done until reaching final marking.
+        :param random_cuts: set to true to cut in random indices. 
+        :param cut_length: in case of cutting fix tail lengths, select the tail length to cut for all sequences.
+        :param upper: upper bound for how many iterations a non stop iterative predictor should run.
         """
         st= tim.time()
         
@@ -140,7 +155,12 @@ class ProcessModelManager:
                 raise CutTooLarge()
 
     def tail_cutter(self, case_id_counts, cut_length, cuts, input_sequences):
-
+        """
+        cut sequences cut_length steps from the tail.
+        :param cut_length: how many steps to cut from the tail of each sequence. 
+        :param case_id_counts: number of steps on each case_id
+        :param input_sequences: list of sequences to be cut. 
+        """
         for i, case_id in enumerate(case_id_counts.index):
             count = case_id_counts.loc[case_id]
             cut = random.randint(1, count)

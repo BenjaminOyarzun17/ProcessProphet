@@ -15,6 +15,13 @@ from collections import deque
 
 class PredictionManager: 
     def __init__(self, model, case_id_key, activity_key, timestamp_key, config ):
+        """
+        :param model: the model used for doing predictions
+        :param case_id_key: case id key of the log 
+        :param activity_key: activity key of the log
+        :param timestamp_key: timestamp key of the log
+        :param config: configuration used for training and important hyperparams.
+        """
         self.model =model  #: we assume there is an already existing model
         self.case_id_key = case_id_key # we assume the three important columns are known
         self.activity_key = activity_key
@@ -36,7 +43,7 @@ class PredictionManager:
 
     def get_dummy_process(self, df, case_id_column):
         """
-        just used for testing
+        just used for testing; create a dummy input df.
         """
         random_case_id = df[case_id_column].sample(n = 1).values[0]
         dummy = df[df[case_id_column]==random_case_id]
@@ -48,6 +55,9 @@ class PredictionManager:
 
 
     def check_input_uniqueness(self):
+        """
+        the input df must contain only one process. hence check if thereis one unique case_id 
+        """
         return len(self.encoded_df[self.case_id_key].unique()) == 1
     
 
@@ -60,6 +70,8 @@ class PredictionManager:
         preprocessor = Preprocessing()
         preprocessor.import_event_log_dataframe(df, self.case_id_key, self.activity_key, self.timestamp_key)
         self.encoded_df= preprocessor.event_df 
+
+        #: check case id uniqueness
         if not self.check_input_uniqueness():
             raise NotOneCaseId()
         self.current_case_id= self.encoded_df[self.case_id_key].sample(n = 1).values[0]
@@ -68,17 +80,17 @@ class PredictionManager:
 
     def single_prediction(self):
         """
-        make one prediction 
+        make one prediction given a partial process. 
         """
+
+        #: sliding window
         step1= ATMDataset(self.config,self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key)
-        #: batch size set to one to have one sample per batch.
+        #: just create one batch
         step2 = DataLoader(step1, batch_size=len(step1.time_seqs), shuffle=False, collate_fn=ATMDataset.to_features)
 
+        #: TODO: refactor these lines here. no need for a for loop
         pred_times, pred_events = [], []
         for i, batch in enumerate(step2):   
-            logger_multiple_prediction.debug("batch:")
-            logger_multiple_prediction.debug(batch[0].shape)
-            logger_multiple_prediction.debug(batch[1].shape)
             pred_time, pred_event = self.model.predict(batch, pm_active = True)
             pred_times.append(pred_time)
             pred_events.append(pred_event)
@@ -91,7 +103,7 @@ class PredictionManager:
         """
         note that we just save the
         probability of the last pair (time, event) in the path, 
-        since the nn calculates lambda*(t), which is 
+        since the nn calculates lambda*(t) (see paper), which is 
         the probability of the last predicted event happening
         in the predicted time t. 
         """
@@ -105,6 +117,9 @@ class PredictionManager:
 
 
     def get_differences(self):
+        """
+        calculates time differences. 
+        """
         local = []
         for seq in self.recursive_time_seqs:
             seq = np.insert(seq, 0, seq[0])
@@ -114,7 +129,13 @@ class PredictionManager:
 
 
     def append_one_difference_array(self, lst):
+        """
+        appends one difference array to self.recursive_time_diffs 
+        :param lst: list use for calculating the contiguous differences. 
+        """
+        #: extend the list by one element
         time = np.array([lst[0]]+ lst)
+        #: get the differrnces between contiguous elements.
         time = np.diff(time)
         self.recursive_time_diffs= np.append(self.recursive_time_diffs, [time], axis = 0)
         
@@ -124,37 +145,55 @@ class PredictionManager:
         where the degree= 1. we avoid backtracking and recursion for
         efficiency reasons.  
         """
+        #: get the event and timestamp of the last event in the partial process.
         c_t =self.encoded_df[self.timestamp_key].iloc[-1]
         c_e =self.encoded_df[self.activity_key].iloc[-1]
 
+        #: compute sliding window
         self.recursive_atm= ATMDataset(self.config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
         self.recursive_time_seqs = self.recursive_atm.time_seqs
         self.recursive_event_seqs = self.recursive_atm.event_seqs
+
+        #: compute differences within each window
         self.recursive_time_diffs= self.get_differences()
-        if nonstop:
+        
+
+        if nonstop: 
+            #: in case that we run until end activity
             self.linear_iterative_predictor_non_stop(c_t, c_e, upper) 
         else:
+            #: in case we run until a given depth
             self.linear_iterative_predictor(depth, c_t, c_e) 
+        
+        #: decode the generated paths
         self.decode_paths()
 
     def linear_iterative_predictor_non_stop(self, start_time, start_event, upper): 
-
+        """
+        :param start_time: used to mark the start of the path 
+        :param start_event: used to mark the start of the path
+        :param upper: upper bound for the amount of iterations
+        """
         c_t = start_time
         c_e = start_event
         path = [(c_t , (1,c_e))]
         i = 0
-        while not self.end_activities[c_e] and i<upper:
-            p_t, p_events = self.get_sorted_wrapper()
-            p_pair = p_events[0]
-            path.append((p_t[0], (p_pair[0], p_pair[1] )))
-            self.append_to_log(p_t[0], p_pair[1])
+        #TODO: set upper bound as default to INFTY
+        while not self.end_activities[c_e] and i<upper: #stop if end activity found or upper bound crossed
+            p_t, p_events = self.get_sorted_wrapper() #get prediction
+            p_pair = p_events[0] #get pair (prob, event)
+            path.append((p_t[0], (p_pair[0], p_pair[1] ))) #save to path
+            self.append_to_log(p_t[0], p_pair[1]) #update log for recusrive call
             c_t = p_t[0]
             c_e = p_pair[0]
             i+=1
-        self.paths.append(path)
+        self.paths.append(path) #save generated path 
     
 
     def linear_iterative_predictor(self, depth, start_time, start_event): 
+        """
+        TODO: merge this fucntion with linear_iterative_predictor
+        """
         c_t = start_time
         c_e = start_event
         path = [(c_t , (1,c_e))]
@@ -171,25 +210,24 @@ class PredictionManager:
         timestamp and event pair.  
         :param depth: how many steps in the future are to be predicted.
         :param degree: how many predictions on each step are to be considered.
-        :param config: TODO 
+        :param config: configuration used for the NN. required by ATM Dataset
         """
-        #logger_multiple_prediction.debug("dummies:")
-        #logger_multiple_prediction.debug(self.encoded_df)
         c_t =self.encoded_df[self.timestamp_key].iloc[-1]
         c_e =self.encoded_df[self.activity_key].iloc[-1]
 
-
+        #:load data, get windows
         self.recursive_atm= ATMDataset(self.config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
         self.recursive_time_seqs = self.recursive_atm.time_seqs
         self.recursive_event_seqs = self.recursive_atm.event_seqs
 
+        #:get differences
         self.recursive_time_diffs= self.get_differences()
+
+        #: compute paths
         self.backtracking_prediction_tree(c_t, c_e, 0,depth, degree,[(c_t, (1, c_e))]) 
         
-
+        #: decode paths
         self.decode_paths()
-        #logger_multiple_prediction.debug("paths:")
-        #logger_multiple_prediction.debug(self.paths)
 
 
     def backtracking_prediction_tree(self, c_t, c_e, c_d, depth, degree,current_path):
@@ -226,27 +264,32 @@ class PredictionManager:
         self.recursive_atm.time_seqs = self.recursive_time_seqs
 
 
-       #step2 = DataLoader(self.recursive_atm, batch_size=len(self.recursive_atm.event_seqs), shuffle=False, collate_fn=ATMDataset.to_features)
-
+        #: do not use dataloader for batch genertaion, too inefficient
+        #: differnces are also computed in a smarter way, as well as windows.
         batch = ( torch.tensor(self.recursive_time_diffs,dtype=torch.float32), torch.tensor(self.recursive_event_seqs, dtype=torch.int64)) 
 
 
         pred_times, pred_events = [], []
         
         pred_time, pred_event = self.model.predict_sorted(batch)
+        
         pred_times.append(pred_time)
         pred_events.append(pred_event)
 
         pred_times= pred_times[-1][-1] #we are only interested in the last one; unpack the batch
         pred_events = pred_events[-1][-1]
 
-        #logger_multiple_prediction.debug("predicted time:")
-        #logger_multiple_prediction.debug(pred_times)
-        #logger_multiple_prediction.debug("predicted event:")
-        #logger_multiple_prediction.debug(pred_events)
-
         return pred_times, pred_events
+
+
     def append_to_log(self,time, event): 
+        """
+        instead of calling ATMDataset and Dataloader on each iterative call 
+        of the prediction generator, just append a window and a difference array
+        to an existing list.  
+        :param time: newly predicted timestamp
+        :param event: newly predicted event 
+        """
         last_time_seq = list(self.recursive_time_seqs[-1])
         last_event_seq = list(self.recursive_event_seqs[-1])
         new_time_seq = last_time_seq[1:]
@@ -259,22 +302,26 @@ class PredictionManager:
        
     def pop_from_log(self): 
         """
-        self.encoded_df = self.encoded_df.iloc[:-1]
+        used for backtracking to restore the old path
         """
         self.recursive_time_seqs.pop()
         self.recursive_event_seqs.pop()
         self.recursive_time_diffs= np.delete(self.recursive_time_diffs, len(self.recursive_time_diffs)-1, axis = 0) 
 
-    def decode_paths(self): #TODO: decode time
+    def decode_paths(self): 
+        """
+        used for decoding the events and timestamps in the generated paths. 
+        """
+        #TODO: decode time
+
         self.decoded_paths = []
         for path in self.paths: 
             encoded_events = [event_index for _, (_, event_index) in path]
             encoded_events = list(map(int, encoded_events))
-            #print("encoded events:")
-            #print(encoded_events)
             decoded_events = self.config.activity_le.inverse_transform(encoded_events)
+
+
             decoded_path= [(time, (prob, event)) for (time, (prob, _)), event in zip(path, decoded_events) ]
-            #print(decoded_path)
             self.decoded_paths.append(decoded_path)
         
  
