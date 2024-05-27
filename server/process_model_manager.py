@@ -180,11 +180,22 @@ class ProcessModelManager:
     
 
     def decode_sequence(self, sequence):
+        """
+        decodes the input sequence that ocntains a df.  
+        :return: sequence that has been decoded. 
+        """
         sequence[self.case_activity_key] = self.config.activity_le.inverse_transform(sequence[self.case_activity_key].astype(int))
         return sequence
 
 
     def handle_nat(self, group):
+        """
+        the inverse transformation for timestamps is a lossy transformation and might lead to NaT entries. 
+        a timedelta of k second's with respect to the last valid timestamp is set as a timestamp value for 
+        the kth NaT entry.
+        :param group: a group in the predictive df that contains only one case id. 
+        :return: the same group now with valid timestamps
+        """
         last_valid_idx = group[self.case_timestamp_key].last_valid_index()
         if last_valid_idx is None:
             return group
@@ -201,26 +212,37 @@ class ProcessModelManager:
 
 
     def decode_df(self):
-
-        logger_generate_predictive_log.debug("numbers of nan before decode")        
-        logger_generate_predictive_log.debug(self.predictive_df.isna().sum())        
-        logger_generate_predictive_log.debug(self.predictive_df.head(20))        
-        logger_generate_predictive_log.debug(self.predictive_df.tail(20))        
+        """
+        decodes the predictive df; inverse transform timestamps and event names.
+        """
         self.predictive_df[self.case_activity_key] = self.predictive_df[self.case_activity_key].astype("str")
         self.predictive_df[self.case_id_key] = self.predictive_df[self.case_activity_key].astype("str")
         #: note that this operation is lossy and might generate NaT. 
         self.predictive_df[self.case_timestamp_key] = self.predictive_df[self.case_timestamp_key]*(10**self.config.exponent)
         self.predictive_df[self.case_timestamp_key] = self.predictive_df[self.case_timestamp_key].astype("datetime64[ns]")
 
+        #: handle NaT values
         self.predictive_df= self.predictive_df.groupby(self.case_id_key, group_keys=False).apply(self.handle_nat)
 
+        #: save the generated predictive model
         self.predictive_df.to_csv("logs/predicted_df")
 
+
     def import_predictive_df(self, path):
+        """
+        used for importing a predictive df. 
+        """
         self.predictive_df = pd.read_csv(path, sep = ",")
 
 
     def heuristic_miner(self,path,  dependency_threshold=0.5, and_threshold=0.65, loop_two_threshold=0.5):
+        """
+        run heuristic miner on the predictive log and generate a petri net.
+        :param path: path used for saving the generated petri net. 
+        :param dependency_threshold: dependency threshold parameter for heursitic miner
+        :param and_threshold:  and threshold parameter for heursitic miner
+        :param loop_two_threshold:  loop two thrshold parameter for heursitic miner
+        """
         self.decode_df()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_heuristics(
             self.predictive_df,
@@ -232,11 +254,16 @@ class ProcessModelManager:
             case_id_key= self.case_id_key
         )
         #pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
-        #pm4py.view_petri_net(self.petri_net, format='svg')
+        #: export the petri net in the given path
         pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking, file_path=path)
 
 
     def inductive_miner(self, path,   noise_threshold=0):
+        """
+        run inductive miner on the predictive log and generate a petri net.
+        :param path: path used for saving the generated petri net. 
+        :param noise_threshold: noise threshold parameter for inductive miner
+        """
         self.decode_df()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_inductive(
             self.predictive_df,
@@ -249,6 +276,10 @@ class ProcessModelManager:
         pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking, file_path=path)
 
     def alpha_miner(self, path):
+        """
+        run alpha miner on the predictive log and generate a petri net.
+        :param path: path used for saving the generated petri net. 
+        """
         self.decode_df()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_alpha(
             self.predictive_df,
@@ -260,6 +291,10 @@ class ProcessModelManager:
         pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking , file_path=path)
 
     def prefix_tree_miner(self, path):
+        """
+        run prefix tre miner on the predictive log and generate a petri net.
+        :param path: path used for saving the generated petri net. 
+        """
         self.decode_df()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_prefix_tree(
             self.predictive_df,
