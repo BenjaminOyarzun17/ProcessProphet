@@ -8,4 +8,5 @@ plugins:
   - mkdocstrings
 
 nav: 
-  - reference.md
+  - managers.md
+  - server_routes.md
