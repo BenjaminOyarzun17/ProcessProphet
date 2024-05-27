@@ -1,6 +1,7 @@
 
 import pm4py
 import os
+import time
 import pandas as pd
 import pydoc_markdown
 from ERPP_RMTPP_torch import * 
@@ -35,6 +36,7 @@ class Config:
         self.activity_le = None
         self.exponent = None
         self.number_classes = 0
+        self.train_time_limit = None
     def asdict(self):
         return {
             "seq_len": self.seq_len,
@@ -113,6 +115,7 @@ class NNManagement:
         :param batch_size: batch size
         :param lr: learning rate
         :param epochs: no of epochs
+        :param train_time_limit: time limit for training in minutes, when the time is over training will be aborted
         """
         self.config.seq_len = params.get('seq_len')
         self.config.emb_dim = params.get('emb_dim')
@@ -125,6 +128,7 @@ class NNManagement:
         self.config.epochs = params.get('epochs')
         self.config.importance_weight = params.get('importance_weight')
         self.config.verbose_step = params.get('verbose_step')
+        self.config.train_time_limit = params.get('train_time_limit')
 
     def evaluate(self, config):
         """
@@ -278,6 +282,7 @@ class NNManagement:
         if self.config.cuda: 
             self.model.cuda() #GPU 
 
+        start_time = time.time()
         for epc in range(self.config.epochs): #do the epochs
             self.model.train()  
             range_loss1 = range_loss2 = range_loss = 0
@@ -293,7 +298,10 @@ class NNManagement:
                     print("event loss:", range_loss2 / self.config.verbose_step)
                     print("total loss:", range_loss / self.config.verbose_step)
                     range_loss1 = range_loss2 = range_loss = 0
-        
 
+                # check if the training time limit is exceeded
+                elapsed_time = time.time() - start_time
+                if self.config.train_time_limit is not None and elapsed_time > self.config.train_time_limit * 60:
+                    raise TrainTimeLimitExceeded()
 
         self.evaluate( self.config)

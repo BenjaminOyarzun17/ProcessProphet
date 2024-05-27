@@ -23,11 +23,27 @@ class TestTrainEvaluate(unittest.TestCase):
         - nn model is saved in the class 
         - acc, recall, f1 are saved in class
     """
+    @classmethod
     def setUpClass(cls):
         #: run this to import the data once 
         cls.preprocessor= Preprocessing()
         path = "data/running-example.csv" #its smaller, use preferrably.
         cls.preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ";")
+
+    def test_train_time_limit(self):
+        """
+        test if the train time limit is respected
+        """
+        train, test = self.preprocessor.split_train_test(.5)
+        nn_manager = NNManagement(None)
+        nn_manager.config.absolute_frequency_distribution = self.preprocessor.absolute_frequency_distribution
+        nn_manager.config.number_classes = self.preprocessor.number_classes
+        nn_manager.config.train_time_limit = 0.1
+        nn_manager.load_data(train, test, self.preprocessor.case_id_key, self.preprocessor.case_timestamp_key, self.preprocessor.case_activity_key)
+
+        with self.assertRaises(exceptions.TrainTimeLimitExceeded):
+            nn_manager.train()
+
 
 
 class TestImportXESFunction(unittest.TestCase):

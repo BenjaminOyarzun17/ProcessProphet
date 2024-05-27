@@ -6,6 +6,13 @@ class TrainPercentageTooHigh(Exception):
 
     def __str__(self):
         return self.message
+    
+class TrainTimeLimitExceeded(Exception):
+    def __init__(self):
+        self.message= "the training time limit has been exceeded"
+
+    def __str__(self):
+        return self.message
 
 
 class CutLengthZero(Exception):
