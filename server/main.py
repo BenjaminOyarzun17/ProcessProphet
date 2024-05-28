@@ -196,9 +196,9 @@ def test_single_prediction():
 
 def test_multiple_prediction():
     preprocessor = Preprocessing()
-    is_xes  = False
-    path =  "data/train_day_joined.csv"
-    #path = "data/BPI_Challenge_2019.xes"
+    is_xes  = True
+    #path =  "data/train_day_joined.csv"
+    path = "data/BPI_Challenge_2019.xes"
     #path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
@@ -210,7 +210,7 @@ def test_multiple_prediction():
         preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
     train, test = preprocessor.split_train_test(.9)
 
-    nn_manager = NNManagement(None)
+    nn_manager = NNManagement()
     # select cuda or not
     nn_manager.config.cuda = True 
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
@@ -224,8 +224,8 @@ def test_multiple_prediction():
     pm = PredictionManager( nn_manager.model, preprocessor.case_id_key, preprocessor.case_activity_key, preprocessor.case_timestamp_key, nn_manager.config)
     dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
     pm.multiple_prediction_dataframe(
-        6, 
         3, 
+        2, 
         dummy  
     )
 
@@ -254,7 +254,8 @@ def test_process_model_manager_random_cut_nontstop():
     nn_manager.train()
     nn_manager.config.activity_le = preprocessor.activity_le
     nn_manager.config.case_id_le = preprocessor.case_id_le
-    
+    nn_manager.config.exponent = preprocessor.exponent
+
     pmm = ProcessModelManager(
         preprocessor.event_df, 
         nn_manager.model, 
@@ -264,15 +265,17 @@ def test_process_model_manager_random_cut_nontstop():
         preprocessor.case_timestamp_key
     )
     pmm.end_activities = preprocessor.find_end_activities()
-    pmm.generate_predictive_log(non_stop=True, upper =30, random_cuts=True)
+    pmm.generate_predictive_log(non_stop=True, upper =30, random_cuts=True, new_log_path="generated_predicted_df.csv")
+    pmm.decode_df()
+    pmm.predictive_df.to_csv("generated_predicted_df.csv")
 
 
 def test_process_model_manager_random_cut():
     preprocessor = Preprocessing()
-    is_xes  = True
-    #path =  "data/train_day_joined.csv"
+    is_xes  = False
+    path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
-    path = "data/Hospital_log.xes"
+    #path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
      
@@ -292,6 +295,7 @@ def test_process_model_manager_random_cut():
     nn_manager.train()
     nn_manager.config.activity_le = preprocessor.activity_le
     nn_manager.config.case_id_le = preprocessor.case_id_le
+    nn_manager.config.exponent = preprocessor.exponent
     
     pmm = ProcessModelManager(
         preprocessor.event_df, 
@@ -301,8 +305,9 @@ def test_process_model_manager_random_cut():
         preprocessor.case_id_key,
         preprocessor.case_timestamp_key
     )
-    pmm.generate_predictive_log(non_stop=False, upper =100, random_cuts=True)
-
+    pmm.generate_predictive_log(non_stop=False, upper =100, random_cuts=True, new_log_path = "generated_predicted_df.csv")
+    pmm.decode_df()
+    pmm.predictive_df.to_csv("generated_predicted_df.csv")
 
 def test_process_model_manager_tail_cut():
     preprocessor = Preprocessing()
@@ -329,6 +334,7 @@ def test_process_model_manager_tail_cut():
     nn_manager.train()
     nn_manager.config.activity_le = preprocessor.activity_le
     nn_manager.config.case_id_le = preprocessor.case_id_le
+    nn_manager.config.exponent = preprocessor.exponent
     
 
     pmm = ProcessModelManager(
@@ -389,7 +395,7 @@ def test_alpha_miner():
     #pmm.generate_predictive_log_random_cut_until_end(100)
     pmm.generate_predictive_log_random_cut(100)
     #pmm.alpha_miner()
-    pmm.heuristic_miner()
+    pmm.heuristic_miner(view = True)
 
 def test_heuristic():
     preprocessor = Preprocessing()
@@ -427,18 +433,18 @@ def test_heuristic():
         preprocessor.case_timestamp_key
     )
     
-    pmm.generate_predictive_log_tail_cut()
 
-    pmm.heuristic_miner()
+    pmm.generate_predictive_log(non_stop=False, upper =100, random_cuts=True, new_log_path = "generated_predicted_df.csv")
+    pmm.heuristic_miner(view = True, path = "awesome_heristic.pnml")
 
 
 def test_import_model():
     preprocessor = Preprocessing()
     is_xes  = False
     
-    path =  "data/train_day_joined.csv"
+    #path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
-    #path = "data/Hospital_log.xes"
+    path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
      
@@ -464,6 +470,7 @@ def test_import_model():
     #: unfortunately the le object is lost when exported.
     nn_manager.config.activity_le = preprocessor.activity_le
     nn_manager.config.case_id_le = preprocessor.case_id_le
+    nn_manager.config.exponent = preprocessor.exponent
     pmm = ProcessModelManager(
         preprocessor.event_df, 
         nn_manager.model, 
@@ -485,12 +492,12 @@ if __name__=="__main__":
     #test_random_search(2)
     #test_grid_search()
     #test_single_prediction()
-    test_multiple_prediction()
+    #test_multiple_prediction()
     #test_process_model_manager_random_cut()
     #test_process_model_manager_random_cut_nontstop()
     #test_process_model_manager_random_cut()
     #test_end_activities()
     #test_process_model_manager_tail_cut()
-    #test_heuristic()
+    test_heuristic()
     #dummy()
     #app.run()

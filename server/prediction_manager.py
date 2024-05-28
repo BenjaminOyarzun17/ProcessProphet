@@ -8,7 +8,7 @@ import numpy as np
 import pprint 
 import json
 import time
-
+import random
 
 
 
@@ -44,13 +44,21 @@ class PredictionManager:
         """
         just used for testing; create a dummy input df.
         """
-        random_case_id = df[case_id_column].sample(n = 1).values[0]
-        dummy = df[df[case_id_column]==random_case_id]
-        n_rows = dummy.shape[0]
-        if n_rows == 1:
-            raise ProcessTooShort()
+        case_ids = df[case_id_column].unique()
+        selected_id = -1
+        length = 0
+        for id in case_ids: 
+            length = len(df[df[case_id_column]==id])
+            if length>=self.config.seq_len:
+                selected_id = id
+                break
+        if selected_id == -1: #: no sequence of appropiate length for input
+            raise SeqLengthTooHigh()             
 
-        return dummy.iloc[:n_rows-10]
+        random_cut = random.randint(self.config.seq_len+1, length ) 
+        dummy = df[df[case_id_column]==selected_id]
+
+        return dummy.iloc[:random_cut]
 
 
     def check_input_uniqueness(self):
@@ -164,8 +172,6 @@ class PredictionManager:
             #: in case we run until a given depth
             self.linear_iterative_predictor(depth, c_t, c_e) 
         
-        #: decode the generated paths
-        self.decode_paths()
 
     def linear_iterative_predictor_non_stop(self, start_time, start_event, upper): 
         """
@@ -310,8 +316,9 @@ class PredictionManager:
     def decode_paths(self): 
         """
         used for decoding the events and timestamps in the generated paths. 
+        The timestamps are NOT decoded, since the predictions are TIMEDELTAS
         """
-        #TODO: decode time
+        #TODO: decode time considering time deltas
 
         self.decoded_paths = []
         for path in self.paths: 
@@ -319,9 +326,8 @@ class PredictionManager:
             encoded_events = list(map(int, encoded_events))
             decoded_events = self.config.activity_le.inverse_transform(encoded_events)
 
-            decoded_path= [(pd.to_datetime(float(time)*(10**self.config.exponent)), (prob, event)) for (time, (prob, _)), event in zip(path, decoded_events) ]
+            decoded_path= [(time, (prob, event)) for (time, (prob, _)), event in zip(path, decoded_events) ]
             self.decoded_paths.append(decoded_path)
-        pprint.pprint(self.decoded_paths, indent=2)
  
     def jsonify_paths(self): 
         """
@@ -363,7 +369,7 @@ class PredictionManager:
         self.current_case_id= self.encoded_df[self.case_id_key].sample(n = 1).values[0]
         if not linear: 
             """
-            case backtracking needed 
+            case backtracking needed; never called by prediction manager.  
             """
             self.multiple_prediction(depth, degree)
         else: 
@@ -371,7 +377,7 @@ class PredictionManager:
             the linear version is only being used for
             the iterative use of the multiple prediction generation.
             it mostly contains optimizations that are only 
-            tought for the iterative generation prediction 
+            tought for the prediction manager. 
             """
             self.multiple_prediction_linear(depth, non_stop, upper)
 

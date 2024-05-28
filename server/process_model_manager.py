@@ -50,7 +50,7 @@ class ProcessModelManager:
         """
         for i, case_id in enumerate(case_id_counts.index):
             count = case_id_counts.loc[case_id]
-            sequence = self.event_df[self.event_df[self.case_id_key]==case_id]  
+            sequence = self.event_df[self.event_df[self.case_id_key]==case_id] 
             if count<=self.config.seq_len or count>max_len:
                 continue
             cut = random.randint(self.config.seq_len+1, count)
@@ -86,22 +86,31 @@ class ProcessModelManager:
                 non_stop=non_stop,
                 upper = upper, 
             )
-            prediction = pm.decoded_paths[0] 
+            prediction = pm.paths[0] 
             extension = {
                 self.case_id_key:[],
                 self.case_activity_key:[],
                 self.case_timestamp_key:[]
             }
             #: arrange the predictions in the extension dictionary
-            for time, (pred, event) in prediction: 
+            # the first prediction is not used because it is just information 
+            # use for knowing what was the last timestamp recorded
+            for time, (pred, event) in prediction[1:]: 
                 extension[self.case_id_key] = [case_id]
                 extension[self.case_activity_key]= [event]
                 extension[self.case_timestamp_key]= [time]
             
-            #: transform extension to dtaframe and extend the predictive df now with the predictions
             extension = pd.DataFrame(extension)
+            #: here compute cumulative sum of times + last timestamp recorded
+            extension[self.case_timestamp_key] = extension[self.case_timestamp_key].cumsum()
+            extension[self.case_timestamp_key] = extension[self.case_timestamp_key] + prediction[0][0]
+            #: transform extension to dtaframe and extend the predictive df now with the predictions
             self.predictive_df= pd.concat([self.predictive_df, extension], ignore_index = True)
 
+        self.predictive_df=  self.predictive_df.sort_values(by=[self.case_id_key, self.case_timestamp_key])
+        #: TODO: the the sorting again by case id and timestamp --> if a 
+        # prediction goes backwards it still doesnt make a difference.
+            
 
 
     def generate_predictive_log(self, new_log_path, max_len= 15, upper = 30, non_stop = False, random_cuts = False, cut_length = 0): 
@@ -207,8 +216,9 @@ class ProcessModelManager:
         decodes the predictive df; inverse transform timestamps and event names.
         """
         self.predictive_df[self.case_activity_key] = self.predictive_df[self.case_activity_key].astype("str")
-        self.predictive_df[self.case_id_key] = self.predictive_df[self.case_activity_key].astype("str")
+        self.predictive_df[self.case_id_key] = self.predictive_df[self.case_id_key].astype("str")
         #: note that this operation is lossy and might generate NaT. 
+
         self.predictive_df[self.case_timestamp_key] = self.predictive_df[self.case_timestamp_key]*(10**self.config.exponent)
         self.predictive_df[self.case_timestamp_key] = self.predictive_df[self.case_timestamp_key].astype("datetime64[ns]")
 
@@ -226,7 +236,7 @@ class ProcessModelManager:
         self.predictive_df = pd.read_csv(path, sep = ",")
 
 
-    def heuristic_miner(self,path,  dependency_threshold=0.5, and_threshold=0.65, loop_two_threshold=0.5):
+    def heuristic_miner(self,path,  dependency_threshold=0.5, and_threshold=0.65, loop_two_threshold=0.5, view= False):
         """
         run heuristic miner on the predictive log and generate a petri net.
         :param path: path used for saving the generated petri net. 
@@ -244,7 +254,8 @@ class ProcessModelManager:
             timestamp_key=self.case_timestamp_key,
             case_id_key= self.case_id_key
         )
-        #pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
+        if view:
+            pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
         #: export the petri net in the given path
         pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking, file_path=path)
 

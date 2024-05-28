@@ -94,7 +94,7 @@ class NNManagement:
     - set params. 
     - TODO: might be extended 
     """
-    def __init__(self, config):
+    def __init__(self, config = None):
         self.config = Config() if config == None else config
         self.f1 = None
         self.recall= None
