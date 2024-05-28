@@ -310,4 +310,7 @@ class ProcessModelManager:
 
     def conformance_checking_alignments(self):
         aligned_traces = pm4py.conformance_diagnostics_alignments(self.predictive_df, self.petri_net, self.initial_marking, self.final_marking)
+        from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
+        log_fitness = replay_fitness.evaluate(aligned_traces, variant=replay_fitness.Variants.ALIGNMENT_BASED)
+        return log_fitness
         #: TODO keep reading pm4py documentation on alignments (goal: get the fitness score)
