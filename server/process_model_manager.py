@@ -1,6 +1,8 @@
 import pm4py
 from prediction_manager import PredictionManager
+import pprint
 import random
+from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
 import pandas as pd
 from loggers import logger_generate_predictive_log, logger_multiple_prediction
 from tqdm import tqdm
@@ -21,8 +23,10 @@ class ProcessModelManager:
         self.predictive_df= None
         # variables to store PM model for further Conformance checking
         self.initial_marking = None
+        self.unencoded_df = None #used for conformance checking
         self.final_marking = None
         self.petri_net = None
+
 
     def initialize_variables(self):
         """
@@ -211,26 +215,28 @@ class ProcessModelManager:
 
 
 
-    def decode_df(self):
+    def decode_df(self, df):
         """
         decodes the predictive df; inverse transform timestamps and event names.
         """
-        self.predictive_df[self.case_activity_key] = self.predictive_df[self.case_activity_key].astype("int")
-        self.predictive_df[self.case_id_key] = self.predictive_df[self.case_id_key].astype("int")
-        self.predictive_df[self.case_activity_key] = self.config.activity_le.inverse_transform(self.predictive_df[self.case_activity_key])
-        self.predictive_df[self.case_id_key] = self.config.case_id_le.inverse_transform(self.predictive_df[self.case_id_key])
-        self.predictive_df[self.case_activity_key] = self.predictive_df[self.case_activity_key].astype("str")
-        self.predictive_df[self.case_id_key] = self.predictive_df[self.case_id_key].astype("str")
+        df[self.case_activity_key] = df[self.case_activity_key].astype("int")
+        df[self.case_id_key] = df[self.case_id_key].astype("int")
+        df[self.case_activity_key] = self.config.activity_le.inverse_transform(df[self.case_activity_key])
+        df[self.case_id_key] = self.config.case_id_le.inverse_transform(df[self.case_id_key])
+        df[self.case_activity_key] = df[self.case_activity_key].astype("str")
+        df[self.case_id_key] = df[self.case_id_key].astype("str")
         #: note that this operation is lossy and might generate NaT. 
 
-        self.predictive_df[self.case_timestamp_key] = self.predictive_df[self.case_timestamp_key]*(10**self.config.exponent)
-        self.predictive_df[self.case_timestamp_key] = self.predictive_df[self.case_timestamp_key].astype("datetime64[ns]")
+        df[self.case_timestamp_key] = df[self.case_timestamp_key]*(10**self.config.exponent)
+        df[self.case_timestamp_key] = df[self.case_timestamp_key].astype("datetime64[ns]")
 
         #: handle NaT values
-        self.predictive_df= self.predictive_df.groupby(self.case_id_key, group_keys=False).apply(self.handle_nat)
-
+        df= df.groupby(self.case_id_key, group_keys=False).apply(self.handle_nat)
+        #: just in case 
+        df = df.dropna() # TODO: this might not be very clean and might wipe too much data
         #: save the generated predictive model
-        self.predictive_df.to_csv("logs/predicted_df")
+        df.to_csv("logs/predicted_df")
+        return df
 
 
     def import_predictive_df(self, path):
@@ -248,7 +254,7 @@ class ProcessModelManager:
         :param and_threshold:  and threshold parameter for heursitic miner
         :param loop_two_threshold:  loop two thrshold parameter for heursitic miner
         """
-        self.decode_df()
+        self.predictive_df = self.decode_df(self.predictive_df)
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_heuristics(
             self.predictive_df,
             dependency_threshold, 
@@ -270,7 +276,7 @@ class ProcessModelManager:
         :param path: path used for saving the generated petri net. 
         :param noise_threshold: noise threshold parameter for inductive miner
         """
-        self.decode_df()
+        self.predictive_df =self.decode_df(self.predictive_df)
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_inductive(
             self.predictive_df,
             noise_threshold, 
@@ -286,7 +292,7 @@ class ProcessModelManager:
         run alpha miner on the predictive log and generate a petri net.
         :param path: path used for saving the generated petri net. 
         """
-        self.decode_df()
+        self.predictive_df =self.decode_df(self.predictive_df)
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_alpha(
             self.predictive_df,
             self.case_activity_key,
@@ -301,7 +307,7 @@ class ProcessModelManager:
         run prefix tre miner on the predictive log and generate a petri net.
         :param path: path used for saving the generated petri net. 
         """
-        self.decode_df()
+        self.predictive_df =self.decode_df(self.predictive_df)
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_prefix_tree(
             self.predictive_df,
             self.case_activity_key,
@@ -319,13 +325,34 @@ class ProcessModelManager:
         '''
 
     def conformance_checking_token_based_replay(self):
-        replayed_traces = pm4py.conformance_diagnostics_token_based_replay(self.predictive_df, self.petri_net, self.initial_marking, self.final_marking)
-        #: TODO get the fitness 
 
+        replayed_traces = pm4py.conformance_diagnostics_token_based_replay(self.unencoded_df,  self.petri_net, self.initial_marking, self.final_marking)
+
+        fitness = self.compute_fitness(replayed_traces)
+
+        return fitness
+
+    
+    def compute_fitness(self, replayed_traces):
+
+ 
+        sum_m =  0 
+        sum_c = 0
+        sum_r = 0 
+        sum_p  = 0
+        # TODO: multiply by trace frequency in the log.
+        for trace in replayed_traces: 
+            sum_m+= 1*trace["missing_tokens"]
+            sum_c+= 1*trace["consumed_tokens"]
+            sum_r += 1*trace["remaining_tokens"]
+            sum_p += 1*trace["produced_tokens"]
+
+
+        return 0.5*(1-(sum_m/sum_c)) + 0.5*(1-(sum_r/sum_p))
+    
 
     def conformance_checking_alignments(self):
-        aligned_traces = pm4py.conformance_diagnostics_alignments(self.predictive_df, self.petri_net, self.initial_marking, self.final_marking)
-        from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
+        aligned_traces = pm4py.conformance_diagnostics_alignments(self.event_df, self.petri_net, self.initial_marking, self.final_marking)
         log_fitness = replay_fitness.evaluate(aligned_traces, variant=replay_fitness.Variants.ALIGNMENT_BASED)
         return log_fitness
         #: TODO keep reading pm4py documentation on alignments (goal: get the fitness score)

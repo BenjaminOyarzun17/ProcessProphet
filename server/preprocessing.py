@@ -37,6 +37,7 @@ class Preprocessing:
         self.case_id_le = None
         self.activity_le = None
         self.exponent = None
+        self.unencoded_df = None
         # TODO: invoke import_event_log? (decide)
 
 
@@ -135,7 +136,12 @@ class Preprocessing:
 
         #: filter out all the other generated columns
         self.event_df= self.event_df[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
+
         self.event_df= self.event_df.dropna()
+        #: used for conformance checking, save everything except the 
+        # extra columns 
+        self.unencoded_df = self.event_df.copy(deep = True)
+
         
         #: sort the rows by group id and timestamp key
         self.event_df =  self.event_df.sort_values(by=[case_id, timestamp_key])
