@@ -264,11 +264,10 @@ def test_process_model_manager_random_cut_nontstop():
         preprocessor.case_id_key,
         preprocessor.case_timestamp_key
     )
+    pmm.unencoded_df= preprocessor.unencoded_df
     pmm.end_activities = preprocessor.find_end_activities()
     pmm.generate_predictive_log(non_stop=True, upper =30, random_cuts=True, new_log_path="generated_predicted_df.csv")
-    pmm.decode_df()
-    pmm.predictive_df.to_csv("generated_predicted_df.csv")
-
+    pmm.decode_df(pmm.predictive_df).to_csv("generated_predicted_df.csv")
 
 def test_process_model_manager_random_cut():
     preprocessor = Preprocessing()
@@ -305,9 +304,9 @@ def test_process_model_manager_random_cut():
         preprocessor.case_id_key,
         preprocessor.case_timestamp_key
     )
+    pmm.unencoded_df= preprocessor.unencoded_df
     pmm.generate_predictive_log(non_stop=False, upper =100, random_cuts=True, new_log_path = "generated_predicted_df.csv")
-    pmm.decode_df()
-    pmm.predictive_df.to_csv("generated_predicted_df.csv")
+    pmm.decode_df(pmm.predictive_df).to_csv("generated_predicted_df.csv")
 
 def test_process_model_manager_tail_cut():
     preprocessor = Preprocessing()
@@ -394,8 +393,7 @@ def test_alpha_miner():
     pmm.end_activities = preprocessor.find_end_activities()
     #pmm.generate_predictive_log_random_cut_until_end(100)
     pmm.generate_predictive_log_random_cut(100)
-    #pmm.alpha_miner()
-    pmm.heuristic_miner(view = True)
+    pmm.alpha_miner()
 
 def test_heuristic():
     preprocessor = Preprocessing()
@@ -432,11 +430,11 @@ def test_heuristic():
         preprocessor.case_id_key,
         preprocessor.case_timestamp_key
     )
-    
+    pmm.unencoded_df = preprocessor.unencoded_df 
 
     pmm.generate_predictive_log(non_stop=False, upper =100, random_cuts=True, new_log_path = "generated_predicted_df.csv")
-    pmm.heuristic_miner(view = True, path = "awesome_heristic.pnml")
-
+    pmm.heuristic_miner(view = False, dependency_threshold=0.8, and_threshold=0.8, loop_two_threshold=0.8,  path = "awesome_heristic.pnml")
+    pmm.conformance_checking_token_based_replay()
 
 def test_import_model():
     preprocessor = Preprocessing()
