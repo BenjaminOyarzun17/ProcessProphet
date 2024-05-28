@@ -1,7 +1,7 @@
 from loggers import logger_get_dummy_process,logger_single_prediction , logger_multiple_prediction
 from exceptions import ProcessTooShort, SeqLengthTooHigh, NotOneCaseId
 from preprocessing import Preprocessing
-from ERPP_RMTPP_torch import * 
+from RMTPP_torch import * 
 from torch.utils.data import DataLoader
 import pandas as pd
 import numpy as np
@@ -244,7 +244,7 @@ class PredictionManager:
             # filter branching degree ; the list is already sorted
             # therefore the "degree" most probable are taken
             self.append_to_log(p_t[0], p_e[1]) 
-            current_path.append((p_t, p_e))
+            current_path.append((p_t[0], p_e))
             self.backtracking_prediction_tree(p_t[0], p_e[1], c_d+1, depth, degree, list(current_path))    
             current_path.pop() 
             self.pop_from_log()
@@ -319,10 +319,9 @@ class PredictionManager:
             encoded_events = list(map(int, encoded_events))
             decoded_events = self.config.activity_le.inverse_transform(encoded_events)
 
-
-            decoded_path= [(time, (prob, event)) for (time, (prob, _)), event in zip(path, decoded_events) ]
+            decoded_path= [(pd.to_datetime(float(time)*(10**self.config.exponent)), (prob, event)) for (time, (prob, _)), event in zip(path, decoded_events) ]
             self.decoded_paths.append(decoded_path)
-        
+        pprint.pprint(self.decoded_paths, indent=2)
  
     def jsonify_paths(self): 
         """

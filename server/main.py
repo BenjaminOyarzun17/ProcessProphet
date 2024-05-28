@@ -210,21 +210,22 @@ def test_multiple_prediction():
         preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
     train, test = preprocessor.split_train_test(.9)
 
-    nn_manager = NNManagement()
+    nn_manager = NNManagement(None)
     # select cuda or not
     nn_manager.config.cuda = True 
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.activity_le = preprocessor.activity_le
     nn_manager.config.case_id_le = preprocessor.case_id_le
     nn_manager.config.number_classes = preprocessor.number_classes
+    nn_manager.config.exponent = preprocessor.exponent
     nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
     nn_manager.train()
 
     pm = PredictionManager( nn_manager.model, preprocessor.case_id_key, preprocessor.case_activity_key, preprocessor.case_timestamp_key, nn_manager.config)
     dummy = pm.get_dummy_process(preprocessor.event_df, preprocessor.case_id_key)
     pm.multiple_prediction_dataframe(
-        2, 
-        2, 
+        6, 
+        3, 
         dummy  
     )
 
@@ -484,7 +485,7 @@ if __name__=="__main__":
     #test_random_search(2)
     #test_grid_search()
     #test_single_prediction()
-    #test_multiple_prediction()
+    test_multiple_prediction()
     #test_process_model_manager_random_cut()
     #test_process_model_manager_random_cut_nontstop()
     #test_process_model_manager_random_cut()
@@ -492,4 +493,4 @@ if __name__=="__main__":
     #test_process_model_manager_tail_cut()
     #test_heuristic()
     #dummy()
-    app.run()
+    #app.run()

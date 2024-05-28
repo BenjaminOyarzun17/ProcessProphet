@@ -1,10 +1,12 @@
-
+"""
+This module is in charge of training the NN Model
+"""
 import pm4py
 import os
 import time
 import pandas as pd
 import pydoc_markdown
-from ERPP_RMTPP_torch import * 
+from RMTPP_torch import * 
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import numpy as np
