@@ -1,4 +1,3 @@
-
 import pm4py
 from prediction_manager import PredictionManager
 import random
@@ -6,7 +5,6 @@ import pandas as pd
 from loggers import logger_generate_predictive_log, logger_multiple_prediction
 from tqdm import tqdm
 from exceptions import CutTooLarge, CutLengthZero
-
 import time as tim
 
 class ProcessModelManager:
@@ -121,7 +119,6 @@ class ProcessModelManager:
         :param cut_length: in case of cutting fix tail lengths, select the tail length to cut for all sequences.
         :param upper: upper bound for how many iterations a non stop iterative predictor should run.
         """
-        st= tim.time()
         
         case_id_counts, cuts, input_sequences, cuts = self.initialize_variables()
 
@@ -137,13 +134,7 @@ class ProcessModelManager:
         self.check_too_short(input_sequences)
 
         self.fill_up_log( upper , non_stop , random_cuts , cut_length , input_sequences, cuts)
-
-        logger_generate_predictive_log.debug("generated df:")        
-        logger_generate_predictive_log.debug(self.predictive_df.head(20))        
     
-        et= tim.time()
-        logger_generate_predictive_log.debug("pred df creation duration:")        
-        logger_generate_predictive_log.debug(et-st)
         self.predictive_df.to_csv(new_log_path, sep = ",")
 
 
@@ -314,3 +305,9 @@ class ProcessModelManager:
 
     def conformance_checking_token_based_replay(self):
         replayed_traces = pm4py.conformance_diagnostics_token_based_replay(self.predictive_df, self.petri_net, self.initial_marking, self.final_marking)
+        #: TODO get the fitness 
+
+
+    def conformance_checking_alignments(self):
+        aligned_traces = pm4py.conformance_diagnostics_alignments(self.predictive_df, self.petri_net, self.initial_marking, self.final_marking)
+        #: TODO keep reading pm4py documentation on alignments (goal: get the fitness score)

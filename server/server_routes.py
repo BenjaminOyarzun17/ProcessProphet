@@ -14,7 +14,6 @@ def start():
     return ok
 
 
-
 @routes.route('/generate_predictive_process_model', methods = ["GET"])
 def generate_predictive_process_model():
     
