@@ -416,6 +416,10 @@ def test_heuristic():
     nn_manager.config.cuda = True 
     nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     nn_manager.config.number_classes = preprocessor.number_classes
+    nn_manager.config.emb_dim =2000 
+    nn_manager.config.mlp_dim=2000 
+    nn_manager.config.hid_dim= 2000
+    nn_manager.config.epochs= 15
     nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
     nn_manager.train()
     nn_manager.config.activity_le = preprocessor.activity_le
@@ -434,7 +438,8 @@ def test_heuristic():
 
     pmm.generate_predictive_log(non_stop=False, upper =100, random_cuts=True, new_log_path = "generated_predicted_df.csv")
     pmm.heuristic_miner(view = False, dependency_threshold=0.8, and_threshold=0.8, loop_two_threshold=0.8,  path = "awesome_heristic.pnml")
-    pmm.conformance_checking_token_based_replay()
+    print(f"achieved fitness: {pmm.conformance_checking_token_based_replay()}")
+    pmm.visualize()
 
 def test_import_model():
     preprocessor = Preprocessing()
