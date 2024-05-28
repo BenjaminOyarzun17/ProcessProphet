@@ -246,6 +246,11 @@ class ProcessModelManager:
         self.predictive_df = pd.read_csv(path, sep = ",")
 
 
+    def visualize(self):
+        #: this way it can be accessed from outside the class.
+        pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
+
+
     def heuristic_miner(self,path,  dependency_threshold=0.5, and_threshold=0.65, loop_two_threshold=0.5, view= False):
         """
         run heuristic miner on the predictive log and generate a petri net.
@@ -264,8 +269,6 @@ class ProcessModelManager:
             timestamp_key=self.case_timestamp_key,
             case_id_key= self.case_id_key
         )
-        if view:
-            pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
         #: export the petri net in the given path
         pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking, file_path=path)
 
