@@ -401,8 +401,8 @@ def test_heuristic():
     preprocessor = Preprocessing()
     is_xes  = True
     #path =  "data/train_day_joined.csv"
-    path = "data/BPI_Challenge_2019.xes"
-    #path = "data/Hospital_log.xes"
+    #path = "data/BPI_Challenge_2019.xes"
+    path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
      

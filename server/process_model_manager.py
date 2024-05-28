@@ -215,6 +215,10 @@ class ProcessModelManager:
         """
         decodes the predictive df; inverse transform timestamps and event names.
         """
+        self.predictive_df[self.case_activity_key] = self.predictive_df[self.case_activity_key].astype("int")
+        self.predictive_df[self.case_id_key] = self.predictive_df[self.case_id_key].astype("int")
+        self.predictive_df[self.case_activity_key] = self.config.activity_le.inverse_transform(self.predictive_df[self.case_activity_key])
+        self.predictive_df[self.case_id_key] = self.config.case_id_le.inverse_transform(self.predictive_df[self.case_id_key])
         self.predictive_df[self.case_activity_key] = self.predictive_df[self.case_activity_key].astype("str")
         self.predictive_df[self.case_id_key] = self.predictive_df[self.case_id_key].astype("str")
         #: note that this operation is lossy and might generate NaT. 

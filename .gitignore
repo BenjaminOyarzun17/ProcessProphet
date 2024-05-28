@@ -15,3 +15,4 @@
 /CLI/predictive_logs
 /CLI/petri_nets
 /site
+*.pnml
