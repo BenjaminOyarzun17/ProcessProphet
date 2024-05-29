@@ -28,6 +28,11 @@ class ProcessProphetStart:
 
 
     def select_manager(self) : 
+        """
+        TODO: the manager alternativs should depend on the sate of the folders, 
+        ie if for example the models folder is empty, no conformance checking should be possible. 
+        other ex: if decoded_dfs is empty, train should not be possible.
+        """
         container = ptg.Container(
             ptg.Label(f"select one of the following actions:"),
             "",
@@ -76,7 +81,7 @@ class ProcessProphetStart:
             success = False
         else: 
             message = f"directory created in path {os.getcwd()}/{self.pp.state.projects_path}/{name}"
-            subdirectories = ["input_logs", "models", "petri_nets", "predictive_logs", "partial_traces"]
+            subdirectories = ["input_logs", "models", "petri_nets", "predictive_logs", "partial_traces", "decoded_dfs"]
             os.mkdir(f"{os.getcwd()}/{self.pp.state.projects_path}/{name}")
             self.pp.state.current_project = name
             self.pp.state.input_logs_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/input_logs"
@@ -84,6 +89,7 @@ class ProcessProphetStart:
             self.pp.state.petri_nets_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/petri_nets"
             self.pp.state.predictive_logs_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/predictive_logs"
             self.pp.state.partial_traces_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/partial_traces"
+            self.pp.state.decoded_dfs_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/decoded_dfs"
             for subdirectory in subdirectories: 
                 os.mkdir(f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/{subdirectory}")
 
