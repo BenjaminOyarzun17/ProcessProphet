@@ -2,6 +2,12 @@ import requests
 import json
 import os
 import pprint
+from pytermgui import tim, Container, Label, Splitter, Button, Checkbox
+import pytermgui as ptg
+import time
+from ProcessProphetStart import ProcessProphetStart
+from ProcessProphet import ProcessProphet
+
 
 
 
@@ -163,8 +169,12 @@ def test_single_prediction(config, path_to_model, path_to_log):
     )
     return json.loads(response.text)
 
+
+
+
+
 if __name__=="__main__":
-    statistics, config = test_train()
+    #statistics, config = test_train()
     #test_single_prediction(config, "CLI/models/my_cool_model.pt", "CLI/input_logs/dummy.csv")
     #print(test_multiple_prediction(config, "CLI/models/my_cool_model.pt", "CLI/input_logs/dummy.csv", 2,2))
     """
@@ -178,7 +188,6 @@ if __name__=="__main__":
         3, 
         "CLI/predictive_logs/my_cool_predictive_log.csv"
     )
-    """
     test_predictive_process_model_generator(
         config, 
         "CLI/models/my_cool_model.pt", 
@@ -188,3 +197,8 @@ if __name__=="__main__":
         "CLI/petri_nets/alpha.pnml", 
         {}
     )
+    """
+    #start_process_prophet()
+    pp = ProcessProphet()
+    pps = ProcessProphetStart(pp)
+    pp.run()
