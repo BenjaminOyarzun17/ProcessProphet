@@ -99,7 +99,6 @@ class ATMDataset:
         :return: two tensors, one containing the time differences
         between adjacent time stamps and the other one the events.  
         """
-        #print(batch)
         times, events = [], []
         for time, event in batch:
             time = np.array([time[0]] + time)
@@ -113,9 +112,9 @@ class ATMDataset:
 
     def statistic(self):
         print("TOTAL SEQs:", len(self.time_seqs))
-        intervals = np.diff(np.array(self.time))
-        for thr in [0.001, 0.01, 0.1, 1, 10, 100]:
-            print(f"<{thr} = {np.mean(intervals < thr)}")
+        # intervals = np.diff(np.array(self.time))
+        # for thr in [0.001, 0.01, 0.1, 1, 10, 100]:
+        #     print(f"<{thr} = {np.mean(intervals < thr)}")
 
     def importance_weight(self, count):
         """
