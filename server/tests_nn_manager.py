@@ -27,7 +27,7 @@ class TestTrainEvaluate(unittest.TestCase):
     def setUpClass(cls):
         #: run this to import the data once 
         cls.preprocessor= Preprocessing()
-        path = "data/running-example.csv" #its smaller, use preferrably.
+        path = "data/running-example.csv"
         cls.preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ";")
 
     def test_train_time_limit(self):
@@ -38,7 +38,12 @@ class TestTrainEvaluate(unittest.TestCase):
         nn_manager = NNManagement(None)
         nn_manager.config.absolute_frequency_distribution = self.preprocessor.absolute_frequency_distribution
         nn_manager.config.number_classes = self.preprocessor.number_classes
-        nn_manager.config.train_time_limit = 0.1
+        nn_manager.config.case_id_le = self.preprocessor.case_id_le
+        nn_manager.config.activity_le = self.preprocessor.activity_le
+        nn_manager.config.exponent = self.preprocessor.exponent
+        nn_manager.config.seq_len = 3
+        # have to set train_time_limit to 0 because the data is so small that we only have on batch, and we check after each batch
+        nn_manager.config.train_time_limit = 0 
         nn_manager.load_data(train, test, self.preprocessor.case_id_key, self.preprocessor.case_timestamp_key, self.preprocessor.case_activity_key)
 
         with self.assertRaises(exceptions.TrainTimeLimitExceeded):
