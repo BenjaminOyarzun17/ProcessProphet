@@ -501,6 +501,6 @@ if __name__=="__main__":
     #test_process_model_manager_random_cut()
     #test_end_activities()
     #test_process_model_manager_tail_cut()
-    test_heuristic()
+    #test_heuristic()
     #dummy()
-    #app.run()
+    app.run()

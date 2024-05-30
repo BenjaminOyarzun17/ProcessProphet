@@ -1,7 +1,9 @@
 import pytermgui as ptg
 from ProcessProphet import ProcessProphet
+from ProcessProphetPreprocessing import ProcessProphetPreprocessing
 from ProcessProphetTrain import ProcessProphetTrain
 import os
+from loggers import logger_set_params_cli
 
 
 class ProcessProphetStart: 
@@ -10,7 +12,8 @@ class ProcessProphetStart:
         self.pp.switch_window(self.main_menu())
 
     def launch_preprocessor(self):
-        pass
+        preprocessor= ProcessProphetPreprocessing(self.pp)
+        
     def launch_trainer(self):
         trainer = ProcessProphetTrain(self.pp)
 
@@ -36,7 +39,7 @@ class ProcessProphetStart:
         container = ptg.Container(
             ptg.Label(f"select one of the following actions:"),
             "",
-            ptg.Button("import and filter log", lambda *_: self.pp.switch_window(self.launch_preprocessor())), 
+            ptg.Button("import and filter log", lambda *_: self.launch_preprocessor()), 
             "",
             ptg.Button("train neural network", lambda *_: self.launch_trainer()), 
             "",
@@ -97,12 +100,77 @@ class ProcessProphetStart:
         self.pp.switch_window(self.notify_project_creation(message, success))
 
 
+
+
+    def handle_project_selection(self):
+
+        projects = [project  for project in os.listdir(f"{self.pp.state.projects_path}")]
+        name= self.input_select_project.value
+        if name in projects: 
+
+            self.pp.state.input_logs_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/input_logs"
+            self.pp.state.models_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/models"
+            self.pp.state.petri_nets_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/petri_nets"
+            self.pp.state.predictive_logs_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/predictive_logs"
+            self.pp.state.partial_traces_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/partial_traces"
+            self.pp.state.decoded_dfs_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/decoded_dfs"
+            container = ptg.Container(
+                "Project selected successfully", 
+                ptg.Button("continue", lambda *_: self.pp.switch_window(self.select_manager())), 
+                ptg.Button("Exit", lambda *_: self.pp.manager.stop())
+            ).center()
+            window = ptg.Window(container, box="DOUBLE")
+            window.center()
+            return window
+        else: 
+            container = ptg.Container(
+                "Project does not exist", 
+                ptg.Button("Exit", lambda *_: self.pp.manager.stop())
+            ).center()
+            window = ptg.Window(container, box="DOUBLE")
+            window.center()
+            return window
+
+
+    def load_existing_project(self, mask = []): 
+
+        c = [ptg.Label("Pick one of the following: ")]
+        projects = [project  for project in os.listdir(f"{self.pp.state.projects_path}")]
+        if len(mask) ==0:
+            mask = [False]*len(projects)
+            mask[0]= True
+
+        #checkboxes = [ptg.Label(project)  for project in os.listdir(f"{self.pp.state.projects_path}")]
+        checkboxes = []
+
+        for id, project in enumerate(os.listdir(f"{self.pp.state.projects_path}")): 
+            checkboxes.append(
+                ptg.Label(
+                    f"- {project}"
+                )
+            )
+        c= c+ checkboxes
+        self.input_select_project= ptg.InputField(projects[0],  prompt="enter a project name: ")
+        c.append("")
+        c.append(self.input_select_project)
+        c.append("")
+        c.append(ptg.Button("select", lambda *_: self.pp.switch_window(self.handle_project_selection())))
+        c.append("")
+        c.append(ptg.Button("Exit", lambda *_: self.pp.manager.stop()))
+        container = ptg.Container(
+            *c    
+        ).center()
+
+        window = ptg.Window(container, box="DOUBLE")
+        window.center()
+        return window
+
     def new_project_form(self):
 
         self.project_name_input =  ptg.InputField("first Prophet", prompt="Project name: ")
         container = ptg.Container(
             ptg.Label("Create new project"),
-            ptg.Label(f"current path: {os.getcwd()}"),
+            ptg.Label(f"current path: {os.getcwd()}/{self.pp.state.projects_path}"),
             "", 
             self.project_name_input, 
             "", 
@@ -126,7 +194,7 @@ class ProcessProphetStart:
             "", 
             ptg.Button("Create new project", lambda *_: self.pp.switch_window(self.new_project_form())),
             "", 
-            ptg.Button("Load existing project", lambda *_: self.pp.switch_window(self.main_menu())),
+            ptg.Button("Load existing project", lambda *_: self.pp.switch_window(self.load_existing_project())),
             "", 
             ptg.Button("Exit", lambda *_: self.manager.stop())
         ).center()

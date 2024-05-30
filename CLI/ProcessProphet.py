@@ -10,13 +10,20 @@ class PPStateData:
     model_trained: bool
     predictive_df_generated: bool
     petri_net_generated: bool
+    input_logs_path: str|None
+    models_path: str|None
+    petri_nets_path: str|None
+    predictive_logs_path:str|None
+    partial_traces_path: str|None
+    decoded_dfs_path:str|None
+
 
 
 class ProcessProphet:
     def __init__(self):
         self.manager = ptg.WindowManager()
         # Initially add the main menu window
-        self.state = PPStateData("projects", None, False, False, False) 
+        self.state = PPStateData("projects", None, False, False, False, None, None, None,None,None,None) 
         self.current_window = None
 
     def set_current_window(self, window): 
@@ -29,7 +36,6 @@ class ProcessProphet:
         # Remove the current window
         if self.current_window !=None:
             self.remove_current_window()
-        logger_set_params_cli.debug(self.current_window)
         # Add the new window
 
         self.set_current_window(new_window)
