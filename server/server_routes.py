@@ -377,7 +377,7 @@ def train_nn():
     :param path: path to the event log. just used if is_xes is False
     :param case_id: case id column name. just used if is_xes is False
     :param activity_key: activity column name. just used if is_xes is False
-    :para  cuda: use cuda.
+    :param cuda: use cuda.
     """
     if request.method == 'GET':
         request_config = request.args.to_dict()
