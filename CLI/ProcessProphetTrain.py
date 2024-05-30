@@ -1,4 +1,4 @@
-from ProcessProphet import ProcessProphet
+import ProcessProphet
 import pytermgui as ptg
 
 

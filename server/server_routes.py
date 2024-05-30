@@ -432,6 +432,34 @@ def train_nn():
 
 
 
+@routes.route('/import_log', methods = ["GET"])
+def import_log():
+    """
+    :param path_to_log: the program will only search the path ../projects/<subfolder>/<file_name> 
+    so the extected addr is of the form `/subfolder/file_name`.
+    :param is_xes: Boolean expected. if False, then csv expected.
+    :param export path: path where the preprocessed event log is exported.
+    :param case_id: case id column name. just used if is_xes is False
+    :param activity_key: activity column name. just used if is_xes is False
+    """
+    if request.method == 'GET':
+        request_config = request.args.to_dict()
+        is_xes = True if request_config["is_xes"]=="True" else False
+        path_to_log = str(request_config["path_to_log"])
+        case_id= str(request_config["case_id"])
+        activity= str(request_config["activity_key"])
+        timestamp= str(request_config["timestamp_key"])
+        export_path= str(request_config["export_path"])
+
+        print(path_to_log)
+        print(export_path)
+        preprocessor = Preprocessing()
+        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
+        preprocessor.event_df.to_csv(export_path, sep = ",")
+        
+        return ok
+
+
 
 
 @routes.route('/end_session')
