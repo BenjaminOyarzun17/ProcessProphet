@@ -39,6 +39,9 @@ class Config:
         self.exponent = None
         self.number_classes = 0
         self.train_time_limit = None
+        self.case_activity_key=""
+        self.case_timestamp_key=""
+        self.case_id_key = ""
     def asdict(self):
         return {
             "seq_len": self.seq_len,
@@ -58,6 +61,9 @@ class Config:
             "activity_le": self.encoder_to_dict(self.activity_le),
             "exponent": self.exponent,
             "number_classes": self.number_classes,
+            "case_id_key": self.case_id_key,
+            "case_timestamp_key":self.case_timestamp_key, 
+            "case_activity_key": self.case_activity_key
         }
     def load_config(self, dic):
         self.seq_len=int(dic["seq_len"])
@@ -66,7 +72,7 @@ class Config:
         self.mlp_dim=int(dic["mlp_dim"])
         self.alpha=float(dic["alpha"])
         self.dropout=float(dic["dropout"])
-        self.batch_size=dic["batch_size"]
+        self.batch_size=int(dic["batch_size"])
         self.lr=float(dic["lr"])
         self.epochs=int(dic["epochs"])
         self.importance_weight =dic["importance_weight"] #string
@@ -77,6 +83,9 @@ class Config:
         self.activity_le = self.dict_to_encoder(dic["activity_le"])
         self.exponent =int(dic["exponent"])
         self.number_classes =int(dic["number_classes"])
+        self.case_activity_key = dic["case_activity_key"]
+        self.case_id_key = dic["case_id_key"]
+        self.case_timestamp_key = dic["case_timestamp_key"]
 
     def encoder_to_dict(self, encoder):
         return {label:index for index, label in enumerate(encoder.classes_)} 
@@ -204,12 +213,13 @@ class NNManagement:
         model state dict contains
         optimizer state dict
         """
-        torch.save({
+        dic = {
             'model_state_dict': self.model.state_dict(),
             'optimizer_state_dict': self.model.optimizer.state_dict(),
             'config': self.model.config, 
             'lossweight': self.model.lossweight
-        }, name)
+        }
+        torch.save(dic, name)
 
     def random_search(self,train,test,  search_parameters, iterations, case_id_key, timestamp_key, case_activity_key ): 
         acc = 0

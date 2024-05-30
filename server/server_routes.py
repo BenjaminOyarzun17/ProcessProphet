@@ -1,8 +1,10 @@
-from flask import Blueprint, request, send_file, make_response, jsonify
+from flask import Blueprint, request, send_file, make_response, jsonify, Response
 from preprocessing import * 
 from nn_manager import *
 from process_model_manager  import *
 from prediction_manager import *
+import base64
+import os
 
 routes =Blueprint("Routes", __name__)
 
@@ -366,7 +368,7 @@ def grid_search():
 
 
 
-@routes.route('/train_nn', methods = ["GET"])
+@routes.route('/train_nn', methods = ["POST"])
 def train_nn():
     """
     :param path_to_log: the program will only search the path ../projects/<subfolder>/<file_name> 
@@ -379,55 +381,68 @@ def train_nn():
     :param activity_key: activity column name. just used if is_xes is False
     :para  cuda: use cuda.
     """
-    if request.method == 'GET':
-        request_config = request.args.to_dict()
-        is_xes = True if request_config["is_xes"]=="True" else False
-        cuda = True if request_config["cuda"]=="True" else False
+    if request.method == 'POST':
+        request_config = request.get_json()
         path_to_log = str(request_config["path_to_log"])
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
-        model_name= str(request_config["model_name"])
+        model_path= str(request_config["model_path"])
 
-        config = Config()
-        #config = config.load_config(request_config["config"])
+        is_xes = request_config["is_xes"] 
+
 
         preprocessor = Preprocessing()
         preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
+
+
         train, test= preprocessor.split_train_test(float(request_config["split"]))
 
-        nn_manager= NNManagement(None) 
-        nn_manager.config.cuda = cuda
+
+        nn_manager= NNManagement() 
+
+        nn_manager.config.cuda = True if request_config["cuda"] == "True" else False
         nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
         nn_manager.config.number_classes = preprocessor.number_classes
-        nn_manager.config.case_id_le = preprocessor.case_id_le
         nn_manager.config.activity_le = preprocessor.activity_le
-        nn_manager.config.exponent = preprocessor.exponent
-
-        nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+        nn_manager.config.case_id_le = preprocessor.case_id_le
+        nn_manager.load_data(train, test, case_id, timestamp, activity)
         nn_manager.train()
 
         training_stats = nn_manager.get_training_statistics()
+ 
         config = nn_manager.config.asdict()
 
-        nn_manager.export_nn_model(model_name)
 
+        trash_path = "temp/model.pt"
+        nn_manager.export_nn_model(trash_path)
         
-        with open(model_name, 'rb') as f:
-            model_data = f.read()
-        response = make_response(model_data)
-
-        metadata = json.dumps({
+        
+        data = {
             "training_statistics": training_stats, 
             "config": config
-        })
+        }
+        with open(trash_path, 'rb') as f:
+            model_data = f.read()
 
-        # TODO: it might be convenient to also send the nn_mnager config.
-        response.headers.set('Content-Type', 'application/octet-stream') # announce file included
-        response.headers.set('Content-Disposition', 'attachment', filename='model.pt') 
-        response.headers.set('X-Metadata', metadata) #include json metadata
 
-        return response 
+
+        encoded_file_content = base64.b64encode(model_data).decode('utf-8')
+        data["file_content"] = encoded_file_content
+        data["file_name"] = "model.pt" 
+
+
+        response = make_response(jsonify(data))
+
+        response.headers['Content-Disposition']=  'attachment; filename=model.pt'
+        response.headers['Content-Type']=  'application/json'
+        if not os.path.exists(trash_path):
+            return make_response(jsonify({"error": "File not found"}), 404)
+        os.remove(trash_path)
+
+
+
+        return response
 
 
 
@@ -455,7 +470,26 @@ def import_log():
         print(export_path)
         preprocessor = Preprocessing()
         preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
+        
+        
+        #: TODO: this should not write, but instead send a file.
         preprocessor.event_df.to_csv(export_path, sep = ",")
+
+        config = Config()
+        config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
+        config.number_classes = preprocessor.number_classes
+        config.case_id_le = preprocessor.case_id_le
+        config.activity_le = preprocessor.activity_le
+        config.exponent = preprocessor.exponent
+        config.case_activity_key = preprocessor.case_activity_key
+        config.case_id_key = preprocessor.case_id_key
+        config.case_timestamp_key = preprocessor.case_timestamp_key
+        configuration_dict = config.asdict()
+        with open(f"{export_path}.json", 'w') as f: 
+            json.dump( configuration_dict, f)
+
+
+
         
         return ok
 
