@@ -135,10 +135,11 @@ class NNManagement:
         self.config.verbose_step = params.get('verbose_step')
         self.config.train_time_limit = params.get('train_time_limit')
 
-    def evaluate(self, config):
+    def evaluate(self):
         """
         this is the testing function for the model. 
         it prints out the time_error, precision, recall and f1 score.
+        :return: time_error, acc, recall, f1
         """
         #: main testing function
         self.model.eval()
@@ -163,9 +164,11 @@ class NNManagement:
         self.time_error = abs_error(pred_times, gold_times)  #compute errors
 
 
-        self.acc, self.recall, self.f1 = clf_metric(pred_events, gold_events, n_class=config.number_classes) #get the metrics
+        self.acc, self.recall, self.f1 = clf_metric(pred_events, gold_events, n_class=self.config.number_classes) #get the metrics
         
         print(f"time_error: {self.time_error}, PRECISION: {self.acc}, RECALL: {self.recall}, F1: {self.f1}")
+        
+        return self.time_error, self.acc, self.recall, self.f1
 
     def get_training_statistics(self):
         """
@@ -199,7 +202,7 @@ class NNManagement:
         self.model.eval() # relevant for droput layers.
 
 
-    def export_nn_model(self, name):
+    def export_nn_model(self, name="trained_model.pt"):
         """
         generates the .pt file containing the generated
         model. 
@@ -309,4 +312,4 @@ class NNManagement:
                 if self.config.train_time_limit is not None and elapsed_time > self.config.train_time_limit * 60:
                     raise TrainTimeLimitExceeded()
 
-        self.evaluate( self.config)
+        self.evaluate()
