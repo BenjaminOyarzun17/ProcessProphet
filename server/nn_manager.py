@@ -106,18 +106,21 @@ class NNManagement:
     def set_training_parameters(self,  params):
         """
         Used for setting the training parameters. Note that not all params must be input.
+        :param params: dictionary containing the parameters, the following keys are possible:
 
-        :param seq_length: --seq_len determines the "b" constant that was defined in the paper (see 5.2 parameter learning)
+        * seq_length: --seq_len determines the "b" constant that was defined in the paper (see 5.2 parameter learning)
         determines a window size to save the training sequences into in a tensor. 
-        :param emb_dim: embedding dimension 
-        :param hid_dim: --hid_dim dimension for the hidden dimension 
-        :param mlp_dim: --mlp_dim dimension for the mlp (LSTM) TODO: revise
-        :param alpha: --alpha=0.05 
-        :param dropout: dropout parameter (RNN)
-        :param batch_size: batch size
-        :param lr: learning rate
-        :param epochs: no of epochs
-        :param train_time_limit: time limit for training in minutes, when the time is over training will be aborted
+        * emb_dim: embedding dimension 
+        * hid_dim: --hid_dim dimension for the hidden dimension 
+        * mlp_dim: --mlp_dim dimension for the mlp (LSTM) TODO: revise
+        * alpha: --alpha=0.05 
+        * dropout: dropout parameter (RNN)
+        * batch_size: batch size
+        * lr: learning rate
+        * epochs: no of epochs
+        * importance_weight: importance weight for the loss function
+        * verbose_step: after how many steps the loss should be printed
+        * train_time_limit: time limit for training in minutes, when the time is over training will be aborted
         """
         self.config.seq_len = params.get('seq_len')
         self.config.emb_dim = params.get('emb_dim')
