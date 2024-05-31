@@ -1,8 +1,10 @@
-from flask import Blueprint, request, send_file, make_response, jsonify
+from flask import Blueprint, request, send_file, make_response, jsonify, Response
 from preprocessing import * 
 from nn_manager import *
 from process_model_manager  import *
 from prediction_manager import *
+import base64
+import os
 
 routes =Blueprint("Routes", __name__)
 
@@ -243,38 +245,70 @@ def single_prediction():
         })
 
 
-@routes.route('/random_search', methods = ["GET"])
+@routes.route('/random_search', methods = ["POST"])
 def random_search():
     """
+    carries out random search. It only accepts post requests. 
+
+    the following data is expected in the JSON body of the request: 
+    :param path_to_log: path to the log used for training. must not be encoded
+    :param split: float in range [0,1]. represents train - test ratio. 
+    :param case_id: name of case id column
+    :param activity_key: name of activity column
+    :param timestamp_key: name of timestamp column
+    :param cuda: True/False if cuda used/not used. 
+    :param seq_len: length of the sliding window used. 
+    :param lr: learning rate
+    :param batch_size: batch size 
+    :param epochs: number of epochs
+    :param is_xes: is the log in xes format?
+    :param iterations: number of iterations for random search.
+    :param search_params: dictioary of the format: 
+    ```py
+    {
+        "hidden_dim":[lower_bound,upper_bound] ,
+        "mlp_dim":[lower_bound, upper_bound] ,
+        "emb_dim":[lower_bound, upper_bound] 
+    }
+    ```
+
+    the response contains the following and has the next side effects: 
+    a json document is returned with the foloing parameters: 
+    :return config: the config file that is used for process prophet. 
+    :return acc: the best accuracy of training achieved
+    :return model: a base64 encoded pt file containing the model setup  ready
+    for importing
     """
-    if request.method == 'GET':
-        request_config = request.args.to_dict()
-        is_xes = True if request_config["is_xes"]=="True" else False
-        cuda = True if request_config["cuda"]=="True" else False
+    if request.method == 'POST':
+        request_config = request.get_json()
+        is_xes = request_config["is_xes"] 
         path_to_log = str(request_config["path_to_log"])
-        path_to_log = "/home/benja/Desktop/SPP-process-discovery/data/train_day_joined.csv"       
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
-        sp = json.loads(request_config["search_params"])
-        iterations= json.loads(request_config["iterations"])
+        iterations = int(request_config["iterations"])
+        sp = request_config["search_params"]
+        split =  float(request_config["split"])
 
-        config = Config()
-        #config = config.load_config(request_config["config"])
+        for key in sp.keys():
+            for i, val in enumerate(sp[key]): 
+                sp[key][i] = int(val)
 
         preprocessor = Preprocessing()
         preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
-        train, test= preprocessor.split_train_test(float(request_config["split"]))
 
-        nn_manager= NNManagement(None) 
-        nn_manager.config.cuda = cuda
-        nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
-        nn_manager.config.number_classes = preprocessor.number_classes
-        nn_manager.config.case_id_le = preprocessor.case_id_le
-        nn_manager.config.activity_le = preprocessor.activity_le
-        nn_manager.config.exponent = preprocessor.exponent
 
-        nn_manager.random_search(
+        train, test= preprocessor.split_train_test(split)
+
+
+        nn_manager= NNManagement() 
+
+
+        nn_manager.config.cuda = True if request_config["cuda"] == "True" else False
+        nn_manager.config = load_config_from_preprocessor(nn_manager.config, preprocessor) 
+        
+        
+        acc= nn_manager.random_search(
             train,
             test, 
             sp, 
@@ -283,151 +317,200 @@ def random_search():
             preprocessor.case_timestamp_key, 
             preprocessor.case_activity_key
         )
-
         config = nn_manager.config.asdict()
 
-        model_path = request_config["model_name"]
-        nn_manager.export_nn_model(model_path)
+        nn_manager.export_nn_model(request_config["model_path"])
+        
 
-        with open(model_path, 'rb') as f:
-            model_data = f.read()
-        response = make_response(model_data)
+        with open(f"{request_config["model_path"]}.config.json", "w") as f:
+            json.dump(config,f)
+        data = {
+            "acc":  acc
+        }
 
-        metadata = json.dumps({
-            "config": config
-        })
 
-        # TODO: it might be convenient to also send the nn_mnager config.
-        response.headers.set('Content-Type', 'application/octet-stream') # announce file included
-        response.headers.set('Content-Disposition', 'attachment', filename='model.pt') 
-        response.headers.set('X-Metadata', metadata) #include json metadata
 
-        return response 
+        response = make_response(jsonify(data))
 
 
 
 
+        return response
+    
 
 
-@routes.route('/grid_search', methods = ["GET"])
+
+
+@routes.route('/grid_search', methods = ["POST"])
 def grid_search():
     """
+    carries out grid search. It only accepts post requests. 
+
+    the following data is expected in the JSON body of the request: 
+    :param path_to_log: path to the log used for training. must not be encoded
+    :param split: float in range [0,1]. represents train - test ratio. 
+    :param case_id: name of case id column
+    :param activity_key: name of activity column
+    :param timestamp_key: name of timestamp column
+    :param cuda: True/False if cuda used/not used. 
+    :param seq_len: length of the sliding window used. 
+    :param lr: learning rate
+    :param batch_size: batch size 
+    :param epochs: number of epochs
+    :param is_xes: is the log in xes format?
+    :param search_params: dictioary of the format: 
+    ```py
+    {
+        "hidden_dim":[lower_bound,upper_bound, step] ,
+        "mlp_dim":[lower_bound, upper_bound, step] ,
+        "emb_dim":[lower_bound, upper_bound, step] 
+    }
+    ```
+    the response contains the following and has the next side effects: 
+    a json document is returned with the foloing parameters: 
+    :return config: the config file that is used for process prophet. 
+    :return acc: the best accuracy of training achieved
+    :return model: a base64 encoded pt file containing the model setup  ready
+    for importing
     """
-    if request.method == 'GET':
-        request_config = request.args.to_dict()
-        is_xes = True if request_config["is_xes"]=="True" else False
-        cuda = True if request_config["cuda"]=="True" else False
+    if request.method == 'POST':
+        request_config = request.get_json()
+        is_xes = request_config["is_xes"] 
         path_to_log = str(request_config["path_to_log"])
-        path_to_log = "/home/benja/Desktop/SPP-process-discovery/data/train_day_joined.csv"       
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
-        sp = json.loads(request_config["search_params"])
+        sp = request_config["search_params"]
 
-        config = Config()
-        #config = config.load_config(request_config["config"])
+        for key in sp.keys():
+            for i, val in enumerate(sp[key]): 
+                sp[key][i] = int(val)
+
 
         preprocessor = Preprocessing()
         preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
+
+
         train, test= preprocessor.split_train_test(float(request_config["split"]))
 
-        nn_manager= NNManagement(None) 
-        nn_manager.config.cuda = cuda
-        nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
-        nn_manager.config.number_classes = preprocessor.number_classes
-        nn_manager.config.case_id_le = preprocessor.case_id_le
-        nn_manager.config.activity_le = preprocessor.activity_le
-        nn_manager.config.exponent = preprocessor.exponent
 
-        nn_manager.grid_search(train, test, sp, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+        nn_manager= NNManagement() 
 
+        nn_manager.config.cuda = True if request_config["cuda"] == "True" else False
+
+        nn_manager.config = load_config_from_preprocessor(nn_manager.config, preprocessor) 
+
+
+        
+        acc= nn_manager.grid_search(train, test, sp, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+        
         config = nn_manager.config.asdict()
 
-        model_path = request_config["model_name"]
-        nn_manager.export_nn_model(model_path)
+        nn_manager.export_nn_model(request_config["model_path"])
+        
 
-        with open(model_path, 'rb') as f:
-            model_data = f.read()
-        response = make_response(model_data)
+        with open(f"{request_config["model_path"]}.config.json", "w") as f:
+            json.dump(config,f)
+        data = {
+            "acc":  acc
+        }
 
-        metadata = json.dumps({
-            "config": config
-        })
-
-        # TODO: it might be convenient to also send the nn_mnager config.
-        response.headers.set('Content-Type', 'application/octet-stream') # announce file included
-        response.headers.set('Content-Disposition', 'attachment', filename='model.pt') 
-        response.headers.set('X-Metadata', metadata) #include json metadata
-
-        return response 
+        response = make_response(jsonify(data))
+        return response
 
 
-
-
-
-
-@routes.route('/train_nn', methods = ["GET"])
+@routes.route('/train_nn', methods = ["POST"])
 def train_nn():
     """
-    :param path_to_log: the program will only search the path ../projects/<subfolder>/<file_name> 
-    so the extected addr is of the form `/subfolder/file_name`.
-    :param is_xes: Boolean expected. if False, then csv expected.
-    :param training_params: dictionary of params for the nn expected. 
-    See Config class for possible values.  
-    :param path: path to the event log. just used if is_xes is False
-    :param case_id: case id column name. just used if is_xes is False
-    :param activity_key: activity column name. just used if is_xes is False
-    :param cuda: use cuda.
+    trains the RMTPP neural network. 
+
+    the following data is expected in the JSON body of the request: 
+    :param path_to_log: path to the log used for training. must not be encoded
+    :param split: float in range [0,1]. represents train - test ratio. 
+    :param case_id: name of case id column
+    :param activity_key: name of activity column
+    :param timestamp_key: name of timestamp column
+    :param cuda: True/False if cuda used/not used. 
+    :param seq_len: length of the sliding window used. 
+    :param lr: learning rate
+    :param batch_size: batch size 
+    :param epochs: number of epochs
+    :param is_xes: is the log in xes format?
+    :param emb_dim: embedding dimension
+    :param hid_dim: hidden layer dimension
+    :param mlp_dim: mlp dimension
+    
+    the response contains the following and has the next side effects: 
+    a json document is returned with the foloing parameters: 
+    :return config: the config file that is used for process prophet. 
+    :return acc: the training accuracy achieved
+    :return model: a base64 encoded pt file containing the model setup  ready
+    for importing
     """
-    if request.method == 'GET':
-        request_config = request.args.to_dict()
-        is_xes = True if request_config["is_xes"]=="True" else False
-        cuda = True if request_config["cuda"]=="True" else False
+    if request.method == 'POST':
+        request_config = request.get_json()
         path_to_log = str(request_config["path_to_log"])
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
-        model_name= str(request_config["model_name"])
 
-        config = Config()
-        #config = config.load_config(request_config["config"])
+        is_xes = request_config["is_xes"] 
+
 
         preprocessor = Preprocessing()
         preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
+
+
         train, test= preprocessor.split_train_test(float(request_config["split"]))
 
-        nn_manager= NNManagement(None) 
-        nn_manager.config.cuda = cuda
-        nn_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
-        nn_manager.config.number_classes = preprocessor.number_classes
-        nn_manager.config.case_id_le = preprocessor.case_id_le
-        nn_manager.config.activity_le = preprocessor.activity_le
-        nn_manager.config.exponent = preprocessor.exponent
 
-        nn_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+        nn_manager= NNManagement() 
+
+        nn_manager.config.cuda = request_config["cuda"]
+        nn_manager.config.seq_len = int(request_config["seq_len"])
+        nn_manager.config.emb_dim= int(request_config["emb_dim"])
+        nn_manager.config.hid_dim= int(request_config["hid_dim"])
+        nn_manager.config.mlp_dim= int(request_config["mlp_dim"])
+        nn_manager.config.lr= float(request_config["lr"])
+        nn_manager.config.batch_size= int(request_config["batch_size"])
+        nn_manager.config.epochs= int(request_config["epochs"])
+
+        nn_manager.config = load_config_from_preprocessor(nn_manager.config, preprocessor) 
+
+        nn_manager.load_data(train, test, case_id, timestamp, activity)
+
         nn_manager.train()
 
         training_stats = nn_manager.get_training_statistics()
+
         config = nn_manager.config.asdict()
 
-        nn_manager.export_nn_model(model_name)
 
-        
-        with open(model_name, 'rb') as f:
-            model_data = f.read()
-        response = make_response(model_data)
-
-        metadata = json.dumps({
+        data = {
             "training_statistics": training_stats, 
-            "config": config
-        })
+        }
 
-        # TODO: it might be convenient to also send the nn_mnager config.
-        response.headers.set('Content-Type', 'application/octet-stream') # announce file included
-        response.headers.set('Content-Disposition', 'attachment', filename='model.pt') 
-        response.headers.set('X-Metadata', metadata) #include json metadata
+        nn_manager.export_nn_model(request_config["model_path"])
 
-        return response 
+
+        with open(f"{request_config["model_path"]}.config.json", "w") as f:
+            json.dump(config,f)
+
+        response = make_response(jsonify(data))
+
+        return response
+
+def load_config_from_preprocessor(config : Config, preprocessor : Preprocessing)-> Config:
+    config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
+    config.number_classes = preprocessor.number_classes
+    config.case_id_le = preprocessor.case_id_le
+    config.activity_le = preprocessor.activity_le
+    config.exponent = preprocessor.exponent
+    config.case_activity_key = preprocessor.case_activity_key
+    config.case_id_key = preprocessor.case_id_key
+    config.case_timestamp_key = preprocessor.case_timestamp_key
+    return config
+
 
 
 

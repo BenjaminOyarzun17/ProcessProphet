@@ -16,3 +16,5 @@
 /CLI/petri_nets
 /site
 *.pnml
+./projects
+./trash
