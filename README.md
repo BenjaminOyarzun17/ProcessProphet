@@ -1,6 +1,12 @@
 # SPP-process-discovery
 
 
+
+### building server
+```sh
+docker buildx -f Dockerfile.server -t ppserver .
+```
+
 ### using mkdocs
 run the following command to run the documentation on local host:
 ```bash

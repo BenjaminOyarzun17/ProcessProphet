@@ -82,9 +82,9 @@ class ProcessProphetTrain:
 
             container = ptg.Container(
                 "training successful", 
-                f"accuracy: {statistics["acc"]}", 
-                f"recall: {statistics["recall"]}", 
-                f"f1-score: {statistics["f1"]}", 
+                f"accuracy: {statistics['acc']}", 
+                f"recall: {statistics['recall']}", 
+                f"f1-score: {statistics['f1']}", 
                 ptg.Button("training menu", lambda *_: self.pp.switch_window(self.trainer_main_menu())), 
                 ptg.Button("action menu", lambda *_:  self.return_to_menu())
             )
