@@ -116,7 +116,9 @@ class ProcessProphetStart:
             self.pp.state.decoded_dfs_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/decoded_dfs"
             container = ptg.Container(
                 "Project selected successfully", 
+                "",
                 ptg.Button("continue", lambda *_: self.pp.switch_window(self.select_manager())), 
+                "",
                 ptg.Button("Exit", lambda *_: self.pp.manager.stop())
             ).center()
             window = ptg.Window(container, box="DOUBLE")

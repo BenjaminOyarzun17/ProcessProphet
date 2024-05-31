@@ -8,10 +8,15 @@ import ProcessProphetStart
 
 class ProcessProphetTrain: 
     def __init__(self, pp):
-        self.pp = pp
+        self.pp = pp #: reference to the PP object 
+        #: after creating the object, set the main menu as start screen
         self.pp.switch_window(self.trainer_main_menu())
 
+
     def loading(self, message = ""): 
+        """
+        a loading screen 
+        """
         container = ptg.Container(
             "Loading...", 
             message
@@ -22,11 +27,24 @@ class ProcessProphetTrain:
     
 
     def return_to_menu(self):
+        """
+        returns to p.p. start
+        """
         pp_start = ProcessProphetStart.ProcessProphetStart(self.pp)
 
 
 
     def start_training(self) : 
+        """
+        carries out a training request. 
+
+        side effects/ outputs: 
+        :return model: a model pt file is saved in the models folder 
+        :return config: a models config information for the server is saved in the models folder
+        as a json file. 
+        the training statistics (accuracy, recall, f1 score)  are 
+        displayed on screen. 
+        """
         self.loading("preprocessing data...")
         input_logs_path= self.pp.state.input_logs_path
 
@@ -60,15 +78,7 @@ class ProcessProphetTrain:
             data = response.json()
 
             statistics = data["training_statistics"]
-            config = data["config"]
-            with open(f"{self.pp.state.models_path}/{self.model_name.value}.config.json", "w") as f:
-                json.dump(config,f)
             
-            encoded_file_content = data.get('file_content')
-
-            file_content = base64.b64decode(encoded_file_content)
-            with open(f"{self.pp.state.models_path}/{self.model_name.value}", 'wb') as file:
-                file.write(file_content)
 
             container = ptg.Container(
                 "training successful", 
@@ -165,15 +175,8 @@ class ProcessProphetTrain:
             data = response.json()
 
             accuracy = data["acc"]
-            config = data["config"]
-            with open(f"{self.pp.state.models_path}/{self.model_name.value}.config.json", "w") as f:
-                json.dump(config,f)
             
-            encoded_file_content = data.get('file_content')
 
-            file_content = base64.b64decode(encoded_file_content)
-            with open(f"{self.pp.state.models_path}/{self.model_name.value}", 'wb') as file:
-                file.write(file_content)
 
             container = ptg.Container(
                 "training successful", 
@@ -199,18 +202,18 @@ class ProcessProphetTrain:
         is_xes = True if self.log_name.value[-3:] == "xes"  else False
 
         sp = {
-            "hidden_dim":[self.hidden_dim_lower.value,self.hidden_dim_upper.value, self.hidden_dim_step.value] ,
-            "mlp_dim":[self.mlp_dim_lower.value, self.mlp_dim_upper.value, self.mlp_dim_step.value] ,
-            "emb_dim":[self.emb_dim_lower.value, self.emb_dim_upper.value, self.emb_dim_step.value] 
+            "hidden_dim":[self.hidden_dim_lower.value,self.hidden_dim_upper.value] ,
+            "mlp_dim":[self.mlp_dim_lower.value, self.mlp_dim_upper.value] ,
+            "emb_dim":[self.emb_dim_lower.value, self.emb_dim_upper.value] 
         } 
         params = {
             "path_to_log": f"{input_logs_path}/{self.log_name.value}" , 
             "split": self.split.value, 
-            "model_path": f"{self.pp.state.models_path}/{self.model_name.value}", 
             "case_id": self.case_id_key.value, 
             "activity_key":  self.case_activity_key.value, 
             "timestamp_key":  self.case_timestamp_key.value, 
             "cuda": self.cuda.value, 
+            "model_path": f"{self.pp.state.models_path}/{self.model_name.value}", 
             "seq_len": self.seq_len.value, 
             "lr": self.lr.value, 
             "batch_size": self.batch_size.value, 
@@ -230,15 +233,6 @@ class ProcessProphetTrain:
             data = response.json()
 
             accuracy = data["acc"]
-            config = data["config"]
-            with open(f"{self.pp.state.models_path}/{self.model_name.value}.config.json", "w") as f:
-                json.dump(config,f)
-            
-            encoded_file_content = data.get('file_content')
-
-            file_content = base64.b64decode(encoded_file_content)
-            with open(f"{self.pp.state.models_path}/{self.model_name.value}", 'wb') as file:
-                file.write(file_content)
 
             container = ptg.Container(
                 "training successful", 
@@ -273,16 +267,13 @@ class ProcessProphetTrain:
 
         self.hidden_dim_lower= ptg.InputField("100", prompt="hidden dim. lower bound: ")
         self.hidden_dim_upper= ptg.InputField("200", prompt="hidden dim. upper bound: ")
-        self.hidden_dim_step= ptg.InputField("50", prompt="hidden dim. step: ")
         
         self.mlp_dim_lower= ptg.InputField("100", prompt="mlp dim. lower bound: ")
         self.mlp_dim_upper= ptg.InputField("200", prompt="mlp dim. upper bound: ")
-        self.mlp_dim_step= ptg.InputField("100", prompt="mlp dim. step: ")
 
 
         self.emb_dim_lower= ptg.InputField("100", prompt="emb dim. lower bound: ")
         self.emb_dim_upper= ptg.InputField("200", prompt="emb dim. upper bound: ")
-        self.emb_dim_step= ptg.InputField("100", prompt="emb dim. step: ")
 
         container = [
             ptg.Label(f"set parameters for grid search"),
@@ -299,13 +290,10 @@ class ProcessProphetTrain:
             self.case_timestamp_key,
             self.hidden_dim_lower, 
             self.hidden_dim_upper, 
-            self.hidden_dim_step, 
             self.mlp_dim_lower, 
             self.mlp_dim_upper, 
-            self.mlp_dim_step, 
             self.emb_dim_lower, 
             self.emb_dim_upper, 
-            self.emb_dim_step,
             self.iterations,
             ptg.Button("continue", lambda *_: self.pp.switch_window(self.start_random_search()))
         ]
@@ -375,8 +363,12 @@ class ProcessProphetTrain:
 
     def trainer_main_menu(self) : 
         container = ptg.Container(
+            "select one training alternative", 
+            "", 
             ptg.Button("set params manually", lambda *_: self.pp.switch_window(self.set_training_params())), 
+            "",
             ptg.Button("grid search", lambda *_: self.pp.switch_window(self.set_grid_search_params())), 
+            "",
             ptg.Button("random search", lambda *_: self.pp.switch_window(self.set_random_search_params()))
         )
 
