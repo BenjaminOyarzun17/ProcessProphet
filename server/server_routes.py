@@ -322,7 +322,7 @@ def random_search():
         nn_manager.export_nn_model(request_config["model_path"])
         
 
-        with open(f"{request_config["model_path"]}.config.json", "w") as f:
+        with open(f"{request_config['model_path']}.config.json", "w") as f:
             json.dump(config,f)
         data = {
             "acc":  acc
@@ -409,7 +409,7 @@ def grid_search():
         nn_manager.export_nn_model(request_config["model_path"])
         
 
-        with open(f"{request_config["model_path"]}.config.json", "w") as f:
+        with open(f"{request_config['model_path']}.config.json", "w") as f:
             json.dump(config,f)
         data = {
             "acc":  acc
@@ -493,7 +493,7 @@ def train_nn():
         nn_manager.export_nn_model(request_config["model_path"])
 
 
-        with open(f"{request_config["model_path"]}.config.json", "w") as f:
+        with open(f"{request_config['model_path']}.config.json", "w") as f:
             json.dump(config,f)
 
         response = make_response(jsonify(data))
