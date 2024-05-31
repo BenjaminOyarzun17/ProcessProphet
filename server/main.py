@@ -111,7 +111,7 @@ def test_grid_search():
     # Define the hyperparameter search space [lower_bound, upper_bound, step_size]
     sp= {
         "hidden_dim": [500, 2000, 500],
-        "lstm_dim": [500, 2000,  500],
+        "mlp_dim": [500, 2000,  500],
         "emb_dim": [500, 2000, 500]
     }
     nn_manager = NNManagement()
@@ -501,6 +501,6 @@ if __name__=="__main__":
     #test_process_model_manager_random_cut()
     #test_end_activities()
     #test_process_model_manager_tail_cut()
-    test_heuristic()
+    #test_heuristic()
     #dummy()
-    #app.run()
+    app.run()
