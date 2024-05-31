@@ -63,8 +63,6 @@ class TestImportXESFunction(unittest.TestCase):
 
         self.assertTrue(correct_order)
 
-
-
     def test_columns(self):
         """
         test if there are three columns and if they match the input names
@@ -131,8 +129,6 @@ class TestImportCSVFunction(unittest.TestCase):
 
         self.assertTrue(correct_order)
 
-
-
     def test_columns(self):
         """
         test if there are three columns and if they match the input names
@@ -163,14 +159,14 @@ class TestSplitTrainTest(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        #: run this to import the data once 
         cls.preprocessor= Preprocessing()
-        path = "data/running-example.csv" #its smaller, use preferrably.
+        path = "data/running-example.csv" 
         cls.preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ";")
 
     def test_small_dataset(self):
         """
         test if the TrainPercentageTooHigh exception is raised for a small dataset
+        has low probability of failing, because split_train_test is randomly sampling
         """
         df = self.preprocessor.event_df
         self.preprocessor.event_df = df.iloc[:2]
@@ -180,6 +176,23 @@ class TestSplitTrainTest(unittest.TestCase):
 
         # restore the original dataframe
         self.preprocessor.event_df = df
+
+    def test_train_test_sizes(self):
+        """
+        test if the number of cases sums up to the original number of cases
+        """
+        train_percentage = 0.7
+
+        df = self.preprocessor.event_df
+        df_case_number = len(df["case_id"].unique())
+        train_df, test_df = self.preprocessor.split_train_test(train_percentage)
+        train_case_number = len(train_df["case_id"].unique())
+        test_case_number = len(test_df["case_id"].unique())
+
+        self.assertEqual(df_case_number, train_case_number + test_case_number)
+
+
+
 
 
 
