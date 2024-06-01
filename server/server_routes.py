@@ -1,10 +1,11 @@
 from flask import Blueprint, request, send_file, make_response, jsonify, Response
-from preprocessing import * 
-from nn_manager import *
-from process_model_manager  import *
-from prediction_manager import *
+from server import preprocessing
+from server import nn_manager
+from server import process_model_manager
+from server import prediction_manager
 import base64
 import os
+import json
 
 routes =Blueprint("Routes", __name__)
 
@@ -36,22 +37,22 @@ def generate_predictive_process_model():
         minig_algo_config=  json.loads(request_config.get("mining_algo_config"))
 
 
-        preprocessor = Preprocessing()
+        preprocessor = preprocessing.Preprocessing()
         if is_xes:
             #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
             preprocessor.import_event_log_xes(path_to_log , case_id, activity, timestamp)# bpi 2019
         else:
             preprocessor.import_event_log_csv(path_to_log , case_id, activity, timestamp, ',')
 
-        config = Config()
+        config = nn_manager.Config()
         config.load_config(dic)
-        nn_manager = NNManagement(config)
-        nn_manager.import_nn_model(path_to_model)
+        neural_manager = nn_manager.NNManagement(config)
+        neural_manager.import_nn_model(path_to_model)
 
-        pmm = ProcessModelManager(
+        pmm = preprocessing.ProcessModelManager(
             preprocessor.event_df, 
-            nn_manager.model, 
-            nn_manager.config,
+            neural_manager.model, 
+            neural_manager.config,
             preprocessor.case_activity_key,
             preprocessor.case_id_key,
             preprocessor.case_timestamp_key
@@ -102,7 +103,7 @@ def generate_predictive_log():
         new_log_path=  request_config.get("new_log_path")
 
 
-        preprocessor = Preprocessing()
+        preprocessor = preprocessing.Preprocessing()
         if is_xes:
             #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
             preprocessor.import_event_log_xes(path_to_log , case_id, activity, timestamp)# bpi 2019
@@ -110,16 +111,16 @@ def generate_predictive_log():
             preprocessor.import_event_log_csv(path_to_log , case_id, activity, timestamp, ',')
 
 
-        config = Config()
+        config = nn_manager.Config()
         config.load_config(dic)
 
-        nn_manager = NNManagement(config)
-        nn_manager.import_nn_model(path_to_model)
+        neural_manager = nn_manager.NNManagement(config)
+        neural_manager.import_nn_model(path_to_model)
 
-        pmm = ProcessModelManager(
+        pmm = process_model_manager.ProcessModelManager(
             preprocessor.event_df, 
-            nn_manager.model, 
-            nn_manager.config,
+            neural_manager.model, 
+            neural_manager.config,
             preprocessor.case_activity_key,
             preprocessor.case_id_key,
             preprocessor.case_timestamp_key
@@ -160,7 +161,7 @@ def multiple_prediction():
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         path_to_log = str(request_config["path_to_log"])
-        preprocessor = Preprocessing()
+        preprocessor = preprocessing.Preprocessing()
 
         if is_xes:
             #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
@@ -174,14 +175,14 @@ def multiple_prediction():
 
         path_to_model = str(request_config["path_to_model"])
 
-        config = Config()
+        config = nn_manager.Config()
         dic =  json.loads(request_config.get("config"))
         config.load_config(dic)
 
-        nn_manager = NNManagement(config)
-        nn_manager.import_nn_model(path_to_model)
-        pm = PredictionManager(
-            nn_manager.model, 
+        neural_manager = nn_manager.NNManagement(config)
+        neural_manager.import_nn_model(path_to_model)
+        pm = prediction_manager.PredictionManager(
+            neural_manager.model, 
             case_id, 
             activity,
             timestamp, 
@@ -208,7 +209,7 @@ def single_prediction():
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         path_to_log = str(request_config["path_to_log"])
-        preprocessor = Preprocessing()
+        preprocessor = preprocessing.Preprocessing()
 
         if is_xes:
             #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
@@ -222,14 +223,14 @@ def single_prediction():
 
         path_to_model = str(request_config["path_to_model"])
 
-        config = Config()
+        config = nn_manager.Config()
         dic =  json.loads(request_config.get("config"))
         config.load_config(dic)
 
-        nn_manager = NNManagement(config)
-        nn_manager.import_nn_model(path_to_model)
-        pm = PredictionManager(
-            nn_manager.model, 
+        neural_manager = nn_manager.NNManagement(config)
+        neural_manager.import_nn_model(path_to_model)
+        pm = prediction_manager.PredictionManager(
+            neural_manager.model, 
             case_id, 
             activity,
             timestamp, 
@@ -294,21 +295,21 @@ def random_search():
             for i, val in enumerate(sp[key]): 
                 sp[key][i] = int(val)
 
-        preprocessor = Preprocessing()
+        preprocessor = preprocessing.Preprocessing()
         preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
 
 
         train, test= preprocessor.split_train_test(split)
 
 
-        nn_manager= NNManagement() 
+        neural_manager= nn_manager.NNManagement() 
 
 
-        nn_manager.config.cuda = True if request_config["cuda"] == "True" else False
-        nn_manager.config = load_config_from_preprocessor(nn_manager.config, preprocessor) 
+        neural_manager.config.cuda = True if request_config["cuda"] == "True" else False
+        neural_manager.config = load_config_from_preprocessor(neural_manager.config, preprocessor) 
         
         
-        acc= nn_manager.random_search(
+        acc= neural_manager.random_search(
             train,
             test, 
             sp, 
@@ -317,9 +318,9 @@ def random_search():
             preprocessor.case_timestamp_key, 
             preprocessor.case_activity_key
         )
-        config = nn_manager.config.asdict()
+        config = neural_manager.config.asdict()
 
-        nn_manager.export_nn_model(request_config["model_path"])
+        neural_manager.export_nn_model(request_config["model_path"])
         
 
         with open(f"{request_config['model_path']}.config.json", "w") as f:
@@ -387,26 +388,26 @@ def grid_search():
                 sp[key][i] = int(val)
 
 
-        preprocessor = Preprocessing()
+        preprocessor = preprocessing.Preprocessing()
         preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
 
 
         train, test= preprocessor.split_train_test(float(request_config["split"]))
 
 
-        nn_manager= NNManagement() 
+        neural_manager= nn_manager.NNManagement() 
 
-        nn_manager.config.cuda = True if request_config["cuda"] == "True" else False
+        neural_manager.config.cuda = True if request_config["cuda"] == "True" else False
 
-        nn_manager.config = load_config_from_preprocessor(nn_manager.config, preprocessor) 
+        neural_manager.config = load_config_from_preprocessor(neural_manager.config, preprocessor) 
 
 
         
-        acc= nn_manager.grid_search(train, test, sp, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+        acc= neural_manager.grid_search(train, test, sp, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
         
-        config = nn_manager.config.asdict()
+        config = neural_manager.config.asdict()
 
-        nn_manager.export_nn_model(request_config["model_path"])
+        neural_manager.export_nn_model(request_config["model_path"])
         
 
         with open(f"{request_config['model_path']}.config.json", "w") as f:
@@ -457,40 +458,40 @@ def train_nn():
         is_xes = request_config["is_xes"] 
 
 
-        preprocessor = Preprocessing()
+        preprocessor = preprocessing.Preprocessing()
         preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
 
 
         train, test= preprocessor.split_train_test(float(request_config["split"]))
 
 
-        nn_manager= NNManagement() 
+        neural_manager= nn_manager.NNManagement() 
 
-        nn_manager.config.cuda = request_config["cuda"]
-        nn_manager.config.seq_len = int(request_config["seq_len"])
-        nn_manager.config.emb_dim= int(request_config["emb_dim"])
-        nn_manager.config.hid_dim= int(request_config["hid_dim"])
-        nn_manager.config.mlp_dim= int(request_config["mlp_dim"])
-        nn_manager.config.lr= float(request_config["lr"])
-        nn_manager.config.batch_size= int(request_config["batch_size"])
-        nn_manager.config.epochs= int(request_config["epochs"])
+        neural_manager.config.cuda = request_config["cuda"]
+        neural_manager.config.seq_len = int(request_config["seq_len"])
+        neural_manager.config.emb_dim= int(request_config["emb_dim"])
+        neural_manager.config.hid_dim= int(request_config["hid_dim"])
+        neural_manager.config.mlp_dim= int(request_config["mlp_dim"])
+        neural_manager.config.lr= float(request_config["lr"])
+        neural_manager.config.batch_size= int(request_config["batch_size"])
+        neural_manager.config.epochs= int(request_config["epochs"])
 
-        nn_manager.config = load_config_from_preprocessor(nn_manager.config, preprocessor) 
+        neural_manager.config = load_config_from_preprocessor(neural_manager.config, preprocessor) 
 
-        nn_manager.load_data(train, test, case_id, timestamp, activity)
+        neural_manager.load_data(train, test, case_id, timestamp, activity)
 
-        nn_manager.train()
+        neural_manager.train()
 
-        training_stats = nn_manager.get_training_statistics()
+        training_stats = neural_manager.get_training_statistics()
 
-        config = nn_manager.config.asdict()
+        config = neural_manager.config.asdict()
 
 
         data = {
             "training_statistics": training_stats, 
         }
 
-        nn_manager.export_nn_model(request_config["model_path"])
+        neural_manager.export_nn_model(request_config["model_path"])
 
 
         with open(f"{request_config['model_path']}.config.json", "w") as f:
@@ -500,7 +501,7 @@ def train_nn():
 
         return response
 
-def load_config_from_preprocessor(config : Config, preprocessor : Preprocessing)-> Config:
+def load_config_from_preprocessor(config : nn_manager.Config, preprocessor : preprocessing.Preprocessing)-> nn_manager.Config:
     config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     config.number_classes = preprocessor.number_classes
     config.case_id_le = preprocessor.case_id_le

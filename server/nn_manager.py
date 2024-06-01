@@ -6,15 +6,16 @@ import os
 import time
 import pandas as pd
 import pydoc_markdown
-from RMTPP_torch import * 
+from server import RMTPP_torch
+from server import loggers
+from server import exceptions
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import numpy as np
 import json
-from exceptions import *
 import logging
+import torch
 from collections import Counter
-from loggers import logger_evaluate
 import random
 import pprint
 from sklearn.preprocessing import LabelEncoder
@@ -170,10 +171,10 @@ class NNManagement:
         gold_times = np.concatenate(gold_times).reshape(-1)
         pred_events = np.concatenate(pred_events).reshape(-1)
         gold_events = np.concatenate(gold_events).reshape(-1)
-        self.time_error = abs_error(pred_times, gold_times)  #compute errors
+        self.time_error = RMTPP_torch.abs_error(pred_times, gold_times)  #compute errors
 
 
-        self.acc, self.recall, self.f1 = clf_metric(pred_events, gold_events, n_class=self.config.number_classes) #get the metrics
+        self.acc, self.recall, self.f1 = RMTPP_torch.clf_metric(pred_events, gold_events, n_class=self.config.number_classes) #get the metrics
         
         print(f"time_error: {self.time_error}, PRECISION: {self.acc}, RECALL: {self.recall}, F1: {self.f1}")
         
@@ -185,7 +186,7 @@ class NNManagement:
         as a json object in string format. 
         """
         if self.acc == None and self.recall == None and self.f1 ==None: 
-            raise ModelNotTrainedYet()
+            raise exceptions.ModelNotTrainedYet()
 
         #: dumps generates a string
         return {
@@ -201,7 +202,7 @@ class NNManagement:
         saved_model_contents = torch.load(path)
         config = saved_model_contents['config']
         lossweight = saved_model_contents['lossweight']
-        self.model = Net(config, lossweight)
+        self.model = RMTPP_torch.Net(config, lossweight)
         if config.cuda: 
             self.model.to("cuda")
         else:
@@ -269,11 +270,11 @@ class NNManagement:
         return acc
     
     def load_data(self,train_data, test_data, case_id, timestamp_key, event_key ):
-        train_set = ATMDataset(self.config ,train_data, case_id,   timestamp_key, event_key ) 
-        test_set = ATMDataset(self.config , test_data, case_id, timestamp_key, event_key)
+        train_set = RMTPP_torch.ATMDataset(self.config ,train_data, case_id,   timestamp_key, event_key ) 
+        test_set =  RMTPP_torch.ATMDataset(self.config , test_data, case_id, timestamp_key, event_key)
         # now load the data to torch tensors and generate the batches. also 
-        self.train_loader = DataLoader(train_set, batch_size=self.config.batch_size, shuffle=True, collate_fn=ATMDataset.to_features)
-        self.test_loader = DataLoader(test_set, batch_size=self.config.batch_size, shuffle=False, collate_fn=ATMDataset.to_features)
+        self.train_loader = DataLoader(train_set, batch_size=self.config.batch_size, shuffle=True, collate_fn= RMTPP_torch.ATMDataset.to_features)
+        self.test_loader = DataLoader(test_set, batch_size=self.config.batch_size, shuffle=False, collate_fn= RMTPP_torch.ATMDataset.to_features)
 
         #: initialize a matrix to store the importance weights
         # that will be passed to the CrossEntropyLoss object. 
@@ -295,7 +296,7 @@ class NNManagement:
         # we already pass the split data to de ATM loader. ATMDAtaset uses the sliding window for generating the input for training.
         # since we are using tensors for training the sequence length remains fixed in each epoch, hence we cannot do "arbitrary length cuts" 
         # to the training data
-        self.model = Net(self.config, lossweight=self.weight) #crete a NN instance
+        self.model =  RMTPP_torch.Net(self.config, lossweight=self.weight) #crete a NN instance
         self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs) #TODO: fix use bert (doesnt exist)
 
 
@@ -322,6 +323,6 @@ class NNManagement:
                 # check if the training time limit is exceeded
                 elapsed_time = time.time() - start_time
                 if self.config.train_time_limit is not None and elapsed_time > self.config.train_time_limit * 60:
-                    raise TrainTimeLimitExceeded()
+                    raise exceptions.TrainTimeLimitExceeded()
 
         self.evaluate()

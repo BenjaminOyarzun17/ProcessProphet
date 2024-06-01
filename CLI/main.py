@@ -7,12 +7,12 @@ import pytermgui as ptg
 import time
 from ProcessProphetStart import ProcessProphetStart
 from ProcessProphet import ProcessProphet
+from dotenv import load_dotenv
 
 
 
-
-
-
+load_dotenv()
+SERVER_NAME= os.getenv('SERVER_NAME')
 
 
 
@@ -32,7 +32,7 @@ def test_train():
         "model_name": model_name
     }
     response = requests.get(
-        "http://localhost:5000/train_nn", 
+        f"http://{SERVER_NAME}:5000/train_nn", 
         params = params,
         timeout =6000
     )
@@ -77,7 +77,7 @@ def test_predictive_process_model_generator(
 
 
     response = requests.get(
-        "http://localhost:5000/generate_predictive_process_model", 
+        f"http://{SERVER_NAME}:5000/generate_predictive_process_model", 
         params = params,
         timeout =6000
     )
@@ -115,7 +115,7 @@ def test_predictive_log_generator(
 
 
     response = requests.get(
-        "http://localhost:5000/generate_predictive_log", 
+        f"http://{SERVER_NAME}:5000/generate_predictive_log", 
         params = params,
         timeout =6000
     )
@@ -139,7 +139,7 @@ def test_multiple_prediction(config, path_to_model, path_to_log, depth, degree):
 
 
     response = requests.get(
-        "http://localhost:5000/multiple_prediction", 
+        f"http://{SERVER_NAME}:5000/multiple_prediction", 
         params = params,
         timeout =6000
     )
@@ -163,7 +163,7 @@ def test_single_prediction(config, path_to_model, path_to_log):
 
 
     response = requests.get(
-        "http://localhost:5000/single_prediction", 
+        f"http://{SERVER_NAME}:5000/single_prediction", 
         params = params,
         timeout =6000
     )

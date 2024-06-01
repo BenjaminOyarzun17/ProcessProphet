@@ -1,7 +1,8 @@
 
 #import dateutil.parser
 #import dateutil
-from exceptions import TrainPercentageTooHigh
+from server import exceptions
+from server import loggers
 
 import random
 import pandas as pd
@@ -13,8 +14,6 @@ import pprint
 import pm4py
 
 import datetime as dt
-from loggers import logger_import_event_log, logger_split_train_test, logger_evaluate
-
 
 
 class Preprocessing: 
@@ -146,7 +145,7 @@ class Preprocessing:
         #: sort the rows by group id and timestamp key
         self.event_df =  self.event_df.sort_values(by=[case_id, timestamp_key])
 
-        logger_import_event_log.debug(self.event_df.iloc[:30])
+        loggers.logger_import_event_log.debug(self.event_df.iloc[:30])
 
         self.encode_df_columns()
 
@@ -209,7 +208,7 @@ class Preprocessing:
         frequence distribution for each class in the whole event log. 
         """
         if train_percentage>=1 or train_percentage<=0: 
-            raise TrainPercentageTooHigh()
+            raise exceptions.TrainPercentageTooHigh()
 
         cases = self.event_df[self.case_id_key].unique().tolist()
         train_cases = set()
@@ -224,7 +223,7 @@ class Preprocessing:
         test = self.event_df[self.event_df[self.case_id_key].isin(test_cases)]
 
         if test.shape[0] == 0: 
-            raise TrainPercentageTooHigh()
+            raise exceptions.TrainPercentageTooHigh()
 
 
         return train, test
