@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 SERVER_NAME= os.getenv('SERVER_NAME')
+SERVER_PORT= os.getenv('SERVER_PORT')
 
 
 
@@ -32,7 +33,7 @@ def test_train():
         "model_name": model_name
     }
     response = requests.get(
-        f"http://{SERVER_NAME}:5000/train_nn", 
+        f"http://{SERVER_NAME}:{SERVER_PORT}/train_nn", 
         params = params,
         timeout =6000
     )
@@ -77,7 +78,7 @@ def test_predictive_process_model_generator(
 
 
     response = requests.get(
-        f"http://{SERVER_NAME}:5000/generate_predictive_process_model", 
+        f"http://{SERVER_NAME}:{SERVER_PORT}/generate_predictive_process_model", 
         params = params,
         timeout =6000
     )
@@ -115,7 +116,7 @@ def test_predictive_log_generator(
 
 
     response = requests.get(
-        f"http://{SERVER_NAME}:5000/generate_predictive_log", 
+        f"http://{SERVER_NAME}:{SERVER_PORT}/generate_predictive_log", 
         params = params,
         timeout =6000
     )
@@ -139,7 +140,7 @@ def test_multiple_prediction(config, path_to_model, path_to_log, depth, degree):
 
 
     response = requests.get(
-        f"http://{SERVER_NAME}:5000/multiple_prediction", 
+        f"http://{SERVER_NAME}:{SERVER_PORT}/multiple_prediction", 
         params = params,
         timeout =6000
     )
@@ -163,7 +164,7 @@ def test_single_prediction(config, path_to_model, path_to_log):
 
 
     response = requests.get(
-        f"http://{SERVER_NAME}:5000/single_prediction", 
+        f"http://{SERVER_NAME}:{SERVER_PORT}/single_prediction", 
         params = params,
         timeout =6000
     )

@@ -7,6 +7,8 @@ services:
       - "5000:5000"
     volumes:
       - ./projects:/projects
+    environment:
+      - SERVER_PORT=5000
   cli:
     build:
       context: .
@@ -17,3 +19,4 @@ services:
       - ./projects:/projects
     environment:
       - SERVER_NAME=server
+      - SERVER_PORT=5000
