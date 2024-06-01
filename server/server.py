@@ -10,6 +10,13 @@ import logging
 #from ray import tune
 from functools import partial
 import random
+import os
+from dotenv import load_dotenv
+
+
+
+load_dotenv()
+SERVER_PORT= os.getenv('SERVER_PORT')
 
 
 
@@ -502,4 +509,4 @@ if __name__=="__main__":
     #test_process_model_manager_tail_cut()
     #test_heuristic()
     #dummy()
-    app.run()
+    app.run(port = SERVER_PORT)
