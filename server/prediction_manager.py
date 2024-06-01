@@ -1,7 +1,7 @@
-from loggers import logger_get_dummy_process,logger_single_prediction , logger_multiple_prediction
-from exceptions import ProcessTooShort, SeqLengthTooHigh, NotOneCaseId
-from preprocessing import Preprocessing
-from RMTPP_torch import * 
+from server import loggers
+from server import exceptions
+from server import preprocessing
+from server import RMTPP_torch
 from torch.utils.data import DataLoader
 import pandas as pd
 import numpy as np
@@ -9,6 +9,7 @@ import pprint
 import json
 import time
 import random
+import torch
 
 
 
@@ -53,7 +54,7 @@ class PredictionManager:
                 selected_id = id
                 break
         if selected_id == -1: #: no sequence of appropiate length for input
-            raise SeqLengthTooHigh()             
+            raise exceptions.SeqLengthTooHigh()             
 
         random_cut = random.randint(self.config.seq_len+1, length ) 
         dummy = df[df[case_id_column]==selected_id]
@@ -74,13 +75,13 @@ class PredictionManager:
         preprocessor is in charge of doing the
         reading/importing from csv, xes, commandline, etc...
         """
-        preprocessor = Preprocessing()
+        preprocessor = preprocessing.Preprocessing()
         preprocessor.import_event_log_dataframe(df, self.case_id_key, self.activity_key, self.timestamp_key)
         self.encoded_df= preprocessor.event_df 
 
         #: check case id uniqueness
         if not self.check_input_uniqueness():
-            raise NotOneCaseId()
+            raise exceptions.NotOneCaseId()
         self.current_case_id= self.encoded_df[self.case_id_key].sample(n = 1).values[0]
         return self.single_prediction()
 
@@ -91,9 +92,9 @@ class PredictionManager:
         """
 
         #: sliding window
-        step1= ATMDataset(self.config,self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key)
+        step1= RMTPP_torch.ATMDataset(self.config,self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key)
         #: just create one batch
-        step2 = DataLoader(step1, batch_size=len(step1.time_seqs), shuffle=False, collate_fn=ATMDataset.to_features)
+        step2 = DataLoader(step1, batch_size=len(step1.time_seqs), shuffle=False, collate_fn=RMTPP_torch.ATMDataset.to_features)
 
         #: TODO: refactor these lines here. no need for a for loop
         pred_times, pred_events = [], []
@@ -157,7 +158,7 @@ class PredictionManager:
         c_e =self.encoded_df[self.activity_key].iloc[-1]
 
         #: compute sliding window
-        self.recursive_atm= ATMDataset(self.config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
+        self.recursive_atm= RMTPP_torch.ATMDataset(self.config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
         self.recursive_time_seqs = self.recursive_atm.time_seqs
         self.recursive_event_seqs = self.recursive_atm.event_seqs
 
@@ -221,7 +222,7 @@ class PredictionManager:
         c_e =self.encoded_df[self.activity_key].iloc[-1]
 
         #:load data, get windows
-        self.recursive_atm= ATMDataset(self.config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
+        self.recursive_atm= RMTPP_torch.ATMDataset(self.config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
         self.recursive_time_seqs = self.recursive_atm.time_seqs
         self.recursive_event_seqs = self.recursive_atm.event_seqs
 
@@ -262,7 +263,7 @@ class PredictionManager:
         # processed data by dataloader/atmdataset 
         # output empty lists... 
         if self.config.seq_len>= len(self.encoded_df):
-            raise SeqLengthTooHigh()
+            raise exceptions.SeqLengthTooHigh()
 
         
         self.recursive_atm.event_seqs = self.recursive_event_seqs
@@ -362,7 +363,7 @@ class PredictionManager:
         reading/importing from csv, xes, commandline, etc...
         it is assumed that the event log contains only one case id.
         """
-        preprocessor = Preprocessing()
+        preprocessor = preprocessing.Preprocessing()
         preprocessor.import_event_log_dataframe(df, self.case_id_key, self.activity_key, self.timestamp_key)
         
         self.encoded_df= preprocessor.event_df 

@@ -1,12 +1,12 @@
 import pm4py
-from prediction_manager import PredictionManager
+from server  import prediction_manager
+from server  import loggers
+from server import exceptions
 import pprint
 import random
 from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
 import pandas as pd
-from loggers import logger_generate_predictive_log, logger_multiple_prediction
 from tqdm import tqdm
-from exceptions import CutTooLarge, CutLengthZero
 import time as tim
 
 class ProcessModelManager:
@@ -70,7 +70,7 @@ class ProcessModelManager:
         it now constains the predictions. 
         """
         #: initialize prediction manager.
-        pm= PredictionManager(
+        pm=prediction_manager.PredictionManager(
             self.model, 
             self.case_id_key, 
             self.case_activity_key, 
@@ -140,7 +140,7 @@ class ProcessModelManager:
             case_id_counts,cuts, input_sequences= self.random_cutter(case_id_counts, max_len,cuts,  input_sequences)
         else: 
             if cut_length ==0: 
-                raise CutLengthZero()
+                raise exceptions.CutLengthZero()
             case_id_counts,cuts, input_sequences= self.tail_cutter(case_id_counts, cut_length,cuts,  input_sequences)
             
         
@@ -156,7 +156,7 @@ class ProcessModelManager:
         for i in lenths: 
             if i<=self.config.seq_len: 
                 print("found too short sequence")
-                raise CutTooLarge()
+                raise exceptions.CutTooLarge()
 
     def tail_cutter(self, case_id_counts, cut_length, cuts, input_sequences):
         """

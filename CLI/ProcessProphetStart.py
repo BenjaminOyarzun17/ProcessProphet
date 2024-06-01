@@ -4,6 +4,12 @@ from ProcessProphetPreprocessing import ProcessProphetPreprocessing
 from ProcessProphetTrain import ProcessProphetTrain
 import os
 from loggers import logger_set_params_cli
+from dotenv import load_dotenv
+
+
+
+load_dotenv()
+SERVER_NAME= os.getenv('SERVER_NAME')
 
 
 class ProcessProphetStart: 

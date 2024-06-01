@@ -1,0 +1,19 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./projects:/projects
+  cli:
+    build:
+      context: .
+      dockerfile: Dockerfile.cli
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./projects:/projects
+    environment:
+      - SERVER_NAME=server

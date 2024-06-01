@@ -5,6 +5,13 @@ import requests
 import base64
 from loggers import logger_set_params_cli
 import ProcessProphetStart
+from dotenv import load_dotenv
+import os
+
+
+
+load_dotenv()
+SERVER_NAME= os.getenv('SERVER_NAME')
 
 class ProcessProphetTrain: 
     def __init__(self, pp):
@@ -69,7 +76,7 @@ class ProcessProphetTrain:
         } 
 
         response = requests.post(
-            "http://localhost:5000/train_nn", 
+            f"http://{SERVER_NAME}:5000/train_nn", 
             json= params,
             timeout =6000
         )
@@ -166,7 +173,7 @@ class ProcessProphetTrain:
         } 
 
         response = requests.post(
-            "http://localhost:5000/grid_search", 
+            f"http://{SERVER_NAME}:5000/grid_search", 
             json= params,
             timeout =6000
         )
@@ -224,7 +231,7 @@ class ProcessProphetTrain:
         } 
 
         response = requests.post(
-            "http://localhost:5000/random_search", 
+            f"http://{SERVER_NAME}:5000/random_search", 
             json= params,
             timeout =6000
         )

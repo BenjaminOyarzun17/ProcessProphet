@@ -7,12 +7,15 @@ WORKDIR /
 
 
 COPY CLI /CLI
+COPY logs /logs
 COPY requirements.txt .
 
 VOLUME /projects
 
-RUN pip install pytermgui
+RUN pip install pytermgui requests python-dotenv
 #RUN  pip install --no-cache-dir -r requirements.txt
 
+
+#CMD ["python", "CLI/main.py"]
 
 
