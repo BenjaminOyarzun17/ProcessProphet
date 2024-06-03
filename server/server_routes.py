@@ -1,13 +1,9 @@
 from flask import Blueprint, request, send_file, make_response, jsonify, Response
-# from server import preprocessing
-# from server import nn_manager
-# from server import process_model_manager
-# from server import prediction_manager
+from server import preprocessing
+from server import nn_manager
+from server import process_model_manager
+from server import prediction_manager
 
-import preprocessing
-import nn_manager
-import process_model_manager
-import prediction_manager
 
 import base64
 import os
