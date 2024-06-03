@@ -1,23 +1,23 @@
 """
 This module is in charge of training the NN Model
 """
-import pm4py
-import os
 import time
 import pandas as pd
 import pydoc_markdown
-from server import RMTPP_torch
-from server import loggers
-from server import exceptions
+# from server import RMTPP_torch
+# from server import loggers
+# from server import exceptions
+import RMTPP_torch
+import loggers
+import exceptions
+
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import numpy as np
-import json
 import logging
 import torch
 from collections import Counter
 import random
-import pprint
 from sklearn.preprocessing import LabelEncoder
 
 class Config: 
