@@ -5,7 +5,6 @@ import pm4py
 import os
 import time
 import pandas as pd
-import pydoc_markdown
 from server import RMTPP_torch
 from server import loggers
 from server import exceptions

@@ -1,0 +1,27 @@
+services:
+  servercuda:
+    build:
+      context: .
+      dockerfile: Dockerfile.servercuda
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./projects:/projects
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+  cli:
+    build:
+      context: .
+      dockerfile: Dockerfile.cli
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./projects:/projects
+    environment:
+      - SERVER_NAME=servercuda
+      - SERVER_PORT=5000

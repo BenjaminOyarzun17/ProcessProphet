@@ -1,23 +1,26 @@
 
 
-
+#FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
+FROM nvidia/cuda:12.5.0-runtime-ubuntu22.04
+#FROM pytorch/pytorch:latest
 FROM python:3.12
 
 WORKDIR /
 
-COPY server /server 
-COPY logs /logs
 COPY requirements.txt .
 
+#RUN  pip install --no-cache-dir -r requirements.txt
+#RUN pip install gunicorn flask pm4py pandas numpy torch python-dotenv tqdm scikit-learn 
+RUN pip install gunicorn flask pm4py pandas numpy python-dotenv tqdm scikit-learn 
+RUN pip install torch --index-url https://download.pytorch.org/whl/cu121
 
+
+COPY server /server 
+COPY logs /logs
 VOLUME /projects
+ENV SERVER_PORT=5000
 
-
-#RUN pip install -r ./requirements.txt
-RUN  pip install --no-cache-dir -r requirements.txt
-
-RUN pip install gunicorn 
 
 EXPOSE 5000
 CMD ["gunicorn", "-b", ":5000","server.server:app", "--timeout", "150"]
-
+#CMD ["python", "-m", "server.server"]
