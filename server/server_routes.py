@@ -12,6 +12,7 @@ import prediction_manager
 import base64
 import os
 import json
+import torch
 
 routes =Blueprint("Routes", __name__)
 
@@ -22,7 +23,21 @@ ok = {"status":"OK"}
 def start():
     return ok
 
-
+@routes.route('/test')
+def test():
+    if torch.cuda.is_available():
+        return {
+            "CUDA available: ": torch.cuda.is_available(),
+            "CUDA device count: ": torch.cuda.device_count(), 
+            "CUDA device name: ": torch.cuda.get_device_name(0), 
+        }
+    elif not torch.cuda.is_available(): 
+        return {
+            "state": "no cuda"
+        }
+    return {
+        "state": "error"
+    }
 @routes.route('/generate_predictive_process_model', methods = ["GET"])
 def generate_predictive_process_model():
     
@@ -462,7 +477,6 @@ def train_nn():
         timestamp= str(request_config["timestamp_key"])
 
         is_xes = request_config["is_xes"] 
-
 
         preprocessor = preprocessing.Preprocessing()
         preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)

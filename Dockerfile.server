@@ -5,19 +5,20 @@ FROM python:3.12
 
 WORKDIR /
 
-COPY server /server 
-COPY logs /logs
 COPY requirements.txt .
 
-
-VOLUME /projects
-
-
-#RUN pip install -r ./requirements.txt
 RUN  pip install --no-cache-dir -r requirements.txt
-
 RUN pip install gunicorn 
 
+
+
+COPY server /server 
+COPY logs /logs
+VOLUME /projects
+
+ENV SERVER_PORT=5000
+
 EXPOSE 5000
+
 CMD ["gunicorn", "-b", ":5000","server.server:app", "--timeout", "150"]
 

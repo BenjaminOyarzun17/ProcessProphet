@@ -3,13 +3,9 @@ This module is in charge of training the NN Model
 """
 import time
 import pandas as pd
-import pydoc_markdown
-# from server import RMTPP_torch
-# from server import loggers
-# from server import exceptions
-import RMTPP_torch
-import loggers
-import exceptions
+from server import RMTPP_torch
+from server import loggers
+from server import exceptions
 
 from torch.utils.data import DataLoader
 from tqdm import tqdm
