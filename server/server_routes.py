@@ -325,16 +325,10 @@ def random_search():
         neural_manager.config.cuda = True if request_config["cuda"] == "True" else False
         neural_manager.config = load_config_from_preprocessor(neural_manager.config, preprocessor) 
         
+        neural_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
         
-        acc= neural_manager.random_search(
-            train,
-            test, 
-            sp, 
-            iterations, 
-            preprocessor.case_id_key, 
-            preprocessor.case_timestamp_key, 
-            preprocessor.case_activity_key
-        )
+        acc= neural_manager.random_search(sp, iterations)
+        
         config = neural_manager.config.asdict()
 
         neural_manager.export_nn_model(request_config["model_path"])
@@ -418,9 +412,9 @@ def grid_search():
 
         neural_manager.config = load_config_from_preprocessor(neural_manager.config, preprocessor) 
 
-
+        neural_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
         
-        acc= neural_manager.grid_search(train, test, sp, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
+        acc= neural_manager.grid_search(sp)
         
         config = neural_manager.config.asdict()
 

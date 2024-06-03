@@ -74,6 +74,7 @@ class TestTrainEvaluate(unittest.TestCase):
         f1_calculated = 2 * ((acc * recall) / (acc + recall))
         self.assertAlmostEqual(f1, f1_calculated, places=5)
         
+
 class TestImportExportModel(unittest.TestCase):
     """
     Test class for importing and exporting NN models
@@ -123,46 +124,48 @@ class TestImportExportModel(unittest.TestCase):
         self.assertTrue(nn_manager.model is not None)
 
 
-    
-    
-
-
-class TestImportXESFunction(unittest.TestCase):
+class TestHyperparameterTuning(unittest.TestCase):
     """
-    Test class for the `Preprocessing.import_event_log_xes` method
+    Test class for Grid Search and Random Search
     """
-
     @classmethod
     def setUpClass(cls):
-        #: run this to import the data once 
         cls.preprocessor= Preprocessing()
-        path = "data/Hospital_log.xes" #its smaller, use preferrably.
-        cls.preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")
+        path = "data/running-example.csv"
+        cls.preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ";")
 
-    def test_no_nan(self):
-        """check if there are no nans"""
-        count = self.preprocessor.event_df.isna().sum().sum()
-        print(count)
-        self.assertEqual(count, 0)
-        
-    def test_column_types(self):
-        column_types = list(self.preprocessor.event_df.dtypes) 
-        column_types = list(map(str, column_types))
-        self.assertListEqual(["float64"]*3 , column_types)
+        # setup the nn manager
+        train, test = cls.preprocessor.split_train_test(.5)
+        cls.nn_manager = NNManagement(None)
+        cls.nn_manager.config.absolute_frequency_distribution = cls.preprocessor.absolute_frequency_distribution
+        cls.nn_manager.config.number_classes = cls.preprocessor.number_classes
+        cls.nn_manager.config.case_id_le = cls.preprocessor.case_id_le
+        cls.nn_manager.config.activity_le = cls.preprocessor.activity_le
+        cls.nn_manager.config.exponent = cls.preprocessor.exponent
+        cls.nn_manager.config.seq_len = 3
+        cls.nn_manager.load_data(train, test, cls.preprocessor.case_id_key, cls.preprocessor.case_timestamp_key, cls.preprocessor.case_activity_key)
 
-   
-    
-    def test_columns(self):
+    def test_grid_search(self):
         """
-        test if there are three columns and if they match the input names
+        test if grid search can be performed
         """
-        dataframe = self.preprocessor.event_df
-        columns = set(dataframe.columns)
-        gold = set(["case:concept:name", "concept:name", "time:timestamp"])
-        self.assertSetEqual(gold, columns)
+        search_params = {
+            "hidden_dim": [30, 50, 10],
+            "mlp_dim": [10, 30, 10],
+            "emb_dim": [30, 50, 10],
+        }
+        self.nn_manager.grid_search(search_params)
 
-    def test_correct_subfolder(self):
-        pass #: TODO (waiting for CLI)
+    def test_random_search(self):
+        """
+        test if random search can be performed
+        """
+        search_params = {
+            "hidden_dim": [1, 50],
+            "mlp_dim": [10, 30],
+            "emb_dim": [30, 50],
+        }
+        self.nn_manager.random_search(search_params, 3)
 
 
 if __name__ == "__main__":

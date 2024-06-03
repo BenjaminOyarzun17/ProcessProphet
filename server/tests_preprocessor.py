@@ -28,7 +28,6 @@ class TestImportXESFunction(unittest.TestCase):
         column_types = list(map(str, column_types))
         self.assertListEqual(["float64"]*3 , column_types)
 
-   
     def test_row_order(self):
         """
         test whether the timestamps are in the correct order and 
