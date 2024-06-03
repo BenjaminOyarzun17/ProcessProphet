@@ -7,7 +7,6 @@ from server import loggers
 import random
 import pandas as pd
 import datetime as dt
-import pydoc_markdown
 from sklearn.preprocessing import LabelEncoder
 from collections import Counter
 import pprint
