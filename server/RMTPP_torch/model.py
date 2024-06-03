@@ -37,8 +37,8 @@ class Net(nn.Module):
             self.intensity_b = nn.Parameter(torch.tensor(0.1, dtype=torch.float, device='cuda'))
             self.time_criterion = self.RMTPPLoss
         else: 
-            self.intensity_w = nn.Parameter(torch.tensor(0.1, dtype=torch.float))
-            self.intensity_b = nn.Parameter(torch.tensor(0.1, dtype=torch.float))
+            self.intensity_w = nn.Parameter(torch.tensor(0.1, dtype=torch.float, device= 'cpu'))
+            self.intensity_b = nn.Parameter(torch.tensor(0.1, dtype=torch.float, device = 'cpu'))
             self.time_criterion = self.RMTPPLoss
         
 

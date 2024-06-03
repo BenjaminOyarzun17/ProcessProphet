@@ -57,6 +57,7 @@ class ProcessProphetTrain:
         input_logs_path= self.pp.state.input_logs_path
 
         is_xes = True if self.log_name.value[-3:] == "xes"  else False
+        cuda= True if  self.cuda.value== "True"  else False
         
         params = {
             "path_to_log": f"{input_logs_path}/{self.log_name.value}" , 
@@ -65,7 +66,7 @@ class ProcessProphetTrain:
             "case_id": self.case_id_key.value, 
             "activity_key":  self.case_activity_key.value, 
             "timestamp_key":  self.case_timestamp_key.value, 
-            "cuda": self.cuda.value, 
+            "cuda": cuda, 
             "seq_len": self.seq_len.value, 
             "emb_dim": self.emb_dim.value, 
             "hid_dim":self.hid_dim.value, 
@@ -107,7 +108,7 @@ class ProcessProphetTrain:
 
 
     def set_training_params(self): 
-        self.cuda=  ptg.InputField("True", prompt="use cuda: ")
+        self.cuda=  ptg.InputField("False", prompt="use cuda: ")
         self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
         self.seq_len=  ptg.InputField("10", prompt="sequence length: ")
         self.emb_dim=  ptg.InputField("32", prompt="embedding dimension: ")
@@ -117,13 +118,14 @@ class ProcessProphetTrain:
         self.batch_size=  ptg.InputField("1024", prompt="batch size: ")
         self.epochs=  ptg.InputField("10", prompt="number of epochs: ")
         self.split=  ptg.InputField("0.9", prompt="split fraction: ")
-        self.log_name=  ptg.InputField("BPI_Challenge_2019.xes", prompt="log name: ")
+        self.log_name=  ptg.InputField("Hospital_log.xes", prompt="log name: ")
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
         self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
         self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
 
         container = [
             ptg.Label(f"set parameters for training"),
+            SERVER_NAME,
             self.cuda , 
             self.model_name ,
             self.seq_len ,
@@ -152,6 +154,7 @@ class ProcessProphetTrain:
 
         is_xes = True if self.log_name.value[-3:] == "xes"  else False
 
+        cuda= True if  self.cuda.value== "True"  else False
         sp = {
             "hidden_dim":[self.hidden_dim_lower.value,self.hidden_dim_upper.value, self.hidden_dim_step.value] ,
             "mlp_dim":[self.mlp_dim_lower.value, self.mlp_dim_upper.value, self.mlp_dim_step.value] ,
@@ -164,7 +167,7 @@ class ProcessProphetTrain:
             "case_id": self.case_id_key.value, 
             "activity_key":  self.case_activity_key.value, 
             "timestamp_key":  self.case_timestamp_key.value, 
-            "cuda": self.cuda.value, 
+            "cuda": cuda, 
             "seq_len": self.seq_len.value, 
             "lr": self.lr.value, 
             "batch_size": self.batch_size.value, 
@@ -209,6 +212,7 @@ class ProcessProphetTrain:
 
         is_xes = True if self.log_name.value[-3:] == "xes"  else False
 
+        cuda= True if  self.cuda.value== "True"  else False
         sp = {
             "hidden_dim":[self.hidden_dim_lower.value,self.hidden_dim_upper.value] ,
             "mlp_dim":[self.mlp_dim_lower.value, self.mlp_dim_upper.value] ,
@@ -220,7 +224,7 @@ class ProcessProphetTrain:
             "case_id": self.case_id_key.value, 
             "activity_key":  self.case_activity_key.value, 
             "timestamp_key":  self.case_timestamp_key.value, 
-            "cuda": self.cuda.value, 
+            "cuda": cuda, 
             "model_path": f"{self.pp.state.models_path}/{self.model_name.value}", 
             "seq_len": self.seq_len.value, 
             "lr": self.lr.value, 

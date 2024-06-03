@@ -16,10 +16,10 @@ from flask import Flask
 import time
 import logging
 #from ray import tune
-from functools import partial
 import random
 import os
 from dotenv import load_dotenv
+import torch
 
 
 
