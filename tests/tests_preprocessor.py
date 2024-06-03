@@ -1,8 +1,13 @@
 import unittest
-from preprocessing import *
-from nn_manager import *
-import numpy as np
-import exceptions
+import sys
+import os
+
+# needed for the import of the server module:
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from server.preprocessing import Preprocessing
+from server.nn_manager import NNManagement
+import server.exceptions as exceptions
+
 
 
 class TestImportXESFunction(unittest.TestCase):
