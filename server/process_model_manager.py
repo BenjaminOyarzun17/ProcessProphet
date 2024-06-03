@@ -1,10 +1,7 @@
 import pm4py
-# from server  import prediction_manager
-# from server  import loggers
-# from server import exceptions
-import prediction_manager
-import loggers
-import exceptions
+from server  import prediction_manager
+from server  import loggers
+from server import exceptions
 
 import pprint
 import random
