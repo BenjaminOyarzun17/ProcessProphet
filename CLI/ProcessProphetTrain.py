@@ -10,6 +10,9 @@ import os
 
 
 
+
+
+
 load_dotenv()
 SERVER_NAME= os.getenv('SERVER_NAME')
 SERVER_PORT= os.getenv('SERVER_PORT')
@@ -29,7 +32,7 @@ class ProcessProphetTrain:
             "Loading...", 
             message
         )
-        window = ptg.Window(container, box="DOUBLE")
+        window = ptg.Window(*container, box="DOUBLE")
         window.center()
         self.pp.switch_window(window)
     
@@ -89,26 +92,26 @@ class ProcessProphetTrain:
             statistics = data["training_statistics"]
             
 
-            container = ptg.Container(
+            container =[  
                 "training successful", 
                 f"accuracy: {statistics['acc']}", 
                 f"recall: {statistics['recall']}", 
                 f"f1-score: {statistics['f1']}", 
-                ptg.Button("training menu", lambda *_: self.pp.switch_window(self.trainer_main_menu())), 
-                ptg.Button("action menu", lambda *_:  self.return_to_menu())
-            )
+                ptg.Button(f"{self.pp.button_color}training menu", lambda *_: self.pp.switch_window(self.trainer_main_menu())), 
+                ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
+            ]
         else: 
-            container = ptg.Container(
+            container = [ 
                 "training FAILED:",
-                ptg.Button("back", lambda *_: self.pp.switch_window(self.set_training_params()))
-            )
-        window = ptg.Window(container, box="DOUBLE")
+                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.set_training_params()))
+            ]
+        window = ptg.Window(*container, box="DOUBLE")
         window.center()
         return window
 
 
     def set_training_params(self): 
-        self.cuda=  ptg.InputField("False", prompt="use cuda: ")
+        self.cuda=  ptg.InputField("True", prompt="use cuda: ")
         self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
         self.seq_len=  ptg.InputField("10", prompt="sequence length: ")
         self.emb_dim=  ptg.InputField("32", prompt="embedding dimension: ")
@@ -140,7 +143,8 @@ class ProcessProphetTrain:
             self.case_id_key, 
             self.case_activity_key, 
             self.case_timestamp_key,
-            ptg.Button("continue", lambda *_: self.pp.switch_window(self.start_training()))
+            ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_training())),
+            ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
         ]
 
         window = ptg.Window(*container)
@@ -189,18 +193,18 @@ class ProcessProphetTrain:
             
 
 
-            container = ptg.Container(
+            container =[
                 "training successful", 
                 f"accuracy: {accuracy}", 
-                ptg.Button("training menu", lambda *_: self.pp.switch_window(self.trainer_main_menu())), 
-                ptg.Button("action menu", lambda *_:  self.return_to_menu())
-            )
+                ptg.Button(f"{self.pp.button_color}training menu", lambda *_: self.pp.switch_window(self.trainer_main_menu())), 
+                ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
+            ]
         else: 
-            container = ptg.Container(
+            container =[  
                 "training FAILED:", 
-                ptg.Button("back", lambda *_: self.pp.switch_window(self.set_grid_search_params()))
-            )
-        window = ptg.Window(container, box="DOUBLE")
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.set_grid_search_params()))
+            ]
+        window = ptg.Window(*container, box="DOUBLE")
         window.center()
         return window
 
@@ -246,18 +250,18 @@ class ProcessProphetTrain:
 
             accuracy = data["acc"]
 
-            container = ptg.Container(
+            container = [ 
                 "training successful", 
                 f"accuracy: {accuracy}", 
-                ptg.Button("training menu", lambda *_: self.pp.switch_window(self.trainer_main_menu())), 
-                ptg.Button("action menu", lambda *_:  self.return_to_menu())
-            )
+                ptg.Button(f"{self.pp.button_color}training menu", lambda *_: self.pp.switch_window(self.trainer_main_menu())), 
+                ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
+            ]
         else: 
-            container = ptg.Container(
+            container = [ 
                 "training FAILED:", 
-                ptg.Button("back", lambda *_: self.pp.switch_window(self.set_random_search_params()))
-            )
-        window = ptg.Window(container, box="DOUBLE")
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.set_random_search_params()))
+            ]
+        window = ptg.Window(*container, box="DOUBLE")
         window.center()
         return window
 
@@ -307,7 +311,8 @@ class ProcessProphetTrain:
             self.emb_dim_lower, 
             self.emb_dim_upper, 
             self.iterations,
-            ptg.Button("continue", lambda *_: self.pp.switch_window(self.start_random_search()))
+            ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_random_search())),
+            ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
         ]
 
         window = ptg.Window(*container)
@@ -365,7 +370,8 @@ class ProcessProphetTrain:
             self.emb_dim_lower, 
             self.emb_dim_upper, 
             self.emb_dim_step,
-            ptg.Button("continue", lambda *_: self.pp.switch_window(self.start_grid_search()))
+            ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_grid_search())),
+            ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
         ]
 
         window = ptg.Window(*container)
@@ -377,13 +383,15 @@ class ProcessProphetTrain:
         container = ptg.Container(
             "select one training alternative", 
             "", 
-            ptg.Button("set params manually", lambda *_: self.pp.switch_window(self.set_training_params())), 
+            ptg.Button(f"{self.pp.button_color}set params manually", lambda *_: self.pp.switch_window(self.set_training_params())), 
             "",
-            ptg.Button("grid search", lambda *_: self.pp.switch_window(self.set_grid_search_params())), 
+            ptg.Button(f"{self.pp.button_color}grid search", lambda *_: self.pp.switch_window(self.set_grid_search_params())), 
             "",
-            ptg.Button("random search", lambda *_: self.pp.switch_window(self.set_random_search_params()))
+            ptg.Button(f"{self.pp.button_color}random search", lambda *_: self.pp.switch_window(self.set_random_search_params())),
+            "",
+            ptg.Button("[black]back", lambda *_: self.return_to_menu())
         )
 
-        window = ptg.Window(container, box="DOUBLE")
+        window = ptg.Window(*container, box="DOUBLE")
         window.center()
         return window

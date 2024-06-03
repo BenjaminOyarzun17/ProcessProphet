@@ -8,6 +8,10 @@ from dotenv import load_dotenv
 
 
 
+
+
+
+
 load_dotenv()
 SERVER_NAME= os.getenv('SERVER_NAME')
 
@@ -30,54 +34,48 @@ class ProcessProphetStart:
         pass
 
 
-
-
-
-
-
-
     def select_manager(self) : 
         """
         TODO: the manager alternativs should depend on the sate of the folders, 
         ie if for example the models folder is empty, no conformance checking should be possible. 
         other ex: if decoded_dfs is empty, train should not be possible.
         """
-        container = ptg.Container(
+        container = [
             ptg.Label(f"select one of the following actions:"),
             "",
-            ptg.Button("import and filter log", lambda *_: self.launch_preprocessor()), 
+            ptg.Button(f"{self.pp.button_color}import and filter log", lambda *_: self.launch_preprocessor()), 
             "",
-            ptg.Button("train neural network", lambda *_: self.launch_trainer()), 
+            ptg.Button(f"{self.pp.button_color}train neural network", lambda *_: self.launch_trainer()), 
             "",
-            ptg.Button("make predictions", lambda *_: self.pp.switch_window(self.launch_predictor())), 
+            ptg.Button(f"{self.pp.button_color}make predictions", lambda *_: self.pp.switch_window(self.launch_predictor())), 
             "",
-            ptg.Button("conformance checking", lambda *_: self.pp.switch_window(self.launch_conformance())), 
+            ptg.Button(f"{self.pp.button_color}conformance checking", lambda *_: self.pp.switch_window(self.launch_conformance())), 
             "",
-            ptg.Button("back to menu", lambda *_: self.pp.switch_window(self.main_menu())), 
+            ptg.Button(f"{self.pp.button_color}back to menu", lambda *_: self.pp.switch_window(self.main_menu())), 
             "",
-            ptg.Button("Exit", lambda *_: self.manager.stop())
-        ).center()
+            ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
+        ] 
 
-        window = ptg.Window(container, box="DOUBLE")
+        window = ptg.Window(*container, box="DOUBLE")
         window.center()
         return window
 
     def notify_project_creation(self, message, success): 
         if success: 
-            container = ptg.Container(
+            container =[  
                 ptg.Label(f"{message}"),
                 "",
-                ptg.Button("continue", lambda *_: self.pp.switch_window(self.select_manager())), 
-                ptg.Button("Exit", lambda *_: self.manager.stop())
-            ).center()
+                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.select_manager())), 
+                ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
+            ]
         else: 
-            container = ptg.Container(
+            container = [ 
                 ptg.Label(f"{message}!"),
-                ptg.Button("back to menu", lambda *_: self.pp.switch_window(self.main_menu()))
-            ).center()
+                ptg.Button(f"{self.pp.button_color}back to menu", lambda *_: self.pp.switch_window(self.main_menu()))
+            ]
 
 
-        window = ptg.Window(container, box="DOUBLE")
+        window = ptg.Window(*container, box="DOUBLE")
         window.center()
         return window
 
@@ -120,22 +118,22 @@ class ProcessProphetStart:
             self.pp.state.predictive_logs_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/predictive_logs"
             self.pp.state.partial_traces_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/partial_traces"
             self.pp.state.decoded_dfs_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/decoded_dfs"
-            container = ptg.Container(
+            container =[  
                 "Project selected successfully", 
                 "",
-                ptg.Button("continue", lambda *_: self.pp.switch_window(self.select_manager())), 
+                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.select_manager())), 
                 "",
-                ptg.Button("Exit", lambda *_: self.pp.manager.stop())
-            ).center()
-            window = ptg.Window(container, box="DOUBLE")
+                ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
+            ]
+            window = ptg.Window(*container, box="DOUBLE")
             window.center()
             return window
         else: 
-            container = ptg.Container(
+            container =  [ 
                 "Project does not exist", 
-                ptg.Button("Exit", lambda *_: self.pp.manager.stop())
-            ).center()
-            window = ptg.Window(container, box="DOUBLE")
+                ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
+            ]
+            window = ptg.Window(*container, box="DOUBLE")
             window.center()
             return window
 
@@ -162,52 +160,50 @@ class ProcessProphetStart:
         c.append("")
         c.append(self.input_select_project)
         c.append("")
-        c.append(ptg.Button("select", lambda *_: self.pp.switch_window(self.handle_project_selection())))
+        c.append(ptg.Button(f"{self.pp.button_color}select", lambda *_: self.pp.switch_window(self.handle_project_selection())))
         c.append("")
-        c.append(ptg.Button("Exit", lambda *_: self.pp.manager.stop()))
-        container = ptg.Container(
-            *c    
-        ).center()
+        c.append(ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop()))
+       
 
-        window = ptg.Window(container, box="DOUBLE")
+        window = ptg.Window(*c, box="DOUBLE")
         window.center()
         return window
 
     def new_project_form(self):
 
         self.project_name_input =  ptg.InputField("first Prophet", prompt="Project name: ")
-        container = ptg.Container(
-            ptg.Label("Create new project"),
-            ptg.Label(f"current path: {os.getcwd()}/{self.pp.state.projects_path}"),
+        container =[ 
+            ptg.Label(f"{self.pp.button_color}Create new project"),
+            ptg.Label(f"{self.pp.button_color}current path: {os.getcwd()}/{self.pp.state.projects_path}"),
             "", 
             self.project_name_input, 
             "", 
-            ptg.Button("Create project", lambda *_: self.handle_project_name_input()), 
+            ptg.Button(f"{self.pp.button_color}Create project", lambda *_: self.handle_project_name_input()), 
             "", 
-            ptg.Button("Back to start", lambda *_: self.pp.switch_window(self.main_menu())), 
+            ptg.Button(f"{self.pp.button_color}Back to start", lambda *_: self.pp.switch_window(self.main_menu())), 
             "", 
-            ptg.Button("Exit", lambda *_: self.manager.stop())
-        ).center()
+            ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
+        ] 
 
-        window = ptg.Window(container, box="DOUBLE")
+        window = ptg.Window(*container, box="DOUBLE")
         window.center()
         return window
 
 
     def main_menu(self):
-        container = ptg.Container(
+        container =[ 
             ptg.Label("Welcome to Process Prophet"),
             "", 
             ptg.Label("Choose one option:"),
             "", 
-            ptg.Button("Create new project", lambda *_: self.pp.switch_window(self.new_project_form())),
+            ptg.Button(f"{self.pp.button_color}Create new project", lambda *_: self.pp.switch_window(self.new_project_form())),
             "", 
-            ptg.Button("Load existing project", lambda *_: self.pp.switch_window(self.load_existing_project())),
+            ptg.Button(f"{self.pp.button_color}Load existing project", lambda *_: self.pp.switch_window(self.load_existing_project())),
             "", 
-            ptg.Button("Exit", lambda *_: self.manager.stop())
-        ).center()
+            ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
+        ] 
         
-        window = ptg.Window(container, box="DOUBLE")
+        window = ptg.Window(*container, title = "Process Prophet")
         window.center()
         return window
 

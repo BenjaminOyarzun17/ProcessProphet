@@ -2,6 +2,18 @@ import pytermgui as ptg
 from dataclasses import dataclass
 import os
 from loggers import logger_set_params_cli
+import yaml
+
+
+
+with open("CLI/styles.yaml", "r") as styles_file: 
+    styles_content = styles_file.read()
+
+CONFIG = styles_content
+
+
+
+
 
 @dataclass
 class PPStateData: 
@@ -22,6 +34,8 @@ class PPStateData:
 
 
 
+
+
 class ProcessProphet:
     """
     this class is intended for window management
@@ -31,6 +45,10 @@ class ProcessProphet:
         self.manager = ptg.WindowManager() #: manager object for the window
         self.current_window = None #: current window content
 
+        self.button_color = "[black]"
+        self.window_width = 100
+        self.window_height = 50
+
     def set_current_window(self, window): 
         self.current_window = window #: setter for current window
 
@@ -39,8 +57,13 @@ class ProcessProphet:
 
     def switch_window(self, new_window):
         # Remove the current window
+
+        with ptg.YamlLoader() as loader:
+            loader.load(CONFIG)
         if self.current_window !=None: #for not initialized case
             self.remove_current_window()
+
+
 
         #: set the widgets in the window.
         self.set_current_window(new_window)

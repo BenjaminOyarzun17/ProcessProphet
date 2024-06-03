@@ -405,10 +405,10 @@ def test_alpha_miner():
 
 def test_heuristic():
     preprocessor = preprocessing.Preprocessing()
-    is_xes  = True
-    #path =  "data/train_day_joined.csv"
+    is_xes  =False 
+    path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
-    path = "data/Hospital_log.xes"
+    #path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
      
@@ -446,7 +446,8 @@ def test_heuristic():
 
     pmm.generate_predictive_log(non_stop=False, upper =100, random_cuts=True, new_log_path = "generated_predicted_df.csv")
     pmm.heuristic_miner(view = False, dependency_threshold=0.8, and_threshold=0.8, loop_two_threshold=0.8,  path = "awesome_heristic.pnml")
-    print(f"achieved fitness: {pmm.conformance_checking_token_based_replay()}")
+    #print(f"achieved fitness: {pmm.conformance_checking_token_based_replay()}")
+    print(f"achieved fitness: {pmm.conformance_checking_alignments}")
     pmm.visualize()
 
 def test_import_model():
@@ -509,6 +510,6 @@ if __name__=="__main__":
     #test_process_model_manager_random_cut()
     #test_end_activities()
     #test_process_model_manager_tail_cut()
-    #test_heuristic()
+    test_heuristic()
     #dummy()
-    app.run(port = SERVER_PORT)
+    #app.run(port = SERVER_PORT)

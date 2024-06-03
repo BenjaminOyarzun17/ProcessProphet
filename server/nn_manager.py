@@ -29,7 +29,7 @@ class Config:
         self.epochs= 1 
         self.importance_weight = "store_true"
         self.verbose_step = 350
-        self.cuda = False
+        self.cuda =True 
         self.absolute_frequency_distribution = Counter()
         self.case_id_le = None
         self.activity_le = None
