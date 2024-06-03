@@ -1,9 +1,17 @@
-from server import preprocessing
-from server import nn_manager
-from server import server_routes 
-from server import loggers
-from server import prediction_manager
-from server import  process_model_manager 
+# from server import preprocessing
+# from server import nn_manager
+# from server import server_routes 
+# from server import loggers
+# from server import prediction_manager
+# from server import  process_model_manager 
+
+import preprocessing
+import nn_manager
+import server_routes 
+import loggers
+import prediction_manager
+import  process_model_manager
+
 from flask import Flask
 import time
 import logging
