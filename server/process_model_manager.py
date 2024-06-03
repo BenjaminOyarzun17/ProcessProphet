@@ -44,6 +44,25 @@ class ProcessModelManager:
         cuts = {}
         return case_id_counts, cuts, input_sequences, cuts
 
+    """
+    def alignment_input(self, cut_length, total_traces): 
+        - cuts `cut_length` elements from the tail of each of the sampled `total_traces` traces. 
+        - the cut out subsequences are saved in a dataframe.
+        - the partial sequence (what remained after cutting) is passed as input for the pred. model
+        and `cut_length` predictions are done for each trace. 
+        - with this we can later compute alignments.  
+        this conformance chcking method should better quantify how good the model is at reconstructing 
+        past behaviour for each trace individually, without considering the part that was using for training.  
+    """
+
+
+
+
+
+
+
+
+
     def random_cutter(self, case_id_counts, max_len, cuts, input_sequences):
         """
         cuts the each sequence contained in input sequences at random indices. 
@@ -338,8 +357,6 @@ class ProcessModelManager:
 
     
     def compute_fitness(self, replayed_traces):
-
- 
         sum_m =  0 
         sum_c = 0
         sum_r = 0 
@@ -358,5 +375,6 @@ class ProcessModelManager:
     def conformance_checking_alignments(self):
         aligned_traces = pm4py.conformance_diagnostics_alignments(self.event_df, self.petri_net, self.initial_marking, self.final_marking)
         log_fitness = replay_fitness.evaluate(aligned_traces, variant=replay_fitness.Variants.ALIGNMENT_BASED)
+        print(log_fitness)
         return log_fitness
         #: TODO keep reading pm4py documentation on alignments (goal: get the fitness score)

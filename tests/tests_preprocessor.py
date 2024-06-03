@@ -175,7 +175,7 @@ class TestSplitTrainTest(unittest.TestCase):
         df = self.preprocessor.event_df
         self.preprocessor.event_df = df.iloc[:2]
 
-        with self.assertRaises(TrainPercentageTooHigh):
+        with self.assertRaises(exceptions.TrainPercentageTooHigh):
             self.preprocessor.split_train_test(0.9)
 
         # restore the original dataframe
