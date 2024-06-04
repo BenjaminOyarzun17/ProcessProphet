@@ -55,10 +55,10 @@ def dummy():
 
 def test_end_activities():
     preprocessor = preprocessing.Preprocessing()
-    is_xes = False
-    path =  "data/train_day_joined.csv"
+    is_xes = True 
+    #path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
-    #path = "data/Hospital_log.xes"
+    path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
     if is_xes:
@@ -72,13 +72,13 @@ def test_end_activities():
  
 def test_our():
     preprocessor = preprocessing.Preprocessing()
-    #path = "data/BPI_Challenge_2019.xes"
+    path = "data/BPI_Challenge_2019.xes"
     #path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
 
-    preprocessor.handle_import(False,"data/train_day_joined.csv",  "case_id", "activity", "timestamp",time_precision.TimePrecision.S, ',' )
-    #preprocessor.handle_import(True,path, "case:concept:name", "concept:name", "time:timestamp" ,time_precision.TimePrecision.S)
+    #preprocessor.handle_import(False,"data/train_day_joined.csv",  "case_id",  "timestamp","activity",time_precision.TimePrecision.S, ',' )
+    preprocessor.handle_import(True,path, "case:concept:name", "time:timestamp","concept:name" ,time_precision.TimePrecision.NS)
 
     
     train, test = preprocessor.split_train_test(.7)
@@ -508,4 +508,4 @@ if __name__=="__main__":
     #test_process_model_manager_tail_cut()
     #test_heuristic()
     #dummy()
-    app.run(port = SERVER_PORT)
+    #app.run(port = SERVER_PORT)

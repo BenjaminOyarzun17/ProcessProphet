@@ -23,15 +23,15 @@ from enum import Enum, auto
 class Config: 
     def __init__(self):
         self.seq_len: int= 10
-        self.emb_dim: int= 32
-        self.hid_dim:int=32
-        self.mlp_dim:int= 16
+        self.emb_dim: int= 1500
+        self.hid_dim:int=1500
+        self.mlp_dim:int= 1500
         self.batch_size:int = 1024
         self.alpha: float= 0.05
         self.dropout:float= 0.1
         self.time_precision:time_precision.TimePrecision = time_precision.TimePrecision.NS
         self.lr:float = 1e-3
-        self.epochs: int = 1 
+        self.epochs: int = 10 
         self.importance_weight: str = "store_true"
         self.verbose_step: int = 350
         self.cuda: bool =True 

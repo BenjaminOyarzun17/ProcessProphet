@@ -166,6 +166,11 @@ class Preprocessing:
         
         #: sort the rows by group id and timestamp key
         self.event_df =  self.event_df.sort_values(by=[self.case_id_key, self.case_timestamp_key])
+        
+
+        #: removes the duplicates ie the rows where the same activity happened at the same time in the same case id.
+        # since we are dropping all the other columns, these duplicates make no sense.
+        self.event_df = self.event_df.drop_duplicates(subset=[self.case_id_key, self.case_activity_key, self.case_timestamp_key])
 
         #loggers.logger_import_event_log.debug(self.event_df.iloc[:30])
 
