@@ -4,6 +4,7 @@ from server import server_routes
 from server import loggers
 from server import prediction_manager
 from server import  process_model_manager 
+from server import time_precision
 
 
 from flask import Flask
@@ -71,26 +72,21 @@ def test_end_activities():
  
 def test_our():
     preprocessor = preprocessing.Preprocessing()
-    is_xes = False
-    path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
     #path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
 
-    
-    if is_xes:
-        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
-        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
-        print(preprocessor.event_df.head())
-    else:
-        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
-    
+    preprocessor.handle_import(False,"data/train_day_joined.csv",  "case_id", "activity", "timestamp",time_precision.TimePrecision.S, ',' )
+    #preprocessor.handle_import(True,path, "case:concept:name", "concept:name", "time:timestamp" ,time_precision.TimePrecision.S)
+
     
     train, test = preprocessor.split_train_test(.7)
     neural_manager = nn_manager.NNManagement()
+
     # select cuda or not
-    neural_manager.config.cuda = True 
+    neural_manager.config.cuda = True
+
     neural_manager.config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
     neural_manager.config.number_classes = preprocessor.number_classes
     neural_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
@@ -499,7 +495,7 @@ def test_import_model():
 
 
 if __name__=="__main__": 
-    #test_our()
+    test_our()
     #test_import_model()
     #test_random_search(2)
     #test_grid_search()
@@ -510,6 +506,6 @@ if __name__=="__main__":
     #test_process_model_manager_random_cut()
     #test_end_activities()
     #test_process_model_manager_tail_cut()
-    test_heuristic()
+    #test_heuristic()
     #dummy()
-    #app.run(port = SERVER_PORT)
+    app.run(port = SERVER_PORT)
