@@ -2,8 +2,7 @@ import pytermgui as ptg
 from dataclasses import dataclass
 import os
 from loggers import logger_set_params_cli
-import yaml
-
+from process_prophet_modes import ProcessProphetMode
 
 
 with open("CLI/styles.yaml", "r") as styles_file: 
@@ -31,7 +30,7 @@ class PPStateData:
     predictive_logs_path:str|None
     partial_traces_path: str|None
     decoded_dfs_path:str|None
-
+    mode: ProcessProphetMode | None
 
 
 
@@ -41,7 +40,7 @@ class ProcessProphet:
     this class is intended for window management
     """
     def __init__(self):
-        self.state = PPStateData("projects", None, False, False, False, None, None, None,None,None,None) 
+        self.state = PPStateData("projects", None, False, False, False, None, None, None,None,None,None, None) 
         self.manager = ptg.WindowManager() #: manager object for the window
         self.current_window = None #: current window content
 

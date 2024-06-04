@@ -5,6 +5,7 @@ from ProcessProphetTrain import ProcessProphetTrain
 import os
 from loggers import logger_set_params_cli
 from dotenv import load_dotenv
+from process_prophet_modes import ProcessProphetMode
 
 
 
@@ -62,20 +63,22 @@ class ProcessProphetStart:
 
     def notify_project_creation(self, message, success): 
         if success: 
-            container =[  
+            container =ptg.Container( 
                 ptg.Label(f"{message}"),
                 "",
-                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.select_manager())), 
+                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.select_mode())), 
+                "",
                 ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
-            ]
+            )
         else: 
-            container = [ 
+            container = ptg.Container( 
                 ptg.Label(f"{message}!"),
+                "",
                 ptg.Button(f"{self.pp.button_color}back to menu", lambda *_: self.pp.switch_window(self.main_menu()))
-            ]
+            )
 
 
-        window = ptg.Window(*container, box="DOUBLE")
+        window = ptg.Window(container, box="DOUBLE")
         window.center()
         return window
 
@@ -104,6 +107,33 @@ class ProcessProphetStart:
         self.pp.switch_window(self.notify_project_creation(message, success))
 
 
+    def handle_select_mode(self, mode: ProcessProphetMode):
+        self.pp.mode = mode
+        container = [
+            f"Currently in {mode.name} mode", 
+            "", 
+            ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.select_manager())), 
+            "",
+            ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
+        ]
+
+        window = ptg.Window(*container, box="DOUBLE")
+        window.center()
+        return window
+
+
+
+    def select_mode(self): 
+        container = [
+            "Select a mode", 
+            "",
+            ptg.Button("quick", lambda *_: self.pp.switch_window(self.handle_select_mode(ProcessProphetMode.quick))),
+            "",
+            ptg.Button("advanced", lambda *_: self.pp.switch_window(self.handle_select_mode(ProcessProphetMode.advanced)))
+        ]
+        window = ptg.Window(*container, box="DOUBLE")
+        window.center()
+        return window
 
 
     def handle_project_selection(self):
@@ -121,8 +151,7 @@ class ProcessProphetStart:
             container =[  
                 "Project selected successfully", 
                 "",
-                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.select_manager())), 
-                "",
+                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.select_mode())), "",
                 ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
             ]
             window = ptg.Window(*container, box="DOUBLE")
@@ -149,6 +178,7 @@ class ProcessProphetStart:
             "[underline]Select a project", 
             "",
             self.input_select_project, 
+            "",
             ptg.Button(f"{self.pp.button_color}Select", lambda *_: self.pp.switch_window(self.handle_project_selection())), 
             "", 
             ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
@@ -200,6 +230,3 @@ class ProcessProphetStart:
         window = ptg.Window(*container, title = "Process Prophet")
         window.center()
         return window
-
-    def run(self):
-        super().run()
