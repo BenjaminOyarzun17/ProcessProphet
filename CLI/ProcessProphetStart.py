@@ -158,7 +158,7 @@ class ProcessProphetStart:
             "[underline]Existing projects", 
             *projects 
         )
-        window = ptg.Window(ptg.Splitter(left_container,right_container), width = 80)
+        window = ptg.Window(ptg.Splitter(left_container,right_container), width = self.pp.window_width)
         #window = ptg.Window(*c, box="DOUBLE")
         window.center()
         return window
