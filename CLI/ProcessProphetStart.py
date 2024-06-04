@@ -138,34 +138,28 @@ class ProcessProphetStart:
             return window
 
 
-    def load_existing_project(self, mask = []): 
+    def load_existing_project(self): 
 
-        c = [ptg.Label("Pick one of the following: ")]
-        projects = [project  for project in os.listdir(f"{self.pp.state.projects_path}")]
-        if len(mask) ==0:
-            mask = [False]*len(projects)
-            mask[0]= True
+        projects = [f"{project}"  for project in os.listdir(f"{self.pp.state.projects_path}")]
 
-        #checkboxes = [ptg.Label(project)  for project in os.listdir(f"{self.pp.state.projects_path}")]
-        checkboxes = []
-
-        for id, project in enumerate(os.listdir(f"{self.pp.state.projects_path}")): 
-            checkboxes.append(
-                ptg.Label(
-                    f"- {project}"
-                )
-            )
-        c= c+ checkboxes
+    
         self.input_select_project= ptg.InputField(projects[0],  prompt="enter a project name: ")
-        c.append("")
-        c.append(self.input_select_project)
-        c.append("")
-        c.append(ptg.Button(f"{self.pp.button_color}select", lambda *_: self.pp.switch_window(self.handle_project_selection())))
-        c.append("")
-        c.append(ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop()))
        
+        left_container = ptg.Container(
+            "[underline]Select a project", 
+            "",
+            self.input_select_project, 
+            ptg.Button(f"{self.pp.button_color}Select", lambda *_: self.pp.switch_window(self.handle_project_selection())), 
+            "", 
+            ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
+        )
 
-        window = ptg.Window(*c, box="DOUBLE")
+        right_container= ptg.Container(
+            "[underline]Existing projects", 
+            *projects 
+        )
+        window = ptg.Window(ptg.Splitter(left_container,right_container), width = 80)
+        #window = ptg.Window(*c, box="DOUBLE")
         window.center()
         return window
 
@@ -192,7 +186,7 @@ class ProcessProphetStart:
 
     def main_menu(self):
         container =[ 
-            ptg.Label("Welcome to Process Prophet"),
+            ptg.Label("Welcome to [yellow]Process Prophet"),
             "", 
             ptg.Label("Choose one option:"),
             "", 
