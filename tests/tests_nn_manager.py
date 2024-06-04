@@ -1,9 +1,9 @@
 import unittest
 import os
 import sys
+
 # needed for the import of the server module:
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from server.preprocessing import Preprocessing
 from server.nn_manager import NNManagement
 import server.exceptions as exceptions
@@ -11,21 +11,7 @@ import server.exceptions as exceptions
 
 class TestTrainEvaluate(unittest.TestCase):
     """
-    tests: 
-    - check if there are no nan's while training /
-    as output of the predictions
-    - check if train/test are empty, raise an exception.
-    - raise an exception if cols dont exist. 
-
-    specification: 
-    - input: 
-        - traindata, testdata, all 3 col names,no_classes
-
-    - output/sideeffects:
-        - no classes is set
-        - nn is trained and tested
-        - nn model is saved in the class 
-        - acc, recall, f1 are saved in class
+    Test class for training and evaluating the model
     """
     @classmethod
     def setUpClass(cls):
