@@ -94,6 +94,7 @@ class ProcessProphetTrain:
 
             container =[  
                 "training successful", 
+                f"time error: {statistics['time error']}", 
                 f"accuracy: {statistics['acc']}", 
                 f"recall: {statistics['recall']}", 
                 f"f1-score: {statistics['f1']}", 

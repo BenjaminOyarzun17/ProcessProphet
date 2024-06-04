@@ -3,6 +3,7 @@
 #import dateutil
 from server import exceptions
 from server import loggers
+from server import time_precision
 
 import random
 import pandas as pd
@@ -15,6 +16,11 @@ import pm4py
 import datetime as dt
 
 
+
+
+
+
+
 class Preprocessing: 
     """
     This is the preprocessing unit for our server. Provided functionality:
@@ -23,6 +29,10 @@ class Preprocessing:
     - TODO: might be extended
     """
     def __init__(self):
+        self.time_precision = None
+
+
+
         #: contains the event log path
         self.event_log_path = None
         self.event_log= None
@@ -37,23 +47,30 @@ class Preprocessing:
         self.exponent = None
         self.unencoded_df = None
         # TODO: invoke import_event_log? (decide)
-
-
-    def handle_import(self,is_xes, path, case_id, timestamp, activity, sep = ","):
-        if is_xes: 
-            self.import_event_log_xes(path, case_id, activity, timestamp)
-        else: 
-            self.import_event_log_csv(path, case_id, activity, timestamp, sep)
-
+    
 
 
     def xes_helper(self, path): 
+        """just a testing function"""
         log =pm4py.read.read_xes(path)
         dataframe = pm4py.convert_to_dataframe(log)
         print("done loading")
         print(dataframe.columns)
 
-    def import_event_log_xes(self, path, case_id, activity_key, timestamp_key): 
+
+    def handle_import(self,is_xes, path, case_id, timestamp, activity,time_precision = time_precision.TimePrecision.NS,  sep = ","):
+        self.time_precision = time_precision
+
+        self.case_id_key =  case_id
+        self.case_activity_key =activity 
+        self.case_timestamp_key =timestamp 
+        if is_xes: 
+            self.import_event_log_xes(path)
+        else: 
+            self.import_event_log_csv(path, sep)
+
+
+    def import_event_log_xes(self, path): 
         """
         :param path: path where the xes file is found
         :param case_id: column name for the case id column.
@@ -67,9 +84,10 @@ class Preprocessing:
         """
         self.event_df = pm4py.read.read_xes(path)
         self.event_df = pm4py.convert_to_dataframe(self.event_df)
-        self.import_event_log(case_id, activity_key, timestamp_key)
-    
-    def import_event_log_csv(self, path, case_id, activity_key, timestamp_key, sep): 
+        self.import_event_log()
+
+
+    def import_event_log_csv(self, path, sep): 
         """
         this is an adapter for format_dataframe such that 
         the event data can be properly used by the rnn model. 
@@ -81,12 +99,16 @@ class Preprocessing:
         :param sep: separator
         """
         self.event_df= pd.read_csv(path, sep=sep)
-        self.import_event_log(case_id, activity_key, timestamp_key)
+        self.import_event_log()
 
-    def import_event_log_dataframe(self,df,  case_id, activity_key, timestamp_key):
+
+    def import_event_log_dataframe(self,df, case_id, activity_key, timestamp_key):
         """
         this is an adapter for format_dataframe such that 
         the event data can be properly used by the rnn model. 
+
+        this is for the case that the data has already been imported, ie there already exists a 
+        memory instance of the event log. 
 
         :param path: path to the event log
         :param case_id: case id column name
@@ -94,10 +116,13 @@ class Preprocessing:
         :param timestamp_key: timestamp column name
         """
         self.event_df = df
-        self.import_event_log(case_id, activity_key, timestamp_key)
+        self.case_id_key =  case_id
+        self.case_activity_key =activity_key
+        self.case_timestamp_key =timestamp_key
+        self.import_event_log()
 
 
-    def import_event_log(self, case_id, activity_key, timestamp_key):
+    def import_event_log(self):
         """
         helper function for import_event_log_csv and import_event_log_xes. 
         - genereates an EventLog object so that other pm4py functions can use it
@@ -107,20 +132,18 @@ class Preprocessing:
         effects: 
         - rows sorted by case id and timestamp
         """
-        self.case_id_key =  case_id
-        self.case_activity_key = activity_key 
-        self.case_timestamp_key = timestamp_key 
         #: returns a formated dataframe that can work with other pm4py functions
         self.event_df = pm4py.format_dataframe(self.event_df, 
                                            case_id=self.case_id_key,
                                              activity_key=self.case_activity_key,
                                              timestamp_key=self.case_timestamp_key) #returns formated df.
 
-
-
         #: convert_to_event_log requires string format for case_id and marker
         self.event_df[self.case_id_key] = self.event_df[self.case_id_key].astype("string")
         self.event_df[self.case_activity_key] = self.event_df[self.case_activity_key].astype("string")
+        
+        
+        
         self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].astype("datetime64[ns, UTC]")
 
 
@@ -142,9 +165,9 @@ class Preprocessing:
 
         
         #: sort the rows by group id and timestamp key
-        self.event_df =  self.event_df.sort_values(by=[case_id, timestamp_key])
+        self.event_df =  self.event_df.sort_values(by=[self.case_id_key, self.case_timestamp_key])
 
-        loggers.logger_import_event_log.debug(self.event_df.iloc[:30])
+        #loggers.logger_import_event_log.debug(self.event_df.iloc[:30])
 
         self.encode_df_columns()
 
@@ -187,9 +210,11 @@ class Preprocessing:
         # use an Excel format, but we decide to use integers for simplicity.
         self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key].astype(int)
 
-        #: generates an integer in posix standard. 
-        self.exponent = self.event_df[self.case_timestamp_key].astype(str).apply(lambda x: len(x)).mean()
-        self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key] / (10 ** self.exponent)
+
+        if self.time_precision == time_precision.TimePrecision.NS: 
+            #: nanoseconds can cause numerical instability. therefore we make the number smaller by shifting the comma.
+            self.exponent = self.event_df[self.case_timestamp_key].astype(str).apply(lambda x: len(x)).mean()
+            self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key] / (10 ** self.exponent)
 
 
         # #: transform the case id and markers back into float

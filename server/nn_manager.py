@@ -6,6 +6,7 @@ import pandas as pd
 from server import RMTPP_torch
 from server import loggers
 from server import exceptions
+from server import time_precision
 
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -16,31 +17,36 @@ from collections import Counter
 import random
 from sklearn.preprocessing import LabelEncoder
 
+from enum import Enum, auto
+
+
 class Config: 
     def __init__(self):
-        self.seq_len= 10
-        self.emb_dim= 32
-        self.hid_dim=32
-        self.mlp_dim= 16
-        self.alpha= 0.05
-        self.dropout= 0.1
-        self.batch_size= 1024
-        self.lr= 1e-3
-        self.epochs= 1 
-        self.importance_weight = "store_true"
-        self.verbose_step = 350
-        self.cuda =True 
-        self.absolute_frequency_distribution = Counter()
-        self.case_id_le = None
-        self.activity_le = None
-        self.exponent = None
-        self.number_classes = 0
-        self.train_time_limit = None
-        self.case_activity_key=""
-        self.case_timestamp_key=""
-        self.case_id_key = ""
+        self.seq_len: int= 10
+        self.emb_dim: int= 32
+        self.hid_dim:int=32
+        self.mlp_dim:int= 16
+        self.batch_size:int = 1024
+        self.alpha: float= 0.05
+        self.dropout:float= 0.1
+        self.time_precision:time_precision.TimePrecision = time_precision.TimePrecision.NS
+        self.lr:float = 1e-3
+        self.epochs: int = 1 
+        self.importance_weight: str = "store_true"
+        self.verbose_step: int = 350
+        self.cuda: bool =True 
+        self.absolute_frequency_distribution:Counter = Counter()
+        self.case_id_le:LabelEncoder = None
+        self.activity_le:LabelEncoder = None
+        self.exponent:int = None
+        self.number_classes:int = 0
+        self.train_time_limit = None #TODO: it makes more sense to regulate this in the frontend; lowers complexity of backend
+        self.case_activity_key: str=""
+        self.case_timestamp_key:str =""
+        self.case_id_key:str = ""
     def asdict(self):
         return {
+            "time_precision": self.time_precision.name,
             "seq_len": self.seq_len,
             "emb_dim": self.emb_dim,
             "hid_dim": self.hid_dim,
@@ -63,6 +69,7 @@ class Config:
             "case_activity_key": self.case_activity_key
         }
     def load_config(self, dic):
+        self.time_precision= TimePrecision[dic["time_precision"]] 
         self.seq_len=int(dic["seq_len"])
         self.emb_dim=int(dic["emb_dim"])
         self.hid_dim=int(dic["hid_dim"])
@@ -74,7 +81,7 @@ class Config:
         self.epochs=int(dic["epochs"])
         self.importance_weight =dic["importance_weight"] #string
         self.verbose_step = int(dic["verbose_step"])
-        self.cuda = True if dic["cuda"]=="True" else False
+        self.cuda = True if dic["cuda"]=="True" else False  
         self.absolute_frequency_distribution = Counter(["absolute_frequency_distribution"])
         self.case_id_le = self.dict_to_encoder(dic["case_id_le"])
         self.activity_le = self.dict_to_encoder(dic["activity_le"])
@@ -84,10 +91,10 @@ class Config:
         self.case_id_key = dic["case_id_key"]
         self.case_timestamp_key = dic["case_timestamp_key"]
 
-    def encoder_to_dict(self, encoder):
+    def encoder_to_dict(self, encoder:LabelEncoder)->dict:
         return {label:index for index, label in enumerate(encoder.classes_)} 
 
-    def dict_to_encoder(self, dic):
+    def dict_to_encoder(self, dic:dict)->LabelEncoder:
         encoder = LabelEncoder()
         encoder.classes_ = np.array(list(dic.keys()))
         return encoder
@@ -100,7 +107,7 @@ class NNManagement:
     - set params. 
     - TODO: might be extended 
     """
-    def __init__(self, config = None):
+    def __init__(self, config:Config|None = None):
         self.config = Config() if config == None else config
         self.f1 = None
         self.recall= None
@@ -111,6 +118,10 @@ class NNManagement:
 
     def set_training_parameters(self,  params):
         """
+
+        TODO: this mnethod is not being used anywhere. delete it if necessary.
+
+
         Used for setting the training parameters. Note that not all params must be input.
         :param params: dictionary containing the parameters, the following keys are possible:
 
@@ -118,7 +129,7 @@ class NNManagement:
         determines a window size to save the training sequences into in a tensor. 
         * emb_dim: embedding dimension 
         * hid_dim: --hid_dim dimension for the hidden dimension 
-        * mlp_dim: --mlp_dim dimension for the mlp (LSTM) TODO: revise
+        * mlp_dim: --mlp_dim dimension for the mlp (LSTM)
         * alpha: --alpha=0.05 
         * dropout: dropout parameter (RNN)
         * batch_size: batch size
@@ -186,6 +197,7 @@ class NNManagement:
 
         #: dumps generates a string
         return {
+            "time error": self.time_error,
             "acc":self.acc, 
             "recall":self.recall,
             "f1":self.f1
