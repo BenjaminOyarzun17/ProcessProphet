@@ -34,6 +34,11 @@ def test():
     return {
         "state": "error"
     }
+
+
+
+
+
 @routes.route('/generate_predictive_process_model', methods = ["GET"])
 def generate_predictive_process_model():
     
@@ -523,6 +528,147 @@ def load_config_from_preprocessor(config : nn_manager.Config, preprocessor : pre
     return config
 
 
+
+
+@routes.route('/replace_with_median', methods = ["POST"])
+def replace_with_median():
+    """
+    replaces NaN's in the activity column with median
+    the following data is expected in the JSON body of the request: 
+    :param path_to_log: path to the log used for training. must not be encoded
+    :param case_id: name of case id column
+    :param activity_key: name of activity column
+    :param timestamp_key: name of timestamp column
+    :param save_path: path where the processed event log is exported 
+    """
+    if request.method == 'POST':
+        request_config = request.get_json()
+        is_xes = request_config["is_xes"] 
+        path_to_log = str(request_config["path_to_log"])
+        case_id= str(request_config["case_id"])
+        activity= str(request_config["activity_key"])
+        timestamp= str(request_config["timestamp_key"])
+        save_path= str(request_config["save_path"])
+        if not is_xes: 
+            sep= str(request_config["sep"])
+
+
+        preprocessor = preprocessing.Preprocessing()
+        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
+        success= preprocessor.replace_activity_nan_with_median()
+        if success:
+            return {
+                "status": "successfully finished", 
+                "save_path":save_path
+                }, 200
+        return {"status": "something went wrong..."}, 300
+
+
+
+
+
+
+@routes.route('/replace_activity_nan', methods = ["POST"])
+def replace_activity_nan():
+    """
+    replaces NaN's in the activity column with median
+    the following data is expected in the JSON body of the request: 
+    :param path_to_log: path to the log used for training. must not be encoded
+    :param case_id: name of case id column
+    :param activity_key: name of activity column
+    :param timestamp_key: name of timestamp column
+    :param save_path: path where the processed event log is exported 
+    """
+    if request.method == 'POST':
+        request_config = request.get_json()
+        is_xes = request_config["is_xes"] 
+        path_to_log = str(request_config["path_to_log"])
+        case_id= str(request_config["case_id"])
+        activity= str(request_config["activity_key"])
+        timestamp= str(request_config["timestamp_key"])
+        save_path= str(request_config["save_path"])
+        if not is_xes: 
+            sep= str(request_config["sep"])
+
+
+        preprocessor = preprocessing.Preprocessing()
+        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
+        success= preprocessor.replace_activity_nan_with_median()
+        if success:
+            return {
+                "status": "successfully created", 
+                "path":save_path
+                }, 200
+        return {"status": "operation not necessary, the log already has a unique start/end activity"}, 200
+
+
+
+
+
+
+@routes.route('/add_unique_start_end', methods = ["POST"])
+def add_unique_start_end():
+    """
+    adds a unique start/end activity to the log
+    the following data is expected in the JSON body of the request: 
+    :param path_to_log: path to the log used for training. must not be encoded
+    :param case_id: name of case id column
+    :param activity_key: name of activity column
+    :param timestamp_key: name of timestamp column
+    :param save_path: path where the processed event log is exported 
+    """
+    if request.method == 'POST':
+        request_config = request.get_json()
+        is_xes = request_config["is_xes"] 
+        path_to_log = str(request_config["path_to_log"])
+        case_id= str(request_config["case_id"])
+        activity= str(request_config["activity_key"])
+        timestamp= str(request_config["timestamp_key"])
+        save_path= str(request_config["save_path"])
+        if not is_xes: 
+            sep= str(request_config["sep"])
+
+
+        preprocessor = preprocessing.Preprocessing()
+        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
+        success= preprocessor.add_unique_start_end_activity()
+        if success:
+            return {
+                "status": "successfully created", 
+                "save_path":save_path
+                }, 200
+        return {"status": "operation not necessary, the log already has a unique start/end activity"}, 200
+
+@routes.route('/remove_duplicates', methods = ["POST"])
+def remove_duplicates():
+    """
+    removes the duplicates ie the rows where the same activity happened at the same time in the same case id.
+
+    the following data is expected in the JSON body of the request: 
+    :param path_to_log: path to the log used for training. must not be encoded
+    :param case_id: name of case id column
+    :param activity_key: name of activity column
+    :param timestamp_key: name of timestamp column
+    :param save_path: path where the processed event log is exported 
+    """
+    if request.method == 'POST':
+        request_config = request.get_json()
+        is_xes = request_config["is_xes"] 
+        path_to_log = str(request_config["path_to_log"])
+        case_id= str(request_config["case_id"])
+        activity= str(request_config["activity_key"])
+        timestamp= str(request_config["timestamp_key"])
+        save_path= str(request_config["save_path"])
+        if not is_xes: 
+            sep= str(request_config["sep"])
+
+
+        preprocessor = preprocessing.Preprocessing()
+        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
+        success= preprocessor.remove_duplicate_rows()
+        if success:
+            return {"save_path":save_path}, 200
+        return {"error": "something went wrong..."}, 300
 
 
 

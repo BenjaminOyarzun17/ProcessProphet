@@ -495,7 +495,7 @@ def test_import_model():
 
 
 if __name__=="__main__": 
-    test_our()
+    #test_our()
     #test_import_model()
     #test_random_search(2)
     #test_grid_search()
@@ -508,4 +508,4 @@ if __name__=="__main__":
     #test_process_model_manager_tail_cut()
     #test_heuristic()
     #dummy()
-    #app.run(port = SERVER_PORT)
+    app.run(port = SERVER_PORT)

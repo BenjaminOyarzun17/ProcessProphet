@@ -100,6 +100,7 @@ class ProcessProphetStart:
             self.pp.state.predictive_logs_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/predictive_logs"
             self.pp.state.partial_traces_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/partial_traces"
             self.pp.state.decoded_dfs_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/decoded_dfs"
+            self.pp.state.multiple_predictions_path= f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/decoded_dfs"
             for subdirectory in subdirectories: 
                 os.mkdir(f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/{subdirectory}")
 
@@ -197,8 +198,8 @@ class ProcessProphetStart:
 
         self.project_name_input =  ptg.InputField("first Prophet", prompt="Project name: ")
         container =[ 
-            ptg.Label(f"{self.pp.button_color}Create new project"),
-            ptg.Label(f"{self.pp.button_color}current path: {os.getcwd()}/{self.pp.state.projects_path}"),
+            ptg.Label(f"Create new project"),
+            ptg.Label(f"current path: {os.getcwd()}/{self.pp.state.projects_path}"),
             "", 
             self.project_name_input, 
             "", 
