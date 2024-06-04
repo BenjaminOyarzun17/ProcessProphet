@@ -29,6 +29,7 @@ class PPStateData:
     petri_nets_path: str|None
     predictive_logs_path:str|None
     partial_traces_path: str|None
+    multiple_predictions_path: str|None
     decoded_dfs_path:str|None
     mode: ProcessProphetMode | None
 
@@ -40,7 +41,7 @@ class ProcessProphet:
     this class is intended for window management
     """
     def __init__(self):
-        self.state = PPStateData("projects", None, False, False, False, None, None, None,None,None,None, None) 
+        self.state = PPStateData("projects", None, False, False, False, None, None, None,None,None,None, None, None) 
         self.manager = ptg.WindowManager() #: manager object for the window
         self.current_window = None #: current window content
 

@@ -58,19 +58,19 @@ class Preprocessing:
         print(dataframe.columns)
 
 
-    def handle_import(self,is_xes, path, case_id, timestamp, activity,time_precision = time_precision.TimePrecision.NS,  sep = ","):
+    def handle_import(self,is_xes, path, case_id, timestamp, activity,time_precision = time_precision.TimePrecision.NS,  sep = ",", formatting = True):
         self.time_precision = time_precision
 
         self.case_id_key =  case_id
         self.case_activity_key =activity 
         self.case_timestamp_key =timestamp 
         if is_xes: 
-            self.import_event_log_xes(path)
+            self.import_event_log_xes(path, formatting)
         else: 
-            self.import_event_log_csv(path, sep)
+            self.import_event_log_csv(path, sep, formatting)
 
 
-    def import_event_log_xes(self, path): 
+    def import_event_log_xes(self, path, formatting = True): 
         """
         :param path: path where the xes file is found
         :param case_id: column name for the case id column.
@@ -84,10 +84,11 @@ class Preprocessing:
         """
         self.event_df = pm4py.read.read_xes(path)
         self.event_df = pm4py.convert_to_dataframe(self.event_df)
-        self.import_event_log()
+        if formatting: 
+            self.import_event_log()
 
 
-    def import_event_log_csv(self, path, sep): 
+    def import_event_log_csv(self, path, sep, formatting = True): 
         """
         this is an adapter for format_dataframe such that 
         the event data can be properly used by the rnn model. 
@@ -99,10 +100,11 @@ class Preprocessing:
         :param sep: separator
         """
         self.event_df= pd.read_csv(path, sep=sep)
-        self.import_event_log()
+        if formatting: 
+            self.import_event_log()
 
 
-    def import_event_log_dataframe(self,df, case_id, activity_key, timestamp_key):
+    def import_event_log_dataframe(self,df, case_id, activity_key, timestamp_key, formatting = True):
         """
         this is an adapter for format_dataframe such that 
         the event data can be properly used by the rnn model. 
@@ -119,7 +121,8 @@ class Preprocessing:
         self.case_id_key =  case_id
         self.case_activity_key =activity_key
         self.case_timestamp_key =timestamp_key
-        self.import_event_log()
+        if formatting: 
+            self.import_event_log()
 
 
     def import_event_log(self):
@@ -152,8 +155,6 @@ class Preprocessing:
         self.event_log = pm4py.convert_to_event_log(self.event_df, self.case_id_key) #this returns an event log
 
 
-        #: add unique start/end _activity
-        self.add_unique_start_end_activity()
 
         #: filter out all the other generated columns
         self.event_df= self.event_df[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
@@ -168,9 +169,6 @@ class Preprocessing:
         self.event_df =  self.event_df.sort_values(by=[self.case_id_key, self.case_timestamp_key])
         
 
-        #: removes the duplicates ie the rows where the same activity happened at the same time in the same case id.
-        # since we are dropping all the other columns, these duplicates make no sense.
-        self.event_df = self.event_df.drop_duplicates(subset=[self.case_id_key, self.case_activity_key, self.case_timestamp_key])
 
         #loggers.logger_import_event_log.debug(self.event_df.iloc[:30])
 
@@ -277,6 +275,34 @@ class Preprocessing:
             end_activity_lookup[activity]= True
         return end_activity_lookup 
         
+            
+    def get_sample_case(self):
+        """
+        returns a sample of a case
+        """
+        sampled_dataframe = pm4py.sample_cases(self.event_log, 1, case_id_key=self.case_id_key)
+        return sampled_dataframe
+
+
+
+    def replace_activity_nan_with_median(self): 
+        """
+        replaces NaN values in activity column with median
+        """
+        
+        median =  self.event_df[self.case_activity_key].median()
+        self.event_df[self.case_activity_key].fillna(median, inplace = True)
+
+        return True
+
+
+    def remove_duplicate_rows(self): 
+        #: removes the duplicates ie the rows where the same activity happened at the same time in the same case id.
+        # since we are dropping all the other columns, these duplicates make no sense.
+        self.event_df[self.case_activity_key] = self.event_df.drop_duplicates(subset=[self.case_id_key, self.case_activity_key, self.case_timestamp_key])
+        return True
+
+    
     def add_unique_start_end_activity(self):
         """
         if there is no unique start/ end activity, add an artificial start and end activity
@@ -289,24 +315,5 @@ class Preprocessing:
                 timestamp_key=self.case_timestamp_key
             )
             self.event_df =pm4py.convert_to_dataframe(processed_log) 
-            
-    def get_sample_case(self):
-        """
-        returns a sample of a case
-        """
-        sampled_dataframe = pm4py.sample_cases(self.event_log, 1, case_id_key=self.case_id_key)
-        return sampled_dataframe
-
-
-
-    def prepare_train_data(self):
-        pass
-    
-    def set_training_parameters(self):
-        pass
-
-    def check_path(self): 
-        pass
-
-
-
+            return True
+        return False
