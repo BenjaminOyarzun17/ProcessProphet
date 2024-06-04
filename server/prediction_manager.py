@@ -40,9 +40,6 @@ class PredictionManager:
         self.end_activities= {}
 
 
-
-
-
     def get_dummy_process(self, df, case_id_column):
         """
         just used for testing; create a dummy input df.
@@ -92,20 +89,16 @@ class PredictionManager:
         """
         make one prediction given a partial process. 
         """
-
         #: sliding window
         step1= RMTPP_torch.ATMDataset(self.config,self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key)
         #: just create one batch
         step2 = DataLoader(step1, batch_size=len(step1.time_seqs), shuffle=False, collate_fn=RMTPP_torch.ATMDataset.to_features)
 
-        #: TODO: refactor these lines here. no need for a for loop
-        pred_times, pred_events = [], []
-        for i, batch in enumerate(step2):   
-            pred_time, pred_event = self.model.predict(batch, pm_active = True)
-            pred_times.append(pred_time)
-            pred_events.append(pred_event)
-        time_pred = pred_times[-1][-1][-1]
-        event_pred = pred_events[-1][-1] 
+        #: get the batch
+        batch = next(iter(step2))
+        pred_time, pred_event = self.model.predict(batch, pm_active = True)
+        time_pred = pred_time[-1][-1]
+        event_pred = pred_event[-1]
         
         return time_pred,  event_pred
 
