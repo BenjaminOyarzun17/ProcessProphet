@@ -126,7 +126,7 @@ class ProcessProphetTrain:
         self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
         self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
 
-        container = [
+        left_container = ptg.Container( 
             ptg.Label(f"set parameters for training"),
             SERVER_NAME,
             self.cuda , 
@@ -143,11 +143,23 @@ class ProcessProphetTrain:
             self.case_id_key, 
             self.case_activity_key, 
             self.case_timestamp_key,
+            "",
             ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_training())),
+            "",
             ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
-        ]
+        )
+        
+        logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
+        logs = logs[:min(len(logs),4 )] #: to not overflow the terminal
 
-        window = ptg.Window(*container)
+        right_container = ptg.Container(
+            f"[underline]First {len(logs)} logs in project:", *logs
+        ).center()
+
+
+
+        window = ptg.Window(ptg.Splitter(left_container, right_container), width = 80)
+        #window = ptg.Window(*container)
         window.center()
         return window
 
@@ -291,7 +303,7 @@ class ProcessProphetTrain:
         self.emb_dim_lower= ptg.InputField("100", prompt="emb dim. lower bound: ")
         self.emb_dim_upper= ptg.InputField("200", prompt="emb dim. upper bound: ")
 
-        container = [
+        container = ptg.Container( 
             ptg.Label(f"set parameters for grid search"),
             self.cuda , 
             self.model_name ,
@@ -310,12 +322,19 @@ class ProcessProphetTrain:
             self.mlp_dim_upper, 
             self.emb_dim_lower, 
             self.emb_dim_upper, 
-            self.iterations,
-            ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_random_search())),
+            self.iterations,"",
+            ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_random_search())),"",
             ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
-        ]
+        )
+        
+        logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
+        logs = logs[:min(len(logs),4 )] #: to not overflow the terminal
 
-        window = ptg.Window(*container)
+        right_container = ptg.Container(
+            f"[underline]First {len(logs)} logs in project:", *logs
+        ).center()
+        window = ptg.Window(ptg.Splitter(container, right_container), width = 80)
+        #window = ptg.Window(*container)
         window.center()
         return window
 
@@ -348,7 +367,7 @@ class ProcessProphetTrain:
         self.emb_dim_upper= ptg.InputField("200", prompt="emb dim. upper bound: ")
         self.emb_dim_step= ptg.InputField("100", prompt="emb dim. step: ")
 
-        container = [
+        container = ptg.Container( 
             ptg.Label(f"set parameters for grid search"),
             self.cuda , 
             self.model_name ,
@@ -372,9 +391,17 @@ class ProcessProphetTrain:
             self.emb_dim_step,
             ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_grid_search())),
             ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
-        ]
+        ).center()
 
-        window = ptg.Window(*container)
+        
+        logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
+        logs = logs[:min(len(logs),4 )] #: to not overflow the terminal
+
+        right_container = ptg.Container(
+            f"[underline]First {len(logs)} logs in project:", *logs
+        ).center()
+        window = ptg.Window(ptg.Splitter(container, right_container), width = 80)
+        #window = ptg.Window(*container)
         window.center()
         return window
 
