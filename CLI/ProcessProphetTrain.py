@@ -158,7 +158,7 @@ class ProcessProphetTrain:
 
 
 
-        window = ptg.Window(ptg.Splitter(left_container, right_container), width = 80)
+        window = ptg.Window(ptg.Splitter(left_container, right_container), width = self.pp.window_width)
         #window = ptg.Window(*container)
         window.center()
         return window
@@ -333,7 +333,7 @@ class ProcessProphetTrain:
         right_container = ptg.Container(
             f"[underline]First {len(logs)} logs in project:", *logs
         ).center()
-        window = ptg.Window(ptg.Splitter(container, right_container), width = 80)
+        window = ptg.Window(ptg.Splitter(container, right_container), width = self.pp.window_width)
         #window = ptg.Window(*container)
         window.center()
         return window
@@ -400,7 +400,7 @@ class ProcessProphetTrain:
         right_container = ptg.Container(
             f"[underline]First {len(logs)} logs in project:", *logs
         ).center()
-        window = ptg.Window(ptg.Splitter(container, right_container), width = 80)
+        window = ptg.Window(ptg.Splitter(container, right_container), width = self.pp.window_width)
         #window = ptg.Window(*container)
         window.center()
         return window

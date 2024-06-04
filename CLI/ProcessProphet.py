@@ -46,7 +46,7 @@ class ProcessProphet:
         self.current_window = None #: current window content
 
         self.button_color = "[black]"
-        self.window_width = 100
+        self.window_width = int(os.get_terminal_size(0)[0]*0.8)
         self.window_height = 50
 
     def set_current_window(self, window): 
