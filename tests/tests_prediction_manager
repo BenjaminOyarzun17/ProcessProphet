@@ -1,0 +1,6 @@
+import os
+import sys
+
+# needed for the import of the server module:
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from server.prediction_manager import PredictionManager
