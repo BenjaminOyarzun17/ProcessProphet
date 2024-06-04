@@ -7,6 +7,7 @@ from loggers import logger_set_params_cli
 import ProcessProphetStart
 from dotenv import load_dotenv
 import os
+from process_prophet_modes import ProcessProphetMode
 
 
 
@@ -279,147 +280,286 @@ class ProcessProphetTrain:
         return window
 
     def set_random_search_params(self):
-        self.cuda=  ptg.InputField("True", prompt="use cuda: ")
-        self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
-        self.seq_len=  ptg.InputField("10", prompt="sequence length: ")
-        self.lr=  ptg.InputField("1e-3", prompt="learning rate: ")
-        self.batch_size=  ptg.InputField("1024", prompt="batch size: ")
-        self.epochs= ptg.InputField("10", prompt="number of epochs: ")
-        self.split= ptg.InputField("0.9", prompt="split fraction: ")
-        self.log_name= ptg.InputField("Hospital_log.xes", prompt="log name: ")
-        self.iterations= ptg.InputField("2", prompt="iterations: ")
+
+        if self.pp.mode == ProcessProphetMode.advanced:
+            self.cuda=  ptg.InputField("True", prompt="use cuda: ")
+            self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
+            self.seq_len=  ptg.InputField("10", prompt="sequence length: ")
+            self.lr=  ptg.InputField("1e-3", prompt="learning rate: ")
+            self.batch_size=  ptg.InputField("1024", prompt="batch size: ")
+            self.epochs= ptg.InputField("10", prompt="number of epochs: ")
+            self.split= ptg.InputField("0.9", prompt="split fraction: ")
+            self.log_name= ptg.InputField("Hospital_log.xes", prompt="log name: ")
+            self.iterations= ptg.InputField("2", prompt="iterations: ")
 
 
-        self.case_id_key= ptg.InputField("case:concept:name", prompt="case id key: ")
-        self.case_activity_key= ptg.InputField("concept:name", prompt="activity key: ")
-        self.case_timestamp_key= ptg.InputField("time:timestamp", prompt="timestamp key: ")
+            self.case_id_key= ptg.InputField("case:concept:name", prompt="case id key: ")
+            self.case_activity_key= ptg.InputField("concept:name", prompt="activity key: ")
+            self.case_timestamp_key= ptg.InputField("time:timestamp", prompt="timestamp key: ")
 
-        self.hidden_dim_lower= ptg.InputField("100", prompt="hidden dim. lower bound: ")
-        self.hidden_dim_upper= ptg.InputField("200", prompt="hidden dim. upper bound: ")
-        
-        self.mlp_dim_lower= ptg.InputField("100", prompt="mlp dim. lower bound: ")
-        self.mlp_dim_upper= ptg.InputField("200", prompt="mlp dim. upper bound: ")
-
-
-        self.emb_dim_lower= ptg.InputField("100", prompt="emb dim. lower bound: ")
-        self.emb_dim_upper= ptg.InputField("200", prompt="emb dim. upper bound: ")
-
-        container = ptg.Container( 
-            ptg.Label(f"set parameters for grid search"),
-            self.cuda , 
-            self.model_name ,
-            self.seq_len ,
-            self.lr ,
-            self.batch_size ,
-            self.epochs ,
-            self.split, 
-            self.log_name,
-            self.case_id_key, 
-            self.case_activity_key, 
-            self.case_timestamp_key,
-            self.hidden_dim_lower, 
-            self.hidden_dim_upper, 
-            self.mlp_dim_lower, 
-            self.mlp_dim_upper, 
-            self.emb_dim_lower, 
-            self.emb_dim_upper, 
-            self.iterations,"",
-            ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_random_search())),"",
-            ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
-        )
-        
-        logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
-        logs = logs[:min(len(logs),4 )] #: to not overflow the terminal
-
-        right_container = ptg.Container(
-            f"[underline]First {len(logs)} logs in project:", *logs
-        ).center()
-        window = ptg.Window(ptg.Splitter(container, right_container), width = self.pp.window_width)
-        #window = ptg.Window(*container)
-        window.center()
-        return window
+            self.hidden_dim_lower= ptg.InputField("100", prompt="hidden dim. lower bound: ")
+            self.hidden_dim_upper= ptg.InputField("200", prompt="hidden dim. upper bound: ")
+            
+            self.mlp_dim_lower= ptg.InputField("100", prompt="mlp dim. lower bound: ")
+            self.mlp_dim_upper= ptg.InputField("200", prompt="mlp dim. upper bound: ")
 
 
+            self.emb_dim_lower= ptg.InputField("100", prompt="emb dim. lower bound: ")
+            self.emb_dim_upper= ptg.InputField("200", prompt="emb dim. upper bound: ")
+
+            container = ptg.Container( 
+                ptg.Label(f"set parameters for grid search"),
+                self.cuda , 
+                self.model_name ,
+                self.seq_len ,
+                self.lr ,
+                self.batch_size ,
+                self.epochs ,
+                self.split, 
+                self.log_name,
+                self.case_id_key, 
+                self.case_activity_key, 
+                self.case_timestamp_key,
+                self.hidden_dim_lower, 
+                self.hidden_dim_upper, 
+                self.mlp_dim_lower, 
+                self.mlp_dim_upper, 
+                self.emb_dim_lower, 
+                self.emb_dim_upper, 
+                self.iterations,"",
+                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_random_search())),"",
+                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
+            )
+            
+            logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
+            logs = logs[:min(len(logs),4 )] #: to not overflow the terminal
+
+            right_container = ptg.Container(
+                f"[underline]First {len(logs)} logs in project:", *logs
+            ).center()
+            window = ptg.Window(ptg.Splitter(container, right_container), width = self.pp.window_width)
+            #window = ptg.Window(*container)
+            window.center()
+            return window
+        elif self.pp.mode == ProcessProphetMode.quick:
+            self.cuda=  ptg.InputField("False", prompt="use cuda: ") #: no cuda assumed
+
+            self.lr=  ptg.InputField("1e-3", prompt="learning rate: ")  #: set to 1e-3 by default, this is a usual value
+
+            self.epochs= ptg.InputField("30", prompt="number of epochs: ") #: set to 30 by default
+            self.split= ptg.InputField("0.9", prompt="split fraction: ") #: set to 0.9 by default
+            
+
+
+            self.batch_size=  ptg.InputField("1024", prompt="batch size: ")
+            self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
+            self.seq_len=  ptg.InputField("10", prompt="sequence length: ") 
+            self.log_name= ptg.InputField("Hospital_log.xes", prompt="log name: ")
+            self.iterations= ptg.InputField("2", prompt="iterations: ")
+
+
+            self.case_id_key= ptg.InputField("case:concept:name", prompt="case id key: ")
+            self.case_activity_key= ptg.InputField("concept:name", prompt="activity key: ")
+            self.case_timestamp_key= ptg.InputField("time:timestamp", prompt="timestamp key: ")
+
+            self.hidden_dim_lower= ptg.InputField("100", prompt="hidden dim. lower bound: ")
+            self.hidden_dim_upper= ptg.InputField("200", prompt="hidden dim. upper bound: ")
+            
+            self.mlp_dim_lower= ptg.InputField("100", prompt="mlp dim. lower bound: ")
+            self.mlp_dim_upper= ptg.InputField("200", prompt="mlp dim. upper bound: ")
+
+
+            self.emb_dim_lower= ptg.InputField("100", prompt="emb dim. lower bound: ")
+            self.emb_dim_upper= ptg.InputField("200", prompt="emb dim. upper bound: ")
+
+            container = ptg.Container( 
+                ptg.Label(f"set parameters for grid search"),
+                self.model_name ,
+                self.seq_len ,
+                self.batch_size ,
+                self.log_name,
+                self.case_id_key, 
+                self.case_activity_key, 
+                self.case_timestamp_key,
+                self.hidden_dim_lower, 
+                self.hidden_dim_upper, 
+                self.mlp_dim_lower, 
+                self.mlp_dim_upper, 
+                self.emb_dim_lower, 
+                self.emb_dim_upper, 
+                self.iterations,"",
+                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_random_search())),"",
+                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
+            )
+            
+            logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
+            logs = logs[:min(len(logs),4 )] #: to not overflow the terminal
+
+            right_container = ptg.Container(
+                f"[underline]First {len(logs)} logs in project:", *logs
+            ).center()
+            window = ptg.Window(ptg.Splitter(container, right_container), width = self.pp.window_width)
+            #window = ptg.Window(*container)
+            window.center()
+            return window
 
 
     def set_grid_search_params(self):
-        self.cuda=  ptg.InputField("True", prompt="use cuda: ")
-        self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
-        self.seq_len=  ptg.InputField("10", prompt="sequence length: ")
-        self.lr=  ptg.InputField("1e-3", prompt="learning rate: ")
-        self.batch_size=  ptg.InputField("1024", prompt="batch size: ")
-        self.epochs= ptg.InputField("10", prompt="number of epochs: ")
-        self.split= ptg.InputField("0.9", prompt="split fraction: ")
-        self.log_name= ptg.InputField("Hospital_log.xes", prompt="log name: ")
-        self.case_id_key= ptg.InputField("case:concept:name", prompt="case id key: ")
-        self.case_activity_key= ptg.InputField("concept:name", prompt="activity key: ")
-        self.case_timestamp_key= ptg.InputField("time:timestamp", prompt="timestamp key: ")
+        if self.pp.mode == ProcessProphetMode.advanced:
+            self.cuda=  ptg.InputField("True", prompt="use cuda: ")
+            self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
+            self.seq_len=  ptg.InputField("10", prompt="sequence length: ")
+            self.lr=  ptg.InputField("1e-3", prompt="learning rate: ")
+            self.batch_size=  ptg.InputField("1024", prompt="batch size: ")
+            self.epochs= ptg.InputField("10", prompt="number of epochs: ")
+            self.split= ptg.InputField("0.9", prompt="split fraction: ")
+            self.log_name= ptg.InputField("Hospital_log.xes", prompt="log name: ")
+            self.case_id_key= ptg.InputField("case:concept:name", prompt="case id key: ")
+            self.case_activity_key= ptg.InputField("concept:name", prompt="activity key: ")
+            self.case_timestamp_key= ptg.InputField("time:timestamp", prompt="timestamp key: ")
 
-        self.hidden_dim_lower= ptg.InputField("100", prompt="hidden dim. lower bound: ")
-        self.hidden_dim_upper= ptg.InputField("200", prompt="hidden dim. upper bound: ")
-        self.hidden_dim_step= ptg.InputField("50", prompt="hidden dim. step: ")
-        
-        self.mlp_dim_lower= ptg.InputField("100", prompt="mlp dim. lower bound: ")
-        self.mlp_dim_upper= ptg.InputField("200", prompt="mlp dim. upper bound: ")
-        self.mlp_dim_step= ptg.InputField("100", prompt="mlp dim. step: ")
+            self.hidden_dim_lower= ptg.InputField("100", prompt="hidden dim. lower bound: ")
+            self.hidden_dim_upper= ptg.InputField("200", prompt="hidden dim. upper bound: ")
+            self.hidden_dim_step= ptg.InputField("50", prompt="hidden dim. step: ")
+            
+            self.mlp_dim_lower= ptg.InputField("100", prompt="mlp dim. lower bound: ")
+            self.mlp_dim_upper= ptg.InputField("200", prompt="mlp dim. upper bound: ")
+            self.mlp_dim_step= ptg.InputField("100", prompt="mlp dim. step: ")
 
 
-        self.emb_dim_lower= ptg.InputField("100", prompt="emb dim. lower bound: ")
-        self.emb_dim_upper= ptg.InputField("200", prompt="emb dim. upper bound: ")
-        self.emb_dim_step= ptg.InputField("100", prompt="emb dim. step: ")
+            self.emb_dim_lower= ptg.InputField("100", prompt="emb dim. lower bound: ")
+            self.emb_dim_upper= ptg.InputField("200", prompt="emb dim. upper bound: ")
+            self.emb_dim_step= ptg.InputField("100", prompt="emb dim. step: ")
 
-        container = ptg.Container( 
-            ptg.Label(f"set parameters for grid search"),
-            self.cuda , 
-            self.model_name ,
-            self.seq_len ,
-            self.lr ,
-            self.batch_size ,
-            self.epochs ,
-            self.split, 
-            self.log_name,
-            self.case_id_key, 
-            self.case_activity_key, 
-            self.case_timestamp_key,
-            self.hidden_dim_lower, 
-            self.hidden_dim_upper, 
-            self.hidden_dim_step, 
-            self.mlp_dim_lower, 
-            self.mlp_dim_upper, 
-            self.mlp_dim_step, 
-            self.emb_dim_lower, 
-            self.emb_dim_upper, 
-            self.emb_dim_step,
-            ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_grid_search())),
-            ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
-        ).center()
+            container = ptg.Container( 
+                ptg.Label(f"set parameters for grid search"),
+                self.cuda , 
+                self.model_name ,
+                self.seq_len ,
+                self.lr ,
+                self.batch_size ,
+                self.epochs ,
+                self.split, 
+                self.log_name,
+                self.case_id_key, 
+                self.case_activity_key, 
+                self.case_timestamp_key,
+                self.hidden_dim_lower, 
+                self.hidden_dim_upper, 
+                self.hidden_dim_step, 
+                self.mlp_dim_lower, 
+                self.mlp_dim_upper, 
+                self.mlp_dim_step, 
+                self.emb_dim_lower, 
+                self.emb_dim_upper, 
+                self.emb_dim_step,
+                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_grid_search())),
+                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
+            ).center()
 
-        
-        logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
-        logs = logs[:min(len(logs),4 )] #: to not overflow the terminal
+            
+            logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
+            logs = logs[:min(len(logs),4 )] #: to not overflow the terminal
 
-        right_container = ptg.Container(
-            f"[underline]First {len(logs)} logs in project:", *logs
-        ).center()
-        window = ptg.Window(ptg.Splitter(container, right_container), width = self.pp.window_width)
-        #window = ptg.Window(*container)
-        window.center()
-        return window
+            right_container = ptg.Container(
+                f"[underline]First {len(logs)} logs in project:", *logs
+            ).center()
+            window = ptg.Window(ptg.Splitter(container, right_container), width = self.pp.window_width)
+            #window = ptg.Window(*container)
+            window.center()
+            return window
+        elif self.pp.mode  == ProcessProphetMode.quick: 
+            self.cuda=  ptg.InputField("True", prompt="use cuda: ")
+            self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
+            self.seq_len=  ptg.InputField("30", prompt="sequence length: ")
+            self.lr=  ptg.InputField("1e-3", prompt="learning rate: ")
+            self.batch_size=  ptg.InputField("1024", prompt="batch size: ")
+            self.epochs= ptg.InputField("10", prompt="number of epochs: ")
+            self.split= ptg.InputField("0.9", prompt="split fraction: ")
+            self.log_name= ptg.InputField("Hospital_log.xes", prompt="log name: ")
+            self.case_id_key= ptg.InputField("case:concept:name", prompt="case id key: ")
+            self.case_activity_key= ptg.InputField("concept:name", prompt="activity key: ")
+            self.case_timestamp_key= ptg.InputField("time:timestamp", prompt="timestamp key: ")
+
+            self.hidden_dim_lower= ptg.InputField("100", prompt="hidden dim. lower bound: ")
+            self.hidden_dim_upper= ptg.InputField("200", prompt="hidden dim. upper bound: ")
+            self.hidden_dim_step= ptg.InputField("50", prompt="hidden dim. step: ")
+            
+            self.mlp_dim_lower= ptg.InputField("100", prompt="mlp dim. lower bound: ")
+            self.mlp_dim_upper= ptg.InputField("200", prompt="mlp dim. upper bound: ")
+            self.mlp_dim_step= ptg.InputField("100", prompt="mlp dim. step: ")
+
+
+            self.emb_dim_lower= ptg.InputField("100", prompt="emb dim. lower bound: ")
+            self.emb_dim_upper= ptg.InputField("200", prompt="emb dim. upper bound: ")
+            self.emb_dim_step= ptg.InputField("100", prompt="emb dim. step: ")
+
+            container = ptg.Container( 
+                ptg.Label(f"set parameters for grid search"),
+                self.model_name ,
+                self.seq_len ,
+                self.batch_size ,
+                self.log_name,
+                self.case_id_key, 
+                self.case_activity_key, 
+                self.case_timestamp_key,
+                self.hidden_dim_lower, 
+                self.hidden_dim_upper, 
+                self.hidden_dim_step, 
+                self.mlp_dim_lower, 
+                self.mlp_dim_upper, 
+                self.mlp_dim_step, 
+                self.emb_dim_lower, 
+                self.emb_dim_upper, 
+                self.emb_dim_step,
+                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_grid_search())),
+                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
+            ).center()
+
+            
+            logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
+            logs = logs[:min(len(logs),4 )] #: to not overflow the terminal
+
+            right_container = ptg.Container(
+                f"[underline]First {len(logs)} logs in project:", *logs
+            ).center()
+            window = ptg.Window(ptg.Splitter(container, right_container), width = self.pp.window_width)
+            #window = ptg.Window(*container)
+            window.center()
+            return window
 
 
     def trainer_main_menu(self) : 
-        container = ptg.Container(
-            "select one training alternative", 
-            "", 
-            ptg.Button(f"{self.pp.button_color}set params manually", lambda *_: self.pp.switch_window(self.set_training_params())), 
-            "",
-            ptg.Button(f"{self.pp.button_color}grid search", lambda *_: self.pp.switch_window(self.set_grid_search_params())), 
-            "",
-            ptg.Button(f"{self.pp.button_color}random search", lambda *_: self.pp.switch_window(self.set_random_search_params())),
-            "",
-            ptg.Button("[black]back", lambda *_: self.return_to_menu())
-        )
+        if self.pp.mode == ProcessProphetMode.advanced: 
+            container = ptg.Container(
+                "select one training alternative", 
+                "", 
+                ptg.Button(f"{self.pp.button_color}set params manually", lambda *_: self.pp.switch_window(self.set_training_params())), 
+                "",
+                ptg.Button(f"{self.pp.button_color}grid search", lambda *_: self.pp.switch_window(self.set_grid_search_params())), 
+                "",
+                ptg.Button(f"{self.pp.button_color}random search", lambda *_: self.pp.switch_window(self.set_random_search_params())),
+                "",
+                ptg.Button("[black]back", lambda *_: self.return_to_menu())
+            )
 
-        window = ptg.Window(*container, box="DOUBLE")
-        window.center()
-        return window
+            window = ptg.Window(*container, box="DOUBLE")
+            window.center()
+
+            return window
+
+        elif self.pp.mode == ProcessProphetMode.quick: 
+            container = ptg.Container(
+                "select one training alternative", 
+                "",
+                ptg.Button(f"{self.pp.button_color}grid search", lambda *_: self.pp.switch_window(self.set_grid_search_params())), 
+                "",
+                ptg.Button(f"{self.pp.button_color}random search", lambda *_: self.pp.switch_window(self.set_random_search_params())),
+                "",
+                ptg.Button("[black]back", lambda *_: self.return_to_menu())
+            )
+
+            window = ptg.Window(*container, box="DOUBLE")
+            window.center()
+
+            return window
