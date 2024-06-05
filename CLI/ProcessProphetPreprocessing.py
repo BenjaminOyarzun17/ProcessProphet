@@ -47,7 +47,7 @@ class ProcessProphetPreprocessing:
         self.pp.switch_window(window)
 
 
-    def handle_replace_nan_with_median(self):
+    def handle_replace_nan_with_mode(self):
         
         self.loading("preprocessing data...")
         input_logs_path= self.pp.state.input_logs_path
@@ -64,7 +64,7 @@ class ProcessProphetPreprocessing:
         } 
 
         response = requests.post(
-            f"http://{SERVER_NAME}:{SERVER_PORT}/replace_with_median", 
+            f"http://{SERVER_NAME}:{SERVER_PORT}/replace_with_mode", 
             json= params,
             timeout =6000
         )
@@ -176,7 +176,7 @@ class ProcessProphetPreprocessing:
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
         self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
         self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
-        self.save_path=  ptg.InputField("HL_nan_to_medi.xes", prompt="output log name:")
+        self.save_path=  ptg.InputField("HL_unique_start.csv", prompt="output log name:")
 
         left_container = ptg.Container( 
             ptg.Label(f"enter relevant information"),
@@ -211,7 +211,7 @@ class ProcessProphetPreprocessing:
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
         self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
         self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
-        self.save_path=  ptg.InputField("HL_nan_to_medi.xes", prompt="output log name:")
+        self.save_path=  ptg.InputField("HL_no_dup.csv", prompt="output log name:")
 
         left_container = ptg.Container( 
             ptg.Label(f"enter relevant information"),
@@ -240,12 +240,12 @@ class ProcessProphetPreprocessing:
 
 
 
-    def replace_nan_with_median(self): 
+    def replace_nan_with_mode(self): 
         self.log_name=  ptg.InputField("Hospital_log.xes", prompt="log name: ")
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
         self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
         self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
-        self.save_path=  ptg.InputField("HL_nan_to_medi.xes", prompt="output log name:")
+        self.save_path=  ptg.InputField("HL_nan_to_mode.csv", prompt="output log name:")
 
         left_container = ptg.Container( 
             ptg.Label(f"enter relevant information"),
@@ -255,7 +255,7 @@ class ProcessProphetPreprocessing:
             self.case_timestamp_key,
             self.save_path,
             "",
-            ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.handle_replace_nan_with_median())),
+            ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.handle_replace_nan_with_mode())),
             "",
             ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu()))
         )
@@ -276,13 +276,13 @@ class ProcessProphetPreprocessing:
 
 
     def preprocessing_main_menu(self) : 
-        replace = "replace NaN in activity column with median"
+        replace = "replace NaN in activity column with mode"
         remove= "remove duplicate rows"
         add= "add unique start and end activities"
 
         container = ptg.Container(
             "select one action:", 
-            ptg.Button(label = replace,onclick= lambda *_: self.pp.switch_window(self.replace_nan_with_median())),
+            ptg.Button(label = replace,onclick= lambda *_: self.pp.switch_window(self.replace_nan_with_mode())),
             "",
             ptg.Button(label = remove,onclick= lambda *_: self.pp.switch_window(self.remove_duplicates())),
             "",

@@ -84,8 +84,7 @@ class Preprocessing:
         """
         self.event_df = pm4py.read.read_xes(path)
         self.event_df = pm4py.convert_to_dataframe(self.event_df)
-        if formatting: 
-            self.import_event_log()
+        self.import_event_log(formatting)
 
 
     def import_event_log_csv(self, path, sep, formatting = True): 
@@ -100,8 +99,7 @@ class Preprocessing:
         :param sep: separator
         """
         self.event_df= pd.read_csv(path, sep=sep)
-        if formatting: 
-            self.import_event_log()
+        self.import_event_log(formatting)
 
 
     def import_event_log_dataframe(self,df, case_id, activity_key, timestamp_key, formatting = True):
@@ -121,11 +119,10 @@ class Preprocessing:
         self.case_id_key =  case_id
         self.case_activity_key =activity_key
         self.case_timestamp_key =timestamp_key
-        if formatting: 
-            self.import_event_log()
+        self.import_event_log(formatting)
 
 
-    def import_event_log(self):
+    def import_event_log(self, formatting):
         """
         helper function for import_event_log_csv and import_event_log_xes. 
         - genereates an EventLog object so that other pm4py functions can use it
@@ -158,6 +155,12 @@ class Preprocessing:
 
         #: filter out all the other generated columns
         self.event_df= self.event_df[[self.case_id_key, self.case_activity_key, self.case_timestamp_key]]
+
+        
+        #: the rest should only be executed when training
+        if not formatting:
+            return
+
 
         self.event_df= self.event_df.dropna()
         #: used for conformance checking, save everything except the 
@@ -285,13 +288,13 @@ class Preprocessing:
 
 
 
-    def replace_activity_nan_with_median(self): 
+    def replace_activity_nan_with_mode(self): 
         """
         replaces NaN values in activity column with median
         """
         
-        median =  self.event_df[self.case_activity_key].median()
-        self.event_df[self.case_activity_key].fillna(median, inplace = True)
+        mode=  self.event_df[self.case_activity_key].mode()
+        self.event_df[self.case_activity_key].fillna(mode, inplace = True)
 
         return True
 
@@ -299,7 +302,8 @@ class Preprocessing:
     def remove_duplicate_rows(self): 
         #: removes the duplicates ie the rows where the same activity happened at the same time in the same case id.
         # since we are dropping all the other columns, these duplicates make no sense.
-        self.event_df[self.case_activity_key] = self.event_df.drop_duplicates(subset=[self.case_id_key, self.case_activity_key, self.case_timestamp_key])
+        print(self.event_df.columns)
+        self.event_df = self.event_df.drop_duplicates(subset=[self.case_id_key, self.case_activity_key, self.case_timestamp_key])
         return True
 
     
