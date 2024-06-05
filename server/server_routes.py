@@ -156,7 +156,6 @@ def generate_predictive_log():
         pmm.generate_predictive_log(non_stop=non_stop, upper =upper, random_cuts=random_cuts,cut_length=cut_length, new_log_path = new_log_path )
 
         
-        print("event log generated")
         
         
         return ok #they are already encoded
@@ -543,6 +542,8 @@ def replace_with_mode():
     """
     if request.method == 'POST':
         request_config = request.get_json()
+        if not isinstance(request_config["is_xes"],bool):
+            return {"error": "is_xes should be boolean"}, 400
         is_xes = request_config["is_xes"] 
         path_to_log = str(request_config["path_to_log"])
         case_id= str(request_config["case_id"])
@@ -590,13 +591,15 @@ def add_unique_start_end():
     """
     if request.method == 'POST':
         request_config = request.get_json()
+        if not isinstance(request_config["is_xes"],bool):
+            return {"error": "is_xes should be boolean"}, 400
+
         is_xes = request_config["is_xes"] 
         path_to_log = str(request_config["path_to_log"])
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         save_path= str(request_config["save_path"])
-        print(is_xes)
         if not is_xes: 
             sep= str(request_config["sep"])
         else: 
@@ -633,6 +636,9 @@ def remove_duplicates():
     """
     if request.method == 'POST':
         request_config = request.get_json()
+        if not isinstance(request_config["is_xes"],bool):
+            return {"error": "is_xes should be boolean"}, 400
+
         is_xes = request_config["is_xes"] 
 
 
