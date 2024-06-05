@@ -97,14 +97,14 @@ class ProcessProphetPreprocessing:
             data = response.json()
             container= ptg.Container( 
                 ptg.Label(f"success"),
-                f"log saved in path {data["save_path"]}"
+                f"log saved in path {data['save_path']}"
                 "",
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu())),
             )
         else: 
             data = response.json()
             container= ptg.Container( 
-                ptg.Label(f"error: {data["error"]}"),
+                ptg.Label(f"error: {data['error']}"),
                 "",
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu())),
             )
@@ -140,14 +140,14 @@ class ProcessProphetPreprocessing:
             data = response.json()
             container= ptg.Container( 
                 ptg.Label(f"success"),
-                f"log saved in path {data["save_path"]}"
+                f"log saved in path {data['save_path']}"
                 "",
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu())),
             )
         else: 
             data = response.json()
             container= ptg.Container( 
-                ptg.Label(f"error: {data["error"]}"),
+                ptg.Label(f"error: {data['error']}"),
                 "",
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu())),
             )
@@ -186,14 +186,14 @@ class ProcessProphetPreprocessing:
             data = response.json()
             container= ptg.Container( 
                 ptg.Label(f"success"),
-                f"log saved in path {data["save_path"]}"
+                f"log saved in path {data['save_path']}"
                 "",
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu())),
             )
         else: 
             data = response.json()
             container= ptg.Container( 
-                ptg.Label(f"error: {data["error"]}"),
+                ptg.Label(f"error: {data['error']}"),
                 "",
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu())),
             )
