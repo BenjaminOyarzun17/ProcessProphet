@@ -18,6 +18,29 @@ class ProcessProphetPreprocessing:
         self.pp = pp
         self.pp.switch_window(self.preprocessing_main_menu())
 
+
+    @staticmethod
+    def check_types(func):
+        def wrapper(self, *args, **kwargs):
+            if self.log_name.value[-3:]!="xes" and self.log_name.value[-3:] != "csv": 
+                container= ptg.Container( 
+                    ptg.Label(f"only xes/csv supported"),
+                    ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu()))
+                )
+                window = ptg.Window( container, box="DOUBLE")
+                window.center()
+                return window
+            elif self.log_name.value not in os.listdir(self.pp.state.input_logs_path):
+                container= ptg.Container( 
+                    ptg.Label(f"the log does not exist"),
+                    ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu()))
+                )
+                window = ptg.Window( container, box="DOUBLE")
+                window.center()
+                return window
+
+            return func(self,*args, **kwargs)
+        return wrapper
    
     def loading(self, message = ""): 
         container = ptg.Container(
@@ -29,7 +52,7 @@ class ProcessProphetPreprocessing:
         self.pp.switch_window(window)
 
     def return_to_menu(self):
-        pp_start = ProcessProphetStart.ProcessProphetStart(self.pp)
+        pp_start = ProcessProphetStart.ProcessProphetStart(self.pp, start = False)
 
 
 
@@ -47,6 +70,7 @@ class ProcessProphetPreprocessing:
         self.pp.switch_window(window)
 
 
+    @check_types
     def handle_replace_nan_with_mode(self):
         
         self.loading("preprocessing data...")
@@ -60,7 +84,8 @@ class ProcessProphetPreprocessing:
             "activity_key":  self.case_activity_key.value, 
             "timestamp_key":  self.case_timestamp_key.value, 
             "is_xes": is_xes, 
-            "save_path": f"{input_logs_path}/{self.save_path.value}" 
+            "save_path": f"{input_logs_path}/{self.save_path.value}" ,
+            "sep": ","
         } 
 
         response = requests.post(
@@ -77,8 +102,9 @@ class ProcessProphetPreprocessing:
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu())),
             )
         else: 
+            data = response.json()
             container= ptg.Container( 
-                ptg.Label(f"something went wrong..."),
+                ptg.Label(f"error: {data["error"]}"),
                 "",
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu())),
             )
@@ -87,6 +113,7 @@ class ProcessProphetPreprocessing:
         window.center()
         return window
 
+    @check_types
     def handle_remove_duplicates(self):
 
         self.loading("preprocessing data...")
@@ -100,7 +127,8 @@ class ProcessProphetPreprocessing:
             "activity_key":  self.case_activity_key.value, 
             "timestamp_key":  self.case_timestamp_key.value, 
             "is_xes": is_xes, 
-            "save_path": f"{input_logs_path}/{self.save_path.value}" 
+            "save_path": f"{input_logs_path}/{self.save_path.value}" ,
+            "sep": ","
         } 
 
         response = requests.post(
@@ -117,8 +145,9 @@ class ProcessProphetPreprocessing:
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu())),
             )
         else: 
+            data = response.json()
             container= ptg.Container( 
-                ptg.Label(f"something went wrong..."),
+                ptg.Label(f"error: {data["error"]}"),
                 "",
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu())),
             )
@@ -128,12 +157,14 @@ class ProcessProphetPreprocessing:
         return window
     
 
+ 
 
+
+    @check_types
     def handle_add_unique_start_end(self):
 
         self.loading("preprocessing data...")
         input_logs_path= self.pp.state.input_logs_path
-        
         is_xes = True if self.log_name.value[-3:] == "xes"  else False
         
         params = {
@@ -142,7 +173,8 @@ class ProcessProphetPreprocessing:
             "activity_key":  self.case_activity_key.value, 
             "timestamp_key":  self.case_timestamp_key.value, 
             "is_xes": is_xes, 
-            "save_path": f"{input_logs_path}/{self.save_path.value}" 
+            "save_path": f"{input_logs_path}/{self.save_path.value}" ,
+            "sep": ","
         } 
 
         response = requests.post(
@@ -159,8 +191,9 @@ class ProcessProphetPreprocessing:
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu())),
             )
         else: 
+            data = response.json()
             container= ptg.Container( 
-                ptg.Label(f"log already has the requested properties!"),
+                ptg.Label(f"error: {data["error"]}"),
                 "",
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu())),
             )
@@ -168,7 +201,6 @@ class ProcessProphetPreprocessing:
         window = ptg.Window( container, box="DOUBLE")
         window.center()
         return window
-
 
 
     def add_unique_start_end(self): 
@@ -288,7 +320,7 @@ class ProcessProphetPreprocessing:
             "",
             ptg.Button(label = add, onclick=lambda *_: self.pp.switch_window(self.add_unique_start_end())), 
             "",
-            ptg.Button("return to menu", lambda *_: self.return_to_menu())  
+            ptg.Button("back", lambda *_: self.return_to_menu())  
 
             
         )

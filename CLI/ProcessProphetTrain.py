@@ -42,7 +42,7 @@ class ProcessProphetTrain:
         """
         returns to p.p. start
         """
-        pp_start = ProcessProphetStart.ProcessProphetStart(self.pp)
+        pp_start = ProcessProphetStart.ProcessProphetStart(self.pp, False)
 
 
 
