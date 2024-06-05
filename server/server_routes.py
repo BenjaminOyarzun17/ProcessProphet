@@ -531,7 +531,7 @@ def load_config_from_preprocessor(config : nn_manager.Config, preprocessor : pre
 
 
 @routes.route('/replace_with_mode', methods = ["POST"])
-def replace_with_modew():
+def replace_with_mode():
     """
     replaces NaN's in the activity column with median
     the following data is expected in the JSON body of the request: 
@@ -556,7 +556,10 @@ def replace_with_modew():
 
 
         preprocessor = preprocessing.Preprocessing()
-        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
+        try: 
+            preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
+        except Exception as e: 
+            return {"error": str(e)}, 400
         success= preprocessor.replace_activity_nan_with_mode()
         if success:
 
@@ -565,7 +568,7 @@ def replace_with_modew():
                 "status": "successfully finished", 
                 "save_path":save_path
                 }, 200
-        return {"status": "something went wrong..."}, 300
+        return {"error": "something went wrong..."}, 400
 
 
 
@@ -597,7 +600,10 @@ def add_unique_start_end():
             sep = "" 
 
         preprocessor = preprocessing.Preprocessing()
-        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
+        try: 
+            preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
+        except Exception as e: 
+            return {"error": str(e)}, 400
         success= preprocessor.add_unique_start_end_activity()
         if success:
             preprocessor.event_df.to_csv(save_path, sep = ",")
@@ -605,7 +611,7 @@ def add_unique_start_end():
                 "status": "successfully created", 
                 "save_path":save_path
                 }, 200
-        return {"status": "operation not necessary, the log already has a unique start/end activity"}, 200
+        return {"error": "operation not necessary, the log already has a unique start/end activity"}, 400
 
 @routes.route('/remove_duplicates', methods = ["POST"])
 def remove_duplicates():
@@ -635,12 +641,17 @@ def remove_duplicates():
             sep = ""
 
         preprocessor = preprocessing.Preprocessing()
-        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
+        try: 
+            preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
+        except Exception as e: 
+            return {"error": str(e)}, 400
+
+
         success= preprocessor.remove_duplicate_rows()
         if success:
             preprocessor.event_df.to_csv(save_path, sep = ",")
             return {"save_path":save_path}, 200
-        return {"error": "something went wrong..."}, 300
+        return {"error": "something went wrong..."},400 
 
 
 
