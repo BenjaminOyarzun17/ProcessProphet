@@ -563,6 +563,9 @@ def replace_with_mode():
         success= preprocessor.replace_activity_nan_with_mode()
         if success:
 
+            path = save_path
+            if os.path.isfile(save_path):
+                return {"error": f"{save_path} already exists..."},400 
             preprocessor.event_df.to_csv(save_path, sep = ",")
             return {
                 "status": "successfully finished", 
@@ -606,6 +609,9 @@ def add_unique_start_end():
             return {"error": str(e)}, 400
         success= preprocessor.add_unique_start_end_activity()
         if success:
+            path = save_path
+            if os.path.isfile(save_path):
+                return {"error": f"{save_path} already exists..."},400 
             preprocessor.event_df.to_csv(save_path, sep = ",")
             return {
                 "status": "successfully created", 
@@ -649,6 +655,9 @@ def remove_duplicates():
 
         success= preprocessor.remove_duplicate_rows()
         if success:
+            path = save_path
+            if os.path.isfile(save_path):
+                return {"error": f"{save_path} already exists..."},400 
             preprocessor.event_df.to_csv(save_path, sep = ",")
             return {"save_path":save_path}, 200
         return {"error": "something went wrong..."},400 

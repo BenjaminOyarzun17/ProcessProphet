@@ -10,11 +10,12 @@
 *.csv
 *.xes
 *.pt
+*.config.json
 /CLI/input_logs
 /CLI/models
 /CLI/predictive_logs
 /CLI/petri_nets
 /site
 *.pnml
-./projects
-./trash
+/projects
+/trash
