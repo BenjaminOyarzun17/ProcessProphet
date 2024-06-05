@@ -508,4 +508,4 @@ if __name__=="__main__":
     #test_process_model_manager_tail_cut()
     #test_heuristic()
     #dummy()
-    app.run(port = SERVER_PORT)
+    app.run(port = SERVER_PORT, debug= True)

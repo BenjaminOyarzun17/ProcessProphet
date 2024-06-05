@@ -87,7 +87,6 @@ class ProcessProphetTrain:
             timeout =6000
         )
         if response.status_code == 200: 
-            logger_set_params_cli.debug(response.content)
             data = response.json()
 
             statistics = data["training_statistics"]
