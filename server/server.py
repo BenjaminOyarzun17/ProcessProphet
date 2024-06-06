@@ -37,28 +37,31 @@ app.register_blueprint(server_routes.routes)
 
 def generate_hospital_mini():
     preprocessor = preprocessing.Preprocessing()
-    is_xes = False
     #path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
     path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
 
-    preprocessor.handle_import(True,path, "case:concept:name", "time:timestamp","concept:name" ,time_precision.TimePrecision.NS)
-    pm4py.write.write_xes(preprocessor.unencoded_df[:1000], "Hospital_log_mini.xes", "case:concept:name")
+    preprocessor.handle_import(True,path,"case:concept:name", "time:timestamp", "concept:name") 
+    df = preprocessor.unencoded_df
+    df = df[:20]
+    df.to_csv("partial_input.csv")
 
 
 
 
 
 def dummy():
+    """
     preprocessor = preprocessing.Preprocessing()
     is_xes = False
-    path =  "data/train_day_joined.csv"
+    #path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
-    #path = "data/Hospital_log.xes"
+    path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
+    preprocessor.handle_import()
     if is_xes:
         #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
         preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
@@ -70,7 +73,19 @@ def dummy():
 
     dummy  = pm.get_dummy_process(preprocessor.event_df,"case_id" )
     dummy.to_csv("CLI/input_logs/dummy.csv",sep = ',' )
+    """
 
+    preprocessor = preprocessing.Preprocessing()
+    #path =  "data/train_day_joined.csv"
+    #path = "data/BPI_Challenge_2019.xes"
+    path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
+
+    preprocessor.handle_import(True,path,"case:concept:name", "time:timestamp", "concept:name") 
+    df = preprocessor.unencoded_df
+    df = df[:20]
+    df.to_csv("partial_input.csv")
 
 
 def test_end_activities():
@@ -535,6 +550,5 @@ if __name__=="__main__":
     #test_end_activities()
     #test_process_model_manager_tail_cut()
     #test_heuristic()
-    #dummy()
     #HL_shorter()
     app.run(port = SERVER_PORT,debug=True)

@@ -243,7 +243,7 @@ class NNManagement:
         Random search for the best hyperparameters. Saves the best model in the class.
         :param search_parameters: dictionary containing the search parameters
             - search_parameters should have the following keys:
-            * 'hidden_dim': [start, end]
+            * 'hid_dim': [start, end]
             * 'mlp_dim': [start, end]
             * 'emb_dim': [start, end]
         :param iterations: number of iterations
@@ -254,7 +254,7 @@ class NNManagement:
         best_model = None
         # self.load_data(train, test, case_id_key, timestamp_key, case_activity_key)
         for i in range(iterations): 
-            a=random.randint(search_parameters["hidden_dim"][0], search_parameters["hidden_dim"][1])
+            a=random.randint(search_parameters["hid_dim"][0], search_parameters["hid_dim"][1])
             b=random.randint(search_parameters["mlp_dim"][0], search_parameters["mlp_dim"][1])
             c=  random.randint(search_parameters["emb_dim"][0], search_parameters["emb_dim"][1])
             self.config.hid_dim = a
@@ -276,7 +276,7 @@ class NNManagement:
         Grid search for the best hyperparameters.
         :param search_parameters: dictionary containing the search parameters
             - search_parameters should have the following keys:
-            * 'hidden_dim': [start, end, step]
+            * 'hid_dim': [start, end, step]
             * 'mlp_dim': [start, end, step]
             * 'emb_dim': [start, end, step]
 
@@ -285,7 +285,7 @@ class NNManagement:
         acc = 0
         best_model = None
         # self.load_data(train, test, case_id_key, timestamp_key, case_activity_key)
-        for i in range(search_parameters["hidden_dim"][0], search_parameters["hidden_dim"][1], search_parameters["hidden_dim"][2]): 
+        for i in range(search_parameters["hid_dim"][0], search_parameters["hid_dim"][1], search_parameters["hid_dim"][2]): 
                 self.config.hid_dim =i 
                 for j in range(search_parameters["mlp_dim"][0], search_parameters["mlp_dim"][1], search_parameters["mlp_dim"][2]): 
                     self.config.mlp_dim=j
