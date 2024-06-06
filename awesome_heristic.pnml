@@ -1,0 +1,321 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pnml>
+  <net id="" type="http://www.pnml.org/version-2009/grammar/pnmlcoremodel">
+    <name>
+      <text></text>
+    </name>
+    <page id="n0">
+      <place id="source0">
+        <name>
+          <text>source0</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <place id="pre_190205 klasse 3b        a205">
+        <name>
+          <text>pre_190205 klasse 3b        a205</text>
+        </name>
+      </place>
+      <place id="pre_creatinine">
+        <name>
+          <text>pre_creatinine</text>
+        </name>
+      </place>
+      <place id="intplace_administratief tarief       - eerste pol">
+        <name>
+          <text>intplace_administratief tarief       - eerste pol</text>
+        </name>
+      </place>
+      <place id="pre_aanname laboratoriumonderzoek">
+        <name>
+          <text>pre_aanname laboratoriumonderzoek</text>
+        </name>
+      </place>
+      <place id="splace_in_190205 klasse 3b        a205_administratief tarief       - eerste pol_0">
+        <name>
+          <text>splace_in_190205 klasse 3b        a205_administratief tarief       - eerste pol_0</text>
+        </name>
+      </place>
+      <place id="splace_in_■_administratief tarief       - eerste pol_0">
+        <name>
+          <text>splace_in_■_administratief tarief       - eerste pol_0</text>
+        </name>
+      </place>
+      <place id="pre_vervolgconsult poliklinisch">
+        <name>
+          <text>pre_vervolgconsult poliklinisch</text>
+        </name>
+      </place>
+      <place id="intplace_aanname laboratoriumonderzoek">
+        <name>
+          <text>intplace_aanname laboratoriumonderzoek</text>
+        </name>
+      </place>
+      <place id="intplace_vervolgconsult poliklinisch">
+        <name>
+          <text>intplace_vervolgconsult poliklinisch</text>
+        </name>
+      </place>
+      <place id="intplace_telefonisch consult">
+        <name>
+          <text>intplace_telefonisch consult</text>
+        </name>
+      </place>
+      <place id="sink0">
+        <name>
+          <text>sink0</text>
+        </name>
+      </place>
+      <place id="splace_in_190205 klasse 3b        a205_telefonisch consult_0">
+        <name>
+          <text>splace_in_190205 klasse 3b        a205_telefonisch consult_0</text>
+        </name>
+      </place>
+      <place id="splace_in_190205 klasse 3b        a205_vervolgconsult poliklinisch_0">
+        <name>
+          <text>splace_in_190205 klasse 3b        a205_vervolgconsult poliklinisch_0</text>
+        </name>
+      </place>
+      <place id="pre_ordertarief">
+        <name>
+          <text>pre_ordertarief</text>
+        </name>
+      </place>
+      <place id="pre_telefonisch consult">
+        <name>
+          <text>pre_telefonisch consult</text>
+        </name>
+      </place>
+      <place id="splace_in_■_telefonisch consult_0">
+        <name>
+          <text>splace_in_■_telefonisch consult_0</text>
+        </name>
+      </place>
+      <place id="splace_in_■_vervolgconsult poliklinisch_0">
+        <name>
+          <text>splace_in_■_vervolgconsult poliklinisch_0</text>
+        </name>
+      </place>
+      <place id="intplace_▶">
+        <name>
+          <text>intplace_▶</text>
+        </name>
+      </place>
+      <transition id="hid_3">
+        <name>
+          <text>hid_3</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="7d640f7f-ad4b-479f-b680-255e7eefc3b8"/>
+      </transition>
+      <transition id="hid_17">
+        <name>
+          <text>hid_17</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="cfad6b38-56ea-4e08-8120-d7a4c0d315a7"/>
+      </transition>
+      <transition id="vervolgconsult poliklinisch">
+        <name>
+          <text>vervolgconsult poliklinisch</text>
+        </name>
+      </transition>
+      <transition id="▶">
+        <name>
+          <text>▶</text>
+        </name>
+      </transition>
+      <transition id="administratief tarief       - eerste pol">
+        <name>
+          <text>administratief tarief       - eerste pol</text>
+        </name>
+      </transition>
+      <transition id="hid_24">
+        <name>
+          <text>hid_24</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="4da7605b-a3ff-4d56-94ed-d5a99e0c9c8e"/>
+      </transition>
+      <transition id="hid_31">
+        <name>
+          <text>hid_31</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="6ebf1563-861e-4cc8-962a-b774dd54c3f3"/>
+      </transition>
+      <transition id="telefonisch consult">
+        <name>
+          <text>telefonisch consult</text>
+        </name>
+      </transition>
+      <transition id="hid_23">
+        <name>
+          <text>hid_23</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="32d47743-5fdc-4c28-8d33-6d11324b7988"/>
+      </transition>
+      <transition id="hid_25">
+        <name>
+          <text>hid_25</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="974639b0-edce-4400-82e7-42645aa34eb1"/>
+      </transition>
+      <transition id="hemoglobine foto-elektrisch">
+        <name>
+          <text>hemoglobine foto-elektrisch</text>
+        </name>
+      </transition>
+      <transition id="verlosk.-gynaec. korte kaart kosten-out">
+        <name>
+          <text>verlosk.-gynaec. korte kaart kosten-out</text>
+        </name>
+      </transition>
+      <transition id="hid_30">
+        <name>
+          <text>hid_30</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="13cc8773-ce32-42e0-b8c3-d90ec757e952"/>
+      </transition>
+      <transition id="aanname laboratoriumonderzoek">
+        <name>
+          <text>aanname laboratoriumonderzoek</text>
+        </name>
+      </transition>
+      <transition id="creatinine">
+        <name>
+          <text>creatinine</text>
+        </name>
+      </transition>
+      <transition id="190205 klasse 3b        a205">
+        <name>
+          <text>190205 klasse 3b        a205</text>
+        </name>
+      </transition>
+      <transition id="■">
+        <name>
+          <text>■</text>
+        </name>
+      </transition>
+      <transition id="hid_14">
+        <name>
+          <text>hid_14</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="92149783-2e60-4da8-983a-c9f1aebec899"/>
+      </transition>
+      <transition id="hid_21">
+        <name>
+          <text>hid_21</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="829ba0fd-2306-4118-bf85-0b8958cc0130"/>
+      </transition>
+      <transition id="ca-125 mbv meia">
+        <name>
+          <text>ca-125 mbv meia</text>
+        </name>
+      </transition>
+      <transition id="ordertarief">
+        <name>
+          <text>ordertarief</text>
+        </name>
+      </transition>
+      <transition id="cytologisch onderzoek - ectocervix -">
+        <name>
+          <text>cytologisch onderzoek - ectocervix -</text>
+        </name>
+      </transition>
+      <transition id="verlosk.-gynaec.   jaarkaart kosten-out">
+        <name>
+          <text>verlosk.-gynaec.   jaarkaart kosten-out</text>
+        </name>
+      </transition>
+      <transition id="hid_2">
+        <name>
+          <text>hid_2</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="d5c3a2b9-3cc4-4714-9b8c-e7eb1a60e95a"/>
+      </transition>
+      <transition id="hid_20">
+        <name>
+          <text>hid_20</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="a18df0b7-8996-4b02-a19c-871b2cbf64c8"/>
+      </transition>
+      <transition id="hid_27">
+        <name>
+          <text>hid_27</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="9a965eb6-10c7-46f8-a1df-7e7878dbf649"/>
+      </transition>
+      <transition id="hid_35">
+        <name>
+          <text>hid_35</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="ddaf5514-c60d-406b-841b-ba202226caae"/>
+      </transition>
+      <arc id="140238764782592" source="intplace_vervolgconsult poliklinisch" target="administratief tarief       - eerste pol"/>
+      <arc id="140238764784128" source="hid_35" target="pre_vervolgconsult poliklinisch"/>
+      <arc id="140238765305872" source="hid_23" target="splace_in_■_telefonisch consult_0"/>
+      <arc id="140238765300256" source="pre_ordertarief" target="ordertarief"/>
+      <arc id="140238765307936" source="administratief tarief       - eerste pol" target="intplace_administratief tarief       - eerste pol"/>
+      <arc id="140238764783648" source="intplace_administratief tarief       - eerste pol" target="cytologisch onderzoek - ectocervix -"/>
+      <arc id="140238764780576" source="ordertarief" target="pre_vervolgconsult poliklinisch"/>
+      <arc id="140238765305392" source="ca-125 mbv meia" target="pre_ordertarief"/>
+      <arc id="140238765294640" source="hid_17" target="splace_in_■_administratief tarief       - eerste pol_0"/>
+      <arc id="140238765306928" source="telefonisch consult" target="intplace_telefonisch consult"/>
+      <arc id="140238764778032" source="hid_27" target="splace_in_190205 klasse 3b        a205_vervolgconsult poliklinisch_0"/>
+      <arc id="140238764784176" source="hid_30" target="pre_telefonisch consult"/>
+      <arc id="140238765299776" source="hid_3" target="pre_190205 klasse 3b        a205"/>
+      <arc id="140238764784704" source="intplace_▶" target="verlosk.-gynaec.   jaarkaart kosten-out"/>
+      <arc id="140238764777024" source="hid_27" target="splace_in_■_vervolgconsult poliklinisch_0"/>
+      <arc id="140238765304912" source="190205 klasse 3b        a205" target="sink0"/>
+      <arc id="140238765309520" source="intplace_telefonisch consult" target="hid_24"/>
+      <arc id="140238764782160" source="intplace_vervolgconsult poliklinisch" target="hid_31"/>
+      <arc id="140238764785232" source="hid_24" target="pre_telefonisch consult"/>
+      <arc id="140238765296224" source="splace_in_190205 klasse 3b        a205_vervolgconsult poliklinisch_0" target="hid_3"/>
+      <arc id="140238765296752" source="splace_in_190205 klasse 3b        a205_telefonisch consult_0" target="hid_3"/>
+      <arc id="140238764784752" source="intplace_vervolgconsult poliklinisch" target="hid_2"/>
+      <arc id="140238764784800" source="intplace_aanname laboratoriumonderzoek" target="ca-125 mbv meia"/>
+      <arc id="140238765309616" source="▶" target="intplace_▶"/>
+      <arc id="140238764780720" source="hid_25" target="pre_vervolgconsult poliklinisch"/>
+      <arc id="140238764785328" source="hid_14" target="pre_aanname laboratoriumonderzoek"/>
+      <arc id="140238765300928" source="hid_2" target="pre_aanname laboratoriumonderzoek"/>
+      <arc id="140238764781248" source="hid_20" target="pre_telefonisch consult"/>
+      <arc id="140238764784320" source="splace_in_■_administratief tarief       - eerste pol_0" target="■"/>
+      <arc id="140238765304528" source="intplace_administratief tarief       - eerste pol" target="hid_20"/>
+      <arc id="140238765309136" source="intplace_administratief tarief       - eerste pol" target="hid_21"/>
+      <arc id="140238764781776" source="intplace_vervolgconsult poliklinisch" target="hid_30"/>
+      <arc id="140238764784848" source="hid_21" target="pre_vervolgconsult poliklinisch"/>
+      <arc id="140238765305056" source="intplace_aanname laboratoriumonderzoek" target="hid_14"/>
+      <arc id="140238764782304" source="■" target="pre_190205 klasse 3b        a205"/>
+      <arc id="140238765297424" source="splace_in_190205 klasse 3b        a205_administratief tarief       - eerste pol_0" target="hid_3"/>
+      <arc id="140238765303568" source="aanname laboratoriumonderzoek" target="intplace_aanname laboratoriumonderzoek"/>
+      <arc id="140238765309712" source="vervolgconsult poliklinisch" target="intplace_vervolgconsult poliklinisch"/>
+      <arc id="140238764780816" source="intplace_vervolgconsult poliklinisch" target="hid_27"/>
+      <arc id="140238765294880" source="hid_17" target="splace_in_190205 klasse 3b        a205_administratief tarief       - eerste pol_0"/>
+      <arc id="140238765295408" source="intplace_administratief tarief       - eerste pol" target="hid_17"/>
+      <arc id="140238764785472" source="splace_in_■_vervolgconsult poliklinisch_0" target="■"/>
+      <arc id="140238765295456" source="pre_aanname laboratoriumonderzoek" target="aanname laboratoriumonderzoek"/>
+      <arc id="140238764784992" source="intplace_administratief tarief       - eerste pol" target="hid_2"/>
+      <arc id="140238764781920" source="intplace_▶" target="verlosk.-gynaec. korte kaart kosten-out"/>
+      <arc id="140238765302128" source="source0" target="▶"/>
+      <arc id="140238764785520" source="splace_in_■_telefonisch consult_0" target="■"/>
+      <arc id="140238765298048" source="pre_creatinine" target="creatinine"/>
+      <arc id="140238765301120" source="pre_telefonisch consult" target="telefonisch consult"/>
+      <arc id="140238764782976" source="intplace_aanname laboratoriumonderzoek" target="hemoglobine foto-elektrisch"/>
+      <arc id="140238764783504" source="intplace_▶" target="hid_35"/>
+      <arc id="140238764785040" source="hid_31" target="pre_vervolgconsult poliklinisch"/>
+      <arc id="140238765309856" source="hid_23" target="splace_in_190205 klasse 3b        a205_telefonisch consult_0"/>
+      <arc id="140238765299104" source="pre_190205 klasse 3b        a205" target="190205 klasse 3b        a205"/>
+      <arc id="140238765306784" source="hemoglobine foto-elektrisch" target="pre_creatinine"/>
+      <arc id="140238765308848" source="intplace_telefonisch consult" target="hid_23"/>
+      <arc id="140238765309376" source="intplace_telefonisch consult" target="hid_25"/>
+      <arc id="140238765303760" source="pre_vervolgconsult poliklinisch" target="vervolgconsult poliklinisch"/>
+    </page>
+    <finalmarkings>
+      <marking>
+        <place idref="sink0">
+          <text>1</text>
+        </place>
+      </marking>
+    </finalmarkings>
+  </net>
+</pnml>

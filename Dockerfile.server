@@ -20,5 +20,5 @@ ENV SERVER_PORT=5000
 
 EXPOSE 5000
 
-CMD ["gunicorn", "-b", ":5000","server.server:app", "--timeout", "150"]
+CMD ["gunicorn", "-b", ":5000","server.server:app", "--timeout", "1800"]
 

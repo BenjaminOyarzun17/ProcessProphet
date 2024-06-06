@@ -197,7 +197,7 @@ class NNManagement:
 
         #: dumps generates a string
         return {
-            "time error": self.time_error,
+            "time error": str(self.time_error),
             "acc":self.acc, 
             "recall":self.recall,
             "f1":self.f1
