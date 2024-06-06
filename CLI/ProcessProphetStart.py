@@ -63,12 +63,20 @@ class ProcessProphetStart:
         window.center()
         return window
 
+<<<<<<< HEAD
     def notifyproject_creation(self, message, success): 
+=======
+    def notify_project_creation(self, message, success): 
+>>>>>>> 087e77c (testing train, random search, grid search routes done. error handling and exception handling in train routes also done)
         if success: 
             container =ptg.Container( 
                 ptg.Label(f"{message}"),
                 "",
+<<<<<<< HEAD
                 ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switchwindow(self.select_mode())), 
+=======
+                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.select_mode())), 
+>>>>>>> 087e77c (testing train, random search, grid search routes done. error handling and exception handling in train routes also done)
                 "",
                 ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
             )
@@ -76,13 +84,21 @@ class ProcessProphetStart:
             container = ptg.Container( 
                 ptg.Label(f"{message}!"),
                 "",
+<<<<<<< HEAD
                 ptg.Button(f"{self.pp.buttoncolor}back to menu", lambda *_: self.pp.switch_window(self.main_menu()))
+=======
+                ptg.Button(f"{self.pp.button_color}back to menu", lambda *_: self.pp.switch_window(self.main_menu()))
+>>>>>>> 087e77c (testing train, random search, grid search routes done. error handling and exception handling in train routes also done)
             )
 
 
         window = ptg.Window(container, box="DOUBLE")
         window.center()
+<<<<<<< HEAD
         return window
+=======
+        return window 
+>>>>>>> 087e77c (testing train, random search, grid search routes done. error handling and exception handling in train routes also done)
 
     def handle_project_name_input(self):
         name = self.project_name_input.value
@@ -102,7 +118,7 @@ class ProcessProphetStart:
         
         
         message = f"directory created in path {os.getcwd()}/{self.pp.state.projects_path}/{name}"
-        subdirectories = ["input_logs", "models", "petri_nets", "predictive_logs", "partial_traces", "decoded_dfs"]
+        subdirectories = ["input_logs", "models", "petri_nets", "predictive_logs", "partial_traces", "decoded_dfs", "multiple_predictions_path"]
         os.mkdir(f"{os.getcwd()}/{self.pp.state.projects_path}/{name}")
         self.pp.state.current_project = name
         self.pp.state.input_logs_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/input_logs"
@@ -111,7 +127,8 @@ class ProcessProphetStart:
         self.pp.state.predictive_logs_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/predictive_logs"
         self.pp.state.partial_traces_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/partial_traces"
         self.pp.state.decoded_dfs_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/decoded_dfs"
-        self.pp.state.multiple_predictions_path= f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/decoded_dfs"
+        self.pp.state.multiple_predictions_path= f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/multiple_predictions_path"
+       
         for subdirectory in subdirectories: 
             os.mkdir(f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/{subdirectory}")
 
