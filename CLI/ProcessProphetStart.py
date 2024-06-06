@@ -63,12 +63,11 @@ class ProcessProphetStart:
         window.center()
         return window
 
-    def notifyproject_creation(self, message, success): 
+    def notify_project_creation(self, message, success): 
         if success: 
             container =ptg.Container( 
                 ptg.Label(f"{message}"),
                 "",
-                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switchwindow(self.select_mode())), 
                 "",
                 ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
             )
@@ -76,7 +75,7 @@ class ProcessProphetStart:
             container = ptg.Container( 
                 ptg.Label(f"{message}!"),
                 "",
-                ptg.Button(f"{self.pp.buttoncolor}back to menu", lambda *_: self.pp.switch_window(self.main_menu()))
+                ptg.Button(f"{self.pp.button_color}back to menu", lambda *_: self.pp.switch_window(self.main_menu()))
             )
 
 
