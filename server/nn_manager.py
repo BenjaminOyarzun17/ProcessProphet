@@ -69,7 +69,7 @@ class Config:
             "case_activity_key": self.case_activity_key
         }
     def load_config(self, dic):
-        self.time_precision= TimePrecision[dic["time_precision"]] 
+        self.time_precision= time_precision.TimePrecision[dic["time_precision"]] 
         self.seq_len=int(dic["seq_len"])
         self.emb_dim=int(dic["emb_dim"])
         self.hid_dim=int(dic["hid_dim"])

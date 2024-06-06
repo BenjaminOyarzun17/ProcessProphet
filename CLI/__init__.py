@@ -2,3 +2,4 @@ from .ProcessProphetStart import ProcessProphetStart
 from .ProcessProphetTrain  import ProcessProphetTrain
 from .ProcessProphetPreprocessing import ProcessProphetPreprocessing
 from .ProcessProphet import ProcessProphet
+from .ProcessProphetPredict import ProcessProphetPredict

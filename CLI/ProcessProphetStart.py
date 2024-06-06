@@ -63,12 +63,31 @@ class ProcessProphetStart:
         window.center()
         return window
 
-    
+    def notifyproject_creation(self, message, success): 
+        if success: 
+            container =ptg.Container( 
+                ptg.Label(f"{message}"),
+                "",
+                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switchwindow(self.select_mode())), 
+                "",
+                ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
+            )
+        else: 
+            container = ptg.Container( 
+                ptg.Label(f"{message}!"),
+                "",
+                ptg.Button(f"{self.pp.buttoncolor}back to menu", lambda *_: self.pp.switch_window(self.main_menu()))
+            )
+
+
+        window = ptg.Window(container, box="DOUBLE")
+        window.center()
+        return window
 
     def handle_project_name_input(self):
         name = self.project_name_input.value
         message = ""
-        if name in os.listdir(f"{os.getcwd()}/{self.pp.state.projects_path}"):
+        if name in os.listdir(f"{self.pp.state.projects_path}"):
             message = "directory already exits"
             container = ptg.Container(
                 message, 
@@ -108,7 +127,7 @@ class ProcessProphetStart:
         window = ptg.Window(container, box="DOUBLE")
         window.center()
         
-        self.pp.switch_window(self.notify_project_creation(message))
+        self.pp.switch_window(self.notify_project_creation(message, True))
 
 
     def handle_select_mode(self, mode: ProcessProphetMode):
