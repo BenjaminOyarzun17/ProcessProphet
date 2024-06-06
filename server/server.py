@@ -15,6 +15,7 @@ import random
 import os
 from dotenv import load_dotenv
 import torch
+import json
 
 
 
@@ -401,18 +402,13 @@ def test_alpha_miner():
 
 def test_heuristic():
     preprocessor = preprocessing.Preprocessing()
-    is_xes  =False 
-    path =  "data/train_day_joined.csv"
+    #path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
-    #path = "data/Hospital_log.xes"
+    path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
-     
-    if is_xes:
-        #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
-        preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# bpi 2019
-    else:
-        preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ',')
+    #preprocessor.handle_import(False,path,"case_id", "timetamp", "activity") 
+    preprocessor.handle_import(True,path,"case:concept:name", "time:timestamp", "concept:name") 
     train, test = preprocessor.split_train_test(.9)
 
     neural_manager = nn_manager.NNManagement()
@@ -423,7 +419,7 @@ def test_heuristic():
     neural_manager.config.emb_dim =2000 
     neural_manager.config.mlp_dim=2000 
     neural_manager.config.hid_dim= 2000
-    neural_manager.config.epochs= 15
+    neural_manager.config.epochs=1
     neural_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
     neural_manager.train()
     neural_manager.config.activity_le = preprocessor.activity_le
@@ -441,10 +437,23 @@ def test_heuristic():
     pmm.unencoded_df = preprocessor.unencoded_df 
 
     pmm.generate_predictive_log(non_stop=False, upper =100, random_cuts=True, new_log_path = "generated_predicted_df.csv")
-    pmm.heuristic_miner(view = False, dependency_threshold=0.8, and_threshold=0.8, loop_two_threshold=0.8,  path = "awesome_heristic.pnml")
-    #print(f"achieved fitness: {pmm.conformance_checking_token_based_replay()}")
-    print(f"achieved fitness: {pmm.conformance_checking_alignments}")
-    pmm.visualize()
+    pmm.heuristic_miner(view = False, dependency_threshold=0.8, and_threshold=0.8, loop_two_threshold=0.8,  path = "projects/first Prophet/petri_nets/awesome_heristic.pnml")
+
+
+    initial = str(pmm.initial_marking)
+    final  = str(pmm.final_marking)
+
+    petri_net_config = {
+        "initial_marking": initial,
+        "final_marking":    final 
+    }
+    print(petri_net_config)
+    print(type(pmm.initial_marking))
+    with open("projects/first Prophet/petri_nets/awesome_heristic.pnml.json","w") as f: 
+        json.dump(petri_net_config, f)
+    print(f"achieved fitness: {pmm.conformance_checking_token_based_replay()}")
+    #print(f"achieved fitness: {pmm.conformance_checking_alignments()}")
+    #pmm.visualize()
 
 def test_import_model():
     preprocessor = preprocessing.Preprocessing()
@@ -508,4 +517,4 @@ if __name__=="__main__":
     #test_process_model_manager_tail_cut()
     #test_heuristic()
     #dummy()
-    app.run(port = SERVER_PORT, debug= True)
+    app.run(port = SERVER_PORT,debug=True)

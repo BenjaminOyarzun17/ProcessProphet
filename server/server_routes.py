@@ -36,8 +36,42 @@ def test():
     }
 
 
+@routes.route("/token_replay", methods = ["POST"])
+def token_replay():
+    
+    if request.method == 'POST':
+        request_config = request.args.to_dict()
+        is_xes = True if request_config["is_xes"]=="True" else False
+        case_id= str(request_config["case_id"])
+        activity= str(request_config["activity_key"])
+        timestamp= str(request_config["timestamp_key"])
+        path_to_log = str(request_config["path_to_log"])
+        petri_net_path  =  str(request_config.get("petri_net_path"))
+        conformance_technique=  str(request_config.get("conformance_technique"))
+        preprocessor = preprocessing.Preprocessing()
+        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
+        # select cuda or not
 
+        with open(f"{petri_net_path}.json", "r") as f: 
+            pn_config = json.load(f)
 
+        pmm = process_model_manager.ProcessModelManager(
+            preprocessor.event_df, 
+            None, 
+            None,
+            preprocessor.case_activity_key,
+            preprocessor.case_id_key,
+            preprocessor.case_timestamp_key
+        )
+        pmm.initial_marking = pn_config["initial_marking"]
+        pmm.final_marking= pn_config["final_marking"]
+        pmm.load_petri_net(petri_net_path)
+        pmm.unencoded_df = preprocessor.unencoded_df  #: generated automatically py preprocessor
+        if conformance_technique == "token":
+            fitness =pmm.conformance_checking_token_based_replay()
+        else: 
+            fitness =pmm.conformance_checking_alignments()
+        return {"fitness": fitness}, 200
 
 @routes.route('/generate_predictive_process_model', methods = ["GET"])
 def generate_predictive_process_model():
@@ -671,9 +705,4 @@ def remove_duplicates():
 
 
 
-
-@routes.route('/end_session')
-def end_session():
-
-    return ok
 
