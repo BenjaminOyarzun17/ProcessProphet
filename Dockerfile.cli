@@ -12,7 +12,7 @@ COPY requirements.txt .
 
 VOLUME /projects
 
-RUN pip install pytermgui requests python-dotenv
+RUN pip install pytermgui requests python-dotenv PyYAML
 
 
 

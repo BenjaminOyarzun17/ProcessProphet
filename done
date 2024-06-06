@@ -1,0 +1,31 @@
+some aesthetic tweaks
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# interactive rebase in progress; onto 4c774e3
+# Last command done (1 command done):
+#    pick 6c87b76 some aesthetic tweaks
+# No commands remaining.
+# You are currently rebasing branch 'main' on '4c774e3'.
+#
+# Changes to be committed:
+#	modified:   CLI/ProcessProphet.py
+#	modified:   CLI/ProcessProphetStart.py
+#	modified:   CLI/ProcessProphetTrain.py
+#	modified:   CLI/__pycache__/ProcessProphet.cpython-310.pyc
+#	modified:   CLI/__pycache__/ProcessProphetStart.cpython-310.pyc
+#	modified:   CLI/__pycache__/ProcessProphetTrain.cpython-310.pyc
+#	new file:   CLI/styles.yaml
+#	modified:   Dockerfile.server
+#	modified:   Dockerfile.servercuda
+#	modified:   docker-compose.yaml
+#	modified:   server/__pycache__/prediction_manager.cpython-310.pyc
+#	modified:   server/__pycache__/process_model_manager.cpython-310.pyc
+#	modified:   server/__pycache__/server.cpython-310.pyc
+#	modified:   server/__pycache__/server_routes.cpython-310.pyc
+#	modified:   server/nn_manager.py
+#	modified:   server/process_model_manager.py
+#	modified:   server/server.py
+#	modified:   tests/tests_preprocessor.py
+#
