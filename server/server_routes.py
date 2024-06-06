@@ -4,6 +4,7 @@ from server import nn_manager
 from server import process_model_manager
 from server import prediction_manager
 from server import exceptions
+from functools import wraps
 
 
 import base64
@@ -14,7 +15,98 @@ import torch
 routes =Blueprint("Routes", __name__)
 
 
+
+
+
+
+
+
+
+
 ok = {"status":"OK"}
+
+
+def check_not_present_paths_factory(must_not_exist: list):
+    def check_not_present_paths(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            data = request.get_json()
+            for file in must_not_exist: 
+                if os.path.isfile(data[file]):
+                    print(data[file], "should NOT be present")
+                    return {"error": "the target path for the new file already exists"},400
+            return func( *args, **kwargs)
+        return wrapper
+    return check_not_present_paths
+
+
+
+def check_required_paths_factory(must_be_present: list):
+    def check_required_paths(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            data = request.get_json()
+            for file in must_be_present: 
+                if not os.path.isfile(data[file]):
+                    print(data[file], "should be present")
+                    return {"error": "one required path does not exist"},400
+
+            return func( *args, **kwargs)
+        return wrapper
+    return check_required_paths 
+
+
+
+def check_integers_factory(params: list):
+    def check_integers(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            data = request.get_json()
+            for param in params:
+                try: 
+                    i = int(data[param])
+                except: 
+                    print(param, "should be int")
+                    return {"error": f"an integer param was set to another type"},400 
+            return func( *args, **kwargs)
+        return wrapper
+    return check_integers 
+
+
+def check_floats_factory(params: list):
+    def check_floats(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            data = request.get_json()
+            for param in params:
+                try: 
+                    i = float(data[param])
+                except: 
+                    print(param, "should be float")
+                    return {"error": f"a float param was set to another type"},400 
+            return func( *args, **kwargs)
+        return wrapper
+    return check_floats 
+
+
+
+def check_booleans_factory(params: list): 
+    def check_booleans(func): 
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            data = request.get_json()
+            for param in params:
+                if not isinstance(data[param], bool):
+                    print(param, "should be bool")
+                    return {"error": f"a boolean param was set to another type"},400 
+            return func( *args, **kwargs)
+        return wrapper
+    return check_booleans 
+
+
+
+
+
 
 @routes.route('/start')
 def start():
@@ -303,6 +395,11 @@ def single_prediction():
 
 
 @routes.route('/random_search', methods = ["POST"])
+@check_booleans_factory(["cuda", "is_xes"])
+@check_integers_factory(["seq_len","batch_size", "epochs", "iterations"])
+@check_floats_factory(["lr", "split"])
+@check_required_paths_factory(["path_to_log"])
+@check_not_present_paths_factory(["model_path"])
 def random_search():
     """
     carries out random search. It only accepts post requests. 
@@ -323,7 +420,7 @@ def random_search():
     :param search_params: dictioary of the format: 
     ```py
     {
-        "hidden_dim":[lower_bound,upper_bound] ,
+        "hid_dim":[lower_bound,upper_bound] ,
         "mlp_dim":[lower_bound, upper_bound] ,
         "emb_dim":[lower_bound, upper_bound] 
     }
@@ -338,53 +435,59 @@ def random_search():
     """
     if request.method == 'POST':
         request_config = request.get_json()
-        if not isinstance(request_config["cuda"], bool):
-            return {"error": f"cuda param should be boolean"},400 
-        if not isinstance(request_config["is_xes"], bool):
-            return {"error": f"is_xes param should be boolean"},400 
+        
+
         is_xes = request_config["is_xes"] 
 
         path_to_log = str(request_config["path_to_log"])
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
-
+        split = float(request_config["split"])
+        iterations = int(request_config["iterations"])
 
         sp = request_config["search_params"]
 
-        try: 
-            iterations=  int(request_config["iterations"])
-        except: 
-            return {"error": f"iterations should be a float"},400 
-        try: 
-            split =  float(request_config["split"])
-        except: 
-            return {"error": f"split should be a float"},400 
 
         sp_keys= sp.keys()
-        if "hidden_dim" not in sp_keys or "mlp_dim" not in sp_keys or "emb_dim" not in sp_keys:
-            return {"error": f"missing key in search params"},400 
-
-
-        for key in ["hidden_dim", "mlp_dim", "emb_dim"]:
+        if "hid_dim" not in sp_keys or "mlp_dim" not in sp_keys or "emb_dim" not in sp_keys:
+            return {"error": "missing key in search params"},400 
+        for key in ["hid_dim", "mlp_dim", "emb_dim"]:
+            if len(sp[key])!=2: 
+                    return {"error": f"search param(s) missing"},400 
             for i, val in enumerate(sp[key]): 
                 try:
                     sp[key][i] = int(val)
                 except: 
-                    return {"error": f"{key} should be integer"},400 
+                    return {"error": f"non integer found in search params"},400 
 
 
         preprocessor = preprocessing.Preprocessing()
-        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
 
 
-        train, test= preprocessor.split_train_test(split)
+        try: 
+            preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
+        except Exception as e: 
+            return {
+                "error":str(e), 
+                "description": "error while importing"
+            }, 400
 
+        try:
+            train, test= preprocessor.split_train_test(float(request_config["split"]))
+        except exceptions.TrainPercentageTooHigh: 
+            return {"error": "train percentage must be in range (0,1) and should not yield empty sublogs"}, 400
+        except Exception as e: 
+            return {
+                "error":str(e),
+                "description": "error while importing"
+            }, 400
 
+     
         neural_manager= nn_manager.NNManagement() 
 
 
-        neural_manager.config.cuda = True if request_config["cuda"] == "True" else False
+        neural_manager.config.cuda =  request_config["cuda"]
         neural_manager.config = load_config_from_preprocessor(neural_manager.config, preprocessor) 
         
         neural_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
@@ -407,7 +510,7 @@ def random_search():
         neural_manager.export_nn_model(request_config["model_path"])
         
 
-        with open(f"{request_config['model_path']}.config.json", "w") as f:
+        with open(f"{request_config['model_path'][:-3]}.config.json", "w") as f:
             json.dump(config,f)
         data = {
             "acc":  acc
@@ -427,6 +530,11 @@ def random_search():
 
 
 @routes.route('/grid_search', methods = ["POST"])
+@check_booleans_factory(["cuda", "is_xes"])
+@check_integers_factory(["seq_len","batch_size", "epochs"])
+@check_floats_factory(["lr", "split"])
+@check_required_paths_factory(["path_to_log"])
+@check_not_present_paths_factory(["model_path"])
 def grid_search():
     """
     carries out grid search. It only accepts post requests. 
@@ -446,7 +554,7 @@ def grid_search():
     :param search_params: dictioary of the format: 
     ```py
     {
-        "hidden_dim":[lower_bound,upper_bound, step] ,
+        "hid_dim":[lower_bound,upper_bound, step] ,
         "mlp_dim":[lower_bound, upper_bound, step] ,
         "emb_dim":[lower_bound, upper_bound, step] 
     }
@@ -461,47 +569,56 @@ def grid_search():
     if request.method == 'POST':
         request_config = request.get_json()
         
-        if not isinstance(request_config["cuda"], bool):
-            return {"error": f"cuda param should be boolean"},400 
-        if not isinstance(request_config["is_xes"], bool):
-            return {"error": f"is_xes param should be boolean"},400 
+        
         is_xes = request_config["is_xes"] 
         path_to_log = str(request_config["path_to_log"])
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         sp = request_config["search_params"]
+        split = float(request_config["split"])
 
 
-        try: 
-            split =  float(request_config["split"])
-        except: 
-            return {"error": f"split should be a float"},400 
-
+      
 
         sp_keys= sp.keys()
-        if "hidden_dim" not in sp_keys or "mlp_dim" not in sp_keys or "emb_dim" not in sp_keys:
+        if "hid_dim" not in sp_keys or "mlp_dim" not in sp_keys or "emb_dim" not in sp_keys:
             return {"error": f"missing key in search params"},400 
 
-        for key in ["hidden_dim", "mlp_dim", "emb_dim"]: #:just in case more keys are present.
+        for key in ["hid_dim", "mlp_dim", "emb_dim"]: #:just in case more keys are present.
+            if len(sp[key])!=3: 
+                    return {"error": f"search param(s) missing"},400 
             for i, val in enumerate(sp[key]): 
                 try:
                     sp[key][i] = int(val)
                 except: 
-                    return {"error": f"{key} should be integer"},400 
+                    return {"error": f"non integer found in search params"},400 
 
 
 
         preprocessor = preprocessing.Preprocessing()
-        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
+        try: 
+            preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
+        except Exception as e: 
+            return {
+                "error":str(e), 
+                "description": "error while importing"
+            }, 400
 
-
-        train, test= preprocessor.split_train_test(split)
+        try:
+            train, test= preprocessor.split_train_test(split)
+        except exceptions.TrainPercentageTooHigh: 
+            return {"error": "train percentage must be in range (0,1) and should not yield empty sublogs"}, 400
+        except Exception as e: 
+            return {
+                "error":str(e),
+                "description": "error while importing"
+            }, 400
 
 
         neural_manager= nn_manager.NNManagement() 
 
-        neural_manager.config.cuda = True if request_config["cuda"] == "True" else False
+        neural_manager.config.cuda =  request_config["cuda"]
 
         neural_manager.config = load_config_from_preprocessor(neural_manager.config, preprocessor) 
 
@@ -516,7 +633,7 @@ def grid_search():
             }
         except Exception as e: 
             return {
-                "error":str(e),
+                "error":str(e), 
                 "description": "error while training"
             }, 400
         
@@ -525,7 +642,7 @@ def grid_search():
         neural_manager.export_nn_model(request_config["model_path"])
         
 
-        with open(f"{request_config['model_path']}.config.json", "w") as f:
+        with open(f"{request_config['model_path'][:-3]}.config.json", "w") as f:
             json.dump(config,f)
         data = {
             "acc":  acc
@@ -534,8 +651,12 @@ def grid_search():
         response = make_response(jsonify(data))
         return response
 
-
 @routes.route('/train_nn', methods = ["POST"])
+@check_booleans_factory(["cuda", "is_xes"])
+@check_integers_factory(["seq_len", "emb_dim", "hid_dim", "mlp_dim", "batch_size", "epochs"])
+@check_floats_factory(["lr", "split"])
+@check_required_paths_factory(["path_to_log"])
+@check_not_present_paths_factory(["model_path"])
 def train_nn():
     """
     trains the RMTPP neural network. 
@@ -572,10 +693,6 @@ def train_nn():
 
 
 
-        if not isinstance(request_config["cuda"], bool):
-            return {"error": f"cuda param should be boolean"},400 
-        if not isinstance(request_config["is_xes"], bool):
-            return {"error": f"is_xes param should be boolean"},400 
 
         preprocessor = preprocessing.Preprocessing()
         
@@ -639,12 +756,15 @@ def train_nn():
         neural_manager.export_nn_model(request_config["model_path"])
 
 
-        with open(f"{request_config['model_path']}.config.json", "w") as f:
+        with open(f"{request_config['model_path'][:-3]}.config.json", "w") as f:
             json.dump(config,f)
 
         response = make_response(jsonify(data))
 
         return response
+
+
+
 
 def load_config_from_params(config: nn_manager.Config, request_config:dict) -> nn_manager.Config:
         config.cuda = request_config["cuda"]
