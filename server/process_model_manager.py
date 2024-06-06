@@ -378,3 +378,6 @@ class ProcessModelManager:
         print(log_fitness)
         return log_fitness
         #: TODO keep reading pm4py documentation on alignments (goal: get the fitness score)
+
+    def load_petri_net(self, path): 
+        self.petri_net, self.initial_marking, self.final_marking = pm4py.read_pnml(path)
