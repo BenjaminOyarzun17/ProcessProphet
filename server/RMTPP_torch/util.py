@@ -152,5 +152,10 @@ def clf_metric(pred, gold, n_class):
     prec /= pcnt
     recall /= rcnt
     print(f"pcnt={pcnt}, rcnt={rcnt}")
+    print("__"*15)
+    print(prec)
+    print(recall)
+    print(type(prec))
+    print(type(recall))
     f1 = 2 * prec * recall / (prec + recall)
     return prec, recall, f1

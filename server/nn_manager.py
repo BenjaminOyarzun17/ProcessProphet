@@ -31,7 +31,7 @@ class Config:
         self.dropout:float= 0.1
         self.time_precision:time_precision.TimePrecision = time_precision.TimePrecision.NS
         self.lr:float = 1e-3
-        self.epochs: int = 10 
+        self.epochs: int = 3 
         self.importance_weight: str = "store_true"
         self.verbose_step: int = 350
         self.cuda: bool =True 
@@ -169,12 +169,15 @@ class NNManagement:
             gold_times.append(batch[0][:, -1].numpy()) # extract for each sequence the last time stamp/ the last event
             gold_events.append(batch[1][:, -1].numpy())
             pred_time, pred_event = self.model.predict(batch)
+            if np.isnan(pred_times).any():
+                raise exceptions.NaNException()
             pred_times.append(pred_time)
             pred_events.append(pred_event)
 
            
 
         pred_times = np.concatenate(pred_times).reshape(-1)
+        print(type(pred_times))
         gold_times = np.concatenate(gold_times).reshape(-1)
         pred_events = np.concatenate(pred_events).reshape(-1)
         gold_events = np.concatenate(gold_events).reshape(-1)
@@ -182,7 +185,6 @@ class NNManagement:
 
 
         self.acc, self.recall, self.f1 = RMTPP_torch.clf_metric(pred_events, gold_events, n_class=self.config.number_classes) #get the metrics
-        
         print(f"time_error: {self.time_error}, PRECISION: {self.acc}, RECALL: {self.recall}, F1: {self.f1}")
         
         return self.time_error, self.acc, self.recall, self.f1

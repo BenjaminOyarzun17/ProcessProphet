@@ -1,5 +1,15 @@
 
 
+
+
+class NaNException(Exception):
+    def __init__(self):
+        self.message= "a NaN value was generated during training. try changing the training parameters"
+
+    def __str__(self):
+        return self.message
+
+
 class TrainPercentageTooHigh(Exception):
     def __init__(self):
         self.message= "the training percentage given is too high. Try a more suitable value. "

@@ -16,6 +16,7 @@ import os
 from dotenv import load_dotenv
 import torch
 import json
+import pm4py
 
 
 
@@ -30,6 +31,24 @@ SERVER_PORT= os.getenv('SERVER_PORT')
 
 app = Flask(__name__)
 app.register_blueprint(server_routes.routes)
+
+
+
+
+def generate_hospital_mini():
+    preprocessor = preprocessing.Preprocessing()
+    is_xes = False
+    #path =  "data/train_day_joined.csv"
+    #path = "data/BPI_Challenge_2019.xes"
+    path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
+
+    preprocessor.handle_import(True,path, "case:concept:name", "time:timestamp","concept:name" ,time_precision.TimePrecision.NS)
+    pm4py.write.write_xes(preprocessor.unencoded_df[:1000], "Hospital_log_mini.xes", "case:concept:name")
+
+
+
 
 
 def dummy():
@@ -73,8 +92,8 @@ def test_end_activities():
  
 def test_our():
     preprocessor = preprocessing.Preprocessing()
-    path = "data/BPI_Challenge_2019.xes"
-    #path = "data/Hospital_log.xes"
+    #path = "data/BPI_Challenge_2019.xes"
+    path = "data/Hospital_log.xes"
     #path = "data/dummy.csv"
     #path =  "data/running.csv"
 
@@ -517,4 +536,5 @@ if __name__=="__main__":
     #test_process_model_manager_tail_cut()
     #test_heuristic()
     #dummy()
+    #HL_shorter()
     app.run(port = SERVER_PORT,debug=True)
