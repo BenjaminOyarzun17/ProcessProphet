@@ -3,6 +3,7 @@ from server import preprocessing
 from server import nn_manager
 from server import process_model_manager
 from server import prediction_manager
+from server import exceptions
 
 
 import base64
@@ -333,18 +334,41 @@ def random_search():
     """
     if request.method == 'POST':
         request_config = request.get_json()
+        if not isinstance(request_config["cuda"], bool):
+            return {"error": f"cuda param should be boolean"},400 
+        if not isinstance(request_config["is_xes"], bool):
+            return {"error": f"is_xes param should be boolean"},400 
         is_xes = request_config["is_xes"] 
+
         path_to_log = str(request_config["path_to_log"])
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
-        iterations = int(request_config["iterations"])
-        sp = request_config["search_params"]
-        split =  float(request_config["split"])
 
-        for key in sp.keys():
+
+        sp = request_config["search_params"]
+
+        try: 
+            iterations=  int(request_config["iterations"])
+        except: 
+            return {"error": f"iterations should be a float"},400 
+        try: 
+            split =  float(request_config["split"])
+        except: 
+            return {"error": f"split should be a float"},400 
+
+        sp_keys= sp.keys()
+        if "hidden_dim" not in sp_keys or "mlp_dim" not in sp_keys or "emb_dim" not in sp_keys:
+            return {"error": f"missing key in search params"},400 
+
+
+        for key in ["hidden_dim", "mlp_dim", "emb_dim"]:
             for i, val in enumerate(sp[key]): 
-                sp[key][i] = int(val)
+                try:
+                    sp[key][i] = int(val)
+                except: 
+                    return {"error": f"{key} should be integer"},400 
+
 
         preprocessor = preprocessing.Preprocessing()
         preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
@@ -361,7 +385,18 @@ def random_search():
         
         neural_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
         
-        acc= neural_manager.random_search(sp, iterations)
+        try:
+            acc= neural_manager.random_search(sp, iterations)
+        except exceptions.NaNException as e: 
+            return {
+                "error": str(e)
+            }
+        except Exception as e: 
+            return {
+                "error":str(e),
+                "description": "error while training"
+            }, 400
+        
         
         config = neural_manager.config.asdict()
 
@@ -421,6 +456,11 @@ def grid_search():
     """
     if request.method == 'POST':
         request_config = request.get_json()
+        
+        if not isinstance(request_config["cuda"], bool):
+            return {"error": f"cuda param should be boolean"},400 
+        if not isinstance(request_config["is_xes"], bool):
+            return {"error": f"is_xes param should be boolean"},400 
         is_xes = request_config["is_xes"] 
         path_to_log = str(request_config["path_to_log"])
         case_id= str(request_config["case_id"])
@@ -428,16 +468,31 @@ def grid_search():
         timestamp= str(request_config["timestamp_key"])
         sp = request_config["search_params"]
 
-        for key in sp.keys():
+
+        try: 
+            split =  float(request_config["split"])
+        except: 
+            return {"error": f"split should be a float"},400 
+
+
+        sp_keys= sp.keys()
+        if "hidden_dim" not in sp_keys or "mlp_dim" not in sp_keys or "emb_dim" not in sp_keys:
+            return {"error": f"missing key in search params"},400 
+
+        for key in ["hidden_dim", "mlp_dim", "emb_dim"]: #:just in case more keys are present.
             for i, val in enumerate(sp[key]): 
-                sp[key][i] = int(val)
+                try:
+                    sp[key][i] = int(val)
+                except: 
+                    return {"error": f"{key} should be integer"},400 
+
 
 
         preprocessor = preprocessing.Preprocessing()
         preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
 
 
-        train, test= preprocessor.split_train_test(float(request_config["split"]))
+        train, test= preprocessor.split_train_test(split)
 
 
         neural_manager= nn_manager.NNManagement() 
@@ -448,7 +503,18 @@ def grid_search():
 
         neural_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
         
-        acc= neural_manager.grid_search(sp)
+
+        try:
+            acc= neural_manager.grid_search(sp)
+        except exceptions.NaNException as e: 
+            return {
+                "error": str(e)
+            }
+        except Exception as e: 
+            return {
+                "error":str(e),
+                "description": "error while training"
+            }, 400
         
         config = neural_manager.config.asdict()
 
@@ -500,36 +566,67 @@ def train_nn():
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
 
-        is_xes = request_config["is_xes"] 
+
+
+        if not isinstance(request_config["cuda"], bool):
+            return {"error": f"cuda param should be boolean"},400 
+        if not isinstance(request_config["is_xes"], bool):
+            return {"error": f"is_xes param should be boolean"},400 
 
         preprocessor = preprocessing.Preprocessing()
-        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
+        
+        path = request_config["model_path"]
+        if os.path.isfile(request_config["model_path"]):
+            return {"error": f"{request_config["model_path"]} model already exists..."},400 
 
+        path = request_config["path_to_log"]
+        if not os.path.isfile(request_config["path_to_log"]):
+            return {"error": f"{request_config["path_to_log"]} does not exist..."},400 
 
-        train, test= preprocessor.split_train_test(float(request_config["split"]))
+        try: 
+            preprocessor.handle_import(request_config['is_xes'], path_to_log, case_id, timestamp, activity)
+        except Exception as e: 
+            return {
+                "error":str(e), 
+                "description": "error while importing"
+            }, 400
+
+        try:
+            train, test= preprocessor.split_train_test(float(request_config["split"]))
+        except exceptions.TrainPercentageTooHigh: 
+            return {"error": "train percentage must be in range (0,1) and should not yield empty sublogs"}, 400
+        except Exception as e: 
+            return {
+                "error":str(e),
+                "description": "error while importing"
+            }, 400
 
 
         neural_manager= nn_manager.NNManagement() 
 
-        neural_manager.config.cuda = request_config["cuda"]
-        neural_manager.config.seq_len = int(request_config["seq_len"])
-        neural_manager.config.emb_dim= int(request_config["emb_dim"])
-        neural_manager.config.hid_dim= int(request_config["hid_dim"])
-        neural_manager.config.mlp_dim= int(request_config["mlp_dim"])
-        neural_manager.config.lr= float(request_config["lr"])
-        neural_manager.config.batch_size= int(request_config["batch_size"])
-        neural_manager.config.epochs= int(request_config["epochs"])
+        neural_manager.config = load_config_from_params(neural_manager.config, request_config)
 
         neural_manager.config = load_config_from_preprocessor(neural_manager.config, preprocessor) 
 
         neural_manager.load_data(train, test, case_id, timestamp, activity)
 
-        neural_manager.train()
+        try:
+            neural_manager.train()
+        except exceptions.NaNException as e: 
+            return {
+                "error": str(e)
+            }
+        except Exception as e: 
+            return {
+                "error":str(e),
+                "description": "error while training"
+            }, 400
+
+
 
         training_stats = neural_manager.get_training_statistics()
 
         config = neural_manager.config.asdict()
-
 
         data = {
             "training_statistics": training_stats, 
@@ -544,6 +641,19 @@ def train_nn():
         response = make_response(jsonify(data))
 
         return response
+
+def load_config_from_params(config: nn_manager.Config, request_config:dict) -> nn_manager.Config:
+        config.cuda = request_config["cuda"]
+        config.seq_len = int(request_config["seq_len"])
+        config.emb_dim= int(request_config["emb_dim"])
+        config.hid_dim= int(request_config["hid_dim"])
+        config.mlp_dim= int(request_config["mlp_dim"])
+        config.lr= float(request_config["lr"])
+        config.batch_size= int(request_config["batch_size"])
+        config.epochs= int(request_config["epochs"])
+        return config
+
+
 
 def load_config_from_preprocessor(config : nn_manager.Config, preprocessor : preprocessing.Preprocessing)-> nn_manager.Config:
     config.absolute_frequency_distribution = preprocessor.absolute_frequency_distribution
@@ -572,14 +682,22 @@ def replace_with_mode():
     """
     if request.method == 'POST':
         request_config = request.get_json()
+
         if not isinstance(request_config["is_xes"],bool):
             return {"error": "is_xes should be boolean"}, 400
+
+        
         is_xes = request_config["is_xes"] 
+        if not isinstance(is_xes, bool):
+            return {"error": f"is_xes param should be boolean"},400 
         path_to_log = str(request_config["path_to_log"])
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         save_path= str(request_config["save_path"])
+        path = save_path
+        if os.path.isfile(save_path):
+            return {"error": f"{save_path} already exists..."},400 
         if not is_xes: 
             sep= str(request_config["sep"])
         else: 
@@ -590,19 +708,19 @@ def replace_with_mode():
         try: 
             preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
         except Exception as e: 
-            return {"error": str(e)}, 400
+            return {
+                "error":str(e),
+                "description": "error while importing"
+            }, 400
+
         success= preprocessor.replace_activity_nan_with_mode()
         if success:
-
-            path = save_path
-            if os.path.isfile(save_path):
-                return {"error": f"{save_path} already exists..."},400 
             preprocessor.event_df.to_csv(save_path, sep = ",")
             return {
                 "status": "successfully finished", 
                 "save_path":save_path
                 }, 200
-        return {"error": "something went wrong..."}, 400
+        return {"error": "nan replacement went wrong..."}, 400
 
 
 
@@ -630,21 +748,28 @@ def add_unique_start_end():
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         save_path= str(request_config["save_path"])
+
+        path = save_path
+        if os.path.isfile(save_path):
+            return {"error": f"{save_path} already exists..."},400 
         if not is_xes: 
             sep= str(request_config["sep"])
         else: 
             sep = "" 
 
         preprocessor = preprocessing.Preprocessing()
+
         try: 
             preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
         except Exception as e: 
-            return {"error": str(e)}, 400
+            return {
+                "error":str(e),
+                "description": "error while importing"
+            }, 400
+
+
         success= preprocessor.add_unique_start_end_activity()
         if success:
-            path = save_path
-            if os.path.isfile(save_path):
-                return {"error": f"{save_path} already exists..."},400 
             preprocessor.event_df.to_csv(save_path, sep = ",")
             return {
                 "status": "successfully created", 
@@ -677,6 +802,9 @@ def remove_duplicates():
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         save_path= str(request_config["save_path"])
+        if os.path.isfile(save_path):
+            return {"error": f"{save_path} already exists..."},400 
+
         if not is_xes: 
             sep= str(request_config["sep"])
         else:
@@ -686,17 +814,18 @@ def remove_duplicates():
         try: 
             preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
         except Exception as e: 
-            return {"error": str(e)}, 400
+            return {
+                "error":str(e),
+                "description": "error while importing"
+            }, 400
 
 
         success= preprocessor.remove_duplicate_rows()
         if success:
             path = save_path
-            if os.path.isfile(save_path):
-                return {"error": f"{save_path} already exists..."},400 
             preprocessor.event_df.to_csv(save_path, sep = ",")
             return {"save_path":save_path}, 200
-        return {"error": "something went wrong..."},400 
+        return {"error": "removing duplicates went wrong..."},400 
 
 
 
