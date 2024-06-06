@@ -254,32 +254,32 @@ def multiple_prediction():
         return paths #they are already encoded
 
 
-@routes.route('/single_prediction', methods = ["GET"])
+@routes.route('/single_prediction', methods = ["POST"])
 def single_prediction():
-    if request.method == 'GET':
-        request_config = request.args.to_dict()
-        is_xes = True if request_config["is_xes"]=="True" else False
-
+    if request.method == 'POST':
+        request_config = request.get_json()
+        print(request_config.keys())
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         path_to_log = str(request_config["path_to_log"])
         preprocessor = preprocessing.Preprocessing()
 
-        if is_xes:
-            #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
-            preprocessor.import_event_log_xes(path_to_log , case_id, activity, timestamp)# bpi 2019
-        else:
-            preprocessor.import_event_log_csv(path_to_log , case_id, activity, timestamp, ',')
+        try: 
+            preprocessor.handle_import(False, path_to_log, case_id, timestamp, activity,sep=",", formatting=False )
+        except Exception as e: 
+            return {"error": str(e)}, 400
 
         input_df = preprocessor.event_df
 
-        cuda = True if request_config["cuda"]=="True" else False
+        cuda = False
 
         path_to_model = str(request_config["path_to_model"])
 
         config = nn_manager.Config()
-        dic =  json.loads(request_config.get("config"))
+        with open (request_config["config"], "r") as f:
+            dic = json.load(f)
+            dic["time_precision"] = "NS"
         config.load_config(dic)
 
         neural_manager = nn_manager.NNManagement(config)
@@ -293,12 +293,8 @@ def single_prediction():
         )
 
         time, event = pm.single_prediction_dataframe(input_df)
-        print(time)
-        print(event)
-        return jsonify({
-            "predicted_time":float(time), 
-            "predicted_event":int(event)
-        })
+        return pm.jsonify_single(time, event)
+        
 
 
 @routes.route('/random_search', methods = ["POST"])
