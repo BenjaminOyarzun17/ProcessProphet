@@ -36,8 +36,8 @@ def test():
     }
 
 
-@routes.route("/token_replay", methods = ["POST"])
-def token_replay():
+@routes.route("/conformance", methods = ["POST"])
+def conformance():
     
     if request.method == 'POST':
         request_config = request.args.to_dict()
@@ -50,8 +50,8 @@ def token_replay():
         conformance_technique=  str(request_config.get("conformance_technique"))
         preprocessor = preprocessing.Preprocessing()
         preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
-        # select cuda or not
-
+    
+ 
         with open(f"{petri_net_path}.json", "r") as f: 
             pn_config = json.load(f)
 
