@@ -3,6 +3,7 @@ from ProcessProphet import ProcessProphet
 from ProcessProphetPreprocessing import ProcessProphetPreprocessing
 from ProcessProphetTrain import ProcessProphetTrain
 from ProcessProphetPredict import ProcessProphetPredict
+from ProcessProphetModel import ProcessProphetModel
 import os
 from loggers import logger_set_params_cli
 from dotenv import load_dotenv
@@ -36,7 +37,7 @@ class ProcessProphetStart:
     def launch_predictor(self):
         predictor = ProcessProphetPredict(self.pp)
     def launch_conformance(self):
-        pass
+        conformance_checker = ProcessProphetModel(self.pp)
 
 
     def select_manager(self) : 
@@ -54,7 +55,7 @@ class ProcessProphetStart:
             "",
             ptg.Button(f"{self.pp.button_color}make predictions", lambda *_: self.launch_predictor()), 
             "",
-            ptg.Button(f"{self.pp.button_color}conformance checking", lambda *_: self.pp.switch_window(self.launch_conformance())), 
+            ptg.Button(f"{self.pp.button_color}conformance checking", lambda *_:self.launch_conformance()), 
             "",
             ptg.Button(f"{self.pp.button_color}back to menu", lambda *_: self.pp.switch_window(self.main_menu())), 
         ] 
