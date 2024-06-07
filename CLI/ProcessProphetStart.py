@@ -102,7 +102,7 @@ class ProcessProphetStart:
         
         
         message = f"directory created in path {os.getcwd()}/{self.pp.state.projects_path}/{name}"
-        subdirectories = ["input_logs", "models", "petri_nets", "predictive_logs", "partial_traces", "decoded_dfs"]
+        subdirectories = ["input_logs", "models", "petri_nets", "predictive_logs", "partial_traces", "decoded_dfs", "multiple_predictions_path"]
         os.mkdir(f"{os.getcwd()}/{self.pp.state.projects_path}/{name}")
         self.pp.state.current_project = name
         self.pp.state.input_logs_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/input_logs"
@@ -111,7 +111,7 @@ class ProcessProphetStart:
         self.pp.state.predictive_logs_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/predictive_logs"
         self.pp.state.partial_traces_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/partial_traces"
         self.pp.state.decoded_dfs_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/decoded_dfs"
-        self.pp.state.multiple_predictions_path= f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/decoded_dfs"
+        self.pp.state.multiple_predictions_path= f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/multiple_predictions_path"
         for subdirectory in subdirectories: 
             os.mkdir(f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/{subdirectory}")
 
