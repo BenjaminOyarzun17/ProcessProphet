@@ -10,11 +10,11 @@ from process_prophet_modes import ProcessProphetMode
 
 
 
-
-
-
 load_dotenv()
 SERVER_NAME= os.getenv('SERVER_NAME')
+SERVER_PORT= os.getenv('SERVER_PORT')
+
+
 
 
 class ProcessProphetStart: 
