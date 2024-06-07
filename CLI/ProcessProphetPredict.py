@@ -17,11 +17,13 @@ class ProcessProphetPredict:
 
     def prediction_main_menu(self) : 
         container = ptg.Container(
-            "select one single or multiple prediction generation", 
+            "select a prediction generation method", 
             "", 
             ptg.Button("single prediction", lambda *_: self.pp.switch_window(self.set_single_prediction_params())), 
             "",
             ptg.Button("multiple prediction", lambda *_: self.pp.switch_window(self.set_multiple_prediction_params())), 
+            "",
+            ptg.Button("back", lambda *_: self.return_to_menu()), 
         )
 
         window = ptg.Window(container, box="DOUBLE")
@@ -88,8 +90,13 @@ class ProcessProphetPredict:
                 ptg.Button("return to menu", lambda *_:self.return_to_menu()), 
             )
         else: 
+            data = response.json()
+            error = data["error"]
             container = ptg.Container(
                 "single prediction FAILED:",
+                "",
+                f"{error}", 
+                "",
                 ptg.Button("back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
             )
         window = ptg.Window(container, box="DOUBLE")
@@ -156,19 +163,20 @@ class ProcessProphetPredict:
 
             paths = data
 
-            #append predicted paths to log file
-            #with open('/project/multiple_predictions_path', 'a') as log_file:
-                #for path in paths:
-                    #log_file.write(f'{path}\n')
-            
+       
 
             container = ptg.Container(
                 f"Multiple predictions stored in {params["prediction_file_name"]}", 
                 ptg.Button("back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
             )
         else: 
+            data = response.json()
+            error = data["error"]
             container = ptg.Container(
                 "multiple prediction FAILED:",
+                "",
+                f"{error}", 
+                "",
                 ptg.Button("back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
             )
         window = ptg.Window(container, box="DOUBLE")
@@ -207,4 +215,4 @@ class ProcessProphetPredict:
         """
         returns to p.p. start
         """
-        pp_start = ProcessProphetStart.ProcessProphetStart(self.pp)
+        pp_start = ProcessProphetStart.ProcessProphetStart(self.pp, False)
