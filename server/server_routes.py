@@ -310,6 +310,8 @@ def multiple_prediction():
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         path_to_log = str(request_config["path_to_log"])
+        prediction_file_name= str(request_config["prediction_file_name"])
+
         preprocessor = preprocessing.Preprocessing()
 
         try: 
@@ -345,9 +347,8 @@ def multiple_prediction():
             input_df
         )
         paths = pm.jsonify_paths()
-        
-        #with open('/projects/multiple_predictions_path', 'w') as multi_predictions:
-            #json.dump(paths, multi_predictions)
+        with open(prediction_file_name, 'w') as multi_predictions:
+            json.dump(paths, multi_predictions, indent=2)
 
         return ok #they are already encoded
         # return ok + paths in file: json.dump + with open

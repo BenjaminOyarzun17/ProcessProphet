@@ -356,12 +356,12 @@ class PredictionManager:
             for time, (per, event) in path:
                 current_path["pairs"].append(
                     {
-                        "time": time, 
-                        "event": event, 
+                        "time":str(time) , 
+                        "event": str(event), 
                     }
                 )
             ans["paths"].append(current_path)
-        return json.dumps(ans)
+        return ans
 
     def multiple_prediction_dataframe(self, depth, degree, df, linear=False, non_stop = False, upper = 30):
         """

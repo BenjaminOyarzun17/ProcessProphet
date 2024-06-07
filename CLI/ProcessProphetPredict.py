@@ -110,7 +110,8 @@ class ProcessProphetPredict:
             self.case_id_key, 
             self.case_activity_key, 
             self.case_timestamp_key,
-            ptg.Button("continue", lambda *_: self.pp.switch_window(self.get_single_prediction()))
+            ptg.Button("continue", lambda *_: self.pp.switch_window(self.get_single_prediction())),
+            ptg.Button("back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
             ]
 
         window = ptg.Window(*container)
@@ -137,9 +138,10 @@ class ProcessProphetPredict:
             "activity_key":  self.case_activity_key.value, 
             "timestamp_key":  self.case_timestamp_key.value,  
             "is_xes": is_xes,
-            "config": f"{self.pp.state.models_path}/{self.model_name.value}.config.json",
+            "config": f"{self.pp.state.models_path}/{self.model_name.value[:-3]}.config.json",
             "depth": self.depth.value,
-            "degree": self.degree.value
+            "degree": self.degree.value, 
+            "prediction_file_name": f"{self.pp.state.multiple_predictions_path}/{self.prediction_file_name_input.value}"
         }
 
         response = requests.post(
@@ -161,8 +163,8 @@ class ProcessProphetPredict:
             
 
             container = ptg.Container(
-                "Multiple predictions stored in multiple_predictions_path", 
-                ptg.Button("return to menu", lambda *_: self.pp.switch_window(self.return_to_menu())) 
+                f"Multiple predictions stored in {params["prediction_file_name"]}", 
+                ptg.Button("back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
             )
         else: 
             container = ptg.Container(
@@ -181,17 +183,20 @@ class ProcessProphetPredict:
         self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
         self.depth= ptg.InputField("5", prompt="depth: ")
         self.degree= ptg.InputField("3", prompt="degree: ")
+        self.prediction_file_name_input = ptg.InputField("mp1.json", prompt= "predictions file name: ")
 
         container = [
             ptg.Label(f"set parameters for prediction"), 
             self.model_name ,
             self.log_name,
+            self.prediction_file_name_input,
             self.case_id_key, 
             self.case_activity_key, 
             self.case_timestamp_key,
             self.depth,
             self.degree,
-            ptg.Button("continue", lambda *_: self.pp.switch_window(self.get_multiple_prediction()))
+            ptg.Button("continue", lambda *_: self.pp.switch_window(self.get_multiple_prediction())), 
+            ptg.Button("back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
             ]
 
         window = ptg.Window(*container)
