@@ -790,6 +790,9 @@ def load_config_from_preprocessor(config : nn_manager.Config, preprocessor : pre
 
 
 @routes.route('/replace_with_mode', methods = ["POST"])
+@check_booleans_factory(["is_xes"])
+@check_required_paths_factory(["path_to_log"])
+@check_not_present_paths_factory(["save_path"])
 def replace_with_mode():
     """
     replaces NaN's in the activity column with median
@@ -803,21 +806,14 @@ def replace_with_mode():
     if request.method == 'POST':
         request_config = request.get_json()
 
-        if not isinstance(request_config["is_xes"],bool):
-            return {"error": "is_xes should be boolean"}, 400
 
         
         is_xes = request_config["is_xes"] 
-        if not isinstance(is_xes, bool):
-            return {"error": f"is_xes param should be boolean"},400 
         path_to_log = str(request_config["path_to_log"])
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         save_path= str(request_config["save_path"])
-        path = save_path
-        if os.path.isfile(save_path):
-            return {"error": f"{save_path} already exists..."},400 
         if not is_xes: 
             sep= str(request_config["sep"])
         else: 
@@ -847,6 +843,9 @@ def replace_with_mode():
 
 
 @routes.route('/add_unique_start_end', methods = ["POST"])
+@check_booleans_factory(["is_xes"])
+@check_required_paths_factory(["path_to_log"])
+@check_not_present_paths_factory(["save_path"])
 def add_unique_start_end():
     """
     adds a unique start/end activity to the log
@@ -859,8 +858,6 @@ def add_unique_start_end():
     """
     if request.method == 'POST':
         request_config = request.get_json()
-        if not isinstance(request_config["is_xes"],bool):
-            return {"error": "is_xes should be boolean"}, 400
 
         is_xes = request_config["is_xes"] 
         path_to_log = str(request_config["path_to_log"])
@@ -869,9 +866,6 @@ def add_unique_start_end():
         timestamp= str(request_config["timestamp_key"])
         save_path= str(request_config["save_path"])
 
-        path = save_path
-        if os.path.isfile(save_path):
-            return {"error": f"{save_path} already exists..."},400 
         if not is_xes: 
             sep= str(request_config["sep"])
         else: 
@@ -898,6 +892,9 @@ def add_unique_start_end():
         return {"error": "operation not necessary, the log already has a unique start/end activity"}, 400
 
 @routes.route('/remove_duplicates', methods = ["POST"])
+@check_booleans_factory(["is_xes"])
+@check_required_paths_factory(["path_to_log"])
+@check_not_present_paths_factory(["save_path"])
 def remove_duplicates():
     """
     removes the duplicates ie the rows where the same activity happened at the same time in the same case id.
@@ -911,8 +908,6 @@ def remove_duplicates():
     """
     if request.method == 'POST':
         request_config = request.get_json()
-        if not isinstance(request_config["is_xes"],bool):
-            return {"error": "is_xes should be boolean"}, 400
 
         is_xes = request_config["is_xes"] 
 
@@ -922,8 +917,6 @@ def remove_duplicates():
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         save_path= str(request_config["save_path"])
-        if os.path.isfile(save_path):
-            return {"error": f"{save_path} already exists..."},400 
 
         if not is_xes: 
             sep= str(request_config["sep"])
