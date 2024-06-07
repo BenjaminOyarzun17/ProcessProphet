@@ -7,6 +7,91 @@ import pandas as pd
 
 #: this module tests the server routes
 
+class TestTrainingRoutes(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        SERVER_NAME="localhost"
+        SERVER_PORT=8080
+
+        cls.routes = [
+            f"http://{SERVER_NAME}:{SERVER_PORT}/multiple_prediction",
+            f"http://{SERVER_NAME}:{SERVER_PORT}/single_prediction",
+                      ]
+        cls.dummy_params = {
+            "path_to_log": "tests/dummy_data/partial_input.csv" , 
+            "case_id": "case:concept:name", 
+            "activity_key":  "concept:name", 
+            "timestamp_key": "time:timestamp" , 
+            "sep": ",", 
+            "path_to_model": "tests/dummy_data/prediction_test_model.pt", 
+            "config":"tests/dummy_data/prediction_test_model.config.pt", 
+            "depth": 3, 
+            "degree": 1, 
+            "prediction_file_name":"tests/dummy_data/prediction_test_prediction.json" 
+        }
+
+    def test_paths(self): 
+        for route in self.routes:
+            for file in ["path_to_log", "config", "path_to_model"]:
+                cpy = self.dummy_params.copy()
+                cpy[file]= "definitely not a path in any OS"
+            
+                response = requests.post(
+                    route,
+                    json= cpy, 
+                    timeout =6000
+                )
+                self.assertEqual(400, response.status_code)
+                data = response.json()
+                self.assertEqual(data["error"], "one required path does not exist")
+
+
+        cpy = self.dummy_params.copy()
+        cpy["prediction_file_name"]= "tests/dummy_data/DONOTDELETE.pt" 
+        response = requests.post(
+            self.routes[0],
+            json= cpy, 
+            timeout =6000
+        )
+        self.assertEqual(400, response.status_code)
+        data = response.json()
+        self.assertEqual(data["error"], "the target path for the new file already exists")
+         
+              
+    def test_wrong_integer_params(self): 
+        cpy = self.dummy_params.copy()
+        
+      
+        for param in ["degree", "path"]: 
+            cpy[param]= "definitely not an int value"
+            response = requests.post(
+                self.routes[0],
+                json= cpy, 
+                timeout =6000
+            )
+            self.assertEqual(400, response.status_code)
+            data = response.json()
+            self.assertEqual(data["error"], "an integer param was set to another type")
+    def test_file_creation(self):
+        for index, route in enumerate(self.routes): 
+            response = requests.post(
+                self.routes[0],
+                json= self.params, 
+                timeout =6000
+            )
+            self.assertEqual(response.status_code, 200)
+            if index == 0:  
+                exists = os.path.isfile(self.params["prediction_file_name"])
+                self.asserTrue(exists)
+            
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        try:
+            os.remove("tests/dummy_data/prediction_test_prediction.json")
+        except: 
+            pass
+    
 
 
 class TestTrainingRoutes(unittest.TestCase):

@@ -299,7 +299,7 @@ def generate_predictive_log():
 
 @routes.route('/multiple_prediction', methods = ["POST"])
 @check_required_paths_factory(["path_to_log", "config", "path_to_model"])
-#@check_not_present_paths_factory(["prediction_file_name"])
+@check_not_present_paths_factory(["prediction_file_name"])
 @check_integers_factory(["degree", "depth"])
 def multiple_prediction():
     if request.method == 'POST':
