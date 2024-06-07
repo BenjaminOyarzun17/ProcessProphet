@@ -2,6 +2,7 @@ import pytermgui as ptg
 from ProcessProphet import ProcessProphet
 from ProcessProphetPreprocessing import ProcessProphetPreprocessing
 from ProcessProphetTrain import ProcessProphetTrain
+from ProcessProphetPredict import ProcessProphetPredict
 import os
 from loggers import logger_set_params_cli
 from dotenv import load_dotenv
@@ -32,9 +33,8 @@ class ProcessProphetStart:
     def launch_trainer(self):
         trainer = ProcessProphetTrain(self.pp)
 
-
     def launch_predictor(self):
-        pass
+        predictor = ProcessProphetPredict(self.pp)
     def launch_conformance(self):
         pass
 
@@ -52,7 +52,7 @@ class ProcessProphetStart:
             "",
             ptg.Button(f"{self.pp.button_color}train neural network", lambda *_: self.launch_trainer()), 
             "",
-            ptg.Button(f"{self.pp.button_color}make predictions", lambda *_: self.pp.switch_window(self.launch_predictor())), 
+            ptg.Button(f"{self.pp.button_color}make predictions", lambda *_: self.launch_predictor()), 
             "",
             ptg.Button(f"{self.pp.button_color}conformance checking", lambda *_: self.pp.switch_window(self.launch_conformance())), 
             "",
