@@ -35,6 +35,22 @@ app.register_blueprint(server_routes.routes)
 
 
 
+def HL_shorter():
+    preprocessor = preprocessing.Preprocessing()
+    #path =  "data/train_day_joined.csv"
+    #path = "data/BPI_Challenge_2019.xes"
+    path = "data/Hospital_log.xes"
+    #path = "data/dummy.csv"
+    #path =  "data/running.csv"
+
+    preprocessor.handle_import(True,path,"case:concept:name", "time:timestamp", "concept:name") 
+    df = preprocessor.unencoded_df[:1000]
+    pm4py.write_xes(df, "Hospital_log_mini.xes")
+    pm4py.write_xes(df, "Hospital_log_mini1.xes")
+
+
+
+
 def generate_hospital_mini():
     preprocessor = preprocessing.Preprocessing()
     #path =  "data/train_day_joined.csv"
