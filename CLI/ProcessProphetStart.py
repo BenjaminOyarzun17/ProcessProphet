@@ -11,11 +11,11 @@ from process_prophet_modes import ProcessProphetMode
 
 
 
-
-
-
 load_dotenv()
 SERVER_NAME= os.getenv('SERVER_NAME')
+SERVER_PORT= os.getenv('SERVER_PORT')
+
+
 
 
 class ProcessProphetStart: 
@@ -63,20 +63,12 @@ class ProcessProphetStart:
         window.center()
         return window
 
-<<<<<<< HEAD
-    def notifyproject_creation(self, message, success): 
-=======
     def notify_project_creation(self, message, success): 
->>>>>>> 087e77c (testing train, random search, grid search routes done. error handling and exception handling in train routes also done)
         if success: 
             container =ptg.Container( 
                 ptg.Label(f"{message}"),
                 "",
-<<<<<<< HEAD
-                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switchwindow(self.select_mode())), 
-=======
                 ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.select_mode())), 
->>>>>>> 087e77c (testing train, random search, grid search routes done. error handling and exception handling in train routes also done)
                 "",
                 ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
             )
@@ -84,21 +76,13 @@ class ProcessProphetStart:
             container = ptg.Container( 
                 ptg.Label(f"{message}!"),
                 "",
-<<<<<<< HEAD
-                ptg.Button(f"{self.pp.buttoncolor}back to menu", lambda *_: self.pp.switch_window(self.main_menu()))
-=======
                 ptg.Button(f"{self.pp.button_color}back to menu", lambda *_: self.pp.switch_window(self.main_menu()))
->>>>>>> 087e77c (testing train, random search, grid search routes done. error handling and exception handling in train routes also done)
             )
 
 
         window = ptg.Window(container, box="DOUBLE")
         window.center()
-<<<<<<< HEAD
         return window
-=======
-        return window 
->>>>>>> 087e77c (testing train, random search, grid search routes done. error handling and exception handling in train routes also done)
 
     def handle_project_name_input(self):
         name = self.project_name_input.value
