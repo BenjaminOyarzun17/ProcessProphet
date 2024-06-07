@@ -1,0 +1,7051 @@
+{
+  "paths": [
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "ligdagen - alle spec.beh.kinderg.-reval."
+        }
+      ],
+      "percentage": "ligdagen - alle spec.beh.kinderg.-reval."
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "ligdagen - alle spec.beh.kinderg.-reval."
+        }
+      ],
+      "percentage": "ligdagen - alle spec.beh.kinderg.-reval."
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "ligdagen - alle spec.beh.kinderg.-reval."
+        }
+      ],
+      "percentage": "ligdagen - alle spec.beh.kinderg.-reval."
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "ureum"
+        }
+      ],
+      "percentage": "ureum"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "ureum"
+        }
+      ],
+      "percentage": "ureum"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "ureum"
+        }
+      ],
+      "percentage": "ureum"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "gammaglutamyltranspeptidase"
+        }
+      ],
+      "percentage": "gammaglutamyltranspeptidase"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "gammaglutamyltranspeptidase"
+        }
+      ],
+      "percentage": "gammaglutamyltranspeptidase"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "gammaglutamyltranspeptidase"
+        }
+      ],
+      "percentage": "gammaglutamyltranspeptidase"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "creatinine"
+        }
+      ],
+      "percentage": "creatinine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "creatinine"
+        }
+      ],
+      "percentage": "creatinine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "creatinine"
+        }
+      ],
+      "percentage": "creatinine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "ligdagen - alle spec.beh.kinderg.-reval."
+        }
+      ],
+      "percentage": "ligdagen - alle spec.beh.kinderg.-reval."
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "ligdagen - alle spec.beh.kinderg.-reval."
+        }
+      ],
+      "percentage": "ligdagen - alle spec.beh.kinderg.-reval."
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "ligdagen - alle spec.beh.kinderg.-reval."
+        }
+      ],
+      "percentage": "ligdagen - alle spec.beh.kinderg.-reval."
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "ureum"
+        }
+      ],
+      "percentage": "ureum"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "ureum"
+        }
+      ],
+      "percentage": "ureum"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "ureum"
+        }
+      ],
+      "percentage": "ureum"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "gammaglutamyltranspeptidase"
+        }
+      ],
+      "percentage": "gammaglutamyltranspeptidase"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "gammaglutamyltranspeptidase"
+        }
+      ],
+      "percentage": "gammaglutamyltranspeptidase"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "gammaglutamyltranspeptidase"
+        }
+      ],
+      "percentage": "gammaglutamyltranspeptidase"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "creatinine"
+        }
+      ],
+      "percentage": "creatinine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "creatinine"
+        }
+      ],
+      "percentage": "creatinine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "creatinine"
+        }
+      ],
+      "percentage": "creatinine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "5.403977394104004",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "ligdagen - alle spec.beh.kinderg.-reval."
+        }
+      ],
+      "percentage": "ligdagen - alle spec.beh.kinderg.-reval."
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "ligdagen - alle spec.beh.kinderg.-reval."
+        }
+      ],
+      "percentage": "ligdagen - alle spec.beh.kinderg.-reval."
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.02798080444336",
+          "event": "ligdagen - alle spec.beh.kinderg.-reval."
+        }
+      ],
+      "percentage": "ligdagen - alle spec.beh.kinderg.-reval."
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "calcium"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "albumine"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "actuele ph - pco2 - stand.bicarbonaat"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.799325704574585",
+          "event": "melkzuur enzymatisch"
+        },
+        {
+          "time": "8.218873023986816",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "4.606424808502197",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "vervolgconsult poliklinisch"
+        }
+      ],
+      "percentage": "vervolgconsult poliklinisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "9.328264236450195",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "kalium vlamfotometrisch - spoed"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "ureum"
+        }
+      ],
+      "percentage": "ureum"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "ureum"
+        }
+      ],
+      "percentage": "ureum"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "immunoglobuline g                    igg"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "6.1087965965271",
+          "event": "ordertarief"
+        },
+        {
+          "time": "8.98570442199707",
+          "event": "ureum"
+        }
+      ],
+      "percentage": "ureum"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "gammaglutamyltranspeptidase"
+        }
+      ],
+      "percentage": "gammaglutamyltranspeptidase"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "gammaglutamyltranspeptidase"
+        }
+      ],
+      "percentage": "gammaglutamyltranspeptidase"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "calcium"
+        }
+      ],
+      "percentage": "calcium"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "albumine"
+        }
+      ],
+      "percentage": "albumine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "calcium"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "3.645228862762451",
+          "event": "gammaglutamyltranspeptidase"
+        }
+      ],
+      "percentage": "gammaglutamyltranspeptidase"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "190205 klasse 3b        a205"
+        }
+      ],
+      "percentage": "190205 klasse 3b        a205"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "ordertarief"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.182267665863037",
+          "event": "ordertarief"
+        }
+      ],
+      "percentage": "ordertarief"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "co-hb kwn."
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "creatinine"
+        }
+      ],
+      "percentage": "creatinine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "methemoglobine - sulfhemoglobine elk"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "creatinine"
+        }
+      ],
+      "percentage": "creatinine"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "aanname laboratoriumonderzoek"
+        }
+      ],
+      "percentage": "aanname laboratoriumonderzoek"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "hemoglobine foto-elektrisch"
+        }
+      ],
+      "percentage": "hemoglobine foto-elektrisch"
+    },
+    {
+      "pairs": [
+        {
+          "time": "1108598400000000000",
+          "event": "1e consult      bezoek"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "-2.1572561264038086",
+          "event": "hyperthermie behandeling - h-1 -"
+        },
+        {
+          "time": "4.370220184326172",
+          "event": "albumine"
+        },
+        {
+          "time": "2.6767749786376953",
+          "event": "calcium - spoed"
+        },
+        {
+          "time": "7.631124019622803",
+          "event": "creatinine"
+        }
+      ],
+      "percentage": "creatinine"
+    }
+  ]
+}
