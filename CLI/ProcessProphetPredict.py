@@ -128,14 +128,14 @@ class ProcessProphetPredict:
 
         params = {
             "path_to_log": f"{input_logs_path}/{self.log_name.value}" ,  
-            "model_path": f"{self.pp.state.models_path}/{self.model_name.value}", 
+            "path_to_model": f"{self.pp.state.models_path}/{self.model_name.value}", 
             "case_id": self.case_id_key.value, 
             "activity_key":  self.case_activity_key.value, 
-            "timestamp_key":  self.case_timestamp_key.value,   
+            "timestamp_key":  self.case_timestamp_key.value,  
             "is_xes": is_xes,
+            "config": f"{self.pp.state.models_path}/{self.model_name.value}.config.json",
             "depth": self.depth.value,
-            "degree": self.degree.value,
-            "config": f"{input_logs_path}/{self.log_name.value}.config.json"
+            "degree": self.degree.value
         }
 
         response = requests.post(
@@ -144,19 +144,20 @@ class ProcessProphetPredict:
             timeout =8000
         )
         if response.status_code == 200: 
-            logger_set_params_cli.debug(response.content)
+            #logger_set_params_cli.debug(response.content)
+            print("alles ok")
             data = response.json()
 
             paths = data
 
             #append predicted paths to log file
-            with open('/logs/multiple_prediction.log', 'a') as log_file:
-                for path in paths:
-                    log_file.write(f'{path}\n')
+            #with open('/project/multiple_predictions_path', 'a') as log_file:
+                #for path in paths:
+                    #log_file.write(f'{path}\n')
             
 
             container = ptg.Container(
-                "Multiple predictions stored in multiple_prediction.log", 
+                "Multiple predictions stored in multiple_predictions_path", 
                 ptg.Button("return to menu", lambda *_: self.pp.switch_window(self.return_to_menu())) 
             )
         else: 
@@ -170,7 +171,7 @@ class ProcessProphetPredict:
     
     def set_multiple_prediction_params(self):
         self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
-        self.log_name=  ptg.InputField("Hospital_log.xes", prompt="log name: ")
+        self.log_name=  ptg.InputField("partial_input.csv", prompt="log name: ")
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
         self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
         self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
