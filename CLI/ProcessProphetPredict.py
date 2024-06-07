@@ -61,7 +61,7 @@ class ProcessProphetPredict:
             "activity_key":  self.case_activity_key.value, 
             "timestamp_key":  self.case_timestamp_key.value,  
             "is_xes": is_xes,
-            "config": f"{self.pp.state.models_path}/{self.model_name.value}.config.json",
+            "config": f"{self.pp.state.models_path}/{self.model_name.value[:-3]}.config.json",
         }
 
 
@@ -81,7 +81,7 @@ class ProcessProphetPredict:
                 "single prediction successful", 
                 f"predicted time: {statistics['predicted_time']}", 
                 f"predicted event: {statistics['predicted_event']}",
-                ptg.Button("return to menu", lambda *_: self.pp.switch_window(self.return_to_menu())), 
+                ptg.Button("return to menu", lambda *_:self.return_to_menu()), 
             )
         else: 
             container = ptg.Container(
