@@ -90,19 +90,21 @@ class PredictionManager:
         make one prediction given a partial process. 
         """
         #: sliding window
+        
+
+
         step1= RMTPP_torch.ATMDataset(self.config,self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key)
         #: just create one batch
         step2 = DataLoader(step1, batch_size=len(step1.time_seqs), shuffle=False, collate_fn=RMTPP_torch.ATMDataset.to_features)
 
         #: get the batch
         batch = next(iter(step2))
-        pred_time, pred_event = self.model.predict(batch, pm_active = True)
-        time_pred = pred_time[-1][-1]
-        event_pred = pred_event[-1]
+        event_pred, prob, time_pred= self.model.predict(batch, pm_active = True)
         
-        return time_pred,  event_pred
+        
+        return time_pred,  event_pred, prob
 
-    def jsonify_single(self, time_pred, event_pred): 
+    def jsonify_single(self, time_pred, event_pred, prob): 
         """
         note that we just save the
         probability of the last pair (time, event) in the path, 
@@ -110,14 +112,20 @@ class PredictionManager:
         the probability of the last predicted event happening
         in the predicted time t. 
         """
-        print(time_pred)
-        print(type(float(time_pred)))
         decoded_event = self.config.activity_le.inverse_transform([event_pred])
-        print(decoded_event)
-        print(type(decoded_event))
+
+        #: decode the timestamp
+        timestamps= self.encoded_df[self.timestamp_key].copy()
+        timestamps = timestamps*self.config.exponent
+        timestamps.iloc[0]= timestamps.iloc[0]+ time_pred
+        timestamps = timestamps.astype("datetime64[ns]")
+
+
+        new_time = timestamps.iloc[0]
         ans = {
-            "predicted_time":float(time_pred), 
-            "predicted_event":decoded_event[0]
+            "predicted_time":str(new_time), 
+            "predicted_event":decoded_event[0], 
+            "probability": prob
         }
         return json.dumps(ans)
 

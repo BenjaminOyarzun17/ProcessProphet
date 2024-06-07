@@ -118,8 +118,21 @@ class Net(nn.Module):
         if pm_active: 
             #TODO: return also the prob in case that pmm_active set 
             # to true (in the context of pred management)
-            pass
+            #retevent_pred_with_indices= []
+            lst = event_logits.detach().cpu().numpy().tolist()
+            last = softmax(lst[-1]).tolist() #get event logits from last run
+            max_prob = max(last)
+            event_index = last.index(max_prob) #compute argmax 
+            time_pred = time_logits.detach().cpu().numpy().tolist() #: get last time prdiction
+            return event_index, max_prob,time_pred[-1][-1]
+
+        
+        #print(type(event_pred))
+        #print(event_pred.shape)
+        #print(event_pred)
         time_pred = time_logits.detach().cpu().numpy()
+        print("pred:")
+        print(time_pred, event_pred)
         return time_pred, event_pred
 
 
