@@ -177,7 +177,6 @@ def generate_predictive_process_model():
         timestamp= str(request_config["timestamp_key"])
         path_to_log = str(request_config["path_to_log"])
         path_to_model = str(request_config["path_to_model"])
-        cuda = True if request_config["cuda"]=="True" else False
         dic =  json.loads(request_config.get("config"))
         new_log_path=  request_config.get("new_log_path")
         selected_model  =  str(request_config.get("selected_model"))
@@ -230,37 +229,35 @@ def generate_predictive_process_model():
 
 
 
-@routes.route('/generate_predictive_log', methods = ["GET"])
+@routes.route('/generate_predictive_log', methods = ["POST"])
 def generate_predictive_log():
     
-    if request.method == 'GET':
-        request_config = request.args.to_dict()
-        is_xes = True if request_config["is_xes"]=="True" else False
-        
-
+    if request.method == 'POST':
+        request_config = request.get_json()
+        is_xes = request_config["is_xes"]
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         path_to_log = str(request_config["path_to_log"])
         path_to_model = str(request_config["path_to_model"])
-        cuda = True if request_config["cuda"]=="True" else False
         non_stop = bool(request_config["non_stop"])
         upper = int(request_config["upper"])
         random_cuts =bool(request_config["random_cuts"])
         cut_length = int(request_config["cut_length"])
-        dic =  json.loads(request_config.get("config"))
         new_log_path=  request_config.get("new_log_path")
+        sep=  request_config.get("sep")
 
 
         preprocessor = preprocessing.Preprocessing()
-        if is_xes:
-            #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
-            preprocessor.import_event_log_xes(path_to_log , case_id, activity, timestamp)# bpi 2019
-        else:
-            preprocessor.import_event_log_csv(path_to_log , case_id, activity, timestamp, ',')
 
+        preprocessor.handle_import(is_xes,path_to_log,case_id, timestamp,activity, sep= sep)
+       
 
         config = nn_manager.Config()
+
+        with open(request_config["config"], "r") as f: 
+            dic = json.load(f)
+
         config.load_config(dic)
 
         neural_manager = nn_manager.NNManagement(config)
