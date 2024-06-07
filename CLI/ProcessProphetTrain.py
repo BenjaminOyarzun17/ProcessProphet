@@ -430,7 +430,7 @@ class ProcessProphetTrain:
             ]
         else: 
             data =response.json()
-            error = data["error"]
+            error = data[""]
             container =[  
                 "training FAILED:", 
                 "",
