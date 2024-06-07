@@ -21,7 +21,7 @@ class TestTrainingRoutes(unittest.TestCase):
             f"http://{SERVER_NAME}:{SERVER_PORT}/grid_search" 
                       ]
         cls.dummy_params = {
-            "path_to_log": "tests/dummy_data/Hospital_log_mini.xes" , 
+            "path_to_log": "tests/dummy_data/Hospital_log_mini1.xes" , 
             "case_id": "case:concept:name", 
             "activity_key":  "concept:name", 
             "timestamp_key": "time:timestamp" , 
@@ -309,7 +309,6 @@ class TestTrainingRoutes(unittest.TestCase):
         except: 
             pass
 
-"""
 class TestPreprocessingRoutes(unittest.TestCase):
     #:tests the three preprocessing routes
     @classmethod
@@ -345,17 +344,17 @@ class TestPreprocessingRoutes(unittest.TestCase):
             )
             self.assertEqual(400, response.status_code)
             data = response.json()
-            self.assertDictEqual({"error": "is_xes should be boolean"}, data)
+            self.assertDictEqual({"error": "a boolean param was set to another type"}, data)
             response = requests.post(
                 route,
                 json= {
-                    "is_xes": "True"
+                    "is_xes": "True" #this is not aboolean xd
                 },
                 timeout =6000
             )
             self.assertEqual(400, response.status_code)
             data = response.json()
-            self.assertDictEqual({"error": "is_xes should be boolean"}, data)
+            self.assertDictEqual({"error": "a boolean param was set to another type"}, data)
 
     def test_path_does_not_exist(self):
         for route in self.routes:
@@ -385,7 +384,7 @@ class TestPreprocessingRoutes(unittest.TestCase):
             )
             self.assertEqual(400, response.status_code)
             data = response.json()
-            self.assertDictEqual({"error": f"{cpy['save_path']} already exists..."}, data)
+            self.assertDictEqual({"error": f"the target path for the new file already exists"}, data)
     def test_wrong_column_name(self):
         for route in self.routes:
             cpy = self.dummy_params
@@ -481,7 +480,6 @@ class TestPreprocessingRoutes(unittest.TestCase):
         except: 
             pass
 
-"""
 
 
 
