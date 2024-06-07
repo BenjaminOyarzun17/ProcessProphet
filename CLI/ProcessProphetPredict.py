@@ -81,6 +81,10 @@ class ProcessProphetPredict:
                 "single prediction successful", 
                 f"predicted time: {statistics['predicted_time']}", 
                 f"predicted event: {statistics['predicted_event']}",
+                f"probability: {statistics['probability']}%",
+                "",
+                ptg.Button("back", lambda *_:self.pp.switch_window(self.prediction_main_menu())), 
+                "",
                 ptg.Button("return to menu", lambda *_:self.return_to_menu()), 
             )
         else: 
@@ -144,7 +148,6 @@ class ProcessProphetPredict:
             timeout =8000
         )
         if response.status_code == 200: 
-            logger_set_params_cli.debug(response.content)
             data = response.json()
 
             paths = data

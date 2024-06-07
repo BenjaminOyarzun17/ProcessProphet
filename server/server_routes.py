@@ -291,12 +291,6 @@ def generate_predictive_log():
 
 
 
-
-
-
-
-
-
 @routes.route('/multiple_prediction', methods = ["GET"])
 def multiple_prediction():
     if request.method == 'GET':
@@ -352,7 +346,6 @@ def multiple_prediction():
 def single_prediction():
     if request.method == 'POST':
         request_config = request.get_json()
-        print(request_config.keys())
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
@@ -366,7 +359,7 @@ def single_prediction():
 
         input_df = preprocessor.event_df
 
-        cuda = False
+        cuda = False #: TODO: check if cuda is also used for making predictions.
 
         path_to_model = str(request_config["path_to_model"])
 
@@ -386,8 +379,8 @@ def single_prediction():
             config
         )
 
-        time, event = pm.single_prediction_dataframe(input_df)
-        return pm.jsonify_single(time, event)
+        time, event, prob = pm.single_prediction_dataframe(input_df)
+        return pm.jsonify_single(time, event, prob)
         
 
 
