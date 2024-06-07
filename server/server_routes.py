@@ -291,11 +291,18 @@ def generate_predictive_log():
 
 
 
-@routes.route('/multiple_prediction', methods = ["GET"])
+
+
+
+
+
+
+@routes.route('/multiple_prediction', methods = ["POST"])
 def multiple_prediction():
-    if request.method == 'GET':
-        request_config = request.args.to_dict()
-        is_xes = True if request_config["is_xes"]=="True" else False
+    if request.method == 'POST':
+        request_config = request.get_json()
+        #might need to delete
+        #is_xes = True if request_config["is_xes"]=="True" else False
 
         depth = int(request_config["depth"])
         degree = int(request_config["degree"])
@@ -305,20 +312,21 @@ def multiple_prediction():
         path_to_log = str(request_config["path_to_log"])
         preprocessor = preprocessing.Preprocessing()
 
-        if is_xes:
-            #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
-            preprocessor.import_event_log_xes(path_to_log , case_id, activity, timestamp)# bpi 2019
-        else:
-            preprocessor.import_event_log_csv(path_to_log , case_id, activity, timestamp, ',')
+        try: 
+            preprocessor.handle_import(False, path_to_log, case_id, timestamp, activity,sep=",", formatting=False )
+        except Exception as e: 
+            return {"error": str(e)}, 400
 
         input_df = preprocessor.event_df
 
-        cuda = True if request_config["cuda"]=="True" else False
+        cuda = False
 
         path_to_model = str(request_config["path_to_model"])
 
         config = nn_manager.Config()
-        dic =  json.loads(request_config.get("config"))
+        with open (request_config["config"], "r") as f:
+            dic = json.load(f)
+            dic["time_precision"] = "NS"
         config.load_config(dic)
 
         neural_manager = nn_manager.NNManagement(config)
@@ -338,7 +346,11 @@ def multiple_prediction():
         )
         paths = pm.jsonify_paths()
         
-        return paths #they are already encoded
+        #with open('/projects/multiple_predictions_path', 'w') as multi_predictions:
+            #json.dump(paths, multi_predictions)
+
+        return ok #they are already encoded
+        # return ok + paths in file: json.dump + with open
 
 
 @routes.route('/single_prediction', methods = ["POST"])
