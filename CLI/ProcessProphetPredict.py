@@ -148,11 +148,8 @@ class ProcessProphetPredict:
             timeout =8000
         )
         if response.status_code == 200: 
-<<<<<<< HEAD
-=======
             #logger_set_params_cli.debug(response.content)
             print("alles ok")
->>>>>>> maxim
             data = response.json()
 
             paths = data
