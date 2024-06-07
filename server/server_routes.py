@@ -329,6 +329,7 @@ def multiple_prediction():
         path_to_model = str(request_config["path_to_model"])
 
         config = nn_manager.Config()
+
         with open (request_config["config"], "r") as f:
             dic = json.load(f)
             dic["time_precision"] = "NS"
@@ -343,13 +344,17 @@ def multiple_prediction():
             timestamp, 
             config
         )
-
-        pm.multiple_prediction_dataframe(
-            depth, 
-            degree, 
-            input_df
-        )
+        try: 
+            pm.multiple_prediction_dataframe(
+                depth, 
+                degree, 
+                input_df
+            )
+        except Exception as e: 
+            return {"error": f"{str(e)}"},400 
         paths = pm.jsonify_paths()
+
+
         with open(prediction_file_name, 'w') as multi_predictions:
             json.dump(paths, multi_predictions, indent=2)
         return ok #they are already encoded
@@ -386,6 +391,7 @@ def single_prediction():
 
         neural_manager = nn_manager.NNManagement(config)
         neural_manager.import_nn_model(path_to_model)
+
         pm = prediction_manager.PredictionManager(
             neural_manager.model, 
             case_id, 
@@ -393,8 +399,10 @@ def single_prediction():
             timestamp, 
             config
         )
-
-        time, event, prob = pm.single_prediction_dataframe(input_df)
+        try:
+            time, event, prob = pm.single_prediction_dataframe(input_df)
+        except Exception as e: 
+            return {"error": f"{str(e)}"},400 
         return pm.jsonify_single(time, event, prob)
         
 
