@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 import pprint 
 import json
+import math
 import time
 import random
 import torch
@@ -351,13 +352,29 @@ class PredictionManager:
         for path in self.decoded_paths :
             current_path = {
                 'pairs':[], 
-                'percentage': path[-1][1][1]
+                'percentage': str(path[-1][1][0])
             }
-            for time, (per, event) in path:
+            first_time, (first_percentage, first_event) = path[0]
+            rest = path[1:]
+
+            #: rescale the timedeltas
+            rest_times = [math.ceil(time*self.config.exponent) for time, (prob, event) in rest] 
+
+
+            #: calculate the timestamp based on the first event 
+            rest_times = [time+first_time for time in rest_times]
+            times= [first_time] + rest_times
+            temp_df = pd.DataFrame({"times": times})
+            temp_df["times"] = temp_df["times"].astype("datetime64[ns]") #: a dataframe is used because we want to revese the encoding 
+            # with the same algorithm (in thie case provided by pandas)
+            times_decoded = temp_df["times"].tolist()
+            
+
+            for path_element, decoded_time in zip(path, times_decoded):
                 current_path["pairs"].append(
                     {
-                        "time":str(time) , 
-                        "event": str(event), 
+                        "time":str(decoded_time) , 
+                        "event": str(path_element[1][1]), 
                     }
                 )
             ans["paths"].append(current_path)
