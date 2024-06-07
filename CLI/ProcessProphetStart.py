@@ -11,11 +11,11 @@ from process_prophet_modes import ProcessProphetMode
 
 
 
-
-
-
 load_dotenv()
 SERVER_NAME= os.getenv('SERVER_NAME')
+SERVER_PORT= os.getenv('SERVER_PORT')
+
+
 
 
 class ProcessProphetStart: 
@@ -68,6 +68,7 @@ class ProcessProphetStart:
             container =ptg.Container( 
                 ptg.Label(f"{message}"),
                 "",
+                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.select_mode())), 
                 "",
                 ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
             )
