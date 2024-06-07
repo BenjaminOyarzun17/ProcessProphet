@@ -166,47 +166,51 @@ def conformance():
             fitness =pmm.conformance_checking_alignments()
         return {"fitness": fitness}, 200
 
-@routes.route('/generate_predictive_process_model', methods = ["GET"])
+@routes.route('/generate_predictive_process_model', methods = ["POST"])
 def generate_predictive_process_model():
     
-    if request.method == 'GET':
-        request_config = request.args.to_dict()
-        is_xes = True if request_config["is_xes"]=="True" else False
+    if request.method == 'POST':
+        request_config = request.get_json()
+        is_xes = False
+
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
+
         path_to_log = str(request_config["path_to_log"])
-        path_to_model = str(request_config["path_to_model"])
-        dic =  json.loads(request_config.get("config"))
-        new_log_path=  request_config.get("new_log_path")
+
         selected_model  =  str(request_config.get("selected_model"))
         petri_net_path  =  str(request_config.get("petri_net_path"))
 
-        minig_algo_config=  json.loads(request_config.get("mining_algo_config"))
+        minig_algo_config=  request_config.get("mining_algo_config")
+        sep = request_config["sep"]
 
 
         preprocessor = preprocessing.Preprocessing()
-        if is_xes:
-            #preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")# hospital
-            preprocessor.import_event_log_xes(path_to_log , case_id, activity, timestamp)# bpi 2019
-        else:
-            preprocessor.import_event_log_csv(path_to_log , case_id, activity, timestamp, ',')
+
+        preprocessor.handle_import(is_xes,path_to_log,case_id, timestamp,activity, sep= sep)
+
 
         config = nn_manager.Config()
+        
+        with open(request_config["config"], "r") as f: 
+            dic = json.load(f)
+
         config.load_config(dic)
-        neural_manager = nn_manager.NNManagement(config)
-        neural_manager.import_nn_model(path_to_model)
+       
 
         pmm = preprocessing.ProcessModelManager(
             preprocessor.event_df, 
-            neural_manager.model, 
-            neural_manager.config,
+            None, 
+            config,
             preprocessor.case_activity_key,
             preprocessor.case_id_key,
             preprocessor.case_timestamp_key
         )
+
         pmm.end_activities = preprocessor.find_end_activities()
-        pmm.import_predictive_df(new_log_path)
+
+        pmm.import_predictive_df(path_to_log)
         match selected_model: 
             case "alpha_miner":
                 pmm.alpha_miner(petri_net_path)
