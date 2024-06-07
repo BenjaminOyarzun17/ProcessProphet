@@ -102,7 +102,7 @@ class PredictionManager:
         
         return time_pred,  event_pred
 
-    def jsonify_single(self, time_pred, event_pred, prob): 
+    def jsonify_single(self, time_pred, event_pred): 
         """
         note that we just save the
         probability of the last pair (time, event) in the path, 
@@ -111,9 +111,8 @@ class PredictionManager:
         in the predicted time t. 
         """
         ans = {
-            "timestamp": time_pred, 
-            "event": self.config.activity_le.inverse_transform(event_pred),
-            "prob": prob
+            "predicted_time":float(time_pred), 
+            "predicted_event":self.config.activity_le.inverse_transform([event_pred])
         }
         json.dumps(ans)
 
