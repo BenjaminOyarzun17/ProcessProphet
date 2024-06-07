@@ -305,8 +305,13 @@ class ProcessProphetTrain:
                 ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
             ]
         else: 
+            data = response.json()
+            error = data["error"]
             container = [ 
                 "training FAILED:",
+                "",
+                f"{error}", 
+                "",
                 ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.set_training_params()))
             ]
         window = ptg.Window(*container, box="DOUBLE")
@@ -424,8 +429,13 @@ class ProcessProphetTrain:
                 ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
             ]
         else: 
+            data =response.json()
+            error = data["error"]
             container =[  
                 "training FAILED:", 
+                "",
+                f"{error}", 
+                "",
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.set_grid_search_params()))
             ]
         window = ptg.Window(*container, box="DOUBLE")
@@ -482,8 +492,13 @@ class ProcessProphetTrain:
                 ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
             ]
         else: 
+            data = response.json()
+            error = data["error"]
             container = [ 
                 "training FAILED:", 
+                "",
+                f"{error}", 
+                "",
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.set_random_search_params()))
             ]
         window = ptg.Window(*container, box="DOUBLE")
