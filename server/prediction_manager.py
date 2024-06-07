@@ -110,11 +110,16 @@ class PredictionManager:
         the probability of the last predicted event happening
         in the predicted time t. 
         """
+        print(time_pred)
+        print(type(float(time_pred)))
+        decoded_event = self.config.activity_le.inverse_transform([event_pred])
+        print(decoded_event)
+        print(type(decoded_event))
         ans = {
             "predicted_time":float(time_pred), 
-            "predicted_event":self.config.activity_le.inverse_transform([event_pred])
+            "predicted_event":decoded_event[0]
         }
-        json.dumps(ans)
+        return json.dumps(ans)
 
 
 

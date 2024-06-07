@@ -348,6 +348,7 @@ def multiple_prediction():
 
 
 @routes.route('/single_prediction', methods = ["POST"])
+@check_required_paths_factory(["path_to_log", "config", "path_to_model"])
 def single_prediction():
     if request.method == 'POST':
         request_config = request.get_json()
