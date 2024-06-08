@@ -61,9 +61,9 @@ class ProcessProphetModel:
             "activity_key":self.case_activity_key.value,
             "timestamp_key":self.case_timestamp_key.value,
             "new_log_path":f"{self.pp.state.predictive_logs_path}/{self.predictive_event_log_name.value}",
-            "non_stop":self.non_stop.value,
+            "non_stop":True if self.non_stop.value== "True" else False,
             "upper":self.upper .value,
-            "random_cuts":self.random_cuts.value,
+            "random_cuts": True if self.random_cuts.value == "True" else False,
             "cut_length":self.cut_length.value,
             "config":f"{self.pp.state.models_path}/{self.model_name.value[:-3]}.config.json",
             "is_xes": is_xes, 
@@ -87,13 +87,13 @@ class ProcessProphetModel:
                 ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
             ]
         else: 
-            #data = response.json()
-            #error = data["error"]
+            data = response.json()
+            error = data["error"]
             container = [ 
                 "training FAILED:",
-                #"",
-                #f"{error}", 
-                #"",
+                "",
+                f"{error}", 
+                "",
                 ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.model_main_menu()))
             ]
         window = ptg.Window(*container, box="DOUBLE")
@@ -107,7 +107,7 @@ class ProcessProphetModel:
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
         self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
         self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
-        self.predictive_event_log_name  = ptg.InputField("predicitive_log1.csv", prompt= "predictive log name: ")
+        self.predictive_event_log_name  = ptg.InputField("predicitive_log4.csv", prompt= "predictive log name: ")
         self.non_stop = ptg.InputField("True", prompt="run until end event: ")
         self.upper = ptg.InputField("30", prompt="non stop upper bound: ")
         self.random_cuts = ptg.InputField("True", prompt="use random cuts: ")
@@ -168,13 +168,13 @@ class ProcessProphetModel:
                 ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
             ]
         else: 
-            #data = response.json()
-            #error = data["error"]
+            data = response.json()
+            error = data["error"]
             container = [ 
                 "training FAILED:",
-                #"",
-                #f"{error}", 
-                #"",
+                "",
+                f"{error}", 
+                "",
                 ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.model_main_menu()))
             ]
         window = ptg.Window(*container, box="DOUBLE")
@@ -247,13 +247,13 @@ class ProcessProphetModel:
                 ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
             ]
         else: 
-            #data = response.json()
-            #error = data["error"]
+            data = response.json()
+            error = data["error"]
             container = [ 
                 "training FAILED:",
-                #"",
-                #f"{error}", 
-                #"",
+                "",
+                f"{error}", 
+                "",
                 ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.model_main_menu()))
             ]
         window = ptg.Window(*container, box="DOUBLE")
