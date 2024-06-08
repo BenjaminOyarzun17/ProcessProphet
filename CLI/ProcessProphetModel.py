@@ -19,6 +19,15 @@ class ProcessProphetModel:
         self.pp = pp
         self.pp.switch_window(self.model_main_menu())
 
+
+
+
+    def return_to_menu(self):
+        """
+        returns to p.p. start
+        """
+        pp_start = ProcessProphetStart.ProcessProphetStart(self.pp, False)
+
     def loading(self, message = ""): 
         """
         a loading screen 
@@ -41,7 +50,7 @@ class ProcessProphetModel:
             "", 
             ptg.Button("Run conformance checking", lambda *_: self.pp.switch_window(self.set_conformance_checking())), 
             "",
-            ptg.Button("Back", lambda *_: self.pp.switch_window(self.return_to_menu())), 
+            ptg.Button("Back", lambda *_: self.return_to_menu()), 
         )
 
         window = ptg.Window(container, box="DOUBLE")

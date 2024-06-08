@@ -359,7 +359,8 @@ class PredictionManager:
 
             #: rescale the timedeltas
             rest_times = [math.ceil(time*self.config.exponent) for time, (prob, event) in rest] 
-
+            for i in range(1,len(rest_times)-1):  #:calculate cumsum
+                rest_times[i] = rest_times[i]+ rest_times[i-1] 
 
             #: calculate the timestamp based on the first event 
             rest_times = [time+first_time for time in rest_times]

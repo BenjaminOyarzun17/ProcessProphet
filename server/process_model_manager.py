@@ -150,7 +150,6 @@ class ProcessModelManager:
             #: transform extension to dtaframe and extend the predictive df now with the predictions
             self.predictive_df= pd.concat([self.predictive_df, extension], ignore_index = True)
 
-        print(self.predictive_df)
         self.predictive_df=  self.predictive_df.sort_values(by=[self.case_id_key, self.case_timestamp_key])
         self.predictive_df = self.decode_df(self.predictive_df)
         #: TODO: the the sorting again by case id and timestamp --> if a 
@@ -283,7 +282,6 @@ class ProcessModelManager:
         :param loop_two_threshold:  loop two thrshold parameter for heursitic miner
         """
         self.predictive_df = self.decode_df(self.predictive_df)
-        print(self.predictive_df.dtypes)
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_heuristics(
             self.predictive_df,
             dependency_threshold, 

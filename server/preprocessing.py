@@ -302,7 +302,6 @@ class Preprocessing:
     def remove_duplicate_rows(self): 
         #: removes the duplicates ie the rows where the same activity happened at the same time in the same case id.
         # since we are dropping all the other columns, these duplicates make no sense.
-        print(self.event_df.columns)
         self.event_df = self.event_df.drop_duplicates(subset=[self.case_id_key, self.case_activity_key, self.case_timestamp_key])
         return True
 
