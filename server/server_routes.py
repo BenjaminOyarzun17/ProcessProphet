@@ -304,7 +304,7 @@ def generate_predictive_log():
         preprocessor = preprocessing.Preprocessing()
 
         try: 
-            preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=",", formatting=False )
+            preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=",", formatting=True )
         except Exception as e: 
             print("generated pred log")
             return {"error": str(e)}, 400

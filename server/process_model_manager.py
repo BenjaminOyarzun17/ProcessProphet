@@ -147,13 +147,12 @@ class ProcessModelManager:
             extension[self.case_timestamp_key] = extension[self.case_timestamp_key].cumsum()
             extension[self.case_timestamp_key] = extension[self.case_timestamp_key] + prediction[0][0]
             
-            #: transform to timestamp
-            extension[self.case_timestamp_key] = extension[self.case_timestamp_key].astype("datetime64[ns, UTC]")
             #: transform extension to dtaframe and extend the predictive df now with the predictions
             self.predictive_df= pd.concat([self.predictive_df, extension], ignore_index = True)
 
-
+        print(self.predictive_df)
         self.predictive_df=  self.predictive_df.sort_values(by=[self.case_id_key, self.case_timestamp_key])
+        self.predictive_df = self.decode_df(self.predictive_df)
         #: TODO: the the sorting again by case id and timestamp --> if a 
         # prediction goes backwards it still doesnt make a difference.
             
@@ -239,7 +238,6 @@ class ProcessModelManager:
         decodes the predictive df; inverse transform timestamps and event names.
         """
         
-        """
         df[self.case_activity_key] = df[self.case_activity_key].astype("int")
         df[self.case_id_key] = df[self.case_id_key].astype("int")
         df[self.case_activity_key] = self.config.activity_le.inverse_transform(df[self.case_activity_key])
@@ -249,7 +247,6 @@ class ProcessModelManager:
         #: note that this operation is lossy and might generate NaT. 
 
         df[self.case_timestamp_key] = df[self.case_timestamp_key]*(10**self.config.exponent)
-        """
         
         df[self.case_activity_key] = df[self.case_activity_key].astype("str")
         df[self.case_id_key] = df[self.case_id_key].astype("str")
