@@ -133,14 +133,17 @@ def test():
 def conformance():
     
     if request.method == 'POST':
-        request_config = request.args.to_dict()
-        is_xes = True if request_config["is_xes"]=="True" else False
+        request_config = request.get_json()
+        is_xes = request_config["is_xes"]
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
+
         path_to_log = str(request_config["path_to_log"])
         petri_net_path  =  str(request_config.get("petri_net_path"))
+
         conformance_technique=  str(request_config.get("conformance_technique"))
+
         preprocessor = preprocessing.Preprocessing()
         preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
     
@@ -225,7 +228,16 @@ def generate_predictive_process_model():
                 pmm.inductive_miner(petri_net_path, float(minig_algo_config["noise_threshold"]))
             case "prefix_tree_miner":
                 pmm.prefix_tree_miner(petri_net_path)
-        print(petri_net_path)
+        initial = str(pmm.initial_marking)
+        final  = str(pmm.final_marking)
+
+        petri_net_config = {
+            "initial_marking": initial,
+            "final_marking":    final 
+        }
+        print(petri_net_config)
+        with open (f"{petri_net_path}.json", "w") as f:
+            json.dump(petri_net_config,f)
         
         return ok #they are already encoded
 
