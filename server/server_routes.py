@@ -130,6 +130,7 @@ def test():
 
 
 @routes.route("/conformance", methods = ["POST"])
+@check_required_paths_factory(["path_to_log", "petri_net_path"])
 def conformance():
     
     if request.method == 'POST':
@@ -140,13 +141,15 @@ def conformance():
         timestamp= str(request_config["timestamp_key"])
 
         path_to_log = str(request_config["path_to_log"])
-        petri_net_path  =  str(request_config.get("petri_net_path"))
+        petri_net_path  =  str(request_config["petri_net_path"])
 
-        conformance_technique=  str(request_config.get("conformance_technique"))
+        conformance_technique=  str(request_config["conformance_technique"])
 
         preprocessor = preprocessing.Preprocessing()
-        preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
-    
+        try:
+            preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
+        except Exception as e: 
+            return {"error": str(e)}, 400
  
         with open(f"{petri_net_path}.json", "r") as f: 
             pn_config = json.load(f)
@@ -163,26 +166,33 @@ def conformance():
         pmm.final_marking= pn_config["final_marking"]
         pmm.load_petri_net(petri_net_path)
         pmm.unencoded_df = preprocessor.unencoded_df  #: generated automatically py preprocessor
-        if conformance_technique == "token":
-            fitness =pmm.conformance_checking_token_based_replay()
-        else: 
-            fitness =pmm.conformance_checking_alignments()
+
+
+        try:
+            if conformance_technique == "token":
+                fitness =pmm.conformance_checking_token_based_replay()
+            else: 
+                fitness =pmm.conformance_checking_alignments()
+        except Exception as e: 
+            return {"error": str(e)}, 400
+
+
         return {"fitness": fitness}, 200
 
 @routes.route('/generate_predictive_process_model', methods = ["POST"])
+@check_required_paths_factory(["path_to_log", "config"])
+@check_not_present_paths_factory(["petri_net_path"])
 def generate_predictive_process_model():
     
     if request.method == 'POST':
         request_config = request.get_json()
-        is_xes = False
 
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
 
         path_to_log = str(request_config["path_to_log"])
-
-        selected_model  =  str(request_config["selected_model"])
+        selected_mining_algo  =  str(request_config["selected_model"])
         petri_net_path  =  str(request_config["petri_net_path"])
 
         minig_algo_config=  request_config["mining_algo_config"]
@@ -190,8 +200,11 @@ def generate_predictive_process_model():
 
 
         preprocessor = preprocessing.Preprocessing()
+        try:
+            preprocessor.handle_import(False,path_to_log,case_id, timestamp,activity, sep= sep)
+        except Exception as e:
+            return {"error": str(e)}, 400
 
-        preprocessor.handle_import(is_xes,path_to_log,case_id, timestamp,activity, sep= sep)
 
 
         config = nn_manager.Config()
@@ -214,20 +227,34 @@ def generate_predictive_process_model():
         pmm.end_activities = preprocessor.find_end_activities()
 
         pmm.import_predictive_df(path_to_log)
-        match selected_model: 
-            case "alpha_miner":
-                pmm.alpha_miner(petri_net_path)
-            case "heuristic_miner":
-                pmm.heuristic_miner(
-                    petri_net_path, 
-                    float(minig_algo_config["dependency_threshold"]), 
-                    float(minig_algo_config["and_threshold"]), 
-                    float(minig_algo_config["loop_two_threshold"])
-                )
-            case "inductive_miner":
-                pmm.inductive_miner(petri_net_path, float(minig_algo_config["noise_threshold"]))
-            case "prefix_tree_miner":
-                pmm.prefix_tree_miner(petri_net_path)
+        try:
+            match selected_mining_algo: 
+                case "alpha_miner":
+                    pmm.alpha_miner(petri_net_path)
+                case "heuristic_miner":
+                    try:
+                        dependency_thr = float(minig_algo_config["dependency_threshold"])
+                        and_thr = float(minig_algo_config["and_threshold"])
+                        loop_thr =float(minig_algo_config["loop_two_threshold"])
+                    except:
+                        return {"error": f"a float param was set to another type"},400 
+                    pmm.heuristic_miner(
+                            petri_net_path, 
+                            dependency_threshold= dependency_thr, 
+                            and_threshold=and_thr, 
+                            loop_two_threshold=loop_thr 
+                    )
+                case "inductive_miner":
+                    try:
+                        noise_thr = float(minig_algo_config["noise_threshold"])
+                    except:
+                        return {"error": f"a float param was set to another type"},400 
+                    pmm.inductive_miner(petri_net_path,noise_thr )
+                case "prefix_tree_miner":
+                    pmm.prefix_tree_miner(petri_net_path)
+        except Exception as e:
+            return {"error": str(e)}, 400
+
         initial = str(pmm.initial_marking)
         final  = str(pmm.final_marking)
 
@@ -245,30 +272,42 @@ def generate_predictive_process_model():
 
 
 @routes.route('/generate_predictive_log', methods = ["POST"])
+@check_required_paths_factory(["path_to_log", "config", "path_to_model"])
+@check_not_present_paths_factory(["new_log_path"])
+@check_integers_factory(["upper", "cut_length"])
+@check_booleans_factory(["non_stop","is_xes", "random_cuts"])
 def generate_predictive_log():
     
     if request.method == 'POST':
         request_config = request.get_json()
-        is_xes = request_config["is_xes"]
+
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
+        
         path_to_log = str(request_config["path_to_log"])
         path_to_model = str(request_config["path_to_model"])
+        new_log_path=  request_config["new_log_path"]
+
+        is_xes = request_config["is_xes"]
         non_stop = bool(request_config["non_stop"])
-        upper = int(request_config["upper"])
         random_cuts =bool(request_config["random_cuts"])
-        cut_length = int(request_config["cut_length"])
-        new_log_path=  request_config.get("new_log_path")
+
         sep=  request_config.get("sep")
 
+        cut_length = int(request_config["cut_length"])
+        upper = int(request_config["upper"])
 
         preprocessor = preprocessing.Preprocessing()
 
-        preprocessor.handle_import(is_xes,path_to_log,case_id, timestamp,activity, sep= sep)
-       
+        try: 
+            preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=",", formatting=False )
+        except Exception as e: 
+            return {"error": str(e)}, 400
+
 
         config = nn_manager.Config()
+
 
         with open(request_config["config"], "r") as f: 
             dic = json.load(f)
@@ -276,28 +315,28 @@ def generate_predictive_log():
         config.load_config(dic)
 
         neural_manager = nn_manager.NNManagement(config)
+
         neural_manager.import_nn_model(path_to_model)
-
-        pmm = process_model_manager.ProcessModelManager(
-            preprocessor.event_df, 
-            neural_manager.model, 
-            neural_manager.config,
-            preprocessor.case_activity_key,
-            preprocessor.case_id_key,
-            preprocessor.case_timestamp_key
-        )
-        pmm.end_activities = preprocessor.find_end_activities()
+        
 
 
-
-        #: TODO: check the combinations for the bool attributes, some combinations 
-        # are not well defined.
-        pmm.generate_predictive_log(non_stop=non_stop, upper =upper, random_cuts=random_cuts,cut_length=cut_length, new_log_path = new_log_path )
-
+        try:
+            pmm = process_model_manager.ProcessModelManager(
+                preprocessor.event_df, 
+                neural_manager.model, 
+                neural_manager.config,
+                preprocessor.case_activity_key,
+                preprocessor.case_id_key,
+                preprocessor.case_timestamp_key
+            )
+            pmm.end_activities = preprocessor.find_end_activities()
+            pmm.generate_predictive_log(non_stop=non_stop, upper =upper, random_cuts=random_cuts,cut_length=cut_length, new_log_path = new_log_path )
+        except Exception as e: 
+            return {"error": str(e)}, 400
         
         
         
-        return ok #they are already encoded
+        return ok, 200 
 
 
 
