@@ -179,10 +179,10 @@ def generate_predictive_process_model():
 
         path_to_log = str(request_config["path_to_log"])
 
-        selected_model  =  str(request_config.get("selected_model"))
-        petri_net_path  =  str(request_config.get("petri_net_path"))
+        selected_model  =  str(request_config["selected_model"])
+        petri_net_path  =  str(request_config["petri_net_path"])
 
-        minig_algo_config=  request_config.get("mining_algo_config")
+        minig_algo_config=  request_config["mining_algo_config"]
         sep = request_config["sep"]
 
 
@@ -199,7 +199,7 @@ def generate_predictive_process_model():
         config.load_config(dic)
        
 
-        pmm = preprocessing.ProcessModelManager(
+        pmm = process_model_manager.ProcessModelManager(
             preprocessor.event_df, 
             None, 
             config,
@@ -217,16 +217,15 @@ def generate_predictive_process_model():
             case "heuristic_miner":
                 pmm.heuristic_miner(
                     petri_net_path, 
-                    minig_algo_config["dependency_threshold"], 
-                    minig_algo_config["and_threshold"], 
-                    minig_algo_config["loop_two_threshold"]
+                    float(minig_algo_config["dependency_threshold"]), 
+                    float(minig_algo_config["and_threshold"]), 
+                    float(minig_algo_config["loop_two_threshold"])
                 )
             case "inductive_miner":
-                pmm.inductive_miner(petri_net_path, minig_algo_config["noise_threshold"])
+                pmm.inductive_miner(petri_net_path, float(minig_algo_config["noise_threshold"]))
             case "prefix_tree_miner":
                 pmm.prefix_tree_miner(petri_net_path)
-
-
+        print(petri_net_path)
         
         return ok #they are already encoded
 
