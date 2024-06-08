@@ -57,11 +57,28 @@ class ProcessModelManager:
 
 
 
+    def tail_cutter(self, case_id_counts, cut_length, cuts, input_sequences):
+        """
+        cut sequences cut_length steps from the tail.
+        :param cut_length: how many steps to cut from the tail of each sequence. 
+        :param case_id_counts: number of steps on each case_id
+        :param input_sequences: list of sequences to be cut. 
+        """
+        for i, case_id in enumerate(case_id_counts.index):
+            count = case_id_counts.loc[case_id]
+            cut = random.randint(1, count)
+            cut = count-min(cut_length, cut)
+            sequence = self.event_df[self.event_df[self.case_id_key]==case_id]  
+            sequence = sequence.iloc[:cut]
+            if len(sequence) <= self.config.seq_len: 
+                continue
+            cuts[case_id]= (count, cut, count-cut)
+            input_sequences.append(sequence)
 
+            #sequence = self.decode_sequence(sequence)
+            self.predictive_df= pd.concat([self.predictive_df, sequence], ignore_index = True)
 
-
-
-
+        return case_id_counts, cuts, input_sequences 
 
     def random_cutter(self, case_id_counts, max_len, cuts, input_sequences):
         """
@@ -126,10 +143,15 @@ class ProcessModelManager:
             
             extension = pd.DataFrame(extension)
             #: here compute cumulative sum of times + last timestamp recorded
+            extension[self.case_timestamp_key] = extension[self.case_timestamp_key]*self.config.exponent
             extension[self.case_timestamp_key] = extension[self.case_timestamp_key].cumsum()
             extension[self.case_timestamp_key] = extension[self.case_timestamp_key] + prediction[0][0]
+            
+            #: transform to timestamp
+            extension[self.case_timestamp_key] = extension[self.case_timestamp_key].astype("datetime64[ns, UTC]")
             #: transform extension to dtaframe and extend the predictive df now with the predictions
             self.predictive_df= pd.concat([self.predictive_df, extension], ignore_index = True)
+
 
         self.predictive_df=  self.predictive_df.sort_values(by=[self.case_id_key, self.case_timestamp_key])
         #: TODO: the the sorting again by case id and timestamp --> if a 
@@ -178,29 +200,6 @@ class ProcessModelManager:
                 print("found too short sequence")
                 raise exceptions.CutTooLarge()
 
-    def tail_cutter(self, case_id_counts, cut_length, cuts, input_sequences):
-        """
-        cut sequences cut_length steps from the tail.
-        :param cut_length: how many steps to cut from the tail of each sequence. 
-        :param case_id_counts: number of steps on each case_id
-        :param input_sequences: list of sequences to be cut. 
-        """
-        for i, case_id in enumerate(case_id_counts.index):
-            count = case_id_counts.loc[case_id]
-            cut = random.randint(1, count)
-            cut = count-min(cut_length, cut)
-            sequence = self.event_df[self.event_df[self.case_id_key]==case_id]  
-            sequence = sequence.iloc[:cut]
-            if len(sequence) <= self.config.seq_len: 
-                continue
-            cuts[case_id]= (count, cut, count-cut)
-            input_sequences.append(sequence)
-
-            sequence = self.decode_sequence(sequence)
-            self.predictive_df= pd.concat([self.predictive_df, sequence], ignore_index = True)
-
-        return case_id_counts, cuts, input_sequences 
-
     
 
     def decode_sequence(self, sequence):
@@ -239,6 +238,8 @@ class ProcessModelManager:
         """
         decodes the predictive df; inverse transform timestamps and event names.
         """
+        
+        """
         df[self.case_activity_key] = df[self.case_activity_key].astype("int")
         df[self.case_id_key] = df[self.case_id_key].astype("int")
         df[self.case_activity_key] = self.config.activity_le.inverse_transform(df[self.case_activity_key])
@@ -248,14 +249,19 @@ class ProcessModelManager:
         #: note that this operation is lossy and might generate NaT. 
 
         df[self.case_timestamp_key] = df[self.case_timestamp_key]*(10**self.config.exponent)
-        df[self.case_timestamp_key] = df[self.case_timestamp_key].astype("datetime64[ns]")
+        """
+        
+        df[self.case_activity_key] = df[self.case_activity_key].astype("str")
+        df[self.case_id_key] = df[self.case_id_key].astype("str")
+
+        df[self.case_timestamp_key] = df[self.case_timestamp_key].astype("datetime64[ns, UTC]")
 
         #: handle NaT values
         df= df.groupby(self.case_id_key, group_keys=False).apply(self.handle_nat)
         #: just in case 
         df = df.dropna() # TODO: this might not be very clean and might wipe too much data
         #: save the generated predictive model
-        df.to_csv("logs/predicted_df")
+        #df.to_csv("logs/predicted_df")
         return df
 
 
@@ -280,6 +286,7 @@ class ProcessModelManager:
         :param loop_two_threshold:  loop two thrshold parameter for heursitic miner
         """
         self.predictive_df = self.decode_df(self.predictive_df)
+        print(self.predictive_df.dtypes)
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_heuristics(
             self.predictive_df,
             dependency_threshold, 
@@ -376,7 +383,6 @@ class ProcessModelManager:
 
         aligned_traces = pm4py.conformance_diagnostics_alignments(self.unencoded_df, self.petri_net, self.initial_marking, self.final_marking)
         log_fitness = replay_fitness.evaluate(aligned_traces, variant=replay_fitness.Variants.ALIGNMENT_BASED)
-        print(log_fitness)
         return self.compute_fitness(log_fitness)
         #return log_fitness
         #: TODO keep reading pm4py documentation on alignments (goal: get the fitness score)

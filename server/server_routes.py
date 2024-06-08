@@ -227,34 +227,37 @@ def generate_predictive_process_model():
         pmm.end_activities = preprocessor.find_end_activities()
 
         pmm.import_predictive_df(path_to_log)
-        try:
-            match selected_mining_algo: 
-                case "alpha_miner":
-                    pmm.alpha_miner(petri_net_path)
-                case "heuristic_miner":
-                    try:
-                        dependency_thr = float(minig_algo_config["dependency_threshold"])
-                        and_thr = float(minig_algo_config["and_threshold"])
-                        loop_thr =float(minig_algo_config["loop_two_threshold"])
-                    except:
-                        return {"error": f"a float param was set to another type"},400 
-                    pmm.heuristic_miner(
-                            petri_net_path, 
-                            dependency_threshold= dependency_thr, 
-                            and_threshold=and_thr, 
-                            loop_two_threshold=loop_thr 
-                    )
-                case "inductive_miner":
-                    try:
-                        noise_thr = float(minig_algo_config["noise_threshold"])
-                    except:
-                        return {"error": f"a float param was set to another type"},400 
-                    pmm.inductive_miner(petri_net_path,noise_thr )
-                case "prefix_tree_miner":
-                    pmm.prefix_tree_miner(petri_net_path)
+        #try:
+        match selected_mining_algo: 
+            case "alpha_miner":
+                pmm.alpha_miner(petri_net_path)
+            case "heuristic_miner":
+                try:
+                    dependency_thr = float(minig_algo_config["dependency_threshold"])
+                    and_thr = float(minig_algo_config["and_threshold"])
+                    loop_thr =float(minig_algo_config["loop_two_threshold"])
+                except:
+                    return {"error": f"a float param was set to another type"},400 
+                pmm.heuristic_miner(
+                        petri_net_path, 
+                        dependency_threshold= dependency_thr, 
+                        and_threshold=and_thr, 
+                        loop_two_threshold=loop_thr 
+                )
+            case "inductive_miner":
+                try:
+                    noise_thr = float(minig_algo_config["noise_threshold"])
+                except:
+                    return {"error": f"a float param was set to another type"},400 
+                pmm.inductive_miner(petri_net_path,noise_thr )
+            case "prefix_tree_miner":
+                pmm.prefix_tree_miner(petri_net_path)
+        """
         except Exception as e:
+            print("here==================================")
+            print(path_to_log)
             return {"error": str(e)}, 400
-
+        """
         initial = str(pmm.initial_marking)
         final  = str(pmm.final_marking)
 
@@ -303,6 +306,7 @@ def generate_predictive_log():
         try: 
             preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=",", formatting=False )
         except Exception as e: 
+            print("generated pred log")
             return {"error": str(e)}, 400
 
 
@@ -320,20 +324,23 @@ def generate_predictive_log():
         
 
 
-        try:
-            pmm = process_model_manager.ProcessModelManager(
-                preprocessor.event_df, 
-                neural_manager.model, 
-                neural_manager.config,
-                preprocessor.case_activity_key,
-                preprocessor.case_id_key,
-                preprocessor.case_timestamp_key
-            )
-            pmm.end_activities = preprocessor.find_end_activities()
-            pmm.generate_predictive_log(non_stop=non_stop, upper =upper, random_cuts=random_cuts,cut_length=cut_length, new_log_path = new_log_path )
-        except Exception as e: 
-            return {"error": str(e)}, 400
-        
+        #try:
+        pmm = process_model_manager.ProcessModelManager(
+            preprocessor.event_df, 
+            neural_manager.model, 
+            neural_manager.config,
+            preprocessor.case_activity_key,
+            preprocessor.case_id_key,
+            preprocessor.case_timestamp_key
+        )
+        pmm.end_activities = preprocessor.find_end_activities()
+        pmm.generate_predictive_log(non_stop=non_stop, upper =upper, random_cuts=random_cuts,cut_length=cut_length, new_log_path = new_log_path )
+        #except Exception as e: 
+        """
+        print("here")
+        print(path_to_log)
+        return {"error": str(e)}, 400
+        """
         
         
         return ok, 200 
