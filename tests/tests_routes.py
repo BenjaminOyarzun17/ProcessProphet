@@ -7,6 +7,187 @@ import pandas as pd
 
 #: this module tests the server routes
 
+
+
+
+class TestConformanceRoutes(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        SERVER_NAME="localhost"
+        SERVER_PORT=8080
+
+        cls.routes = [
+            f"http://{SERVER_NAME}:{SERVER_PORT}/conformance",
+            f"http://{SERVER_NAME}:{SERVER_PORT}/generate_predictive_process_model",
+            f"http://{SERVER_NAME}:{SERVER_PORT}/generate_predictive_log",
+                      ]
+        cls.dummy_params = {
+            "path_to_log": "tests/dummy_data/Hospital_log_mini2.xes" , 
+            "case_id": "case:concept:name", 
+            "activity_key":  "concept:name", 
+            "timestamp_key": "time:timestamp" , 
+            "sep": ",", 
+            "path_to_model": "tests/dummy_data/conformance_test_model.pt", 
+            "config":"tests/dummy_data/conformance_test_model.config.json", 
+            "petri_net_path": "tests/dummy_data/conformance_test_petri_net.pnml", 
+            "upper": 30,
+            "cut_length": 3,
+            "random_cuts": True,
+            "non_stop": False,
+            "mining_algo_config":{
+                "dependency_threshold":0.5,
+                "and_threshold":0.65,
+                "loop_two_threshold":0.5,
+                "noise_threshold":0
+            }, 
+            "selected_model": "heuristic_miner", 
+            "is_xes": True, 
+            "new_log_path": "tests/dummy_data/pred_log.csv", 
+            "conformance_technique": "token"
+        }
+
+   
+    def test_paths(self): 
+        for id, route in enumerate(self.routes):
+            required =[] 
+            if id == 0: 
+                required = ["path_to_log", "petri_net_path"]
+            elif id == 1:
+                required = ["path_to_log", "config"]
+            else: 
+                required = ["path_to_log", "config", "path_to_model"]
+            for file in required:
+                cpy = self.dummy_params.copy()
+                cpy[file]= "definitely not a path in any OS"
+            
+                response = requests.post(
+                    route,
+                    json= cpy, 
+                    timeout =6000
+                )
+                self.assertEqual(400, response.status_code)
+                data = response.json()
+                self.assertEqual(data["error"], "one required path does not exist")
+
+        for id, route in enumerate(self.routes[1:]):
+            required =[] 
+            
+            if id == 0:
+                required = ["petri_net_path"]
+            else: 
+                required = ["new_log_path"]
+            for file in required:
+                cpy = self.dummy_params.copy()
+                if id == 0: 
+                    cpy[file]= "tests/dummy_data/conformance_test_petri_net.pnml"
+                    cpy["path_to_log"] = "tests/dummy_data/conformance_test_pred_log.csv"
+                else: 
+                    cpy[file]  = "Hospital_log_mini2.xes"
+                response = requests.post(
+                    route,
+                    json= cpy, 
+                    timeout =6000
+                )
+                self.assertEqual(400, response.status_code)
+                data = response.json()
+                self.assertEqual(data["error"], "the target path for the new file already exists")
+ 
+
+    def test_wrong_boolean_params(self): 
+        cpy = self.dummy_params.copy()
+        for param in ["non_stop", "is_xes", "random_cuts"]: 
+            cpy[param]= "definitely not a boolean value"
+            response = requests.post(
+                self.routes[2],
+                json= cpy, 
+                timeout =6000
+            )
+            self.assertEqual(400, response.status_code)
+            data = response.json()
+            self.assertEqual(data["error"], "a boolean param was set to another type")
+
+    def test_wrong_integer_params(self): 
+        cpy = self.dummy_params.copy()
+        for param in ["upper", "cut_length"]: 
+            cpy[param]= "definitely not an integer value"
+            response = requests.post(
+                self.routes[2],
+                json= cpy, 
+                timeout =6000
+            )
+            self.assertEqual(400, response.status_code)
+            data = response.json()
+            self.assertEqual(data["error"], "an integer param was set to another type")
+
+    def test_correctness(self):
+        for id, route in enumerate(self.routes): 
+            if id == 0: 
+                cpy = self.dummy_params.copy()
+                response = requests.post(
+                    self.routes[0],
+                    json= cpy, 
+                    timeout =6000
+                )
+                if response.status_code == 400: 
+                    data = response.json()
+                    print(data)
+                self.assertEqual(200, response.status_code)
+                data = response.json()
+                self.assertListEqual(["fitness"], list(data.keys()))
+            elif id == 1: 
+                
+                
+                cpy = self.dummy_params.copy()
+                cpy["path_to_log"]= "tests/dummy_data/conformance_test_pred_log.csv"
+                cpy["petri_net_path"]= "tests/dummy_data/new_petri_net.pnml"
+                response = requests.post(
+                    self.routes[1],
+                    json= cpy, 
+                    timeout =6000
+                )
+                if response.status_code == 400: 
+                    data = response.json()
+                    print(data)
+                self.assertEqual(200, response.status_code)
+                exists = os.path.isfile(cpy["petri_net_path"]) 
+                self.assertTrue(exists)
+                
+            elif id == 2: 
+                cpy = self.dummy_params.copy()
+                cpy["new_log_path"]= "tests/dummy_data/new_predictive_log.csv"
+                response = requests.post(
+                    self.routes[2],
+                    json= cpy, 
+                    timeout =6000
+                )
+                if response.status_code == 400: 
+                    data = response.json()
+                    print(data)
+                self.assertEqual(200, response.status_code)
+                exists = os.path.isfile(cpy["new_log_path"]) 
+                self.assertTrue(exists)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        
+        try:
+            os.remove("tests/dummy_data/new_predictive_log.csv")
+        except: 
+            pass
+        
+        try:
+            os.remove("tests/dummy_data/new_petri_net.pnml")
+        except: 
+            pass
+
+        try:
+            os.remove("tests/dummy_data/new_petri_net.pnml.json")
+
+        except: 
+            pass
+
+
+
 class TestTrainingRoutes(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -564,7 +745,6 @@ class TestPreprocessingRoutes(unittest.TestCase):
             os.remove(cls.dummy_params["save_path"]+"dup"+".csv")
         except: 
             pass
-
 
 
 

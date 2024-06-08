@@ -127,12 +127,7 @@ class Net(nn.Module):
             return event_index, max_prob,time_pred[-1][-1]
 
         
-        #print(type(event_pred))
-        #print(event_pred.shape)
-        #print(event_pred)
         time_pred = time_logits.detach().cpu().numpy()
-        print("pred:")
-        print(time_pred, event_pred)
         return time_pred, event_pred
 
 
