@@ -94,7 +94,7 @@ class ProcessProphetModel:
                 #"",
                 #f"{error}", 
                 #"",
-                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.set_training_params()))
+                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.model_main_menu()))
             ]
         window = ptg.Window(*container, box="DOUBLE")
         window.center()
@@ -138,12 +138,12 @@ class ProcessProphetModel:
 
         
         params = {
-            "path_to_log":f"{self.pp.state.input_logs_path}/{self.log_name.value}" ,
+            "path_to_log":f"{self.pp.state.predictive_logs_path}/{self.log_name.value}" ,
             "case_id":self.case_id_key.value,
             "activity_key":self.case_activity_key.value,
             "timestamp_key":self.case_timestamp_key.value,
             "config":f"{self.pp.state.models_path}/{self.model_name.value[:-3]}.config.json",
-            "petri_net_path": self.petri_net_path.value,
+            "petri_net_path": f"{self.pp.state.petri_nets_path}/{self.petri_net_path.value}",
             "mining_algo_config":{
                 "dependency_threshold":self.dependency_threshold.value,
                 "and_threshold":self.and_threshold.value,
@@ -175,7 +175,7 @@ class ProcessProphetModel:
                 #"",
                 #f"{error}", 
                 #"",
-                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.set_training_params()))
+                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.model_main_menu()))
             ]
         window = ptg.Window(*container, box="DOUBLE")
         window.center()
@@ -184,12 +184,11 @@ class ProcessProphetModel:
 
     def set_process_mining(self):
         self.model_name=  ptg.InputField("f.pt", prompt="model config: ")
-        self.log_name=  ptg.InputField("Hospital_log.xes", prompt="log name: ")
+        self.log_name=  ptg.InputField("predicitive_log1.csv", prompt="log name: ")
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
         self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
         self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
 
-        self.predictive_event_log_name  = ptg.InputField("predicitive_log1.csv", prompt= "predictive log name: ")
         self.petri_net_path= ptg.InputField("p_net1.pnml", prompt= "petri net path: ")
         self.mining_algorithm= ptg.InputField("heuristic_miner", prompt= "process discovery algorithm: ")
         self.dependency_threshold= ptg.InputField("0.5",prompt= "dependency threshold: ")
@@ -204,7 +203,6 @@ class ProcessProphetModel:
             self.case_id_key,
             self.case_activity_key,
             self.case_timestamp_key,
-            self.predictive_event_log_name,
             self.petri_net_path, 
             self.mining_algorithm, 
             self.dependency_threshold, 
