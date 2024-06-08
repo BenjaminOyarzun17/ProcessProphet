@@ -39,7 +39,7 @@ class ProcessProphetModel:
             "", 
             ptg.Button("Run process mining", lambda *_: self.pp.switch_window(self.set_process_mining())), 
             "", 
-            ptg.Button("Run conformance checking", lambda *_: self.pp.switch_window(self.prediction_log())), 
+            ptg.Button("Run conformance checking", lambda *_: self.pp.switch_window(self.set_conformance_checking())), 
             "",
             ptg.Button("Back", lambda *_: self.pp.switch_window(self.return_to_menu())), 
         )
@@ -210,6 +210,75 @@ class ProcessProphetModel:
             self.loop_two_threshold, 
             self.noise_threshold, 
             ptg.Button("continue",lambda *_: self.pp.switch_window(self.get_process_mining()) ),
+            ptg.Button("back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
+        ]
+        window = ptg.Window(*container, width = self.pp.window_width)
+        #window = ptg.Window(*container)
+        window.center()
+        return window
+
+    def get_conformance_checking(self):
+        self.loading("preprocessing data...")
+
+        
+        is_xes = True if self.log_name.value[-3:] == "xes"  else False
+        params = {
+            "path_to_log":f"{self.pp.state.input_logs_path}/{self.log_name.value}" ,
+            "case_id":self.case_id_key.value,
+            "activity_key":self.case_activity_key.value,
+            "timestamp_key":self.case_timestamp_key.value,
+            "petri_net_path": f"{self.pp.state.petri_nets_path}/{self.petri_net_path.value}",
+            "conformance_technique":self.conformance_technique.value, 
+            "is_xes": is_xes
+        }  
+
+        response = requests.post(
+            f"http://{SERVER_NAME}:{SERVER_PORT}/conformance", 
+            json= params,
+            timeout =6000
+        )
+        if response.status_code == 200: 
+            data = response.json()
+
+            container =[  
+                "conformance checking ready", 
+                f"fitness: {data["fitness"]}", 
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.model_main_menu())), 
+                ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
+            ]
+        else: 
+            #data = response.json()
+            #error = data["error"]
+            container = [ 
+                "training FAILED:",
+                #"",
+                #f"{error}", 
+                #"",
+                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.model_main_menu()))
+            ]
+        window = ptg.Window(*container, box="DOUBLE")
+        window.center()
+        return window
+
+    def set_conformance_checking(self):
+        self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
+        self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
+        self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
+
+        self.log_name=  ptg.InputField("Hospital_log.xes", prompt="log name: ")
+        self.petri_net_path= ptg.InputField("p_net1.pnml", prompt= "petri net path: ")
+
+        self.conformance_technique= ptg.InputField("token",prompt= "conformance technique: ")
+
+        container = [
+            "Enter the following params:",
+            self.log_name,
+            self.case_id_key,
+            self.case_activity_key,
+            self.case_timestamp_key,
+            self.petri_net_path, 
+            self.conformance_technique,
+            ptg.Button("continue",lambda *_: self.pp.switch_window(self.get_conformance_checking()) ),
             ptg.Button("back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
         ]
         window = ptg.Window(*container, width = self.pp.window_width)
