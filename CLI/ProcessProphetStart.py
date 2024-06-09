@@ -21,6 +21,9 @@ SERVER_PORT= os.getenv('SERVER_PORT')
 
 class ProcessProphetStart: 
     def __init__(self, pp, start:bool= True):
+        """
+        initialize ProcessProphet Object and main menu
+        """
         self.pp = pp
         if start: 
             self.pp.switch_window(self.main_menu())
@@ -29,14 +32,26 @@ class ProcessProphetStart:
         
 
     def launch_preprocessor(self):
+        """
+        launches the Preprocessing CLI interface 
+        """
         preprocessor= ProcessProphetPreprocessing(self.pp)
         
     def launch_trainer(self):
+        """
+        launches the Training CLI interface 
+        """
         trainer = ProcessProphetTrain(self.pp)
 
     def launch_predictor(self):
+        """
+        launches the Predictor CLI interface 
+        """
         predictor = ProcessProphetPredict(self.pp)
     def launch_conformance(self):
+        """
+        launches the Conformance checking CLI interface 
+        """
         conformance_checker = ProcessProphetModel(self.pp)
 
 
@@ -45,6 +60,8 @@ class ProcessProphetStart:
         TODO: the manager alternativs should depend on the sate of the folders, 
         ie if for example the models folder is empty, no conformance checking should be possible. 
         other ex: if decoded_dfs is empty, train should not be possible.
+
+        creates menu with the main actions for a given project
         """
         container = [
             ptg.Label(f"select one of the following actions:"),
@@ -148,7 +165,10 @@ class ProcessProphetStart:
 
 
 
-    def select_mode(self): 
+    def select_mode(self):
+        """
+        menu to select wether the application should be run in base or advanced mode
+        """ 
         container = [
             "Select a mode", 
             "",
@@ -193,7 +213,11 @@ class ProcessProphetStart:
             return window
 
 
-    def load_existing_project(self): 
+    def load_existing_project(self):
+        """
+        user can load an existing project by entering the name of the existing project
+        if intended the user can return to the main menu or quit the application
+        """ 
 
         projects = [f"{project}"  for project in os.listdir(f"{self.pp.state.projects_path}")]
 
@@ -220,6 +244,10 @@ class ProcessProphetStart:
         return window
 
     def new_project_form(self):
+        """
+        user can create a new project and input a name for it
+        if intended the user can return to the main menu or quit the application
+        """
 
         self.project_name_input =  ptg.InputField("first Prophet", prompt="Project name: ")
         container =[ 
@@ -241,6 +269,9 @@ class ProcessProphetStart:
 
 
     def main_menu(self):
+        """
+        creates main menu for selecting a project to work on 
+        """
         container =[ 
             ptg.Label("Welcome to [yellow]Process Prophet"),
             "", 
