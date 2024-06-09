@@ -130,7 +130,7 @@ def test():
 
 
 @routes.route("/conformance", methods = ["POST"])
-@check_required_paths_factory(["path_to_log", "petri_net_path"])
+@check_required_paths_factory(['path_to_log', "petri_net_path"])
 def conformance():
     
     if request.method == 'POST':
@@ -140,7 +140,7 @@ def conformance():
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
 
-        path_to_log = str(request_config["path_to_log"])
+        path_to_log = str(request_config['path_to_log'])
         petri_net_path  =  str(request_config["petri_net_path"])
 
         conformance_technique=  str(request_config["conformance_technique"])
@@ -180,7 +180,7 @@ def conformance():
         return {"fitness": fitness}, 200
 
 @routes.route('/generate_predictive_process_model', methods = ["POST"])
-@check_required_paths_factory(["path_to_log", "config"])
+@check_required_paths_factory(['path_to_log', "config"])
 @check_not_present_paths_factory(["petri_net_path"])
 def generate_predictive_process_model():
     
@@ -191,7 +191,7 @@ def generate_predictive_process_model():
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
 
-        path_to_log = str(request_config["path_to_log"])
+        path_to_log = str(request_config['path_to_log'])
         selected_mining_algo  =  str(request_config["selected_model"])
         petri_net_path  =  str(request_config["petri_net_path"])
 
@@ -275,7 +275,7 @@ def generate_predictive_process_model():
 
 
 @routes.route('/generate_predictive_log', methods = ["POST"])
-@check_required_paths_factory(["path_to_log", "config", "path_to_model"])
+@check_required_paths_factory(['path_to_log', "config", "path_to_model"])
 @check_not_present_paths_factory(["new_log_path"])
 @check_integers_factory(["upper", "cut_length"])
 @check_booleans_factory(["non_stop","is_xes", "random_cuts"])
@@ -288,7 +288,7 @@ def generate_predictive_log():
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         
-        path_to_log = str(request_config["path_to_log"])
+        path_to_log = str(request_config['path_to_log'])
         path_to_model = str(request_config["path_to_model"])
         new_log_path=  request_config["new_log_path"]
 
@@ -356,8 +356,8 @@ def generate_predictive_log():
 
 
 @routes.route('/multiple_prediction', methods = ["POST"])
-@check_required_paths_factory(["path_to_log", "config", "path_to_model"])
-@check_not_present_paths_factory(["prediction_file_name"])
+@check_required_paths_factory(['path_to_log', "config", "path_to_model"])
+@check_not_present_paths_factory(['prediction_file_name'])
 @check_integers_factory(["degree", "depth"])
 def multiple_prediction():
     if request.method == 'POST':
@@ -370,8 +370,8 @@ def multiple_prediction():
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
-        path_to_log = str(request_config["path_to_log"])
-        prediction_file_name= str(request_config["prediction_file_name"])
+        path_to_log = str(request_config['path_to_log'])
+        prediction_file_name= str(request_config['prediction_file_name'])
 
         preprocessor = preprocessing.Preprocessing()
 
@@ -420,14 +420,14 @@ def multiple_prediction():
 
 
 @routes.route('/single_prediction', methods = ["POST"])
-@check_required_paths_factory(["path_to_log", "config", "path_to_model"])
+@check_required_paths_factory(['path_to_log', "config", "path_to_model"])
 def single_prediction():
     if request.method == 'POST':
         request_config = request.get_json()
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
-        path_to_log = str(request_config["path_to_log"])
+        path_to_log = str(request_config['path_to_log'])
         preprocessor = preprocessing.Preprocessing()
 
         try: 
@@ -469,7 +469,7 @@ def single_prediction():
 @check_booleans_factory(["cuda", "is_xes"])
 @check_integers_factory(["seq_len","batch_size", "epochs", "iterations"])
 @check_floats_factory(["lr", "split"])
-@check_required_paths_factory(["path_to_log"])
+@check_required_paths_factory(['path_to_log'])
 @check_not_present_paths_factory(["model_path"])
 def random_search():
     """
@@ -510,7 +510,7 @@ def random_search():
 
         is_xes = request_config["is_xes"] 
 
-        path_to_log = str(request_config["path_to_log"])
+        path_to_log = str(request_config['path_to_log'])
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
@@ -578,7 +578,7 @@ def random_search():
         
         config = neural_manager.config.asdict()
 
-        neural_manager.export_nn_model(request_config["model_path"])
+        neural_manager.export_nn_model(request_config['model_path'])
         
 
         with open(f"{request_config['model_path'][:-3]}.config.json", "w") as f:
@@ -604,7 +604,7 @@ def random_search():
 @check_booleans_factory(["cuda", "is_xes"])
 @check_integers_factory(["seq_len","batch_size", "epochs"])
 @check_floats_factory(["lr", "split"])
-@check_required_paths_factory(["path_to_log"])
+@check_required_paths_factory(['path_to_log'])
 @check_not_present_paths_factory(["model_path"])
 def grid_search():
     """
@@ -642,7 +642,7 @@ def grid_search():
         
         
         is_xes = request_config["is_xes"] 
-        path_to_log = str(request_config["path_to_log"])
+        path_to_log = str(request_config['path_to_log'])
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
@@ -710,7 +710,7 @@ def grid_search():
         
         config = neural_manager.config.asdict()
 
-        neural_manager.export_nn_model(request_config["model_path"])
+        neural_manager.export_nn_model(request_config['model_path'])
         
 
         with open(f"{request_config['model_path'][:-3]}.config.json", "w") as f:
@@ -726,7 +726,7 @@ def grid_search():
 @check_booleans_factory(["cuda", "is_xes"])
 @check_integers_factory(["seq_len", "emb_dim", "hid_dim", "mlp_dim", "batch_size", "epochs"])
 @check_floats_factory(["lr", "split"])
-@check_required_paths_factory(["path_to_log"])
+@check_required_paths_factory(['path_to_log'])
 @check_not_present_paths_factory(["model_path"])
 def train_nn():
     """
@@ -757,7 +757,7 @@ def train_nn():
     """
     if request.method == 'POST':
         request_config = request.get_json()
-        path_to_log = str(request_config["path_to_log"])
+        path_to_log = str(request_config['path_to_log'])
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
@@ -767,13 +767,13 @@ def train_nn():
 
         preprocessor = preprocessing.Preprocessing()
         
-        path = request_config["model_path"]
-        if os.path.isfile(request_config["model_path"]):
-            return {"error": f"{request_config["model_path"]} model already exists..."},400 
+        path = request_config['model_path']
+        if os.path.isfile(request_config['model_path']):
+            return {"error": f"{request_config['model_path']} model already exists..."},400 
 
-        path = request_config["path_to_log"]
-        if not os.path.isfile(request_config["path_to_log"]):
-            return {"error": f"{request_config["path_to_log"]} does not exist..."},400 
+        path = request_config['path_to_log']
+        if not os.path.isfile(request_config['path_to_log']):
+            return {"error": f"{request_config['path_to_log']} does not exist..."},400 
 
         try: 
             preprocessor.handle_import(request_config['is_xes'], path_to_log, case_id, timestamp, activity)
@@ -824,7 +824,7 @@ def train_nn():
             "training_statistics": training_stats, 
         }
 
-        neural_manager.export_nn_model(request_config["model_path"])
+        neural_manager.export_nn_model(request_config['model_path'])
 
 
         with open(f"{request_config['model_path'][:-3]}.config.json", "w") as f:
@@ -866,7 +866,7 @@ def load_config_from_preprocessor(config : nn_manager.Config, preprocessor : pre
 
 @routes.route('/replace_with_mode', methods = ["POST"])
 @check_booleans_factory(["is_xes"])
-@check_required_paths_factory(["path_to_log"])
+@check_required_paths_factory(['path_to_log'])
 @check_not_present_paths_factory(["save_path"])
 def replace_with_mode():
     """
@@ -884,7 +884,7 @@ def replace_with_mode():
 
         
         is_xes = request_config["is_xes"] 
-        path_to_log = str(request_config["path_to_log"])
+        path_to_log = str(request_config['path_to_log'])
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
@@ -919,7 +919,7 @@ def replace_with_mode():
 
 @routes.route('/add_unique_start_end', methods = ["POST"])
 @check_booleans_factory(["is_xes"])
-@check_required_paths_factory(["path_to_log"])
+@check_required_paths_factory(['path_to_log'])
 @check_not_present_paths_factory(["save_path"])
 def add_unique_start_end():
     """
@@ -935,7 +935,7 @@ def add_unique_start_end():
         request_config = request.get_json()
 
         is_xes = request_config["is_xes"] 
-        path_to_log = str(request_config["path_to_log"])
+        path_to_log = str(request_config['path_to_log'])
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
@@ -968,7 +968,7 @@ def add_unique_start_end():
 
 @routes.route('/remove_duplicates', methods = ["POST"])
 @check_booleans_factory(["is_xes"])
-@check_required_paths_factory(["path_to_log"])
+@check_required_paths_factory(['path_to_log'])
 @check_not_present_paths_factory(["save_path"])
 def remove_duplicates():
     """
@@ -987,7 +987,7 @@ def remove_duplicates():
         is_xes = request_config["is_xes"] 
 
 
-        path_to_log = str(request_config["path_to_log"])
+        path_to_log = str(request_config['path_to_log'])
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])

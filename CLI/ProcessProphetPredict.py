@@ -166,7 +166,7 @@ class ProcessProphetPredict:
        
 
             container = ptg.Container(
-                f"Multiple predictions stored in {params["prediction_file_name"]}", 
+                f"Multiple predictions stored in {params['prediction_file_name']}", 
                 ptg.Button("back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
             )
         else: 
