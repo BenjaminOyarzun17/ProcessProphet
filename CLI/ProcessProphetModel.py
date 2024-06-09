@@ -251,7 +251,7 @@ class ProcessProphetModel:
 
             container =[  
                 "conformance checking ready", 
-                f"fitness: {data["fitness"]}", 
+                f"fitness: {data['fitness']}", 
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.model_main_menu())), 
                 ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
             ]
