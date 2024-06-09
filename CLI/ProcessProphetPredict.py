@@ -12,10 +12,16 @@ SERVER_PORT= os.getenv('SERVER_PORT')
 
 class ProcessProphetPredict: 
     def __init__(self, pp):
+        """
+        initialize ProcessProphet Object and main menu for predictions 
+        """
         self.pp = pp
         self.pp.switch_window(self.prediction_main_menu())
 
-    def prediction_main_menu(self) : 
+    def prediction_main_menu(self) :
+        """
+        menu that returns the window of the selected prediction
+        """ 
         container = ptg.Container(
             "select a prediction generation method", 
             "", 
@@ -104,6 +110,11 @@ class ProcessProphetPredict:
         return window
     
     def set_single_prediction_params(self):
+        """
+        user can modify the given parameters for a single prediction which are then stored in the container and also displayed in the current window
+
+        user can also start the prediction with the continue button or return to the previous menu with the back button
+        """
         self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
         self.log_name=  ptg.InputField("partial_input.csv", prompt="log name: ")
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
@@ -184,6 +195,11 @@ class ProcessProphetPredict:
         return window
     
     def set_multiple_prediction_params(self):
+        """
+        user can modify the given parameters for multiple predictions which are then stored in the container and also displayed in the current window
+
+        user can also start the prediction with the continue button or return to the previous menu with the back button
+        """
         self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
         self.log_name=  ptg.InputField("partial_input.csv", prompt="log name: ")
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
