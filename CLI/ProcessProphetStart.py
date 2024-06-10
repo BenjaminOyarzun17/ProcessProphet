@@ -81,7 +81,11 @@ class ProcessProphetStart:
         window.center()
         return window
 
-    def notify_project_creation(self, message, success): 
+    def notify_project_creation(self, message, success):
+        """
+        function used to indicate that the new project name is valid
+        as a result the window is switched to the menu for selecting the mode the currrent project is going to run in
+        """ 
         if success: 
             container =ptg.Container( 
                 ptg.Label(f"{message}"),
@@ -90,6 +94,7 @@ class ProcessProphetStart:
                 "",
                 ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
             )
+        # TODO: is this else part needed? Dont see it being called anywhere
         else: 
             container = ptg.Container( 
                 ptg.Label(f"{message}!"),
@@ -103,6 +108,15 @@ class ProcessProphetStart:
         return window 
 
     def handle_project_name_input(self):
+        """
+        exception if a new project is created with a name that is already used for another project in the projects directory
+            -> user can return to this previous menu to create a new project with a different name
+
+        If there is a valid input for the new project (unique name) then all of the necessary subdirectories are created where the 
+        files needed for the different functionalities of the application are stored e.g. a subdirectory for the input log on which
+        the RNN can then be trained
+            -> user can then continue and select the mode in which he wants to work in the new project
+        """
         name = self.project_name_input.value
         message = ""
         if name in os.listdir(f"{self.pp.state.projects_path}"):
@@ -117,8 +131,7 @@ class ProcessProphetStart:
             window.center()
             self.pp.switch_window(window)
             return
-        
-        
+
         message = f"directory created in path {os.getcwd()}/{self.pp.state.projects_path}/{name}"
         subdirectories = ["input_logs", "models", "petri_nets", "predictive_logs", "partial_traces", "decoded_dfs", "multiple_predictions_path"]
         os.mkdir(f"{os.getcwd()}/{self.pp.state.projects_path}/{name}")
@@ -150,6 +163,10 @@ class ProcessProphetStart:
 
 
     def handle_select_mode(self, mode: ProcessProphetMode):
+        """
+        indicates the previously selected mode the current project will be running in
+        selected mode can be confirmed or changed if it was a missinput -> window either changes to previous menu or next menu to select further actions
+        """
         self.pp.mode = mode
         container = [
             f"Currently in {mode.name} mode", 
@@ -182,6 +199,15 @@ class ProcessProphetStart:
 
 
     def handle_project_selection(self):
+        """
+        checks if the selected project exists and passes over the directories that are needed for the different functionalities of the application
+        e.g. "partial_traces" directory in order to make predictions
+
+        The user is notified in the current window if the project is successfully selected and can then pursue further actions like selecting the mode
+        of the application
+
+        If the user enters a wrong file name the current window displays the error and the user can go back to the previous menu
+        """
 
         projects = [project  for project in os.listdir(f"{self.pp.state.projects_path}")]
         name= self.input_select_project.value
@@ -203,6 +229,7 @@ class ProcessProphetStart:
             window = ptg.Window(*container, box="DOUBLE")
             window.center()
             return window
+        
         else: 
             container =  [ 
                 "Project does not exist", 
