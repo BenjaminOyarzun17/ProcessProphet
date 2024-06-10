@@ -119,7 +119,16 @@ class ProcessProphetTrain:
 
 
 
-    def set_training_params(self): 
+    def set_training_params(self):
+        """
+        user can either start the training with the displayed default parameters or alternatively adapt the parameters to their
+        own preference
+
+        side effect:
+        -the modified parameters are stored in a container and then the training function is called
+        -parameters are displayed in the window
+        -second window to display the logs that are in this project
+        """ 
         self.cuda=  ptg.InputField("True", prompt="use cuda: ")
 
         self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
@@ -176,7 +185,15 @@ class ProcessProphetTrain:
         window.center()
         return window
 
-    def start_grid_search(self) : 
+    def start_grid_search(self):
+        """
+        sends a request to the server with all the needed parameters to do a grid search training
+        and in case of a successful computation of the request by the server the accuracy of the trained
+        model is displayed in a new window. It is then possible to return to the action or training menu
+
+        if the request fails because e.g. it exceeds the timeout of 6000 the error is displayed in a new window and 
+        the user can go back to the window where the parameters are displayed
+        """ 
         self.loading("preprocessing data...")
         
         input_logs_path= self.pp.state.input_logs_path
@@ -239,7 +256,15 @@ class ProcessProphetTrain:
         return window
 
 
-    def start_random_search(self) : 
+    def start_random_search(self) :
+        """
+        sends a request to the server with all the needed parameters to do a random search training
+        and in case of a successful computation of the request by the server the accuracy of the trained
+        model is displayed in a new window. It is then possible to return to the action or training menu
+
+        if the request fails because e.g. it exceeds the timeout of 6000 the error is displayed in a new window and 
+        the user can go back to the window where the parameters are displayed
+        """ 
         self.loading("preprocessing data...")
         
         input_logs_path= self.pp.state.input_logs_path
@@ -301,7 +326,19 @@ class ProcessProphetTrain:
         return window
 
     def set_random_search_params(self):
+        """
+        used to set the parameters for random search training alternative
 
+        this function distinguishes between quick mode and advanced mode by giving more options to customize
+        the hyperparameters in the advanced mode whereas in the base mode only the most important parameters
+        can be modified by the user
+
+        Side effects:
+        -initializes window with default parameters where th user can adjust them
+        -initializes window where all the event logs of the current project are listed that can be used
+        for the training
+        -random search can be called if the user confirms the indicated parameters
+        """
         if self.pp.mode == ProcessProphetMode.advanced:
             self.cuda=  ptg.InputField("True", prompt="use cuda: ")
             self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
@@ -426,6 +463,19 @@ class ProcessProphetTrain:
 
 
     def set_grid_search_params(self):
+        """
+        used to set the parameters for grid search training alternative
+
+        this function distinguishes between quick mode and advanced mode by giving more options to customize
+        the hyperparameters in the advanced mode whereas in the base mode only the most important parameters
+        can be modified by the user
+
+        Side effects:
+        -initializes window with default parameters where th user can adjust them
+        -initializes window where all the event logs of the current project are listed that can be used
+        for the training
+        -grid search can be called if the user confirms the indicated parameters
+        """
         if self.pp.mode == ProcessProphetMode.advanced:
             self.cuda=  ptg.InputField("True", prompt="use cuda: ")
             self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
@@ -550,7 +600,13 @@ class ProcessProphetTrain:
             return window
 
 
-    def trainer_main_menu(self) : 
+    def trainer_main_menu(self) :
+        """
+        depending on the mode the current project is running in, the user can choose a training alternative
+        and will be redirected to a new window where the parameters for the chosen alternative are displayed
+
+        it is also possible to return to the previous menu
+        """ 
         if self.pp.mode == ProcessProphetMode.advanced: 
             container = ptg.Container(
                 "select one training alternative", 
