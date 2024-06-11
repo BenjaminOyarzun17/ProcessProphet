@@ -16,7 +16,7 @@ from process_prophet_modes import ProcessProphetMode
 load_dotenv()
 SERVER_NAME= os.getenv('SERVER_NAME')
 SERVER_PORT= os.getenv('SERVER_PORT')
-TIMEOUT= os.getenv('TIMEOUT')
+TIMEOUT= int(os.getenv('TIMEOUT'))
 
 class ProcessProphetTrain: 
     """
@@ -221,7 +221,7 @@ class ProcessProphetTrain:
 
         #: search params for grid search
         sp = {
-            "hidden_dim":[self.hidden_dim_lower.value,self.hidden_dim_upper.value, self.hidden_dim_step.value] ,
+            "hid_dim":[self.hid_dim_lower.value,self.hid_dim_upper.value, self.hid_dim_step.value] ,
             "mlp_dim":[self.mlp_dim_lower.value, self.mlp_dim_upper.value, self.mlp_dim_step.value] ,
             "emb_dim":[self.emb_dim_lower.value, self.emb_dim_upper.value, self.emb_dim_step.value] 
         } 
@@ -262,7 +262,7 @@ class ProcessProphetTrain:
         else: 
             #: display error on fail
             data =response.json()
-            error = data[""]
+            error = data["error"]
             container =[  
                 "training FAILED:", 
                 "",
@@ -294,7 +294,7 @@ class ProcessProphetTrain:
 
         #: params for random search. here we only need lower and upper bounds
         sp = {
-            "hidden_dim":[self.hidden_dim_lower.value,self.hidden_dim_upper.value] ,
+            "hid_dim":[self.hid_dim_lower.value,self.hid_dim_upper.value] ,
             "mlp_dim":[self.mlp_dim_lower.value, self.mlp_dim_upper.value] ,
             "emb_dim":[self.emb_dim_lower.value, self.emb_dim_upper.value] 
         } 
@@ -380,8 +380,8 @@ class ProcessProphetTrain:
             self.case_activity_key= ptg.InputField("concept:name", prompt="activity key: ")
             self.case_timestamp_key= ptg.InputField("time:timestamp", prompt="timestamp key: ")
 
-            self.hidden_dim_lower= ptg.InputField("100", prompt="hidden dim. lower bound: ")
-            self.hidden_dim_upper= ptg.InputField("200", prompt="hidden dim. upper bound: ")
+            self.hid_dim_lower= ptg.InputField("100", prompt="hidden dim. lower bound: ")
+            self.hid_dim_upper= ptg.InputField("200", prompt="hidden dim. upper bound: ")
             
             self.mlp_dim_lower= ptg.InputField("100", prompt="mlp dim. lower bound: ")
             self.mlp_dim_upper= ptg.InputField("200", prompt="mlp dim. upper bound: ")
@@ -391,7 +391,7 @@ class ProcessProphetTrain:
             self.emb_dim_upper= ptg.InputField("200", prompt="emb dim. upper bound: ")
 
             container = ptg.Container( 
-                ptg.Label(f"set parameters for grid search"),
+                ptg.Label(f"set parameters for random search"),
                 self.cuda , 
                 self.model_name ,
                 self.seq_len ,
@@ -403,8 +403,8 @@ class ProcessProphetTrain:
                 self.case_id_key, 
                 self.case_activity_key, 
                 self.case_timestamp_key,
-                self.hidden_dim_lower, 
-                self.hidden_dim_upper, 
+                self.hid_dim_lower, 
+                self.hid_dim_upper, 
                 self.mlp_dim_lower, 
                 self.mlp_dim_upper, 
                 self.emb_dim_lower, 
@@ -447,8 +447,8 @@ class ProcessProphetTrain:
             self.case_activity_key= ptg.InputField("concept:name", prompt="activity key: ")
             self.case_timestamp_key= ptg.InputField("time:timestamp", prompt="timestamp key: ")
 
-            self.hidden_dim_lower= ptg.InputField("100", prompt="hidden dim. lower bound: ")
-            self.hidden_dim_upper= ptg.InputField("200", prompt="hidden dim. upper bound: ")
+            self.hid_dim_lower= ptg.InputField("100", prompt="hidden dim. lower bound: ")
+            self.hid_dim_upper= ptg.InputField("200", prompt="hidden dim. upper bound: ")
             
             self.mlp_dim_lower= ptg.InputField("100", prompt="mlp dim. lower bound: ")
             self.mlp_dim_upper= ptg.InputField("200", prompt="mlp dim. upper bound: ")
@@ -466,8 +466,8 @@ class ProcessProphetTrain:
                 self.case_id_key, 
                 self.case_activity_key, 
                 self.case_timestamp_key,
-                self.hidden_dim_lower, 
-                self.hidden_dim_upper, 
+                self.hid_dim_lower, 
+                self.hid_dim_upper, 
                 self.mlp_dim_lower, 
                 self.mlp_dim_upper, 
                 self.emb_dim_lower, 
@@ -517,9 +517,9 @@ class ProcessProphetTrain:
             self.case_activity_key= ptg.InputField("concept:name", prompt="activity key: ")
             self.case_timestamp_key= ptg.InputField("time:timestamp", prompt="timestamp key: ")
 
-            self.hidden_dim_lower= ptg.InputField("100", prompt="hidden dim. lower bound: ")
-            self.hidden_dim_upper= ptg.InputField("200", prompt="hidden dim. upper bound: ")
-            self.hidden_dim_step= ptg.InputField("50", prompt="hidden dim. step: ")
+            self.hid_dim_lower= ptg.InputField("100", prompt="hidden dim. lower bound: ")
+            self.hid_dim_upper= ptg.InputField("200", prompt="hidden dim. upper bound: ")
+            self.hid_dim_step= ptg.InputField("50", prompt="hidden dim. step: ")
             
             self.mlp_dim_lower= ptg.InputField("100", prompt="mlp dim. lower bound: ")
             self.mlp_dim_upper= ptg.InputField("200", prompt="mlp dim. upper bound: ")
@@ -543,9 +543,9 @@ class ProcessProphetTrain:
                 self.case_id_key, 
                 self.case_activity_key, 
                 self.case_timestamp_key,
-                self.hidden_dim_lower, 
-                self.hidden_dim_upper, 
-                self.hidden_dim_step, 
+                self.hid_dim_lower, 
+                self.hid_dim_upper, 
+                self.hid_dim_step, 
                 self.mlp_dim_lower, 
                 self.mlp_dim_upper, 
                 self.mlp_dim_step, 
@@ -581,9 +581,9 @@ class ProcessProphetTrain:
             self.case_activity_key= ptg.InputField("concept:name", prompt="activity key: ")
             self.case_timestamp_key= ptg.InputField("time:timestamp", prompt="timestamp key: ")
 
-            self.hidden_dim_lower= ptg.InputField("100", prompt="hidden dim. lower bound: ")
-            self.hidden_dim_upper= ptg.InputField("200", prompt="hidden dim. upper bound: ")
-            self.hidden_dim_step= ptg.InputField("50", prompt="hidden dim. step: ")
+            self.hid_dim_lower= ptg.InputField("100", prompt="hidden dim. lower bound: ")
+            self.hid_dim_upper= ptg.InputField("200", prompt="hidden dim. upper bound: ")
+            self.hid_dim_step= ptg.InputField("50", prompt="hidden dim. step: ")
             
             self.mlp_dim_lower= ptg.InputField("100", prompt="mlp dim. lower bound: ")
             self.mlp_dim_upper= ptg.InputField("200", prompt="mlp dim. upper bound: ")
@@ -603,9 +603,9 @@ class ProcessProphetTrain:
                 self.case_id_key, 
                 self.case_activity_key, 
                 self.case_timestamp_key,
-                self.hidden_dim_lower, 
-                self.hidden_dim_upper, 
-                self.hidden_dim_step, 
+                self.hid_dim_lower, 
+                self.hid_dim_upper, 
+                self.hid_dim_step, 
                 self.mlp_dim_lower, 
                 self.mlp_dim_upper, 
                 self.mlp_dim_step, 

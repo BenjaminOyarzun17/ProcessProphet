@@ -303,6 +303,7 @@ def generate_predictive_process_model():
                         and_thr = float(minig_algo_config["and_threshold"])
                         loop_thr =float(minig_algo_config["loop_two_threshold"])
                     except:
+                        print(e)
                         return {"error": f"a float param was set to another type"},400 
                     pmm.heuristic_miner(
                             petri_net_path, 
@@ -319,6 +320,7 @@ def generate_predictive_process_model():
                 case "prefix_tree_miner":
                     pmm.prefix_tree_miner(petri_net_path)
         except Exception as e:
+            print(e)
             return {"error": str(e)}, 400
             #: if something goes wrong, return the error
 
