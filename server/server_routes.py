@@ -349,7 +349,6 @@ def generate_predictive_log():
     :param timestamp: timestamp column name
     :param path_to_log: path to the event log used for cutting
     :param path_to_model: path to the RNN model used for making predictions 
-    :param petri_net_path:  path where the pnml file and the json file should be exported. 
     :param new_log_path: path where the predictive log should be saved (csv format is default.) 
     :param sep: column separator (used for csv input logs)
     :param config: path to the config file for the model
@@ -435,12 +434,23 @@ def generate_predictive_log():
 @check_integers_factory(["degree", "depth"])
 def multiple_prediction():
     """
-    carry out multiple predictions.  
+    given a partial trace carry out multiple predictions.  
+  
+    :param case_id: case id column name
+    :param activity_key: activity column name
+    :param timestamp: timestamp column name
+    :param path_to_log: path to the input partial trace. must contain a single case id and columns 
+    must have the same names as the the ones used in the log for training. it must be a csv file with "," as separator
+    :param path_to_model: path to the RNN model used for making predictions 
+    :param prediction_file_name: file name for the output file that will contain the predictions
+    :param config: path to the config file for the model
+    :param degree: branching degree of the generated prediction tree
+    :param depth: depth that the predictive tree should have
     """
 
     if request.method == 'POST':
         request_config = request.get_json()
-
+        #: extract params
         depth = int(request_config["depth"])
         degree = int(request_config["degree"])
         case_id= str(request_config["case_id"])
@@ -451,26 +461,30 @@ def multiple_prediction():
 
         preprocessor = preprocessing.Preprocessing()
 
+        #: import the partial trace
         try: 
+            #: formatting avoided, just a quick import. we assume the input is a csv with "," as separator
             preprocessor.handle_import(False, path_to_log, case_id, timestamp, activity,sep=",", formatting=False )
         except Exception as e: 
+            #: notify error
             return {"error": str(e)}, 400
 
         input_df = preprocessor.event_df
 
         cuda = False
 
+        #: import the RNN model and its config
         path_to_model = str(request_config["path_to_model"])
-
         config = nn_manager.Config()
-
         with open (request_config["config"], "r") as f:
             dic = json.load(f)
             dic["time_precision"] = "NS"
         config.load_config(dic)
-
         neural_manager = nn_manager.NNManagement(config)
         neural_manager.import_nn_model(path_to_model)
+
+
+        #: create the prediction amanger instance
         pm = prediction_manager.PredictionManager(
             neural_manager.model, 
             case_id, 
@@ -478,6 +492,7 @@ def multiple_prediction():
             timestamp, 
             config
         )
+        #: do the predictions
         try: 
             pm.multiple_prediction_dataframe(
                 depth, 
@@ -485,47 +500,63 @@ def multiple_prediction():
                 input_df
             )
         except Exception as e: 
+            #: notify error
             return {"error": f"{str(e)}"},400 
+
+        #: write the obtaine predictions
         paths = pm.jsonify_paths()
-
-
         with open(prediction_file_name, 'w') as multi_predictions:
             json.dump(paths, multi_predictions, indent=2)
-        return ok #they are already encoded
-        # return ok + paths in file: json.dump + with open
+        return ok 
 
 
 @routes.route('/single_prediction', methods = ["POST"])
 @check_required_paths_factory(['path_to_log', "config", "path_to_model"])
 def single_prediction():
+    """
+    given a partial trace do one prediction.  
+  
+    :param case_id: case id column name
+    :param activity_key: activity column name
+    :param timestamp: timestamp column name
+    :param path_to_log: path to the input partial trace. must contain a single case id and columns 
+    must have the same names as the the ones used in the log for training. it must be a csv file with "," as separator
+    :param path_to_model: path to the RNN model used for making predictions 
+    :param config: path to the config file for the model
+    """
     if request.method == 'POST':
         request_config = request.get_json()
+        #: extract params
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         path_to_log = str(request_config['path_to_log'])
         preprocessor = preprocessing.Preprocessing()
 
+        #: import partial trace
         try: 
+            #: formatting set to false, we just want to do a quick import
             preprocessor.handle_import(False, path_to_log, case_id, timestamp, activity,sep=",", formatting=False )
         except Exception as e: 
+            #: notify errors
             return {"error": str(e)}, 400
 
         input_df = preprocessor.event_df
 
         cuda = False #: TODO: check if cuda is also used for making predictions.
 
-        path_to_model = str(request_config["path_to_model"])
 
+        #: load the RNN model and config (language encoders, params, ...)
+        path_to_model = str(request_config["path_to_model"])
         config = nn_manager.Config()
         with open (request_config["config"], "r") as f:
             dic = json.load(f)
             dic["time_precision"] = "NS"
         config.load_config(dic)
-
         neural_manager = nn_manager.NNManagement(config)
         neural_manager.import_nn_model(path_to_model)
 
+        #: create the prediction amanger intance 
         pm = prediction_manager.PredictionManager(
             neural_manager.model, 
             case_id, 
@@ -533,11 +564,17 @@ def single_prediction():
             timestamp, 
             config
         )
+
+        #: do the prediction
         try:
             time, event, prob = pm.single_prediction_dataframe(input_df)
         except Exception as e: 
+            #: notify error
             return {"error": f"{str(e)}"},400 
+
+        #: return the prediction
         return pm.jsonify_single(time, event, prob)
+
         
 
 
@@ -584,18 +621,18 @@ def random_search():
         request_config = request.get_json()
         
 
+        #: extract params
         is_xes = request_config["is_xes"] 
-
         path_to_log = str(request_config['path_to_log'])
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         split = float(request_config["split"])
         iterations = int(request_config["iterations"])
-
         sp = request_config["search_params"]
 
 
+        #: check the format for the search params. 
         sp_keys= sp.keys()
         if "hid_dim" not in sp_keys or "mlp_dim" not in sp_keys or "emb_dim" not in sp_keys:
             return {"error": "missing key in search params"},400 
@@ -609,9 +646,8 @@ def random_search():
                     return {"error": f"non integer found in search params"},400 
 
 
+        #: import the event log for training
         preprocessor = preprocessing.Preprocessing()
-
-
         try: 
             preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
         except Exception as e: 
@@ -620,8 +656,10 @@ def random_search():
                 "description": "error while importing"
             }, 400
 
+        
+        #: split the event log for trianing
         try:
-            train, test= preprocessor.split_train_test(float(request_config["split"]))
+            train, test= preprocessor.split_train_test(split)
         except exceptions.TrainPercentageTooHigh: 
             return {"error": "train percentage must be in range (0,1) and should not yield empty sublogs"}, 400
         except Exception as e: 
@@ -630,15 +668,13 @@ def random_search():
                 "description": "error while importing"
             }, 400
 
-     
+        #: prepare nn manager
         neural_manager= nn_manager.NNManagement() 
-
-
         neural_manager.config.cuda =  request_config["cuda"]
         neural_manager.config = load_config_from_preprocessor(neural_manager.config, preprocessor) 
-        
         neural_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
-        
+
+        #: do random search 
         try:
             acc= neural_manager.random_search(sp, iterations)
         except exceptions.NaNException as e: 
@@ -651,12 +687,10 @@ def random_search():
                 "description": "error while training"
             }, 400
         
-        
+
+        #: export the model and its config 
         config = neural_manager.config.asdict()
-
         neural_manager.export_nn_model(request_config['model_path'])
-        
-
         with open(f"{request_config['model_path'][:-3]}.config.json", "w") as f:
             json.dump(config,f)
         data = {
@@ -664,7 +698,7 @@ def random_search():
         }
 
 
-
+        #: return accuracy
         response = make_response(jsonify(data))
 
 
@@ -716,7 +750,7 @@ def grid_search():
     if request.method == 'POST':
         request_config = request.get_json()
         
-        
+        #: extract params
         is_xes = request_config["is_xes"] 
         path_to_log = str(request_config['path_to_log'])
         case_id= str(request_config["case_id"])
@@ -727,7 +761,7 @@ def grid_search():
 
 
       
-
+        #: check the correctness of the search params
         sp_keys= sp.keys()
         if "hid_dim" not in sp_keys or "mlp_dim" not in sp_keys or "emb_dim" not in sp_keys:
             return {"error": f"missing key in search params"},400 
@@ -742,7 +776,7 @@ def grid_search():
                     return {"error": f"non integer found in search params"},400 
 
 
-
+        #: import training log
         preprocessor = preprocessing.Preprocessing()
         try: 
             preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
@@ -752,6 +786,7 @@ def grid_search():
                 "description": "error while importing"
             }, 400
 
+        #: split the training log
         try:
             train, test= preprocessor.split_train_test(split)
         except exceptions.TrainPercentageTooHigh: 
@@ -762,16 +797,13 @@ def grid_search():
                 "description": "error while importing"
             }, 400
 
-
+        #: initialize nn manager
         neural_manager= nn_manager.NNManagement() 
-
         neural_manager.config.cuda =  request_config["cuda"]
-
         neural_manager.config = load_config_from_preprocessor(neural_manager.config, preprocessor) 
-
         neural_manager.load_data(train, test, preprocessor.case_id_key, preprocessor.case_timestamp_key, preprocessor.case_activity_key)
         
-
+        #: do grid search
         try:
             acc= neural_manager.grid_search(sp)
         except exceptions.NaNException as e: 
@@ -784,17 +816,17 @@ def grid_search():
                 "description": "error while training"
             }, 400
         
+
+        #: export model and its config
         config = neural_manager.config.asdict()
-
         neural_manager.export_nn_model(request_config['model_path'])
-        
-
         with open(f"{request_config['model_path'][:-3]}.config.json", "w") as f:
             json.dump(config,f)
+        
+        #: return the accuracy
         data = {
             "acc":  acc
         }
-
         response = make_response(jsonify(data))
         return response
 
@@ -832,6 +864,8 @@ def train_nn():
     for importing
     """
     if request.method == 'POST':
+
+        #: extract params
         request_config = request.get_json()
         path_to_log = str(request_config['path_to_log'])
         case_id= str(request_config["case_id"])
@@ -839,18 +873,10 @@ def train_nn():
         timestamp= str(request_config["timestamp_key"])
 
 
-
-
         preprocessor = preprocessing.Preprocessing()
         
-        path = request_config['model_path']
-        if os.path.isfile(request_config['model_path']):
-            return {"error": f"{request_config['model_path']} model already exists..."},400 
 
-        path = request_config['path_to_log']
-        if not os.path.isfile(request_config['path_to_log']):
-            return {"error": f"{request_config['path_to_log']} does not exist..."},400 
-
+        #: import the log for training
         try: 
             preprocessor.handle_import(request_config['is_xes'], path_to_log, case_id, timestamp, activity)
         except Exception as e: 
@@ -859,6 +885,7 @@ def train_nn():
                 "description": "error while importing"
             }, 400
 
+        #: split the log for training
         try:
             train, test= preprocessor.split_train_test(float(request_config["split"]))
         except exceptions.TrainPercentageTooHigh: 
@@ -870,14 +897,13 @@ def train_nn():
             }, 400
 
 
+        #: initialize the manager
         neural_manager= nn_manager.NNManagement() 
-
         neural_manager.config = load_config_from_params(neural_manager.config, request_config)
-
         neural_manager.config = load_config_from_preprocessor(neural_manager.config, preprocessor) 
-
         neural_manager.load_data(train, test, case_id, timestamp, activity)
 
+        #: train the RNN
         try:
             neural_manager.train()
         except exceptions.NaNException as e: 
@@ -891,21 +917,20 @@ def train_nn():
             }, 400
 
 
-
+        #: jsonify trianing stats for response
         training_stats = neural_manager.get_training_statistics()
-
-        config = neural_manager.config.asdict()
-
         data = {
             "training_statistics": training_stats, 
         }
 
+
+        #: export model and its config
+        config = neural_manager.config.asdict()
         neural_manager.export_nn_model(request_config['model_path'])
-
-
         with open(f"{request_config['model_path'][:-3]}.config.json", "w") as f:
             json.dump(config,f)
 
+        #: respond with train stats
         response = make_response(jsonify(data))
 
         return response
@@ -956,9 +981,7 @@ def replace_with_mode():
     """
     if request.method == 'POST':
         request_config = request.get_json()
-
-
-        
+        #: extract params
         is_xes = request_config["is_xes"] 
         path_to_log = str(request_config['path_to_log'])
         case_id= str(request_config["case_id"])
@@ -972,6 +995,7 @@ def replace_with_mode():
 
 
         preprocessor = preprocessing.Preprocessing()
+        #: import the log
         try: 
             preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
         except Exception as e: 
@@ -982,11 +1006,14 @@ def replace_with_mode():
 
         success= preprocessor.replace_activity_nan_with_mode()
         if success:
+            #: notify success
             preprocessor.event_df.to_csv(save_path, sep = ",")
             return {
                 "status": "successfully finished", 
                 "save_path":save_path
                 }, 200
+        
+        #: notify error
         return {"error": "nan replacement went wrong..."}, 400
 
 
@@ -1010,6 +1037,7 @@ def add_unique_start_end():
     if request.method == 'POST':
         request_config = request.get_json()
 
+        #: extract params
         is_xes = request_config["is_xes"] 
         path_to_log = str(request_config['path_to_log'])
         case_id= str(request_config["case_id"])
@@ -1024,6 +1052,7 @@ def add_unique_start_end():
 
         preprocessor = preprocessing.Preprocessing()
 
+        #: import log
         try: 
             preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
         except Exception as e: 
@@ -1035,11 +1064,13 @@ def add_unique_start_end():
 
         success= preprocessor.add_unique_start_end_activity()
         if success:
+            #: notify success
             preprocessor.event_df.to_csv(save_path, sep = ",")
             return {
                 "status": "successfully created", 
                 "save_path":save_path
                 }, 200
+        #: notify error
         return {"error": "operation not necessary, the log already has a unique start/end activity"}, 400
 
 @routes.route('/remove_duplicates', methods = ["POST"])
@@ -1060,6 +1091,7 @@ def remove_duplicates():
     if request.method == 'POST':
         request_config = request.get_json()
 
+        #: extract params
         is_xes = request_config["is_xes"] 
 
 
@@ -1075,6 +1107,7 @@ def remove_duplicates():
             sep = ""
 
         preprocessor = preprocessing.Preprocessing()
+        #: import the log
         try: 
             preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=False )
         except Exception as e: 
@@ -1086,9 +1119,12 @@ def remove_duplicates():
 
         success= preprocessor.remove_duplicate_rows()
         if success:
+            #: notify success
             path = save_path
             preprocessor.event_df.to_csv(save_path, sep = ",")
             return {"save_path":save_path}, 200
+
+        #: notify error
         return {"error": "removing duplicates went wrong..."},400 
 
 
