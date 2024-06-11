@@ -15,6 +15,9 @@ SERVER_PORT= os.getenv('SERVER_PORT')
 
 
 class ProcessProphetModel:
+    """
+    initialize ProcessProphet Object and main menu for predictions 
+    """
     def __init__(self, pp):
         self.pp = pp
         self.pp.switch_window(self.model_main_menu())
@@ -41,6 +44,10 @@ class ProcessProphetModel:
         self.pp.switch_window(window)
     
     def model_main_menu(self):
+        """
+        menu to select one of the process mining, conformance checking, creation of a predictive log
+        or go back to the previous menu
+        """
         container = ptg.Container(
             "Select one action", 
             "", 
@@ -58,7 +65,15 @@ class ProcessProphetModel:
         return window 
 
     def get_predictive_log(self): 
+        """
+        sends a request to create a predictive log to the server with the previously confirmed
+        parameters
 
+        side effects:
+        -predictive log that the RNN computed is stored in the predictive_logs directory of the current project
+        and user can return to previous menus
+        -if unsuccessful an error is indicated and the user can return to the model menu
+        """
         self.loading("preprocessing data...")
 
         is_xes = True if self.log_name.value[-3:] == "xes"  else False
@@ -110,7 +125,15 @@ class ProcessProphetModel:
         return window
 
 
-    def set_predictive_log(self) :
+    def set_predictive_log(self):
+        """
+        user can either start generating a predictive log with the displayed default parameters or alternatively adapt the parameters to their
+        own preference
+        side effect:
+        -the modified parameters are stored in a container and then the function for creating a
+        predictive log is called
+        -parameters are displayed in the window
+        """
         self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
         self.log_name=  ptg.InputField("Hospital_log.xes", prompt="log name: ")
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
@@ -143,9 +166,16 @@ class ProcessProphetModel:
         
 
     def get_process_mining(self):
-        self.loading("preprocessing data...")
+        """
+        sends a process mining request to the server with the previously confirmed
+        parameters
 
-        
+        side effects:
+        -petri net that the mining algorithm computed is stored in the models directory of the current project
+        and user can return to previous menus
+        -if unsuccessful an error is indicated and the user can return to the model menu
+        """
+        self.loading("preprocessing data...")
         params = {
             "path_to_log":f"{self.pp.state.predictive_logs_path}/{self.log_name.value}" ,
             "case_id":self.case_id_key.value,
@@ -192,6 +222,14 @@ class ProcessProphetModel:
 
 
     def set_process_mining(self):
+        """
+        user can either start the mining with the displayed default parameters or alternatively adapt the parameters to their
+        own preference (e.g. select different mining algorithm)
+
+        side effect:
+        -the modified parameters are stored in a container and then the mining function is called
+        -parameters are displayed in the window
+        """
         self.model_name=  ptg.InputField("f.pt", prompt="model config: ")
         self.log_name=  ptg.InputField("predicitive_log1.csv", prompt="log name: ")
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
@@ -227,6 +265,15 @@ class ProcessProphetModel:
         return window
 
     def get_conformance_checking(self):
+        """
+        sends a conformance checking request to the server with the previously confirmed
+        parameters
+
+        side effects:
+        -fitness of that the conformance checking algorithm computed is displayed and user can return to 
+        previous menus
+        -if unsuccessful an error is indicated and the user can return to the model menu
+        """
         self.loading("preprocessing data...")
 
         
@@ -270,6 +317,14 @@ class ProcessProphetModel:
         return window
 
     def set_conformance_checking(self):
+        """
+        user can either start the conformance checking with the displayed default parameters or alternatively adapt the parameters to their
+        own preference (e.g. select different conformance checking algorithm)
+
+        side effect:
+        -the modified parameters are stored in a container and then the conformance checking function is called
+        -parameters are displayed in the window
+        """
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
         self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
         self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
