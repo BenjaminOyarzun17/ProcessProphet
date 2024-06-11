@@ -569,7 +569,13 @@ def test_import_model():
     pmm.generate_predictive_log_tail_cut()
    
 
+def show_petri_net(): 
+    path = "projects/first Prophet/petri_nets/p_net1.pnml"
+    net, initial_marking, final_marking = pm4py.read_pnml(path)
+    #pm4py.view_petri_net(net, initial_marking, final_marking, format = 'html')
+    pm4py.save_vis_petri_net(net, initial_marking, final_marking, 'petri_net.png')
 
+    print("done")
 
 
 if __name__=="__main__": 
@@ -586,4 +592,5 @@ if __name__=="__main__":
     #test_process_model_manager_tail_cut()
     #test_heuristic()
     #HL_shorter()
+    #show_petri_net()
     app.run(port = SERVER_PORT,debug=True) #: run the flask server
