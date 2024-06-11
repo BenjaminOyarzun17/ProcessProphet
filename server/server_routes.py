@@ -165,6 +165,7 @@ def conformance():
     :param path_to_log: path to the event log 
     :param petri_net_path:  path to the petri net used for conf. checking.
     :param conformance_technique:  either "token" or "alignment". this selects the corresponding conf. checking technique. 
+    :return fitness: the achieved fitness by the model. 
     """
     
     if request.method == 'POST':
@@ -228,6 +229,8 @@ def generate_predictive_process_model():
     """
     path for creating a predictive process model ie a petri net. 
 
+
+    the petri net and its config are exported in the given path
 
     :param is_xes: whether the input log is xes or not (otherwise csv). 
     :param case_id: case id column name
@@ -343,6 +346,8 @@ def generate_predictive_log():
     generates the predictive event log by cutting all traces using the given configuration
     and by exteniding this cut traces with predictions.
     
+    the predictive log is exported in the given path
+
     :param is_xes: whether the input log is xes or not (otherwise csv). 
     :param case_id: case id column name
     :param activity_key: activity column name
@@ -436,6 +441,8 @@ def multiple_prediction():
     """
     given a partial trace carry out multiple predictions.  
   
+    generates a file containing the multiple predicitons in the given path.
+
     :param case_id: case id column name
     :param activity_key: activity column name
     :param timestamp: timestamp column name
@@ -515,7 +522,7 @@ def multiple_prediction():
 def single_prediction():
     """
     given a partial trace do one prediction.  
-  
+
     :param case_id: case id column name
     :param activity_key: activity column name
     :param timestamp: timestamp column name
@@ -523,6 +530,10 @@ def single_prediction():
     must have the same names as the the ones used in the log for training. it must be a csv file with "," as separator
     :param path_to_model: path to the RNN model used for making predictions 
     :param config: path to the config file for the model
+
+    :return predicted_time:  predicted next timestamp
+    :return predicted_event:  predicted next activity
+    :return probability:  probability of the event
     """
     if request.method == 'POST':
         request_config = request.get_json()
@@ -972,6 +983,9 @@ def load_config_from_preprocessor(config : nn_manager.Config, preprocessor : pre
 def replace_with_mode():
     """
     replaces NaN's in the activity column with median
+
+    a filtered event log is created in the given path
+
     the following data is expected in the JSON body of the request: 
     :param path_to_log: path to the log used for training. must not be encoded
     :param case_id: name of case id column
@@ -1027,6 +1041,9 @@ def replace_with_mode():
 def add_unique_start_end():
     """
     adds a unique start/end activity to the log
+
+    a filtered event log is created in the given path
+
     the following data is expected in the JSON body of the request: 
     :param path_to_log: path to the log used for training. must not be encoded
     :param case_id: name of case id column
@@ -1080,6 +1097,8 @@ def add_unique_start_end():
 def remove_duplicates():
     """
     removes the duplicates ie the rows where the same activity happened at the same time in the same case id.
+
+    a filtered event log is created in the given path
 
     the following data is expected in the JSON body of the request: 
     :param path_to_log: path to the log used for training. must not be encoded
