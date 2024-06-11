@@ -293,6 +293,7 @@ class ProcessModelManager:
         )
         #: export the petri net in the given path
         pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking, file_path=path)
+        pm4py.save_vis_petri_net(self.petri_net, self.initial_marking, self.final_marking, file_path = path+".png")
 
 
     def format_columns(self): 
@@ -321,6 +322,7 @@ class ProcessModelManager:
         )
         #pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
         pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking, file_path=path)
+        pm4py.save_vis_petri_net(self.petri_net, self.initial_marking, self.final_marking, file_path = path+".png")
 
     def alpha_miner(self, path):
         """
@@ -336,6 +338,7 @@ class ProcessModelManager:
         )
         #pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
         pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking , file_path=path)
+        pm4py.save_vis_petri_net(self.petri_net, self.initial_marking, self.final_marking, file_path = path+".png")
 
     def prefix_tree_miner(self, path):
         """
@@ -352,6 +355,7 @@ class ProcessModelManager:
         #pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
         pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking , file_path=path)
 
+        pm4py.save_vis_petri_net(self.petri_net, self.initial_marking, self.final_marking, file_path = path+".png")
         '''
         might be irrelevant as we require to always have a case_identifier in the log input 
         -> correlation miner only useful if we do not have or know the case_identifier
