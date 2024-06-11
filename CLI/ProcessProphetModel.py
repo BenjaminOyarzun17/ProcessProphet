@@ -49,13 +49,13 @@ class ProcessProphetModel:
         container = ptg.Container(
             "Select one action", 
             "", 
-            ptg.Button("Create a predictive event log", lambda *_: self.pp.switch_window(self.set_predictive_log())), 
+            ptg.Button(f"{self.pp.button_color}Create a predictive event log", lambda *_: self.pp.switch_window(self.set_predictive_log())), 
             "", 
-            ptg.Button("Run process mining", lambda *_: self.pp.switch_window(self.set_process_mining())), 
+            ptg.Button(f"{self.pp.button_color}Run process mining", lambda *_: self.pp.switch_window(self.set_process_mining())), 
             "", 
-            ptg.Button("Run conformance checking", lambda *_: self.pp.switch_window(self.set_conformance_checking())), 
+            ptg.Button(f"{self.pp.button_color}Run conformance checking", lambda *_: self.pp.switch_window(self.set_conformance_checking())), 
             "",
-            ptg.Button("Back", lambda *_: self.return_to_menu()), 
+            ptg.Button(f"{self.pp.button_color}Back", lambda *_: self.return_to_menu()), 
         )
 
         window = ptg.Window(container, box="DOUBLE")
@@ -116,7 +116,7 @@ class ProcessProphetModel:
                 "",
                 f"{error}", 
                 "",
-                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.model_main_menu()))
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.model_main_menu()))
             ]
         window = ptg.Window(*container, box="DOUBLE")
         window.center()
@@ -156,8 +156,8 @@ class ProcessProphetModel:
             self.random_cuts,
             self.cut_length,
             self.sep, 
-            ptg.Button("continue",lambda *_: self.pp.switch_window(self.get_predictive_log()) ),
-            ptg.Button("back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
+            ptg.Button(f"{self.pp.button_color}continue",lambda *_: self.pp.switch_window(self.get_predictive_log()) ),
+            ptg.Button(f"{self.pp.button_color}back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
         ]
         window = ptg.Window(*container, width = self.pp.window_width)
         #window = ptg.Window(*container)
@@ -214,7 +214,7 @@ class ProcessProphetModel:
                 "",
                 f"{error}", 
                 "",
-                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.model_main_menu()))
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.model_main_menu()))
             ]
         window = ptg.Window(*container, box="DOUBLE")
         window.center()
@@ -256,8 +256,8 @@ class ProcessProphetModel:
             self.and_threshold, 
             self.loop_two_threshold, 
             self.noise_threshold, 
-            ptg.Button("continue",lambda *_: self.pp.switch_window(self.get_process_mining()) ),
-            ptg.Button("back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
+            ptg.Button(f"{self.pp.button_color}continue",lambda *_: self.pp.switch_window(self.get_process_mining()) ),
+            ptg.Button(f"{self.pp.button_color}back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
         ]
         window = ptg.Window(*container, width = self.pp.window_width)
         #window = ptg.Window(*container)
@@ -310,7 +310,7 @@ class ProcessProphetModel:
                 "",
                 f"{error}", 
                 "",
-                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.model_main_menu()))
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.model_main_menu()))
             ]
         window = ptg.Window(*container, box="DOUBLE")
         window.center()
@@ -342,8 +342,8 @@ class ProcessProphetModel:
             self.case_timestamp_key,
             self.petri_net_path, 
             self.conformance_technique,
-            ptg.Button("continue",lambda *_: self.pp.switch_window(self.get_conformance_checking()) ),
-            ptg.Button("back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
+            ptg.Button(f"{self.pp.button_color}continue",lambda *_: self.pp.switch_window(self.get_conformance_checking()) ),
+            ptg.Button(f"{self.pp.button_color}back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
         ]
         window = ptg.Window(*container, width = self.pp.window_width)
         #window = ptg.Window(*container)
