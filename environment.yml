@@ -9,8 +9,11 @@ dependencies:
   - pandas
   - pydoc-markdown
   - flask
+  - werkzeug==2.0
   - pip
   - pip:
     - pm4py
     - scikit-learn
     - typing_extensions>=3.10.0.0
+    - python-dotenv
+    - pytermgui
