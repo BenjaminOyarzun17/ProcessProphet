@@ -35,7 +35,6 @@ class PPStateData:
     predictive_logs_path:str|None
     partial_traces_path: str|None
     multiple_predictions_path: str|None
-    decoded_dfs_path:str|None
     mode: ProcessProphetMode | None
 
 

@@ -139,7 +139,6 @@ class ProcessProphetStart:
         - `projects/dummy_project/petri_nets` :  all petri nets used for `dummy_project` are stored here
         - `projects/dummy_project/predictive_logs` : all generated predictive logs used for `dummy_project` and conformance checking are stored here.
         - `projects/dummy_project/partial_traces` : all input partial traces given by the user are searched inside this folder.  
-        - `projects/dummy_project/decoded_dfs` : all 
         - `projects/dummy_project/multiple_predictions_path` : all predictions created using the multiple predictions function
         are stored here (for the `dummy_project` project). 
         """
@@ -163,7 +162,7 @@ class ProcessProphetStart:
             return
 
         message = f"directory created in path {os.getcwd()}/{self.pp.state.projects_path}/{name}"
-        subdirectories = ["input_logs", "models", "petri_nets", "predictive_logs", "partial_traces", "decoded_dfs", "multiple_predictions_path"]
+        subdirectories = ["input_logs", "models", "petri_nets", "predictive_logs", "partial_traces", "multiple_predictions_path"]
         #: create the directories
         os.mkdir(f"{os.getcwd()}/{self.pp.state.projects_path}/{name}")
         self.pp.state.current_project = name
@@ -172,7 +171,6 @@ class ProcessProphetStart:
         self.pp.state.petri_nets_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/petri_nets"
         self.pp.state.predictive_logs_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/predictive_logs"
         self.pp.state.partial_traces_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/partial_traces"
-        self.pp.state.decoded_dfs_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/decoded_dfs"
         self.pp.state.multiple_predictions_path= f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/multiple_predictions_path"
        
         for subdirectory in subdirectories: 
@@ -249,7 +247,6 @@ class ProcessProphetStart:
             self.pp.state.petri_nets_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/petri_nets"
             self.pp.state.predictive_logs_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/predictive_logs"
             self.pp.state.partial_traces_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/partial_traces"
-            self.pp.state.decoded_dfs_path = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/decoded_dfs"
             self.pp.state.multiple_predictions_path= f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/multiple_predictions_path"
             container =[  
                 "Project selected successfully", 
