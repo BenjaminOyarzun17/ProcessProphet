@@ -18,7 +18,7 @@ class TestTrainEvaluate(unittest.TestCase):
         #: run this to import the data once 
         cls.preprocessor= Preprocessing()
         path = "data/running-example.csv"
-        cls.preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ";")
+        cls.preprocessor.handle_import(False, path, "case_id", "timestamp", "activity", sep=";")
 
         # setup the nn manager
         train, test = cls.preprocessor.split_train_test(.5)
@@ -74,7 +74,7 @@ class TestImportExportModel(unittest.TestCase):
         #: run this to import the data once 
         cls.preprocessor= Preprocessing()
         path = "data/running-example.csv"
-        cls.preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ";")
+        cls.preprocessor.handle_import(False, path, "case_id", "timestamp", "activity", sep=";")
 
         # setup the nn manager
         train, test = cls.preprocessor.split_train_test(.5)
@@ -92,25 +92,29 @@ class TestImportExportModel(unittest.TestCase):
         """
         test if the model can be exported
         """
-        self.nn_manager.export_nn_model("test_model.pt")
-        self.assertTrue(os.path.exists("test_model.pt"))
+        self.nn_manager.export_nn_model("t_model.pt")
+        self.assertTrue(os.path.exists("t_model.pt"))
+
 
     def test_import_nn_model(self):
         """
         test if the model can be imported
         """
-        nn_manager = NNManagement(None)
-        nn_manager.import_nn_model("test_model.pt")
+        nn_manager = NNManagement()
+        nn_manager.import_nn_model("t_model.pt")
         self.assertTrue(nn_manager.model is not None)
+
 
     def test_export_import_model(self):
         """
         test export and import of the model 
         """
-        self.nn_manager.export_nn_model("test_model")
+        self.nn_manager.export_nn_model("t_model")
         nn_manager = NNManagement(None)
-        nn_manager.import_nn_model("test_model")
+        nn_manager.import_nn_model("t_model")
         self.assertTrue(nn_manager.model is not None)
+
+        os.remove("t_model.pt")
 
 
 class TestHyperparameterTuning(unittest.TestCase):
@@ -121,7 +125,7 @@ class TestHyperparameterTuning(unittest.TestCase):
     def setUpClass(cls):
         cls.preprocessor= Preprocessing()
         path = "data/running-example.csv"
-        cls.preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ";")
+        cls.preprocessor.handle_import(False, path, "case_id", "timestamp", "activity", sep=";")
 
         # setup the nn manager
         train, test = cls.preprocessor.split_train_test(.5)
@@ -139,7 +143,7 @@ class TestHyperparameterTuning(unittest.TestCase):
         test if grid search can be performed
         """
         search_params = {
-            "hidden_dim": [30, 50, 10],
+            "hid_dim": [30, 50, 10],
             "mlp_dim": [10, 30, 10],
             "emb_dim": [30, 50, 10],
         }
@@ -150,7 +154,7 @@ class TestHyperparameterTuning(unittest.TestCase):
         test if random search can be performed
         """
         search_params = {
-            "hidden_dim": [1, 50],
+            "hid_dim": [1, 50],
             "mlp_dim": [10, 30],
             "emb_dim": [30, 50],
         }

@@ -19,7 +19,7 @@ class TestImportXESFunction(unittest.TestCase):
         #: run this to import the data once 
         cls.preprocessor= Preprocessing()
         path = "data/Hospital_log.xes" #its smaller, use preferrably.
-        cls.preprocessor.import_event_log_xes(path , "case:concept:name", "concept:name", "time:timestamp")
+        cls.preprocessor.handle_import(True, path, "case:concept:name", "time:timestamp", "concept:name")
 
     def test_no_nan(self):
         """check if there are no nans"""
@@ -84,7 +84,7 @@ class TestImportCSVFunction(unittest.TestCase):
         #: run this to import the data once 
         cls.preprocessor= Preprocessing()
         path = "data/running-example.csv" #its smaller, use preferrably.
-        cls.preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ";")
+        cls.preprocessor.handle_import(False, path, "case_id", "timestamp", "activity", sep=";")
 
     def test_no_nan(self):
         """check if there are no nans"""
@@ -163,8 +163,8 @@ class TestSplitTrainTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.preprocessor= Preprocessing()
-        path = "data/running-example.csv" 
-        cls.preprocessor.import_event_log_csv(path , "case_id", "activity", "timestamp", ";")
+        path = "data/running-example.csv"
+        cls.preprocessor.handle_import(False, path, "case_id", "timestamp", "activity", sep=";")
 
     def test_small_dataset(self):
         """
