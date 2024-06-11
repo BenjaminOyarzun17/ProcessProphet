@@ -3,8 +3,7 @@
 /maximo
 /sandbox.ipynb
 
-# observation: demo-data/ SHOULD NOT be ignored. 
-
+/demo_data
 /data
 
 
