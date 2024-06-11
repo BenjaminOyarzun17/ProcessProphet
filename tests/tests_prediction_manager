@@ -1,12 +1,297 @@
 import os
 import sys
+import unittest
+import torch
+import pandas as pd
+import numpy as np
 
 # needed for the import of the server module:
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from server.prediction_manager import PredictionManager
+from server import RMTPP_torch
+from server import NNManagement
+from server import exceptions
 
-"""
-tests:
-- single_prediction
-- single_prediction_dataframe
-"""
+
+class TestHelperFunctions(unittest.TestCase):
+    """
+    Assumes that "running-example.csv" is in the data directory
+    and a model "test_model.pt" is trained on it.
+
+    Test some helper functions:
+    - jsonify_single
+    - check_input_uniqueness
+    """
+    @classmethod
+    def setUpClass(cls):
+        """
+        Set up the test class
+        """
+        nn_manager = NNManagement()
+        # load model
+        nn_manager.import_nn_model("test_model.pt")
+        model = nn_manager.model
+        config = nn_manager.model.config
+        
+        cls.prediction_manager = PredictionManager(model, "case_id", "activity", "timestamp", config)
+
+        cls.prediction_manager.encoded_df = pd.DataFrame({"case_id": [1, 1, 1, 2, 2, 2],
+                                                          "activity": ["A", "B", "C", "A", "B", "C"],
+                                                          "timestamp": [1, 2, 3, 1, 2, 3]})
+
+    def test_jsonify_single(self):
+        """
+        Test the jsonify_single function
+        """
+        # test case
+        case1 = {"time_pred": 1, "event_pred": 1, "prob": 0.5}
+        expected1 = '{"predicted_time": "1970-01-01 00:00:00.000000020", "predicted_event": "decide", "probability": 0.5}'
+
+        case2 = {"time_pred": 2, "event_pred": 2, "prob": 0.5}
+        expected2 = '{"predicted_time": "1970-01-01 00:00:00.000000021", "predicted_event": "examine casually", "probability": 0.5}'
+
+        case3 = {"time_pred": 3, "event_pred": 3, "prob": 0.5}
+        expected3 = '{"predicted_time": "1970-01-01 00:00:00.000000022", "predicted_event": "examine thoroughly", "probability": 0.5}'
+
+        case4 = {"time_pred": 4, "event_pred": 4, "prob": 0.5}
+        expected4 = '{"predicted_time": "1970-01-01 00:00:00.000000023", "predicted_event": "pay compensation", "probability": 0.5}'
+
+        self.assertEqual(self.prediction_manager.jsonify_single(**case1), expected1)
+        self.assertEqual(self.prediction_manager.jsonify_single(**case2), expected2)
+        self.assertEqual(self.prediction_manager.jsonify_single(**case3), expected3)
+        self.assertEqual(self.prediction_manager.jsonify_single(**case4), expected4)
+
+
+    def test_check_input_uniqueness(self):
+        """
+        Test the check_input_uniqueness function
+        """
+        # test case
+        case1 = pd.DataFrame({"case_id": [1, 1, 1, 1, 1, 1],
+                              "activity": ["A", "B", "C", "A", "B", "C"],
+                              "timestamp": [1, 2, 3, 1, 2, 3]})
+        case2 = pd.DataFrame({"case_id": [1, 8, 1, 1, 1, 1],
+                                "activity": ["A", "B", "C", "A", "B", "C"],
+                                "timestamp": [1, 2, 3, 1, 2, 3]})
+        case3 = pd.DataFrame({"case_id": [2, 2, 2],
+                                "activity": ["A", "B", "C"],
+                                "timestamp": [1, 2, 3]})
+        case4 = pd.DataFrame({"case_id": [1],
+                              "activity": ["A"],
+                              "timestamp": [1]})
+        case5 = pd.DataFrame({"case_id": [1, 1, 1, 2, 2, 2, 3],
+                              "activity": ["A", "B", "C", "A", "B", "C", "D"],
+                              "timestamp": [1, 2, 3, 1, 2, 3, 4]})
+        
+        self.prediction_manager.encoded_df = case1
+        self.assertTrue(self.prediction_manager.check_input_uniqueness())
+        self.prediction_manager.encoded_df = case2
+        self.assertFalse(self.prediction_manager.check_input_uniqueness())
+        self.prediction_manager.encoded_df = case3
+        self.assertTrue(self.prediction_manager.check_input_uniqueness())
+        self.prediction_manager.encoded_df = case4
+        self.assertTrue(self.prediction_manager.check_input_uniqueness())
+        self.prediction_manager.encoded_df = case5
+        self.assertFalse(self.prediction_manager.check_input_uniqueness())
+
+
+class TestPredictionManager(unittest.TestCase):
+    """
+    Assumes that "running-example.csv" is in the data directory
+    and a model "test_model.pt" is trained on it.
+
+    Test the PredictionManager class:
+    - single_prediction
+    - single_prediction_dataframe
+    """
+    @classmethod
+    def setUpClass(cls):
+        """
+        Set up the test class
+        """
+        nn_manager = NNManagement()
+        # load model
+        nn_manager.import_nn_model("test_model.pt")
+        model = nn_manager.model
+        cls.config = nn_manager.model.config
+        
+        cls.prediction_manager = PredictionManager(model, "case_id", "activity", "timestamp", cls.config)
+
+        cls.prediction_manager.encoded_df = pd.DataFrame({"case_id": [1, 1, 1, 2, 2, 2],
+                                                          "activity": [0, 1, 2, 0, 1, 2],
+                                                          "timestamp": [1, 2, 3, 1, 2, 3]})
+
+    def test_single_prediction(self):
+        """
+        Test the single_prediction function
+        """
+        # test if there are no errors raised when calling on different cases
+        case1 = pd.DataFrame({"case_id": [1, 1, 1, 2, 2, 2],
+                                "activity": [0, 1, 2, 0, 1, 2],
+                                "timestamp": [1, 2, 3, 1, 2, 3]})
+        case2 = pd.DataFrame({"case_id": [1, 1, 1],
+                                "activity": [0, 1, 2],
+                                "timestamp": [1, 2, 3]})
+        case3 = pd.DataFrame({"case_id": [1, 1, 1, 1, 0, 4, 2, 2, 2, 2, 3],
+                                "activity": [0, 1, 2, 0, 1, 2, 0, 1, 2, 3, 4],
+                                "timestamp": [1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7]})
+        case4 = pd.DataFrame({"case_id": [0]*100,
+                                "activity": [0]*100,
+                                "timestamp": [0]*100})
+        case5 = pd.DataFrame({"case_id": [2, 2, 0, 0, 0, 0, 0, 0, 0],
+                                "activity": [0, 1, 0, 1, 2, 3, 4, 5, 6],
+                                "timestamp": [1, 2, 3, 4, 5, 6, 7, 8, 9]})
+
+        cases = [case1, case2, case3, case4, case5]
+        out = []
+        # test if there are no errors raised when calling on different cases
+        for case in cases:
+            self.prediction_manager.encoded_df = case
+            pred = self.prediction_manager.single_prediction()
+            out.append(pred)
+
+        # test if the output is in the correct format
+        for time_pred, event_pred, prob in out:
+            self.assertIsInstance(time_pred, float)
+            self.assertIsInstance(event_pred, int)
+            self.assertIsInstance(prob, float)
+
+            # check if the event prediction is in the correct range
+            classes = self.config.activity_le.classes_
+            self.assertTrue(0 <= event_pred <= len(classes))
+
+            # check if prob is in the correct range
+            self.assertTrue(0 <= prob <= 1)
+
+    def test_single_prediction_dataframe(self):
+        """
+        Test the single_prediction_dataframe function
+        """
+        case1 = pd.DataFrame({"case_id": [2, 2, 2, 2, 2, 2],
+                                "activity": [0, 1, 2, 0, 1, 2],
+                                "timestamp": [1, 2, 3, 1, 2, 3]})
+        case2 = pd.DataFrame({"case_id": [1, 1, 1],
+                                "activity": [0, 1, 2],
+                                "timestamp": [1, 2, 3]})
+        
+        cases = [case1, case2]
+        out = []
+        # check if there are no errors raised when calling on different cases
+        for case in cases:
+            pred = self.prediction_manager.single_prediction_dataframe(case)
+            out.append(pred)
+
+        # test if the output is in the correct format
+        for time_pred, event_pred, prob in out:
+            self.assertIsInstance(time_pred, float)
+            self.assertIsInstance(event_pred, int)
+            self.assertIsInstance(prob, float)
+
+            # check if the event prediction is in the correct range
+            classes = self.config.activity_le.classes_
+            self.assertTrue(0 <= event_pred <= len(classes))
+
+            # check if prob is in the correct range
+            self.assertTrue(0 <= prob <= 1)
+
+
+        # check if the function raises an error when the case_id is not unique
+        case_x = pd.DataFrame({"case_id": [1, 1, 1, 1, 0, 4, 2, 2, 2, 2, 3],
+                                "activity": [0, 1, 2, 0, 1, 2, 0, 1, 2, 3, 4],
+                                "timestamp": [1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7]})
+        
+        with self.assertRaises(exceptions.NotOneCaseId):
+            pred = self.prediction_manager.single_prediction_dataframe(case_x)
+
+
+    def test_multiple_prediction(self):
+        """
+        Test the multiple_prediction function
+        """
+        case1 = pd.DataFrame({"case_id": [1, 1, 1, 1, 1, 1],
+                                "activity": [0, 1, 2, 0, 1, 2],
+                                "timestamp": [1, 2, 3, 4, 20, 26]})
+        case2 = pd.DataFrame({"case_id": [1, 1, 1, 1],
+                                "activity": [0, 1, 2, 0],
+                                "timestamp": [1, 2, 3, 4]})
+        case3 = pd.DataFrame({"case_id": [1, 1, 1, 1, 0, 4, 2, 2, 2, 2, 3],
+                                "activity": [0, 1, 2, 0, 1, 2, 0, 1, 2, 3, 4],
+                                "timestamp": [1, 2, 3, 4, 11, 21, 22, 23, 24, 25, 45]})
+        case4 = pd.DataFrame({"case_id": [0]*100,
+                                "activity": [0]*100,
+                                "timestamp": list(range(100))})
+        case5 = pd.DataFrame({"case_id": [2, 2, 0, 0, 0, 0, 0, 0, 0],
+                                "activity": [0, 1, 0, 1, 2, 3, 4, 5, 6],
+                                "timestamp": [1, 2, 3, 4, 5, 6, 7, 8, 9]})
+
+        cases = [case1, case2, case3, case4, case5]
+        # test if there are no errors raised when calling on different cases
+        for depth in range(2, 4):
+            for degree in range(2, 4):
+                out = []
+                for case in cases:
+                    self.prediction_manager.encoded_df = case
+                    self.prediction_manager.multiple_prediction(depth, degree)
+                    out.append(self.prediction_manager.paths)
+
+                # test if the output is in the correct format
+                for li in out:
+                    for p in li:
+                        self.assertIsInstance(p, list)
+                        for time_pred, (prob, event_pred) in p:
+                            self.assertTrue(isinstance(time_pred, (int, float, np.int64, np.float64)))
+                            self.assertTrue(isinstance(event_pred, (int, float, np.int64, np.float64)))
+                            self.assertTrue(isinstance(prob, (int, float, np.int64, np.float64)))
+
+                            # check if the event prediction is in the correct range
+                            classes = self.config.activity_le.classes_
+                            self.assertTrue(0 <= event_pred <= len(classes))
+
+                            # check if prob is in the correct range
+                            self.assertTrue(0 <= prob <= 1)
+        
+    def test_multiple_prediction_linear(self):
+        """
+        Test the multiple_prediction_linear function
+        Includes nonstop and stop predictions
+        """
+        case1 = pd.DataFrame({"case_id": [1, 1, 1, 1, 1, 1],
+                                "activity": [0, 1, 2, 0, 1, 5],
+                                "timestamp": [1, 2, 3, 4, 20, 26]})
+        case2 = pd.DataFrame({"case_id": [1, 1, 1, 1],
+                                "activity": [0, 1, 2, 5],
+                                "timestamp": [1, 2, 3, 4]})
+        case3 = pd.DataFrame({"case_id": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                                "activity": [0, 1, 2, 0, 1, 2, 0, 1, 2, 3, 5],
+                                "timestamp": [1, 2, 3, 4, 11, 21, 22, 23, 24, 25, 45]})
+
+        self.prediction_manager.end_activities = {0: False, 1: False, 2: False, 3: False, 4: False, 5: True}
+
+        cases = [case1, case2, case3]
+        # test if there are no errors raised when calling on different cases
+        for depth in range(2, 4):
+            for nonstop in [True, False]:
+                for case in cases:
+                    self.prediction_manager.encoded_df = case
+                    self.prediction_manager.multiple_prediction_linear(depth=depth, nonstop=nonstop, upper=6)
+                    out = self.prediction_manager.paths
+
+                    # test if the output is in the correct format
+                    for p in out:
+                        self.assertIsInstance(p, list)
+                        for time_pred, (prob, event_pred) in p:
+                            self.assertTrue(isinstance(time_pred, (int, float, np.int64, np.float64)))
+                            self.assertTrue(isinstance(event_pred, (int, float, np.int64, np.float64)))
+                            self.assertTrue(isinstance(prob, (int, float, np.int64, np.float64)))
+
+                            # check if the event prediction is in the correct range
+                            classes = self.config.activity_le.classes_
+                            self.assertTrue(0 <= event_pred <= len(classes))
+
+                            # check if prob is in the correct range
+                            self.assertTrue(0 <= prob <= 1)
+
+
+
+if __name__ == '__main__':
+    unittest.main()

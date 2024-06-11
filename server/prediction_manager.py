@@ -61,13 +61,11 @@ class PredictionManager:
 
         return dummy.iloc[:random_cut]
 
-
     def check_input_uniqueness(self):
         """
         the input df must contain only one process. hence check if thereis one unique case_id 
         """
         return len(self.encoded_df[self.case_id_key].unique()) == 1
-    
 
     def single_prediction_dataframe(self, df):
         """
@@ -77,14 +75,13 @@ class PredictionManager:
         """
         preprocessor = preprocessing.Preprocessing()
         preprocessor.import_event_log_dataframe(df, self.case_id_key, self.activity_key, self.timestamp_key)
-        self.encoded_df= preprocessor.event_df 
+        self.encoded_df = preprocessor.event_df
 
         #: check case id uniqueness
         if not self.check_input_uniqueness():
             raise exceptions.NotOneCaseId()
-        self.current_case_id= self.encoded_df[self.case_id_key].sample(n = 1).values[0]
+        self.current_case_id = self.encoded_df[self.case_id_key].sample(n = 1).values[0]
         return self.single_prediction()
-
 
     def single_prediction(self):
         """
@@ -92,9 +89,7 @@ class PredictionManager:
         """
         #: sliding window
         
-
-
-        step1= RMTPP_torch.ATMDataset(self.config,self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key)
+        step1 = RMTPP_torch.ATMDataset(self.config,self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key)
         #: just create one batch
         step2 = DataLoader(step1, batch_size=len(step1.time_seqs), shuffle=False, collate_fn=RMTPP_torch.ATMDataset.to_features)
 
@@ -102,8 +97,7 @@ class PredictionManager:
         batch = next(iter(step2))
         event_pred, prob, time_pred= self.model.predict(batch, pm_active = True)
         
-        
-        return time_pred,  event_pred, prob
+        return time_pred, event_pred, prob
 
     def jsonify_single(self, time_pred, event_pred, prob): 
         """
@@ -113,16 +107,16 @@ class PredictionManager:
         the probability of the last predicted event happening
         in the predicted time t. 
         """
+        # decode event
         decoded_event = self.config.activity_le.inverse_transform([event_pred])
 
-        #: decode the timestamp
-        timestamps= self.encoded_df[self.timestamp_key].copy()
+        # decode the timestamp
+        timestamps = self.encoded_df[self.timestamp_key].copy()
         timestamps = timestamps*self.config.exponent
         timestamps.iloc[0]= timestamps.iloc[0]+ time_pred
         timestamps = timestamps.astype("datetime64[ns]")
-
-
         new_time = timestamps.iloc[0]
+
         ans = {
             "predicted_time":str(new_time), 
             "predicted_event":decoded_event[0], 
@@ -166,7 +160,7 @@ class PredictionManager:
         c_e =self.encoded_df[self.activity_key].iloc[-1]
 
         #: compute sliding window
-        self.recursive_atm= RMTPP_torch.ATMDataset(self.config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
+        self.recursive_atm = RMTPP_torch.ATMDataset(self.config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
         self.recursive_time_seqs = self.recursive_atm.time_seqs
         self.recursive_event_seqs = self.recursive_atm.event_seqs
 
@@ -174,15 +168,15 @@ class PredictionManager:
         self.recursive_time_diffs= self.get_differences()
         
 
-        if nonstop: 
+        if nonstop:
             #: in case that we run until end activity
-            self.linear_iterative_predictor_non_stop(c_t, c_e, upper) 
+            self.linear_iterative_predictor_non_stop(c_t, c_e, upper)
         else:
             #: in case we run until a given depth
-            self.linear_iterative_predictor(depth, c_t, c_e) 
+            self.linear_iterative_predictor(depth, c_t, c_e)
         
 
-    def linear_iterative_predictor_non_stop(self, start_time, start_event, upper): 
+    def linear_iterative_predictor_non_stop(self, start_time, start_event, upper=float("inf")): 
         """
         :param start_time: used to mark the start of the path 
         :param start_event: used to mark the start of the path
@@ -192,7 +186,6 @@ class PredictionManager:
         c_e = start_event
         path = [(c_t , (1,c_e))]
         i = 0
-        #TODO: set upper bound as default to INFTY
         while not self.end_activities[c_e] and i<upper: #stop if end activity found or upper bound crossed
             p_t, p_events = self.get_sorted_wrapper() #get prediction
             p_pair = p_events[0] #get pair (prob, event)
@@ -230,7 +223,7 @@ class PredictionManager:
         c_e =self.encoded_df[self.activity_key].iloc[-1]
 
         #:load data, get windows
-        self.recursive_atm= RMTPP_torch.ATMDataset(self.config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
+        self.recursive_atm = RMTPP_torch.ATMDataset(self.config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
         self.recursive_time_seqs = self.recursive_atm.time_seqs
         self.recursive_event_seqs = self.recursive_atm.event_seqs
 
@@ -273,7 +266,6 @@ class PredictionManager:
         if self.config.seq_len>= len(self.encoded_df):
             raise exceptions.SeqLengthTooHigh()
 
-        
         self.recursive_atm.event_seqs = self.recursive_event_seqs
         self.recursive_atm.time_seqs = self.recursive_time_seqs
 
@@ -282,9 +274,7 @@ class PredictionManager:
         #: differnces are also computed in a smarter way, as well as windows.
         batch = ( torch.tensor(self.recursive_time_diffs,dtype=torch.float32), torch.tensor(self.recursive_event_seqs, dtype=torch.int64)) 
 
-
         pred_times, pred_events = [], []
-        
         pred_time, pred_event = self.model.predict_sorted(batch)
         
         pred_times.append(pred_time)
@@ -296,7 +286,7 @@ class PredictionManager:
         return pred_times, pred_events
 
 
-    def append_to_log(self,time, event): 
+    def append_to_log(self, time, event): 
         """
         instead of calling ATMDataset and Dataloader on each iterative call 
         of the prediction generator, just append a window and a difference array
@@ -322,7 +312,7 @@ class PredictionManager:
         self.recursive_event_seqs.pop()
         self.recursive_time_diffs= np.delete(self.recursive_time_diffs, len(self.recursive_time_diffs)-1, axis = 0) 
 
-    def decode_paths(self): 
+    def decode_paths(self):
         """
         used for decoding the events and timestamps in the generated paths. 
         The timestamps are NOT decoded, since the predictions are TIMEDELTAS
@@ -338,7 +328,7 @@ class PredictionManager:
             decoded_path= [(time, (prob, event)) for (time, (prob, _)), event in zip(path, decoded_events) ]
             self.decoded_paths.append(decoded_path)
  
-    def jsonify_paths(self): 
+    def jsonify_paths(self):
         """
         note that we just save the
         probability of the last pair (time, event) in the path, 
