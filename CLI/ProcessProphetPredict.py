@@ -1,7 +1,6 @@
 from ProcessProphet import ProcessProphet
 import os
 import requests
-import json
 import pytermgui as ptg
 import ProcessProphetStart
 from dotenv import load_dotenv

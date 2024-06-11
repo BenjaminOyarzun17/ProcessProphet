@@ -5,9 +5,6 @@ from server import process_model_manager
 from server import prediction_manager
 from server import exceptions
 from functools import wraps
-
-
-import base64
 import os
 import json
 import torch
@@ -26,7 +23,13 @@ routes =Blueprint("Routes", __name__)
 ok = {"status":"OK"}
 
 
+
+
 def check_not_present_paths_factory(must_not_exist: list):
+    """
+    this decorator checks in the given file paths list if each file does not exist
+    if it does, an error is sent as response (the user should know the input is wrong) 
+    """
     def check_not_present_paths(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -42,6 +45,11 @@ def check_not_present_paths_factory(must_not_exist: list):
 
 
 def check_required_paths_factory(must_be_present: list):
+    """
+    this decorator checks in the given file paths list if each file does exist. 
+    very useful for checking if a log exists for example.
+    if it does not, an error is sent as response  (the user should know the input is wrong)
+    """
     def check_required_paths(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -58,6 +66,10 @@ def check_required_paths_factory(must_be_present: list):
 
 
 def check_integers_factory(params: list):
+    """
+    all parameters in the given list are checked whether they are of integer type
+    otherwise an error response is sent.  (the user should know the input is wrong)
+    """
     def check_integers(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -74,6 +86,10 @@ def check_integers_factory(params: list):
 
 
 def check_floats_factory(params: list):
+    """
+    all parameters in the given list are checked whether they are of float type
+    otherwise an error response is sent.  (the user should know the input is wrong)
+    """
     def check_floats(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -91,6 +107,10 @@ def check_floats_factory(params: list):
 
 
 def check_booleans_factory(params: list): 
+    """
+    all parameters in the given list are checked whether they are of bool type
+    otherwise an error response is sent.  (the user should know the input is wrong)
+    """
     def check_booleans(func): 
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -110,10 +130,13 @@ def check_booleans_factory(params: list):
 
 @routes.route('/start')
 def start():
+    #: just a testing route
     return ok
 
 @routes.route('/test')
 def test():
+    #: used for testing cuda availability. very recommended before using cuda; sometimes
+    # docker configuration breaks the cuda settings. 
     if torch.cuda.is_available():
         return {
             "CUDA available: ": torch.cuda.is_available(),
@@ -132,9 +155,22 @@ def test():
 @routes.route("/conformance", methods = ["POST"])
 @check_required_paths_factory(['path_to_log', "petri_net_path"])
 def conformance():
+    """
+    path for conformance checking. the following parameters are expected: 
+
+    :param is_xes: whether the input log is xes or not (otherwise csv). 
+    :param case_id: case id column name
+    :param activity_key: activity column name
+    :param timestamp: timestamp column name
+    :param path_to_log: path to the event log 
+    :param petri_net_path:  path to the petri net used for conf. checking.
+    :param conformance_technique:  either "token" or "alignment". this selects the corresponding conf. checking technique. 
+    """
     
     if request.method == 'POST':
         request_config = request.get_json()
+
+        #: extract the request params
         is_xes = request_config["is_xes"]
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
@@ -146,14 +182,19 @@ def conformance():
         conformance_technique=  str(request_config["conformance_technique"])
 
         preprocessor = preprocessing.Preprocessing()
+
+        #: start by importing the log used for conf checking
         try:
             preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity)
         except Exception as e: 
+            #: return an error and a description if something goes wrong
             return {"error": str(e)}, 400
  
+        #: import the petri net configuration (contains the start, end markings for example)
         with open(f"{petri_net_path}.json", "r") as f: 
             pn_config = json.load(f)
 
+        #: prepare the process model manager intance for conf. checking
         pmm = process_model_manager.ProcessModelManager(
             preprocessor.event_df, 
             None, 
@@ -167,24 +208,40 @@ def conformance():
         pmm.load_petri_net(petri_net_path)
         pmm.unencoded_df = preprocessor.unencoded_df  #: generated automatically py preprocessor
 
-
+        #: run the conformance checking technique. 
         try:
             if conformance_technique == "token":
                 fitness =pmm.conformance_checking_token_based_replay()
             else: 
                 fitness =pmm.conformance_checking_alignments()
         except Exception as e: 
+            #: return an error and a description if something goes wrong
             return {"error": str(e)}, 400
 
-
+        #: return the fitness
         return {"fitness": fitness}, 200
 
 @routes.route('/generate_predictive_process_model', methods = ["POST"])
 @check_required_paths_factory(['path_to_log', "config"])
 @check_not_present_paths_factory(["petri_net_path"])
 def generate_predictive_process_model():
-    
+    """
+    path for creating a predictive process model ie a petri net. 
+
+
+    :param is_xes: whether the input log is xes or not (otherwise csv). 
+    :param case_id: case id column name
+    :param activity_key: activity column name
+    :param timestamp: timestamp column name
+    :param path_to_log: path to the event log 
+    :param petri_net_path:  path where the pnml file and the json file should be exported. 
+    :param selected_model:  selected minign model ("alpha_miner", "heuristic_miner" , "inductive_miner", "prefix_tree_miner")
+    :param mining_algo_config: settings for the selected process mining algorithm
+    :param sep: column separator (used for csv files)
+    :param config: path to the config file for the model
+    """
     if request.method == 'POST':
+        #: extract the params
         request_config = request.get_json()
 
         case_id= str(request_config["case_id"])
@@ -198,23 +255,24 @@ def generate_predictive_process_model():
         minig_algo_config=  request_config["mining_algo_config"]
         sep = request_config["sep"]
 
-
+        #: import the predictive log  (ie with partial traces completed with predictions)
         preprocessor = preprocessing.Preprocessing()
         try:
             preprocessor.handle_import(False,path_to_log,case_id, timestamp,activity, sep= sep)
         except Exception as e:
+            #: if something goes wrong...
             return {"error": str(e)}, 400
 
 
 
+        #: load the config for the model
         config = nn_manager.Config()
-        
         with open(request_config["config"], "r") as f: 
             dic = json.load(f)
-
         config.load_config(dic)
        
 
+        #: initialize the process model manager intance used for petri net generation
         pmm = process_model_manager.ProcessModelManager(
             preprocessor.event_df, 
             None, 
@@ -226,50 +284,51 @@ def generate_predictive_process_model():
 
         pmm.end_activities = preprocessor.find_end_activities()
 
+        #: load the predictive df 
         pmm.import_predictive_df(path_to_log)
-        #try:
-        match selected_mining_algo: 
-            case "alpha_miner":
-                pmm.alpha_miner(petri_net_path)
-            case "heuristic_miner":
-                try:
-                    dependency_thr = float(minig_algo_config["dependency_threshold"])
-                    and_thr = float(minig_algo_config["and_threshold"])
-                    loop_thr =float(minig_algo_config["loop_two_threshold"])
-                except:
-                    return {"error": f"a float param was set to another type"},400 
-                pmm.heuristic_miner(
-                        petri_net_path, 
-                        dependency_threshold= dependency_thr, 
-                        and_threshold=and_thr, 
-                        loop_two_threshold=loop_thr 
-                )
-            case "inductive_miner":
-                try:
-                    noise_thr = float(minig_algo_config["noise_threshold"])
-                except:
-                    return {"error": f"a float param was set to another type"},400 
-                pmm.inductive_miner(petri_net_path,noise_thr )
-            case "prefix_tree_miner":
-                pmm.prefix_tree_miner(petri_net_path)
-        """
+
+        #: runa mining algorithm. file saving is handled by each miner function 
+        try:
+            match selected_mining_algo: 
+                case "alpha_miner":
+                    pmm.alpha_miner(petri_net_path)
+                case "heuristic_miner":
+                    try:
+                        dependency_thr = float(minig_algo_config["dependency_threshold"])
+                        and_thr = float(minig_algo_config["and_threshold"])
+                        loop_thr =float(minig_algo_config["loop_two_threshold"])
+                    except:
+                        return {"error": f"a float param was set to another type"},400 
+                    pmm.heuristic_miner(
+                            petri_net_path, 
+                            dependency_threshold= dependency_thr, 
+                            and_threshold=and_thr, 
+                            loop_two_threshold=loop_thr 
+                    )
+                case "inductive_miner":
+                    try:
+                        noise_thr = float(minig_algo_config["noise_threshold"])
+                    except:
+                        return {"error": f"a float param was set to another type"},400 
+                    pmm.inductive_miner(petri_net_path,noise_thr )
+                case "prefix_tree_miner":
+                    pmm.prefix_tree_miner(petri_net_path)
         except Exception as e:
-            print("here==================================")
-            print(path_to_log)
             return {"error": str(e)}, 400
-        """
+            #: if something goes wrong, return the error
+
+        
+        #: save the initial and final markings int he json file. 
         initial = str(pmm.initial_marking)
         final  = str(pmm.final_marking)
-
         petri_net_config = {
             "initial_marking": initial,
             "final_marking":    final 
         }
-        print(petri_net_config)
         with open (f"{petri_net_path}.json", "w") as f:
             json.dump(petri_net_config,f)
         
-        return ok #they are already encoded
+        return ok #the 200 here is important
 
 
 
@@ -280,10 +339,30 @@ def generate_predictive_process_model():
 @check_integers_factory(["upper", "cut_length"])
 @check_booleans_factory(["non_stop","is_xes", "random_cuts"])
 def generate_predictive_log():
+    """
+    generates the predictive event log by cutting all traces using the given configuration
+    and by exteniding this cut traces with predictions.
     
+    :param is_xes: whether the input log is xes or not (otherwise csv). 
+    :param case_id: case id column name
+    :param activity_key: activity column name
+    :param timestamp: timestamp column name
+    :param path_to_log: path to the event log used for cutting
+    :param path_to_model: path to the RNN model used for making predictions 
+    :param petri_net_path:  path where the pnml file and the json file should be exported. 
+    :param new_log_path: path where the predictive log should be saved (csv format is default.) 
+    :param sep: column separator (used for csv input logs)
+    :param config: path to the config file for the model
+    :param random_cuts: boolean. if set to true, each trace is cut at a random sequence index. 
+    :param non_stop: boolean. if set to true, predictions are made until an end marking is reached. 
+    :param cut_length: in case of random cuts = non_stop = False, we cut from the tail of each trace 
+    the last `cut_length` events. 
+    :param upper: upper bound for the number of iterations the non_stop variant should run (just for safety)
+    """
     if request.method == 'POST':
         request_config = request.get_json()
 
+        #: get the data
         case_id= str(request_config["case_id"])
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
@@ -303,44 +382,39 @@ def generate_predictive_log():
 
         preprocessor = preprocessing.Preprocessing()
 
+        #: import the log for cutitng
         try: 
-            preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=",", formatting=True )
+            preprocessor.handle_import(is_xes, path_to_log, case_id, timestamp, activity,sep=sep, formatting=True )
         except Exception as e: 
-            print("generated pred log")
+            #:  notify the error 
             return {"error": str(e)}, 400
 
 
+        #: load RNN config file and model
         config = nn_manager.Config()
-
-
         with open(request_config["config"], "r") as f: 
             dic = json.load(f)
-
         config.load_config(dic)
-
         neural_manager = nn_manager.NNManagement(config)
-
         neural_manager.import_nn_model(path_to_model)
         
 
-
-        #try:
-        pmm = process_model_manager.ProcessModelManager(
-            preprocessor.event_df, 
-            neural_manager.model, 
-            neural_manager.config,
-            preprocessor.case_activity_key,
-            preprocessor.case_id_key,
-            preprocessor.case_timestamp_key
-        )
-        pmm.end_activities = preprocessor.find_end_activities()
-        pmm.generate_predictive_log(non_stop=non_stop, upper =upper, random_cuts=random_cuts,cut_length=cut_length, new_log_path = new_log_path )
-        #except Exception as e: 
-        """
-        print("here")
-        print(path_to_log)
-        return {"error": str(e)}, 400
-        """
+        #: initialize proces model manager and generate the prdictive log
+        # the pmm is in charge of exporing the log.
+        try:
+            pmm = process_model_manager.ProcessModelManager(
+                preprocessor.event_df, 
+                neural_manager.model, 
+                neural_manager.config,
+                preprocessor.case_activity_key,
+                preprocessor.case_id_key,
+                preprocessor.case_timestamp_key
+            )
+            pmm.end_activities = preprocessor.find_end_activities()
+            pmm.generate_predictive_log(non_stop=non_stop, upper =upper, random_cuts=random_cuts,cut_length=cut_length, new_log_path = new_log_path )
+        except Exception as e: 
+            #: notify errors
+            return {"error": str(e)}, 400
         
         
         return ok, 200 
@@ -360,10 +434,12 @@ def generate_predictive_log():
 @check_not_present_paths_factory(['prediction_file_name'])
 @check_integers_factory(["degree", "depth"])
 def multiple_prediction():
+    """
+    carry out multiple predictions.  
+    """
+
     if request.method == 'POST':
         request_config = request.get_json()
-        #might need to delete
-        #is_xes = True if request_config["is_xes"]=="True" else False
 
         depth = int(request_config["depth"])
         degree = int(request_config["degree"])

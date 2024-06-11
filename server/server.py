@@ -19,7 +19,7 @@ import json
 import pm4py
 
 
-
+#: load server port form env variable. 
 load_dotenv()
 SERVER_PORT= os.getenv('SERVER_PORT')
 
@@ -28,14 +28,17 @@ SERVER_PORT= os.getenv('SERVER_PORT')
 
 
 
-
+#: initialize flask app and load the routes from the `server_routes` file
 app = Flask(__name__)
 app.register_blueprint(server_routes.routes)
 
 
 
-
 def HL_shorter():
+    #: this function is used for debugging PLEASE IGNORE
+
+
+
     preprocessor = preprocessing.Preprocessing()
     #path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
@@ -52,6 +55,9 @@ def HL_shorter():
 
 
 def generate_hospital_mini():
+    #: this function is used for debugging PLEASE IGNORE
+
+    
     preprocessor = preprocessing.Preprocessing()
     #path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
@@ -69,6 +75,7 @@ def generate_hospital_mini():
 
 
 def dummy():
+    #: this function is used for debugging PLEASE IGNORE
     """
     preprocessor = preprocessing.Preprocessing()
     is_xes = False
@@ -105,6 +112,7 @@ def dummy():
 
 
 def test_end_activities():
+    #: this function is used for debugging PLEASE IGNORE
     preprocessor = preprocessing.Preprocessing()
     is_xes = True 
     #path =  "data/train_day_joined.csv"
@@ -122,6 +130,7 @@ def test_end_activities():
 
  
 def test_our():
+    #: this function is used for debugging PLEASE IGNORE
     preprocessor = preprocessing.Preprocessing()
     #path = "data/BPI_Challenge_2019.xes"
     path = "data/Hospital_log.xes"
@@ -146,6 +155,7 @@ def test_our():
     neural_manager.export_nn_model()
 
 def test_grid_search():
+    #: this function is used for debugging PLEASE IGNORE
 
     preprocessor = preprocessing.Preprocessing()
     is_xes  =False
@@ -179,6 +189,7 @@ def test_grid_search():
 
     
 def test_random_search(iterations):
+    #: this function is used for debugging PLEASE IGNORE
     preprocessor = preprocessing.Preprocessing()
     is_xes  =False
     path =  "data/train_day_joined.csv"
@@ -212,6 +223,7 @@ def test_random_search(iterations):
 
 
 def test_single_prediction():
+    #: this function is used for debugging PLEASE IGNORE
     preprocessor = preprocessing.Preprocessing()
     is_xes  =False
     path =  "data/train_day_joined.csv"
@@ -250,6 +262,7 @@ def test_single_prediction():
 
 
 def test_multiple_prediction():
+    #: this function is used for debugging PLEASE IGNORE
     preprocessor = preprocessing.Preprocessing()
     is_xes  = True
     #path =  "data/train_day_joined.csv"
@@ -285,6 +298,7 @@ def test_multiple_prediction():
     )
 
 def test_process_model_manager_random_cut_nontstop():
+    #: this function is used for debugging PLEASE IGNORE
     preprocessor = preprocessing.Preprocessing()
     is_xes  = False
     path =  "data/train_day_joined.csv"
@@ -325,6 +339,7 @@ def test_process_model_manager_random_cut_nontstop():
     pmm.decode_df(pmm.predictive_df).to_csv("generated_predicted_df.csv")
 
 def test_process_model_manager_random_cut():
+    #: this function is used for debugging PLEASE IGNORE
     preprocessor = preprocessing.Preprocessing()
     is_xes  = False
     path =  "data/train_day_joined.csv"
@@ -364,6 +379,7 @@ def test_process_model_manager_random_cut():
     pmm.decode_df(pmm.predictive_df).to_csv("generated_predicted_df.csv")
 
 def test_process_model_manager_tail_cut():
+    #: this function is used for debugging PLEASE IGNORE
     preprocessor = preprocessing.Preprocessing()
     is_xes  =False
     path =  "data/train_day_joined.csv"
@@ -405,6 +421,7 @@ def test_process_model_manager_tail_cut():
 
 def test_alpha_miner():
 
+    #: this function is used for debugging PLEASE IGNORE
     preprocessor = preprocessing.Preprocessing()
     is_xes  = True
     path =  "data/train_day_joined.csv"
@@ -451,6 +468,7 @@ def test_alpha_miner():
     pmm.alpha_miner()
 
 def test_heuristic():
+    #: this function is used for debugging PLEASE IGNORE
     preprocessor = preprocessing.Preprocessing()
     #path =  "data/train_day_joined.csv"
     #path = "data/BPI_Challenge_2019.xes"
@@ -506,6 +524,7 @@ def test_heuristic():
     #pmm.visualize()
 
 def test_import_model():
+    #: this function is used for debugging PLEASE IGNORE
     preprocessor = preprocessing.Preprocessing()
     is_xes  = False
     
@@ -567,4 +586,4 @@ if __name__=="__main__":
     #test_process_model_manager_tail_cut()
     #test_heuristic()
     #HL_shorter()
-    app.run(port = SERVER_PORT,debug=True)
+    app.run(port = SERVER_PORT,debug=True) #: run the flask server
