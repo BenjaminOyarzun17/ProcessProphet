@@ -40,13 +40,30 @@ class PPStateData:
 
 
 
+class SingletonMeta(type):
+    """
+    singleton metaclass taken from https://refactoring.guru/design-patterns/singleton/python/example
+    """
 
-class ProcessProphet:
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            instance = super().__call__(*args, **kwargs)
+            cls._instances[cls] = instance
+        return cls._instances[cls]
+
+
+
+class ProcessProphet(metaclass = SingletonMeta):
     """
     this class is intended for window management. 
     this class works as a singleton. the other ProcessProphet classes (such as ProcessProphetStart)
     will be always provided with the same instance of this class and will basically determine 
     the content of `self.current_window`. 
+
+    there can only be one instance of this class, as there is only one terminal to draw in. therefore this 
+    class is a singleton.
     """
     def __init__(self):
         self.state = PPStateData("projects", None, False, False, False, None, None, None,None,None,None, None, None) 
