@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 SERVER_NAME= os.getenv('SERVER_NAME')
 SERVER_PORT= os.getenv('SERVER_PORT')
+TIMEOUT= os.getenv('TIMEOUT')
 
 class ProcessProphetPredict: 
     def __init__(self, pp):
@@ -75,7 +76,7 @@ class ProcessProphetPredict:
         response = requests.post(
             f"http://{SERVER_NAME}:{SERVER_PORT}/single_prediction", 
             json= params,
-            timeout =6000
+            timeout =TIMEOUT
         )
         if response.status_code == 200: 
             #logger_set_params_cli.debug(response.content)

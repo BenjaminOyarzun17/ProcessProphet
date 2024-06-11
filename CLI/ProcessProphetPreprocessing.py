@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 SERVER_NAME= os.getenv('SERVER_NAME')
 SERVER_PORT= os.getenv('SERVER_PORT')
-
+TIMEOUT= os.getenv('TIMEOUT')
 
 
 class ProcessProphetPreprocessing: 
@@ -97,7 +97,7 @@ class ProcessProphetPreprocessing:
         response = requests.post(
             f"http://{SERVER_NAME}:{SERVER_PORT}/replace_with_mode", 
             json= params,
-            timeout =6000
+            timeout =TIMEOUT
         )
         if response.status_code==200:
             data = response.json()
@@ -140,7 +140,7 @@ class ProcessProphetPreprocessing:
         response = requests.post(
             f"http://{SERVER_NAME}:{SERVER_PORT}/remove_duplicates", 
             json= params,
-            timeout =6000
+            timeout =TIMEOUT
         )
         if response.status_code==200:
             data = response.json()
@@ -186,7 +186,7 @@ class ProcessProphetPreprocessing:
         response = requests.post(
             f"http://{SERVER_NAME}:{SERVER_PORT}/add_unique_start_end", 
             json= params,
-            timeout =6000
+            timeout =TIMEOUT
         )
         if response.status_code==200:
             data = response.json()
