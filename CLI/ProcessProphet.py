@@ -65,7 +65,7 @@ class ProcessProphet(metaclass = SingletonMeta):
     class is a singleton.
     """
     def __init__(self):
-        self.state = PPStateData("projects", None, False, False, False, None, None, None,None,None,None, None, None) 
+        self.state = PPStateData("projects", None, False, False, False, None, None, None,None,None,None, None) 
         
         #: window manager object from pytermgui. this object handles 
         # window lifecycle.  windows have nice properties such as
