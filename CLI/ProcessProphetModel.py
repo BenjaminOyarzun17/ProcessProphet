@@ -9,6 +9,7 @@ from process_prophet_modes import ProcessProphetMode
 load_dotenv()
 SERVER_NAME= os.getenv('SERVER_NAME')
 SERVER_PORT= os.getenv('SERVER_PORT')
+TIMEOUT= os.getenv('TIMEOUT')
 
 
 class ProcessProphetModel:
@@ -94,7 +95,7 @@ class ProcessProphetModel:
         response = requests.post(
             f"http://{SERVER_NAME}:{SERVER_PORT}/generate_predictive_log", 
             json= params,
-            timeout =6000
+            timeout =TIMEOUT
         )
         if response.status_code == 200: 
             data = response.json()
@@ -195,7 +196,7 @@ class ProcessProphetModel:
         response = requests.post(
             f"http://{SERVER_NAME}:{SERVER_PORT}/generate_predictive_process_model", 
             json= params,
-            timeout =6000
+            timeout =TIMEOUT
         )
         if response.status_code == 200: 
             data = response.json()
@@ -290,7 +291,7 @@ class ProcessProphetModel:
         response = requests.post(
             f"http://{SERVER_NAME}:{SERVER_PORT}/conformance", 
             json= params,
-            timeout =6000
+            timeout =TIMEOUT
         )
         if response.status_code == 200: 
             data = response.json()

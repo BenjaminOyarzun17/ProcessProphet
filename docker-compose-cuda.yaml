@@ -25,5 +25,6 @@ services:
     environment:
       - SERVER_NAME=servercuda
       - SERVER_PORT=5000
+      - TIMEOUT=60000
     depends_on:
       - servercuda

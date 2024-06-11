@@ -16,6 +16,7 @@ from process_prophet_modes import ProcessProphetMode
 load_dotenv()
 SERVER_NAME= os.getenv('SERVER_NAME')
 SERVER_PORT= os.getenv('SERVER_PORT')
+TIMEOUT= os.getenv('TIMEOUT')
 
 class ProcessProphetTrain: 
     """
@@ -96,7 +97,7 @@ class ProcessProphetTrain:
         response = requests.post(
             f"http://{SERVER_NAME}:{SERVER_PORT}/train_nn", 
             json= params,
-            timeout =6000
+            timeout =TIMEOUT
         )
         if response.status_code == 200: 
             data = response.json()
@@ -205,7 +206,7 @@ class ProcessProphetTrain:
         and in case of a successful computation of the request by the server the accuracy of the trained
         model is displayed in a new window. It is then possible to return to the action (manager selection) or training menu. 
 
-        if the request fails because e.g. it exceeds the timeout of 6000 the error is displayed in a new window and 
+        if the request fails because e.g. it exceeds the timeout of TIMEOUT the error is displayed in a new window and 
         the user can go back to the window where the parameters are displayed
         """ 
         self.loading("preprocessing data...")
@@ -245,7 +246,7 @@ class ProcessProphetTrain:
         response = requests.post(
             f"http://{SERVER_NAME}:{SERVER_PORT}/grid_search", 
             json= params,
-            timeout =6000
+            timeout =TIMEOUT
         )
         if response.status_code == 200: 
             data = response.json()
@@ -280,7 +281,7 @@ class ProcessProphetTrain:
         and in case of a successful computation of the request by the server the accuracy of the trained
         model is displayed in a new window. It is then possible to return to the action or training menu
 
-        if the request fails because e.g. it exceeds the timeout of 6000 the error is displayed in a new window and 
+        if the request fails because e.g. it exceeds the timeout of TIMEOUT the error is displayed in a new window and 
         the user can go back to the window where the parameters are displayed
         """ 
         self.loading("preprocessing data...") #: shows the loading screen until the response es received. 
@@ -319,7 +320,7 @@ class ProcessProphetTrain:
         response = requests.post(
             f"http://{SERVER_NAME}:{SERVER_PORT}/random_search", 
             json= params,
-            timeout =6000
+            timeout =TIMEOUT
         )
         if response.status_code == 200: 
             logger_set_params_cli.debug(response.content)
