@@ -25,11 +25,11 @@ class ProcessProphetPredict:
         container = ptg.Container(
             "select a prediction generation method", 
             "", 
-            ptg.Button("single prediction", lambda *_: self.pp.switch_window(self.set_single_prediction_params())), 
+            ptg.Button(f"{self.pp.button_color}single prediction", lambda *_: self.pp.switch_window(self.set_single_prediction_params())), 
             "",
-            ptg.Button("multiple prediction", lambda *_: self.pp.switch_window(self.set_multiple_prediction_params())), 
+            ptg.Button(f"{self.pp.button_color}multiple prediction", lambda *_: self.pp.switch_window(self.set_multiple_prediction_params())), 
             "",
-            ptg.Button("back", lambda *_: self.return_to_menu()), 
+            ptg.Button(f"{self.pp.button_color}back", lambda *_: self.return_to_menu()), 
         )
 
         window = ptg.Window(container, box="DOUBLE")
@@ -91,9 +91,9 @@ class ProcessProphetPredict:
                 f"predicted event: {statistics['predicted_event']}",
                 f"probability: {statistics['probability']}%",
                 "",
-                ptg.Button("back", lambda *_:self.pp.switch_window(self.prediction_main_menu())), 
+                ptg.Button(f"{self.pp.button_color}back", lambda *_:self.pp.switch_window(self.prediction_main_menu())), 
                 "",
-                ptg.Button("return to menu", lambda *_:self.return_to_menu()), 
+                ptg.Button(f"{self.pp.button_color}return to menu", lambda *_:self.return_to_menu()), 
             )
         else: 
             data = response.json()
@@ -103,7 +103,7 @@ class ProcessProphetPredict:
                 "",
                 f"{error}", 
                 "",
-                ptg.Button("back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
             )
         window = ptg.Window(container, box="DOUBLE")
         window.center()
@@ -128,8 +128,8 @@ class ProcessProphetPredict:
             self.case_id_key, 
             self.case_activity_key, 
             self.case_timestamp_key,
-            ptg.Button("continue", lambda *_: self.pp.switch_window(self.get_single_prediction())),
-            ptg.Button("back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
+            ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.get_single_prediction())),
+            ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
             ]
 
         window = ptg.Window(*container)
@@ -178,7 +178,7 @@ class ProcessProphetPredict:
 
             container = ptg.Container(
                 f"Multiple predictions stored in {params['prediction_file_name']}", 
-                ptg.Button("back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
             )
         else: 
             data = response.json()
@@ -188,7 +188,7 @@ class ProcessProphetPredict:
                 "",
                 f"{error}", 
                 "",
-                ptg.Button("back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
             )
         window = ptg.Window(container, box="DOUBLE")
         window.center()
@@ -219,8 +219,8 @@ class ProcessProphetPredict:
             self.case_timestamp_key,
             self.depth,
             self.degree,
-            ptg.Button("continue", lambda *_: self.pp.switch_window(self.get_multiple_prediction())), 
-            ptg.Button("back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
+            ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.get_multiple_prediction())), 
+            ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
             ]
 
         window = ptg.Window(*container)

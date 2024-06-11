@@ -122,7 +122,7 @@ class ProcessProphetTrain:
                 "",
                 f"{error}", 
                 "",
-                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.set_training_params()))
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.set_training_params()))
             ]
         window = ptg.Window(*container, box="DOUBLE")
         window.center()
@@ -182,7 +182,7 @@ class ProcessProphetTrain:
             "",
             ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_training())),
             "",
-            ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
+            ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
         )
         
         logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
@@ -411,7 +411,7 @@ class ProcessProphetTrain:
                 self.emb_dim_upper, 
                 self.iterations,"",
                 ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_random_search())),"",
-                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
             )
             
             logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
@@ -474,7 +474,7 @@ class ProcessProphetTrain:
                 self.emb_dim_upper, 
                 self.iterations,"",
                 ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_random_search())),"",
-                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
             )
             
             logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
@@ -553,7 +553,7 @@ class ProcessProphetTrain:
                 self.emb_dim_upper, 
                 self.emb_dim_step,
                 ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_grid_search())),
-                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
             ).center()
 
             
@@ -613,7 +613,7 @@ class ProcessProphetTrain:
                 self.emb_dim_upper, 
                 self.emb_dim_step,
                 ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_grid_search())),
-                ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
             ).center()
 
             
@@ -649,7 +649,7 @@ class ProcessProphetTrain:
                 "",
                 ptg.Button(f"{self.pp.button_color}random search", lambda *_: self.pp.switch_window(self.set_random_search_params())),
                 "",
-                ptg.Button("[black]back", lambda *_: self.return_to_menu())
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.return_to_menu())
             )
 
             window = ptg.Window(*container, box="DOUBLE")
@@ -666,7 +666,7 @@ class ProcessProphetTrain:
                 "",
                 ptg.Button(f"{self.pp.button_color}random search", lambda *_: self.pp.switch_window(self.set_random_search_params())),
                 "",
-                ptg.Button("[black]back", lambda *_: self.return_to_menu())
+                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.return_to_menu())
             )
 
             window = ptg.Window(*container, box="DOUBLE")

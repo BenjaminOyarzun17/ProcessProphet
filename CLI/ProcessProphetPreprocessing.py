@@ -54,7 +54,7 @@ class ProcessProphetPreprocessing:
                 # error if file is in the wrong file type 
                 container= ptg.Container( 
                     ptg.Label(f"only xes/csv supported"),
-                    ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu()))
+                    ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu()))
                 )
                 window = ptg.Window( container, box="DOUBLE")
                 window.center()
@@ -63,7 +63,7 @@ class ProcessProphetPreprocessing:
                 # error if file does not exist in the directory
                 container= ptg.Container( 
                     ptg.Label(f"the log does not exist"),
-                    ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu()))
+                    ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu()))
                 )
                 window = ptg.Window( container, box="DOUBLE")
                 window.center()
@@ -289,7 +289,7 @@ class ProcessProphetPreprocessing:
             "",
             ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.handle_add_unique_start_end())),
             "",
-            ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu()))
+            ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu()))
         )
         
         logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
@@ -337,7 +337,7 @@ class ProcessProphetPreprocessing:
             "",
             ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.handle_remove_duplicates())),
             "",
-            ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu()))
+            ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu()))
         )
         
         logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
@@ -384,7 +384,7 @@ class ProcessProphetPreprocessing:
             "",
             ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.handle_replace_nan_with_mode())),
             "",
-            ptg.Button("[black]back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu()))
+            ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.preprocessing_main_menu()))
         )
         
         logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
@@ -413,9 +413,9 @@ class ProcessProphetPreprocessing:
 
         it is also possible to return to the previous menu.
         """
-        replace = "replace NaN in activity column with mode"
-        remove= "remove duplicate rows"
-        add= "add unique start and end activities"
+        replace = f"{self.pp.button_color}replace NaN in activity column with mode"
+        remove= f"{self.pp.button_color}remove duplicate rows"
+        add= f"{self.pp.button_color}add unique start and end activities"
 
         container = ptg.Container(
             "select one action:", 

@@ -153,7 +153,7 @@ class ProcessProphetStart:
             container = ptg.Container(
                 message, 
                 "",
-                ptg.Button("return", lambda *_: self.pp.switch_window(self.new_project_form()))
+                ptg.Button("{self.pp.button_color}return", lambda *_: self.pp.switch_window(self.new_project_form()))
             )
 
             window = ptg.Window(container, box="DOUBLE")
@@ -218,9 +218,9 @@ class ProcessProphetStart:
         container = [
             "Select a mode", 
             "",
-            ptg.Button("quick", lambda *_: self.pp.switch_window(self.handle_select_mode(ProcessProphetMode.quick))),
+            ptg.Button(f"{self.pp.button_color}quick", lambda *_: self.pp.switch_window(self.handle_select_mode(ProcessProphetMode.quick))),
             "",
-            ptg.Button("advanced", lambda *_: self.pp.switch_window(self.handle_select_mode(ProcessProphetMode.advanced)))
+            ptg.Button(f"{self.pp.button_color}advanced", lambda *_: self.pp.switch_window(self.handle_select_mode(ProcessProphetMode.advanced)))
         ]
         window = ptg.Window(*container, box="DOUBLE")
         window.center()
