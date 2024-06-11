@@ -1,14 +1,12 @@
 import os
 import sys
 import unittest
-import torch
 import pandas as pd
 import numpy as np
 
 # needed for the import of the server module:
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from server.prediction_manager import PredictionManager
-from server import RMTPP_torch
 from server import NNManagement
 from server import exceptions
 

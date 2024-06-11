@@ -122,10 +122,10 @@ class ProcessModelManager:
             pm.multiple_prediction_dataframe(
                 cuts[case_id][2],
                 1,
-                sequence, 
-                linear = True ,  
+                sequence,
+                linear = True,  
                 non_stop=non_stop,
-                upper = upper, 
+                upper = upper,
             )
             prediction = pm.paths[0] 
             extension = {
@@ -136,7 +136,7 @@ class ProcessModelManager:
             #: arrange the predictions in the extension dictionary
             # the first prediction is not used because it is just information 
             # use for knowing what was the last timestamp recorded
-            for time, (pred, event) in prediction[1:]: 
+            for time, (pred, event) in prediction[1:]:
                 extension[self.case_id_key] = [case_id]
                 extension[self.case_activity_key]= [event]
                 extension[self.case_timestamp_key]= [time]
@@ -202,7 +202,7 @@ class ProcessModelManager:
 
     def decode_sequence(self, sequence):
         """
-        decodes the input sequence that ocntains a df.  
+        decodes the input sequence that contains a df.  
         :return: sequence that has been decoded. 
         """
         sequence[self.case_activity_key] = self.config.activity_le.inverse_transform(sequence[self.case_activity_key].astype(int))
