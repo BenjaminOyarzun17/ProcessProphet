@@ -2,7 +2,6 @@ import ProcessProphet
 import pytermgui as ptg
 import json
 import requests
-import base64
 from loggers import logger_set_params_cli
 import ProcessProphetStart
 from dotenv import load_dotenv

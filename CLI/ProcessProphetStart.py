@@ -5,7 +5,6 @@ from ProcessProphetTrain import ProcessProphetTrain
 from ProcessProphetPredict import ProcessProphetPredict
 from ProcessProphetModel import ProcessProphetModel
 import os
-from loggers import logger_set_params_cli
 from dotenv import load_dotenv
 from process_prophet_modes import ProcessProphetMode
 

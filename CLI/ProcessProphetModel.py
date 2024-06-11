@@ -1,9 +1,6 @@
 import ProcessProphet
 import pytermgui as ptg
-import json
 import requests
-import base64
-from loggers import logger_set_params_cli
 import ProcessProphetStart
 from dotenv import load_dotenv
 import os
@@ -91,7 +88,7 @@ class ProcessProphetModel:
             "cut_length":self.cut_length.value,
             "config":f"{self.pp.state.models_path}/{self.model_name.value[:-3]}.config.json",
             "is_xes": is_xes, 
-            "sep": "," 
+            "sep": self.sep.value
         }  
 
         response = requests.post(
@@ -144,6 +141,7 @@ class ProcessProphetModel:
         self.upper = ptg.InputField("30", prompt="non stop upper bound: ")
         self.random_cuts = ptg.InputField("True", prompt="use random cuts: ")
         self.cut_length = ptg.InputField("0", prompt="cut length: ")
+        self.sep  = ptg.InputField(",", prompt= "csv separator: ")
         container = [
             "Enter the following params:",
             self.model_name,
@@ -156,6 +154,7 @@ class ProcessProphetModel:
             self.upper,
             self.random_cuts,
             self.cut_length,
+            self.sep, 
             ptg.Button("continue",lambda *_: self.pp.switch_window(self.get_predictive_log()) ),
             ptg.Button("back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
         ]
