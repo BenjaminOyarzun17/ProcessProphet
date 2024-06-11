@@ -291,6 +291,8 @@ def generate_predictive_process_model():
         pmm.import_predictive_df(path_to_log)
 
         #: runa mining algorithm. file saving is handled by each miner function 
+        #: the exports is handled by each miner function, since a pmp4py call is necessary. 
+        #: therefore it makes more sense to use the wrapper classses (managers) instead. 
         try:
             match selected_mining_algo: 
                 case "alpha_miner":
