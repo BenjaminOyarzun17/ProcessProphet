@@ -14,14 +14,13 @@ TIMEOUT= int(os.getenv('TIMEOUT'))
 
 class ProcessProphetModel:
     """
-    initialize ProcessProphet Object and main menu for predictions 
+    initialize ProcessProphet instance and model main menu
+
+    :param pp: the ProcessProphet instance in charge of window management 
     """
     def __init__(self, pp):
         self.pp = pp
         self.pp.switch_window(self.model_main_menu())
-
-
-
 
     def return_to_menu(self):
         """
@@ -46,6 +45,7 @@ class ProcessProphetModel:
         menu to select one of the process mining, conformance checking, creation of a predictive log
         or go back to the previous menu
         """
+        # container to indicate the different options
         container = ptg.Container(
             "Select one action", 
             "", 
@@ -73,7 +73,7 @@ class ProcessProphetModel:
         -if unsuccessful an error is indicated and the user can return to the model menu
         """
         self.loading("preprocessing data...")
-
+        # check the file type of the input log
         is_xes = True if self.log_name.value[-3:] == "xes"  else False
         
         params = {
@@ -97,18 +97,16 @@ class ProcessProphetModel:
             json= params,
             timeout =TIMEOUT
         )
-        if response.status_code == 200: 
+        if response.status_code == 200:
+            # container to indicate successful generation of predictive log 
             data = response.json()
-
-           
-            
-
             container =[  
                 "predictive process model generated successfully", 
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.model_main_menu())), 
                 ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
             ]
-        else: 
+        else:
+            # container to indicate that an error occurred from the request to the server 
             data = response.json()
             error = data["error"]
             container = [ 
@@ -127,6 +125,7 @@ class ProcessProphetModel:
         """
         user can either start generating a predictive log with the displayed default parameters or alternatively adapt the parameters to their
         own preference
+
         side effect:
         -the modified parameters are stored in a container and then the function for creating a
         predictive log is called
@@ -160,7 +159,6 @@ class ProcessProphetModel:
             ptg.Button(f"{self.pp.button_color}back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
         ]
         window = ptg.Window(*container, width = self.pp.window_width)
-        #window = ptg.Window(*container)
         window.center()
         return window
         
@@ -200,7 +198,7 @@ class ProcessProphetModel:
         )
         if response.status_code == 200: 
             data = response.json()
-
+            # container to indicate successful generation of predictive process model
             container =[  
                 "predictive process model generated successfully", 
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.model_main_menu())), 
@@ -209,6 +207,7 @@ class ProcessProphetModel:
         else: 
             data = response.json()
             error = data["error"]
+            # container to indicate that an error occurred from the request to the server
             container = [ 
                 "training FAILED:",
                 "",
@@ -242,7 +241,7 @@ class ProcessProphetModel:
         self.and_threshold= ptg.InputField("0.65", prompt= "and threshold: ")
         self.loop_two_threshold= ptg.InputField("0.5", prompt= "loop two threshold: ")
         self.noise_threshold= ptg.InputField("0", prompt= "noise threshold: ")
-
+        # container to store and indicate all the needed parameters
         container = [
             "Enter the following params:",
             self.model_name,
@@ -260,7 +259,6 @@ class ProcessProphetModel:
             ptg.Button(f"{self.pp.button_color}back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
         ]
         window = ptg.Window(*container, width = self.pp.window_width)
-        #window = ptg.Window(*container)
         window.center()
         return window
 
@@ -295,7 +293,7 @@ class ProcessProphetModel:
         )
         if response.status_code == 200: 
             data = response.json()
-
+            # container to indicate successful conformance checking and the computed fitness of the process model
             container =[  
                 "conformance checking ready", 
                 f"fitness: {data['fitness']}", 
@@ -305,6 +303,7 @@ class ProcessProphetModel:
         else: 
             data = response.json()
             error = data["error"]
+            # container to indicate that an error occurred from the request to the server
             container = [ 
                 "training FAILED:",
                 "",
@@ -333,7 +332,7 @@ class ProcessProphetModel:
         self.petri_net_path= ptg.InputField("p_net1.pnml", prompt= "petri net path: ")
 
         self.conformance_technique= ptg.InputField("token",prompt= "conformance technique: ")
-
+        # container to store and indicate all the needed parameters
         container = [
             "Enter the following params:",
             self.log_name,
@@ -346,6 +345,5 @@ class ProcessProphetModel:
             ptg.Button(f"{self.pp.button_color}back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
         ]
         window = ptg.Window(*container, width = self.pp.window_width)
-        #window = ptg.Window(*container)
         window.center()
         return window
