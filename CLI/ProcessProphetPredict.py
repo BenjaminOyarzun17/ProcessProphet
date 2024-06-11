@@ -13,7 +13,9 @@ TIMEOUT= int(os.getenv('TIMEOUT'))
 class ProcessProphetPredict: 
     def __init__(self, pp):
         """
-        initialize ProcessProphet Object and main menu for predictions 
+        initialize ProcessProphet instance and prediction main menu
+
+        :param pp: the ProcessProphet instance in charge of window management 
         """
         self.pp = pp
         self.pp.switch_window(self.prediction_main_menu())
@@ -54,14 +56,14 @@ class ProcessProphetPredict:
         carries out a single prediction request. 
 
         side effects/ outputs: 
-        marker and timestamp of the single prediction are displayed
+        marker, timestamp and the probability of the single prediction are displayed
         """
         self.loading("predicting next event...")
         input_logs_path= self.pp.state.partial_traces_path
-
+        # checks the if the file extension is xes
         is_xes = True if self.log_name.value[-3:] == "xes"  else False
-        #is_xes = True
         
+        # parameters that are passed to the server for further computations
         params = {
             "path_to_log": f"{input_logs_path}/{self.log_name.value}" ,  
             "path_to_model": f"{self.pp.state.models_path}/{self.model_name.value}", 
@@ -84,7 +86,7 @@ class ProcessProphetPredict:
 
             statistics = data
             
-
+            # container to display the computed event, time and its probability
             container = ptg.Container(
                 "single prediction successful", 
                 f"predicted time: {statistics['predicted_time']}", 
@@ -98,6 +100,7 @@ class ProcessProphetPredict:
         else: 
             data = response.json()
             error = data["error"]
+            # container to display that an error occured in the request
             container = ptg.Container(
                 "single prediction FAILED:",
                 "",
@@ -131,7 +134,7 @@ class ProcessProphetPredict:
             ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.get_single_prediction())),
             ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
             ]
-
+        # display the container with the parameters
         window = ptg.Window(*container)
         window.center()
         return window
@@ -145,10 +148,9 @@ class ProcessProphetPredict:
         """
         self.loading("predicting next event...")
         input_logs_path= self.pp.state.partial_traces_path
-
+        # checks the if the file extension is xes
         is_xes = True if self.log_name.value[-3:] == "xes"  else False
-        #is_xes = True
-
+        # parameters that are passed to the server for further computations
         params = {
             "path_to_log": f"{input_logs_path}/{self.log_name.value}" ,  
             "path_to_model": f"{self.pp.state.models_path}/{self.model_name.value}", 
@@ -168,14 +170,10 @@ class ProcessProphetPredict:
             timeout =8000
         )
         if response.status_code == 200: 
-            #logger_set_params_cli.debug(response.content)
-            print("alles ok")
             data = response.json()
 
             paths = data
-
-       
-
+            # container that indicates success of the request and shows the filename where the predictions are stored 
             container = ptg.Container(
                 f"Multiple predictions stored in {params['prediction_file_name']}", 
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
@@ -183,6 +181,7 @@ class ProcessProphetPredict:
         else: 
             data = response.json()
             error = data["error"]
+            # container that indicates an error that occured from the request
             container = ptg.Container(
                 "multiple prediction FAILED:",
                 "",
@@ -196,7 +195,8 @@ class ProcessProphetPredict:
     
     def set_multiple_prediction_params(self):
         """
-        user can modify the given parameters for multiple predictions which are then stored in the container and also displayed in the current window
+        function to display the default values for a multiple prediction and grants the user access to 
+        modify the given parameters for multiple predictions which are then stored in the container and also displayed in the current window
 
         user can also start the prediction with the continue button or return to the previous menu with the back button
         """
@@ -205,8 +205,8 @@ class ProcessProphetPredict:
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
         self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
         self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
-        self.depth= ptg.InputField("5", prompt="depth: ")
-        self.degree= ptg.InputField("3", prompt="degree: ")
+        self.depth= ptg.InputField("5", prompt="depth: ") # amount of following events that should be predicted
+        self.degree= ptg.InputField("3", prompt="degree: ") # amount of different paths that should be predicted
         self.prediction_file_name_input = ptg.InputField("mp1.json", prompt= "predictions file name: ")
 
         container = [
@@ -222,7 +222,7 @@ class ProcessProphetPredict:
             ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.get_multiple_prediction())), 
             ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
             ]
-
+        # display the container with the parameters
         window = ptg.Window(*container)
         window.center()
         return window
