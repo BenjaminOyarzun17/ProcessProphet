@@ -34,7 +34,7 @@ class Config:
         self.epochs: int = 3 
         self.importance_weight: str = "store_true"
         self.verbose_step: int = 350
-        self.cuda: bool =True 
+        self.cuda: bool = False 
         self.absolute_frequency_distribution:Counter = Counter()
         self.case_id_le:LabelEncoder = None
         self.activity_le:LabelEncoder = None
