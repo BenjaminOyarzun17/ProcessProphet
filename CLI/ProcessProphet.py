@@ -17,13 +17,19 @@ CONFIG = styles_content
 @dataclass
 class PPStateData: 
     """
-    data class used for state conservation
+    data class used for state conservation. 
     """
     projects_path: str # path where all projects are saved
+
     current_project: str|None # current project name
+
     model_trained: bool # whether a model has been trained
+
     predictive_df_generated: bool # same
     petri_net_generated: bool # same
+
+
+    #: the following paths are subfolders of the current project. they are set for convenience. 
     input_logs_path: str|None
     models_path: str|None
     petri_nets_path: str|None
@@ -38,34 +44,55 @@ class PPStateData:
 
 class ProcessProphet:
     """
-    this class is intended for window management
+    this class is intended for window management. 
+    this class works as a singleton. the other ProcessProphet classes (such as ProcessProphetStart)
+    will be always provided with the same instance of this class and will basically determine 
+    the content of `self.current_window`. 
     """
     def __init__(self):
         self.state = PPStateData("projects", None, False, False, False, None, None, None,None,None,None, None, None) 
-        self.manager = ptg.WindowManager() #: manager object for the window
-        self.current_window = None #: current window content
+        
+        #: window manager object from pytermgui. this object handles 
+        # window lifecycle.  windows have nice properties such as
+        # being resizable. 
+        self.manager = ptg.WindowManager() 
+        
+        #: the current window's content
+        self.current_window = None 
 
+        #: variable used for styling
         self.button_color = "[black]"
+
+        #: use 80% of the window width
         self.window_width = int(os.get_terminal_size(0)[0]*0.8)
         self.window_height = 50
 
-    def set_current_window(self, window): 
-        self.current_window = window #: setter for current window
 
+
+    def set_current_window(self, window): 
+        """
+        sets the current window
+        :param window: window object, the new window.
+        """
+        self.current_window = window 
     def remove_current_window(self): 
-        self.manager.remove(self.current_window) #: removes the window's content
+        """
+        removes the current window
+        :param window: window object, the new window.
+        """
+        self.manager.remove(self.current_window)
 
     def switch_window(self, new_window):
-        # Remove the current window
-
-        with ptg.YamlLoader() as loader:
+        """
+        in charge of switching windows.  
+        :param new_window: the new window. 
+        """
+        with ptg.YamlLoader() as loader: #: loads the styles from `styles.yaml`
             loader.load(CONFIG)
         if self.current_window !=None: #for not initialized case
             self.remove_current_window()
 
-
-
-        #: set the widgets in the window.
+        #: changes the window
         self.set_current_window(new_window)
         self.manager.add(new_window)
         self.manager.focus(new_window)

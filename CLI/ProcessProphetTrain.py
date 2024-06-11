@@ -19,6 +19,15 @@ SERVER_NAME= os.getenv('SERVER_NAME')
 SERVER_PORT= os.getenv('SERVER_PORT')
 
 class ProcessProphetTrain: 
+    """
+    this class provides three basic functions: 
+    - train RNN by setting params manually 
+    - train RNN using grid search
+    - train RNN using random search
+    each one of these options generates a `.pt` file containing the pytorch model and a 
+    `.config.json` file containing the RNN training configuration, encoders, and other data
+    relevant to process prophet. 
+    """
     def __init__(self, pp):
         self.pp = pp #: reference to the PP object 
         #: after creating the object, set the main menu as start screen
@@ -40,9 +49,10 @@ class ProcessProphetTrain:
 
     def return_to_menu(self):
         """
-        returns to p.p. start
+        returns to p.p. start. Start is set to False, since we dont want to select the project again. 
+        this makes sense for example, when the user wants to make predictions after having trained the RNN.
         """
-        pp_start = ProcessProphetStart.ProcessProphetStart(self.pp, False)
+        pp_start = ProcessProphetStart.ProcessProphetStart(self.pp, start = False)
 
 
 
@@ -50,12 +60,15 @@ class ProcessProphetTrain:
         """
         carries out a training request. 
 
-        side effects/ outputs: 
-        :return model: a model pt file is saved in the models folder 
-        :return config: a models config information for the server is saved in the models folder
+        on successful request completion the following side effects/ outputs are expected: 
+        :return model: a model `pt` file is saved in the models folder 
+        :return config: a models `config.json` information for the server is saved in the models folder
         as a json file. 
-        the training statistics (accuracy, recall, f1 score)  are 
+
+        the training statistics (time error, accuracy, recall, f1 score)  are 
         displayed on screen. 
+
+        if the training is unsuccessful, the error returned by the server is displayed on the CLI. 
         """
         self.loading("preprocessing data...")
         input_logs_path= self.pp.state.input_logs_path
@@ -127,7 +140,7 @@ class ProcessProphetTrain:
         side effect:
         -the modified parameters are stored in a container and then the training function is called
         -parameters are displayed in the window
-        -second window to display the logs that are in this project
+        -second window to display the logs contained in this project as a visual aid
         """ 
         self.cuda=  ptg.InputField("True", prompt="use cuda: ")
 
@@ -148,6 +161,7 @@ class ProcessProphetTrain:
         self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
         self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
 
+        #: contains the form for setting the parameters
         left_container = ptg.Container( 
             ptg.Label(f"set parameters for training"),
             SERVER_NAME,
@@ -174,6 +188,7 @@ class ProcessProphetTrain:
         logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
         logs = logs[:min(len(logs),4 )] #: to not overflow the terminal
 
+        #: contains a list of the logs contained in the input logs path.
         right_container = ptg.Container(
             f"[underline]First {len(logs)} logs in project:", *logs
         ).center()
@@ -187,9 +202,9 @@ class ProcessProphetTrain:
 
     def start_grid_search(self):
         """
-        sends a request to the server with all the needed parameters to do a grid search training
+        sends a request to the server with all the needed parameters to carry out grid search training
         and in case of a successful computation of the request by the server the accuracy of the trained
-        model is displayed in a new window. It is then possible to return to the action or training menu
+        model is displayed in a new window. It is then possible to return to the action (manager selection) or training menu. 
 
         if the request fails because e.g. it exceeds the timeout of 6000 the error is displayed in a new window and 
         the user can go back to the window where the parameters are displayed
@@ -198,14 +213,20 @@ class ProcessProphetTrain:
         
         input_logs_path= self.pp.state.input_logs_path
 
+        #: checks the if the file extension is xes. 
         is_xes = True if self.log_name.value[-3:] == "xes"  else False
 
+        #: casting bool("False") also returns True 
         cuda= True if  self.cuda.value== "True"  else False
+
+        #: search params for grid search
         sp = {
             "hidden_dim":[self.hidden_dim_lower.value,self.hidden_dim_upper.value, self.hidden_dim_step.value] ,
             "mlp_dim":[self.mlp_dim_lower.value, self.mlp_dim_upper.value, self.mlp_dim_step.value] ,
             "emb_dim":[self.emb_dim_lower.value, self.emb_dim_upper.value, self.emb_dim_step.value] 
         } 
+
+        
         params = {
             "path_to_log": f"{input_logs_path}/{self.log_name.value}" , 
             "split": self.split.value, 
@@ -228,13 +249,10 @@ class ProcessProphetTrain:
             timeout =6000
         )
         if response.status_code == 200: 
-            logger_set_params_cli.debug(response.content)
             data = response.json()
 
             accuracy = data["acc"]
-            
-
-
+            #: display accuracy on success
             container =[
                 "training successful", 
                 f"accuracy: {accuracy}", 
@@ -242,6 +260,7 @@ class ProcessProphetTrain:
                 ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
             ]
         else: 
+            #: display error on fail
             data =response.json()
             error = data[""]
             container =[  
@@ -265,18 +284,22 @@ class ProcessProphetTrain:
         if the request fails because e.g. it exceeds the timeout of 6000 the error is displayed in a new window and 
         the user can go back to the window where the parameters are displayed
         """ 
-        self.loading("preprocessing data...")
+        self.loading("preprocessing data...") #: shows the loading screen until the response es received. 
         
         input_logs_path= self.pp.state.input_logs_path
 
         is_xes = True if self.log_name.value[-3:] == "xes"  else False
 
         cuda= True if  self.cuda.value== "True"  else False
+
+        #: params for random search. here we only need lower and upper bounds
         sp = {
             "hidden_dim":[self.hidden_dim_lower.value,self.hidden_dim_upper.value] ,
             "mlp_dim":[self.mlp_dim_lower.value, self.mlp_dim_upper.value] ,
             "emb_dim":[self.emb_dim_lower.value, self.emb_dim_upper.value] 
         } 
+
+        #: note the iterations param needed for random search.
         params = {
             "path_to_log": f"{input_logs_path}/{self.log_name.value}" , 
             "split": self.split.value, 
@@ -305,6 +328,7 @@ class ProcessProphetTrain:
 
             accuracy = data["acc"]
 
+            #: display accuracy on success
             container = [ 
                 "training successful", 
                 f"accuracy: {accuracy}", 
@@ -340,6 +364,7 @@ class ProcessProphetTrain:
         -random search can be called if the user confirms the indicated parameters
         """
         if self.pp.mode == ProcessProphetMode.advanced:
+            #: show all params in case of advanced mode
             self.cuda=  ptg.InputField("True", prompt="use cuda: ")
             self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
             self.seq_len=  ptg.InputField("10", prompt="sequence length: ")
@@ -392,6 +417,7 @@ class ProcessProphetTrain:
             logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
             logs = logs[:min(len(logs),4 )] #: to not overflow the terminal
 
+            #: shows the available logs.
             right_container = ptg.Container(
                 f"[underline]First {len(logs)} logs in project:", *logs
             ).center()
@@ -400,6 +426,7 @@ class ProcessProphetTrain:
             window.center()
             return window
         elif self.pp.mode == ProcessProphetMode.quick:
+            #: show some params in case of quick mode
             self.cuda=  ptg.InputField("False", prompt="use cuda: ") #: no cuda assumed
 
             self.lr=  ptg.InputField("1e-3", prompt="learning rate: ")  #: set to 1e-3 by default, this is a usual value
@@ -477,6 +504,7 @@ class ProcessProphetTrain:
         -grid search can be called if the user confirms the indicated parameters
         """
         if self.pp.mode == ProcessProphetMode.advanced:
+            #: show all params in case of advanced mode
             self.cuda=  ptg.InputField("True", prompt="use cuda: ")
             self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
             self.seq_len=  ptg.InputField("10", prompt="sequence length: ")
@@ -540,6 +568,7 @@ class ProcessProphetTrain:
             window.center()
             return window
         elif self.pp.mode  == ProcessProphetMode.quick: 
+            #: show some params in case of advanced mode
             self.cuda=  ptg.InputField("True", prompt="use cuda: ")
             self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
             self.seq_len=  ptg.InputField("30", prompt="sequence length: ")
@@ -602,12 +631,15 @@ class ProcessProphetTrain:
 
     def trainer_main_menu(self) :
         """
-        depending on the mode the current project is running in, the user can choose a training alternative
-        and will be redirected to a new window where the parameters for the chosen alternative are displayed
+        this function displays the main menuy for the trainer manager. 
 
-        it is also possible to return to the previous menu
+        depending on the mode the current project is running in, the user can choose a training alternative
+        and will be redirected to a new window where the parameters for the chosen alternative are displayed.
+
+        it is also possible to return to the previous menu.
         """ 
         if self.pp.mode == ProcessProphetMode.advanced: 
+            #: the set params manually option is only available in the advanced mode
             container = ptg.Container(
                 "select one training alternative", 
                 "", 
@@ -626,6 +658,7 @@ class ProcessProphetTrain:
             return window
 
         elif self.pp.mode == ProcessProphetMode.quick: 
+            #: only grid search and random search are available in this mode.
             container = ptg.Container(
                 "select one training alternative", 
                 "",
