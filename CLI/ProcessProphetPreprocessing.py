@@ -15,10 +15,12 @@ SERVER_PORT= os.getenv('SERVER_PORT')
 
 class ProcessProphetPreprocessing: 
     def __init__(self, pp):
-        self.pp = pp
-        self.pp.switch_window(self.preprocessing_main_menu())
+        self.pp = pp #: reference to the ProcessProphet object
+        self.pp.switch_window(self.preprocessing_main_menu()) #: starts with the preprocessing main menu
 
 
+
+    #: this decorator is used for type checking
     @staticmethod
     def check_types(func):
         def wrapper(self, *args, **kwargs):
@@ -52,6 +54,7 @@ class ProcessProphetPreprocessing:
         self.pp.switch_window(window)
 
     def return_to_menu(self):
+        #: returns to the manager selection menu of `ProcessProphetStart`. Therefore, `start` is set to `False`
         pp_start = ProcessProphetStart.ProcessProphetStart(self.pp, start = False)
 
 
@@ -72,10 +75,13 @@ class ProcessProphetPreprocessing:
 
     @check_types
     def handle_replace_nan_with_mode(self):
-        
+        """
+        makes request to the server to replace nan values with mode in the activity column. 
+        """
         self.loading("preprocessing data...")
         input_logs_path= self.pp.state.input_logs_path
         
+        #: checks if extension is xes. otherwise csv assumed
         is_xes = True if self.log_name.value[-3:] == "xes"  else False
         
         params = {

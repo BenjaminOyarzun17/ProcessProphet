@@ -11,7 +11,7 @@ from process_prophet_modes import ProcessProphetMode
 
 
 
-
+#: load env variables. 
 load_dotenv()
 SERVER_NAME= os.getenv('SERVER_NAME')
 SERVER_PORT= os.getenv('SERVER_PORT')
@@ -20,9 +20,20 @@ SERVER_PORT= os.getenv('SERVER_PORT')
 
 
 class ProcessProphetStart: 
+    """
+    this class defines the windows for the intial part of the programm, ie: 
+    - project creation
+    - project selection
+    - user mode selection
+    it also sets the `pp.state` path variables once a project has been created/selected.  
+    """
     def __init__(self, pp, start:bool= True):
         """
         initialize ProcessProphet Object and main menu
+
+        :param pp: the ProcessProphet instance in charge of window management
+        :param start: if set to true, we start at the very beginning ie project selection/creation. 
+        otherwise we go straight into the manager selection. 
         """
         self.pp = pp
         if start: 
@@ -33,35 +44,36 @@ class ProcessProphetStart:
 
     def launch_preprocessor(self):
         """
-        launches the Preprocessing CLI interface 
+        launches the Preprocessing CLI interface. 
+        the constructor calls the window change
         """
         preprocessor= ProcessProphetPreprocessing(self.pp)
         
     def launch_trainer(self):
         """
         launches the Training CLI interface 
+        the constructor calls the window change
         """
         trainer = ProcessProphetTrain(self.pp)
 
     def launch_predictor(self):
         """
         launches the Predictor CLI interface 
+        the constructor calls the window change
         """
         predictor = ProcessProphetPredict(self.pp)
     def launch_conformance(self):
         """
         launches the Conformance checking CLI interface 
+        the constructor calls the window change
         """
         conformance_checker = ProcessProphetModel(self.pp)
 
 
     def select_manager(self) : 
         """
-        TODO: the manager alternativs should depend on the sate of the folders, 
-        ie if for example the models folder is empty, no conformance checking should be possible. 
-        other ex: if decoded_dfs is empty, train should not be possible.
-
-        creates menu with the main actions for a given project
+        after selecting the project and user mode, the user picks one of the managers in ProcessProphet 
+        (preprocessing, training, prediction generation and conformance checking)
         """
         container = [
             ptg.Label(f"select one of the following actions:"),
@@ -116,11 +128,27 @@ class ProcessProphetStart:
         files needed for the different functionalities of the application are stored e.g. a subdirectory for the input log on which
         the RNN can then be trained
             -> user can then continue and select the mode in which he wants to work in the new project
+
+        At the same time, the state is update (see `ProcessProphetState`)        
+
+        we use the following filestructure: 
+        - `projects/` : contains all projects 
+        - `projects/dummy_project/` : contains all important subfolders for `dummy_project`
+        - `projects/dummy_project/input_logs` : all input logs used for `dummy_project` should be stored in this folder
+        - `projects/dummy_project/models` :  all models use for `dummy_project` are generated in this folder
+        - `projects/dummy_project/petri_nets` :  all petri nets used for `dummy_project` are stored here
+        - `projects/dummy_project/predictive_logs` : all generated predictive logs used for `dummy_project` and conformance checking are stored here.
+        - `projects/dummy_project/partial_traces` : all input partial traces given by the user are searched inside this folder.  
+        - `projects/dummy_project/decoded_dfs` : all 
+        - `projects/dummy_project/multiple_predictions_path` : all predictions created using the multiple predictions function
+        are stored here (for the `dummy_project` project). 
         """
         name = self.project_name_input.value
         message = ""
+
         if name in os.listdir(f"{self.pp.state.projects_path}"):
-            message = "directory already exits"
+            #: check if project already exists
+            message = "directory already exists"
             container = ptg.Container(
                 message, 
                 "",
@@ -134,6 +162,7 @@ class ProcessProphetStart:
 
         message = f"directory created in path {os.getcwd()}/{self.pp.state.projects_path}/{name}"
         subdirectories = ["input_logs", "models", "petri_nets", "predictive_logs", "partial_traces", "decoded_dfs", "multiple_predictions_path"]
+        #: create the directories
         os.mkdir(f"{os.getcwd()}/{self.pp.state.projects_path}/{name}")
         self.pp.state.current_project = name
         self.pp.state.input_logs_path  = f"{os.getcwd()}/{self.pp.state.projects_path}/{name}/input_logs"
@@ -184,7 +213,7 @@ class ProcessProphetStart:
 
     def select_mode(self):
         """
-        menu to select wether the application should be run in base or advanced mode
+        menu to select whether the application should be run in quick or advanced mode. 
         """ 
         container = [
             "Select a mode", 
@@ -200,7 +229,7 @@ class ProcessProphetStart:
 
     def handle_project_selection(self):
         """
-        checks if the selected project exists and passes over the directories that are needed for the different functionalities of the application
+        checks if the selected project exists and updates the `pp.state` with the directories that are needed for the different functionalities of the application
         e.g. "partial_traces" directory in order to make predictions
 
         The user is notified in the current window if the project is successfully selected and can then pursue further actions like selecting the mode
