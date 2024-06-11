@@ -14,7 +14,7 @@ from process_prophet_modes import ProcessProphetMode
 load_dotenv()
 SERVER_NAME= os.getenv('SERVER_NAME')
 SERVER_PORT= os.getenv('SERVER_PORT')
-TIMEOUT= os.getenv('TIMEOUT')
+TIMEOUT= int(os.getenv('TIMEOUT'))
 
 
 
@@ -145,6 +145,8 @@ class ProcessProphetStart:
         """
         name = self.project_name_input.value
         message = ""
+        if not os.path.isdir(self.pp.state.projects_path):
+            os.mkdir(self.pp.state.projects_path)
 
         if name in os.listdir(f"{self.pp.state.projects_path}"):
             #: check if project already exists

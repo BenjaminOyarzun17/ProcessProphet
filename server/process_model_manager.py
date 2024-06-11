@@ -281,7 +281,7 @@ class ProcessModelManager:
         :param and_threshold:  and threshold parameter for heursitic miner
         :param loop_two_threshold:  loop two thrshold parameter for heursitic miner
         """
-        self.predictive_df = self.decode_df(self.predictive_df)
+        self.format_columns()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_heuristics(
             self.predictive_df,
             dependency_threshold, 
@@ -295,13 +295,23 @@ class ProcessModelManager:
         pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking, file_path=path)
 
 
+    def format_columns(self): 
+        """
+        exporting to csv changes the datetime types to object, but we need them to be 
+        datetime.  
+        """
+        self.predictive_df[self.case_timestamp_key] = self.predictive_df[self.case_timestamp_key].astype("datetime64[ns, UTC]")
+        self.predictive_df[self.case_id_key] = self.predictive_df[self.case_id_key].astype("str")
+        self.predictive_df[self.case_activity_key] = self.predictive_df[self.case_activity_key].astype("str")
+
+
     def inductive_miner(self, path,   noise_threshold=0):
         """
         run inductive miner on the predictive log and generate a petri net.
         :param path: path used for saving the generated petri net. 
         :param noise_threshold: noise threshold parameter for inductive miner
         """
-        self.predictive_df =self.decode_df(self.predictive_df)
+        self.format_columns()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_inductive(
             self.predictive_df,
             noise_threshold, 
@@ -317,7 +327,7 @@ class ProcessModelManager:
         run alpha miner on the predictive log and generate a petri net.
         :param path: path used for saving the generated petri net. 
         """
-        self.predictive_df =self.decode_df(self.predictive_df)
+        self.format_columns()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_alpha(
             self.predictive_df,
             self.case_activity_key,
@@ -332,7 +342,7 @@ class ProcessModelManager:
         run prefix tre miner on the predictive log and generate a petri net.
         :param path: path used for saving the generated petri net. 
         """
-        self.predictive_df =self.decode_df(self.predictive_df)
+        self.format_columns()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_prefix_tree(
             self.predictive_df,
             self.case_activity_key,

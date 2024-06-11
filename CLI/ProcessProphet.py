@@ -80,8 +80,11 @@ class ProcessProphet(metaclass = SingletonMeta):
         self.button_color = "[black]"
 
         #: use 80% of the window width
-        self.window_width = int(os.get_terminal_size(0)[0]*0.8)
+        self.window_width = self.calc_term_size()
         self.window_height = 50
+
+    def calc_term_size(self):
+        return int(os.get_terminal_size(0)[0]*0.8)
 
 
 
