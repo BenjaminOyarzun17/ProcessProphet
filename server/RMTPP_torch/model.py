@@ -21,8 +21,8 @@ class Net(nn.Module):
         self.lstm = nn.LSTM(input_size=config.emb_dim + 1,         #we add one to the input because we merge the embedding vector with the time input (float)
                             hidden_size=config.hid_dim,
                             batch_first=True,
-                            bidirectional=False) #TODO: check batch_first 
-        self.mlp =   nn.Linear(in_features=config.hid_dim, out_features=config.mlp_dim) #TODO: check if this is the LSTM gate connection
+                            bidirectional=False)  
+        self.mlp =   nn.Linear(in_features=config.hid_dim, out_features=config.mlp_dim) 
         self.mlp_drop = nn.Dropout(p=config.dropout)
 
         self.event_linear = nn.Linear(in_features=config.mlp_dim, out_features=config.number_classes) #here we generate the output logits for the label
@@ -55,7 +55,7 @@ class Net(nn.Module):
         """
         loss = torch.mean(pred + self.intensity_w * gold + self.intensity_b +
                           (torch.exp(pred + self.intensity_b) -
-                           torch.exp(pred + self.intensity_w * gold + self.intensity_b)) / self.intensity_w) #TODO: this should be the loss function for the time prediction; that is why we have all these exp. (see paper)
+                           torch.exp(pred + self.intensity_w * gold + self.intensity_b)) / self.intensity_w) #: loss function for the time prediction (see paper)
         return -1 * loss
 
 

@@ -214,7 +214,8 @@ class PredictionManager:
 
     def linear_iterative_predictor(self, depth, start_time, start_event): 
         """
-        TODO: merge this fucntion with linear_iterative_predictor
+        makes predictions linearly (ie no backtracking and branching degree = 1) , and also 
+        iteratively (no recursion)
         """
         c_t = start_time
         c_e = start_event
@@ -332,7 +333,6 @@ class PredictionManager:
         used for decoding the events and timestamps in the generated paths. 
         The timestamps are NOT decoded, since the predictions are TIMEDELTAS
         """
-        #TODO: decode time considering time deltas
 
         self.decoded_paths = []
         for path in self.paths: 

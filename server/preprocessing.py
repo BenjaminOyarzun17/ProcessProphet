@@ -40,7 +40,6 @@ class Preprocessing:
     This is the preprocessing unit for our server. Provided functionality:
     - adapter for train_split_test: split the event log's data into testing and training data in the right format
     - adapters for importing event logs: make sure the right format is used for the RNN
-    - TODO: might be extended
     """
     def __init__(self):
         self.time_precision = None
@@ -59,7 +58,6 @@ class Preprocessing:
         self.activity_le = None
         self.exponent = None
         self.unencoded_df = None
-        # TODO: invoke import_event_log? (decide)
     
 
 

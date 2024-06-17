@@ -5,7 +5,6 @@ The generated model may be exported and also imported later on by this class.
 
 it supports manual trainig, random search and grid search. 
 """
-import time
 import pandas as pd
 from server import RMTPP_torch
 from server import loggers
@@ -44,7 +43,6 @@ class Config:
         self.activity_le:LabelEncoder = None
         self.exponent:int = None
         self.number_classes:int = 0
-        self.train_time_limit = None #TODO: it makes more sense to regulate this in the frontend; lowers complexity of backend
         self.case_activity_key: str=""
         self.case_timestamp_key:str =""
         self.case_id_key:str = ""
@@ -109,7 +107,6 @@ class NNManagement:
     - train the model based on the event log. 
     - test the model based on the event log.
     - set params. 
-    - TODO: might be extended 
     """
     def __init__(self, config:Config|None = None):
         self.config = Config() if config == None else config
@@ -118,43 +115,6 @@ class NNManagement:
         self.acc = None
         self.time_error = None
 
-
-
-    def set_training_parameters(self,  params):
-        """
-
-        TODO: this mnethod is not being used anywhere. delete it if necessary.
-
-
-        Used for setting the training parameters. Note that not all params must be input.
-        :param params: dictionary containing the parameters, the following keys are possible:
-
-        * seq_length: --seq_len determines the "b" constant that was defined in the paper (see 5.2 parameter learning)
-        determines a window size to save the training sequences into in a tensor. 
-        * emb_dim: embedding dimension 
-        * hid_dim: --hid_dim dimension for the hidden dimension 
-        * mlp_dim: --mlp_dim dimension for the mlp (LSTM)
-        * alpha: --alpha=0.05 
-        * dropout: dropout parameter (RNN)
-        * batch_size: batch size
-        * lr: learning rate
-        * epochs: no of epochs
-        * importance_weight: importance weight for the loss function
-        * verbose_step: after how many steps the loss should be printed
-        * train_time_limit: time limit for training in minutes, when the time is over training will be aborted
-        """
-        self.config.seq_len = params.get('seq_len')
-        self.config.emb_dim = params.get('emb_dim')
-        self.config.hid_dim = params.get('hid_dim')
-        self.config.mlp_dim = params.get('mlp_dim')
-        self.config.alpha = params.get('alpha')
-        self.config.dropout = params.get('dropout')
-        self.config.batch_size = params.get('batch_size')
-        self.config.lr = params.get('lr')
-        self.config.epochs = params.get('epochs')
-        self.config.importance_weight = params.get('importance_weight')
-        self.config.verbose_step = params.get('verbose_step')
-        self.config.train_time_limit = params.get('train_time_limit')
 
     def evaluate(self):
         """
@@ -332,13 +292,12 @@ class NNManagement:
         # since we are using tensors for training the sequence length remains fixed in each epoch, hence we cannot do "arbitrary length cuts" 
         # to the training data
         self.model =  RMTPP_torch.Net(self.config, lossweight=self.weight) #crete a NN instance
-        self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs) #TODO: fix use bert (doesnt exist)
+        self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs) 
 
 
         if self.config.cuda: 
             self.model.cuda() #GPU 
 
-        start_time = time.time()
         for epc in range(self.config.epochs): #do the epochs
             self.model.train()  
             range_loss1 = range_loss2 = range_loss = 0
@@ -355,9 +314,5 @@ class NNManagement:
                     print("total loss:", range_loss / self.config.verbose_step)
                     range_loss1 = range_loss2 = range_loss = 0
 
-                # check if the training time limit is exceeded
-                elapsed_time = time.time() - start_time
-                if self.config.train_time_limit is not None and elapsed_time > self.config.train_time_limit * 60:
-                    raise exceptions.TrainTimeLimitExceeded()
 
         self.evaluate()

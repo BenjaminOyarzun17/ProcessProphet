@@ -574,8 +574,6 @@ def single_prediction():
 
         input_df = preprocessor.event_df
 
-        cuda = False #: TODO: check if cuda is also used for making predictions.
-
 
         #: load the RNN model and config (language encoders, params, ...)
         path_to_model = str(request_config["path_to_model"])
