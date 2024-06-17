@@ -1,14 +1,15 @@
 
-# Preprocessing
+# Managers
+## Preprocessing
 ::: server.preprocessing
 
 
-# NN Manager
+## NN Manager
 ::: server.nn_manager
 
-# Prediction Manager
+## Prediction Manager
 ::: server.prediction_manager
 
-# Process model manager 
+## Process model manager 
 ::: server.process_model_manager
 
