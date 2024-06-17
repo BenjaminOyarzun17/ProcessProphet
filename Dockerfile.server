@@ -5,9 +5,7 @@ FROM python:3.12
 
 WORKDIR /
 
-COPY requirements.txt .
 
-RUN  pip install --no-cache-dir -r requirements.txt
 RUN pip install gunicorn flask pm4py pandas numpy python-dotenv tqdm scikit-learn torch
 
 

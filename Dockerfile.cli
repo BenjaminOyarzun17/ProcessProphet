@@ -16,9 +16,7 @@ RUN pip install pytermgui requests python-dotenv PyYAML
 
 
 
-#RUN  pip install --no-cache-dir -r requirements.txt
-
-
-#CMD ["python", "CLI/main.py"]
-
+# after running docker compose, use docker's interactive terminal
+# first run `docker-compose exec cli sh`
+# inside the interactive terminal, run `python CLI/main.py`
 
