@@ -1,14 +1,12 @@
 
-
+#: make sure to use the correct cuda version!
 FROM nvidia/cuda:12.5.0-runtime-ubuntu22.04
 FROM python:3.12
 
 WORKDIR /
 
-COPY requirements.txt .
 
-#RUN  pip install --no-cache-dir -r requirements.txt
-#RUN pip install gunicorn flask pm4py pandas numpy torch python-dotenv tqdm scikit-learn 
+# make sure to use the correct cuda version!
 RUN pip install gunicorn flask pm4py pandas numpy python-dotenv tqdm scikit-learn 
 RUN pip install torch --index-url https://download.pytorch.org/whl/cu121
 
@@ -20,5 +18,4 @@ ENV SERVER_PORT=5000
 
 
 EXPOSE 5000
-CMD ["gunicorn", "-b", ":5000","server.server:app", "--timeout", "150"]
-#CMD ["python", "-m", "server.server"]
+CMD ["gunicorn", "-b", ":5000","server.server:app", "--timeout", "1800"]
