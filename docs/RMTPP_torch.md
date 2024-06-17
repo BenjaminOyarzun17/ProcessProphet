@@ -1,5 +1,4 @@
 # RMTPP_torch
-::: server.RMTPP_torch.__init__
 
 
 # model 

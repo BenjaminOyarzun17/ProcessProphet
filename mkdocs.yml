@@ -10,4 +10,3 @@ plugins:
 nav: 
   - managers.md
   - server_routes.md
-  - server_routes.md

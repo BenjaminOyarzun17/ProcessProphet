@@ -1,16 +1,5 @@
 """
-This file contains all the supported server routes by ProcessProphet. Supported routes: 
-- `/remove_duplicates`
-- `/add_unique_start_end`
-- `/replace_with_mode`
-- `/train_nn`
-- `/grid_search`
-- `/random_search`
-- `/single_prediction`
-- `/multiple_prediction`
-- `k/generate_predictive_log`
-- `/generate_predictive_process_model`
-- `/conformance`
+This file contains all the supported server routes by ProcessProphet. 
 """
 
 
@@ -172,16 +161,17 @@ def test():
 @check_required_paths_factory(['path_to_log', "petri_net_path"])
 def conformance():
     """
-    path for conformance checking. the following parameters are expected: 
+    Path for conformance checking.
 
-    :param is_xes: whether the input log is xes or not (otherwise csv). 
-    :param case_id: case id column name
-    :param activity_key: activity column name
-    :param timestamp: timestamp column name
-    :param path_to_log: path to the event log 
-    :param petri_net_path:  path to the petri net used for conf. checking.
-    :param conformance_technique:  either "token" or "alignment". this selects the corresponding conf. checking technique. 
-    :return fitness: the achieved fitness by the model. 
+    Args:
+        is_xes (bool): Whether the input log is in XES format or not (otherwise CSV).
+        case_id (str): Case ID column name.
+        activity_key (str): Activity column name.
+        timestamp (str): Timestamp column name.
+        path_to_log (str): Path to the event log.
+        petri_net_path (str): Path to the Petri net used for conformance checking.
+        conformance_technique (str): Either "token" or "alignment". This selects the corresponding conformance checking technique.
+
     """
     
     if request.method == 'POST':
@@ -243,21 +233,19 @@ def conformance():
 @check_not_present_paths_factory(["petri_net_path"])
 def generate_predictive_process_model():
     """
-    path for creating a predictive process model ie a petri net. 
+    Create a predictive process model, i.e., a petri net.
 
-
-    the petri net and its config are exported in the given path
-
-    :param is_xes: whether the input log is xes or not (otherwise csv). 
-    :param case_id: case id column name
-    :param activity_key: activity column name
-    :param timestamp: timestamp column name
-    :param path_to_log: path to the event log 
-    :param petri_net_path:  path where the pnml file and the json file should be exported. 
-    :param selected_model:  selected minign model ("alpha_miner", "heuristic_miner" , "inductive_miner", "prefix_tree_miner")
-    :param mining_algo_config: settings for the selected process mining algorithm
-    :param sep: column separator (used for csv files)
-    :param config: path to the config file for the model
+    Args:
+        is_xes (bool): Whether the input log is in XES format or not (otherwise CSV).
+        case_id (str): The column name for the case ID.
+        activity_key (str): The column name for the activity.
+        timestamp (str): The column name for the timestamp.
+        path_to_log (str): The path to the event log.
+        petri_net_path (str): The path where the PNML file and the JSON file should be exported.
+        selected_model (str): The selected mining model ("alpha_miner", "heuristic_miner", "inductive_miner", "prefix_tree_miner").
+        mining_algo_config (dict): The settings for the selected process mining algorithm.
+        sep (str): The column separator (used for CSV files).
+        config (str): The path to the config file for the model.
     """
     if request.method == 'POST':
         #: extract the params
@@ -363,25 +351,24 @@ def generate_predictive_process_model():
 @check_booleans_factory(["non_stop","is_xes", "random_cuts"])
 def generate_predictive_log():
     """
-    generates the predictive event log by cutting all traces using the given configuration
-    and by exteniding this cut traces with predictions.
-    
-    the predictive log is exported in the given path
+    Generates the predictive event log by cutting all traces using the given configuration
+    and by extending these cut traces with predictions. The predictive log is exported in the given path.
 
-    :param is_xes: whether the input log is xes or not (otherwise csv). 
-    :param case_id: case id column name
-    :param activity_key: activity column name
-    :param timestamp: timestamp column name
-    :param path_to_log: path to the event log used for cutting
-    :param path_to_model: path to the RNN model used for making predictions 
-    :param new_log_path: path where the predictive log should be saved (csv format is default.) 
-    :param sep: column separator (used for csv input logs)
-    :param config: path to the config file for the model
-    :param random_cuts: boolean. if set to true, each trace is cut at a random sequence index. 
-    :param non_stop: boolean. if set to true, predictions are made until an end marking is reached. 
-    :param cut_length: in case of random cuts = non_stop = False, we cut from the tail of each trace 
-    the last `cut_length` events. 
-    :param upper: upper bound for the number of iterations the non_stop variant should run (just for safety)
+    Args:
+        is_xes (bool): Whether the input log is xes or not (otherwise csv). 
+        case_id (str): Case id column name.
+        activity_key (str): Activity column name.
+        timestamp (str): Timestamp column name.
+        path_to_log (str): Path to the event log used for cutting.
+        path_to_model (str): Path to the RNN model used for making predictions.
+        new_log_path (str): Path where the predictive log should be saved (csv format is default). 
+        sep (str): Column separator (used for csv input logs).
+        config (str): Path to the config file for the model.
+        random_cuts (bool): If set to True, each trace is cut at a random sequence index. 
+        non_stop (bool): If set to True, predictions are made until an end marking is reached. 
+        cut_length (int): In case of random cuts = non_stop = False, we cut from the tail of each trace 
+            the last `cut_length` events. 
+        upper (int): Upper bound for the number of iterations the non_stop variant should run (just for safety).
     """
     if request.method == 'POST':
         request_config = request.get_json()
@@ -459,20 +446,18 @@ def generate_predictive_log():
 @check_integers_factory(["degree", "depth"])
 def multiple_prediction():
     """
-    given a partial trace carry out multiple predictions.  
-  
-    generates a file containing the multiple predicitons in the given path.
+    Given a partial trace, carry out multiple predictions and generate a file containing the multiple predictions in the given path.
 
-    :param case_id: case id column name
-    :param activity_key: activity column name
-    :param timestamp: timestamp column name
-    :param path_to_log: path to the input partial trace. must contain a single case id and columns 
-    must have the same names as the the ones used in the log for training. it must be a csv file with "," as separator
-    :param path_to_model: path to the RNN model used for making predictions 
-    :param prediction_file_name: file name for the output file that will contain the predictions
-    :param config: path to the config file for the model
-    :param degree: branching degree of the generated prediction tree
-    :param depth: depth that the predictive tree should have
+    Args:
+        case_id (str): Case ID column name
+        activity_key (str): Activity column name
+        timestamp (str): Timestamp column name
+        path_to_log (str): Path to the input partial trace. Must contain a single case ID and columns with the same names as the ones used in the log for training. It must be a CSV file with "," as the separator.
+        path_to_model (str): Path to the RNN model used for making predictions
+        prediction_file_name (str): File name for the output file that will contain the predictions
+        config (str): Path to the config file for the model
+        degree (int): Branching degree of the generated prediction tree
+        depth (int): Depth that the predictive tree should have
     """
 
     if request.method == 'POST':
@@ -541,19 +526,22 @@ def multiple_prediction():
 @check_required_paths_factory(['path_to_log', "config", "path_to_model"])
 def single_prediction():
     """
-    given a partial trace do one prediction.  
+    Given a partial trace, perform a single prediction.
 
-    :param case_id: case id column name
-    :param activity_key: activity column name
-    :param timestamp: timestamp column name
-    :param path_to_log: path to the input partial trace. must contain a single case id and columns 
-    must have the same names as the the ones used in the log for training. it must be a csv file with "," as separator
-    :param path_to_model: path to the RNN model used for making predictions 
-    :param config: path to the config file for the model
+    Args:
+        case_id (str): Case ID column name.
+        activity_key (str): Activity column name.
+        timestamp (str): Timestamp column name.
+        path_to_log (str): Path to the input partial trace. Must contain a single case ID and columns 
+                           with the same names as the ones used in the log for training. 
+                           It must be a CSV file with "," as the separator.
+        path_to_model (str): Path to the RNN model used for making predictions.
+        config (str): Path to the config file for the model.
 
-    :return predicted_time:  predicted next timestamp
-    :return predicted_event:  predicted next activity
-    :return probability:  probability of the event
+    Returns:
+        predicted_time (float): Predicted next timestamp.
+        predicted_event (str): Predicted next activity.
+        probability (float): Probability of the event.
     """
     if request.method == 'POST':
         request_config = request.get_json()
@@ -615,36 +603,38 @@ def single_prediction():
 @check_not_present_paths_factory(["model_path"])
 def random_search():
     """
-    carries out random search. It only accepts post requests. 
+    Carries out random search.
 
-    the following data is expected in the JSON body of the request: 
-    :param path_to_log: path to the log used for training. must not be encoded
-    :param split: float in range [0,1]. represents train - test ratio. 
-    :param case_id: name of case id column
-    :param activity_key: name of activity column
-    :param timestamp_key: name of timestamp column
-    :param cuda: True/False if cuda used/not used. 
-    :param seq_len: length of the sliding window used. 
-    :param lr: learning rate
-    :param batch_size: batch size 
-    :param epochs: number of epochs
-    :param is_xes: is the log in xes format?
-    :param iterations: number of iterations for random search.
-    :param search_params: dictioary of the format: 
-    ```py
-    {
-        "hid_dim":[lower_bound,upper_bound] ,
-        "mlp_dim":[lower_bound, upper_bound] ,
-        "emb_dim":[lower_bound, upper_bound] 
-    }
-    ```
+    Args:
+        path_to_log (str): Path to the log used for training. Must not be encoded.
+        split (float): Float in the range [0, 1]. Represents train-test ratio. 
+        case_id (str): Name of the case ID column.
+        activity_key (str): Name of the activity column.
+        timestamp_key (str): Name of the timestamp column.
+        cuda (bool): True/False if CUDA is used or not. 
+        seq_len (int): Length of the sliding window used. 
+        lr (float): Learning rate.
+        batch_size (int): Batch size. 
+        epochs (int): Number of epochs.
+        is_xes (bool): Is the log in XES format?
+        iterations (int): Number of iterations for random search.
+        search_params (dict): Dictionary of the format: 
+            {
+                "hid_dim": [lower_bound (int), upper_bound (int)],
+                "mlp_dim": [lower_bound (int), upper_bound (int)],
+                "emb_dim": [lower_bound (int), upper_bound (int)]
+            }
 
-    the response contains the following and has the next side effects: 
-    a json document is returned with the foloing parameters: 
-    :return config: the config file that is used for process prophet. 
-    :return acc: the best accuracy of training achieved
-    :return model: a base64 encoded pt file containing the model setup  ready
-    for importing
+    Returns:
+        config (dict): The config file that is used for Process Prophet. 
+        acc (float): The best accuracy achieved during training.
+        model (str): A base64 encoded PT file containing the model setup ready for importing.
+
+    Raises:
+        ValueError: If any of the input parameters are invalid.
+
+    Side Effects:
+        - Saves the trained model to a file.
     """
     if request.method == 'POST':
         request_config = request.get_json()
@@ -747,34 +737,32 @@ def random_search():
 @check_not_present_paths_factory(["model_path"])
 def grid_search():
     """
-    carries out grid search. It only accepts post requests. 
+    Carries out grid search. It only accepts POST requests. 
 
-    the following data is expected in the JSON body of the request: 
-    :param path_to_log: path to the log used for training. must not be encoded
-    :param split: float in range [0,1]. represents train - test ratio. 
-    :param case_id: name of case id column
-    :param activity_key: name of activity column
-    :param timestamp_key: name of timestamp column
-    :param cuda: True/False if cuda used/not used. 
-    :param seq_len: length of the sliding window used. 
-    :param lr: learning rate
-    :param batch_size: batch size 
-    :param epochs: number of epochs
-    :param is_xes: is the log in xes format?
-    :param search_params: dictioary of the format: 
-    ```py
-    {
-        "hid_dim":[lower_bound,upper_bound, step] ,
-        "mlp_dim":[lower_bound, upper_bound, step] ,
-        "emb_dim":[lower_bound, upper_bound, step] 
-    }
-    ```
-    the response contains the following and has the next side effects: 
-    a json document is returned with the foloing parameters: 
-    :return config: the config file that is used for process prophet. 
-    :return acc: the best accuracy of training achieved
-    :return model: a base64 encoded pt file containing the model setup  ready
-    for importing
+    Args:
+        path_to_log (str): Path to the log used for training. Must not be encoded.
+        split (float): Float in the range [0, 1] representing the train-test ratio. 
+        case_id (str): Name of the case ID column.
+        activity_key (str): Name of the activity column.
+        timestamp_key (str): Name of the timestamp column.
+        cuda (bool): True/False indicating whether CUDA is used or not. 
+        seq_len (int): Length of the sliding window used. 
+        lr (float): Learning rate.
+        batch_size (int): Batch size. 
+        epochs (int): Number of epochs.
+        is_xes (bool): Is the log in XES format?
+        search_params (dict): Dictionary of the format: 
+            {
+                "hid_dim": [lower_bound, upper_bound, step],
+                "mlp_dim": [lower_bound, upper_bound, step],
+                "emb_dim": [lower_bound, upper_bound, step]
+            }
+
+    Returns:
+        dict: The response contains the following and has the following side effects: 
+            - `config`: The config file used for Process Prophet. 
+            - `acc`: The best accuracy achieved during training.
+            - `model`: A base64 encoded PT file containing the model setup ready for importing.
     """
     if request.method == 'POST':
         request_config = request.get_json()
@@ -867,30 +855,29 @@ def grid_search():
 @check_not_present_paths_factory(["model_path"])
 def train_nn():
     """
-    trains the RMTPP neural network. 
+    Trains the RMTPP neural network.
 
-    the following data is expected in the JSON body of the request: 
-    :param path_to_log: path to the log used for training. must not be encoded
-    :param split: float in range [0,1]. represents train - test ratio. 
-    :param case_id: name of case id column
-    :param activity_key: name of activity column
-    :param timestamp_key: name of timestamp column
-    :param cuda: True/False if cuda used/not used. 
-    :param seq_len: length of the sliding window used. 
-    :param lr: learning rate
-    :param batch_size: batch size 
-    :param epochs: number of epochs
-    :param is_xes: is the log in xes format?
-    :param emb_dim: embedding dimension
-    :param hid_dim: hidden layer dimension
-    :param mlp_dim: mlp dimension
-    
-    the response contains the following and has the next side effects: 
-    a json document is returned with the foloing parameters: 
-    :return config: the config file that is used for process prophet. 
-    :return acc: the training accuracy achieved
-    :return model: a base64 encoded pt file containing the model setup  ready
-    for importing
+    Args:
+        path_to_log (str): Path to the log used for training. Must not be encoded.
+        split (float): Float in the range [0,1] representing the train-test ratio.
+        case_id (str): Name of the case id column.
+        activity_key (str): Name of the activity column.
+        timestamp_key (str): Name of the timestamp column.
+        cuda (bool): True/False indicating whether CUDA is used or not.
+        seq_len (int): Length of the sliding window used.
+        lr (float): Learning rate.
+        batch_size (int): Batch size.
+        epochs (int): Number of epochs.
+        is_xes (bool): Is the log in XES format?
+        emb_dim (int): Embedding dimension.
+        hid_dim (int): Hidden layer dimension.
+        mlp_dim (int): MLP dimension.
+
+    Returns:
+        dict: The response contains the following and has the following side effects:
+        config: The config file used for Process Prophet.
+        acc: The training accuracy achieved.
+        model: A base64 encoded PT file containing the model setup ready for importing.
     """
     if request.method == 'POST':
 
@@ -1000,16 +987,15 @@ def load_config_from_preprocessor(config : nn_manager.Config, preprocessor : pre
 @check_not_present_paths_factory(["save_path"])
 def replace_with_mode():
     """
-    replaces NaN's in the activity column with median
+    Replaces NaN's in the activity column with the median.
+    Creates a filtered event log in the specified path.
 
-    a filtered event log is created in the given path
-
-    the following data is expected in the JSON body of the request: 
-    :param path_to_log: path to the log used for training. must not be encoded
-    :param case_id: name of case id column
-    :param activity_key: name of activity column
-    :param timestamp_key: name of timestamp column
-    :param save_path: path where the processed event log is exported 
+    Args:
+        path_to_log (str): Path to the log used for training. Must not be encoded.
+        case_id (str): Name of the case id column.
+        activity_key (str): Name of the activity column.
+        timestamp_key (str): Name of the timestamp column.
+        save_path (str): Path where the processed event log is exported.
     """
     if request.method == 'POST':
         request_config = request.get_json()
@@ -1058,16 +1044,16 @@ def replace_with_mode():
 @check_not_present_paths_factory(["save_path"])
 def add_unique_start_end():
     """
-    adds a unique start/end activity to the log
+    Adds a unique start/end activity to the log.
 
-    a filtered event log is created in the given path
+    A filtered event log is created in the given path.
 
-    the following data is expected in the JSON body of the request: 
-    :param path_to_log: path to the log used for training. must not be encoded
-    :param case_id: name of case id column
-    :param activity_key: name of activity column
-    :param timestamp_key: name of timestamp column
-    :param save_path: path where the processed event log is exported 
+    Args:
+        path_to_log (str): Path to the log used for training. Must not be encoded.
+        case_id (str): Name of the case ID column.
+        activity_key (str): Name of the activity column.
+        timestamp_key (str): Name of the timestamp column.
+        save_path (str): Path where the processed event log is exported.
     """
     if request.method == 'POST':
         request_config = request.get_json()
@@ -1114,23 +1100,30 @@ def add_unique_start_end():
 @check_not_present_paths_factory(["save_path"])
 def remove_duplicates():
     """
-    removes the duplicates ie the rows where the same activity happened at the same time in the same case id.
+    Removes the duplicates from the event log.
 
-    a filtered event log is created in the given path
+    This function removes the rows where the same activity happened at the same time in the same case ID.
+    A filtered event log is created in the given save path.
 
-    the following data is expected in the JSON body of the request: 
-    :param path_to_log: path to the log used for training. must not be encoded
-    :param case_id: name of case id column
-    :param activity_key: name of activity column
-    :param timestamp_key: name of timestamp column
-    :param save_path: path where the processed event log is exported 
+    Args:
+        path_to_log (str): Path to the log used for training. Must not be encoded.
+        case_id (str): Name of the case ID column.
+        activity_key (str): Name of the activity column.
+        timestamp_key (str): Name of the timestamp column.
+        save_path (str): Path where the processed event log is exported.
+
+    Returns:
+        dict: A dictionary containing the save path of the processed event log.
+
+    Raises:
+        Exception: If there is an error while importing the log or removing duplicates.
+
     """
     if request.method == 'POST':
         request_config = request.get_json()
 
         #: extract params
         is_xes = request_config["is_xes"] 
-
 
         path_to_log = str(request_config['path_to_log'])
         case_id= str(request_config["case_id"])
