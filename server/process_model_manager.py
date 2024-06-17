@@ -75,6 +75,8 @@ class ProcessModelManager:
         :param cut_length: how many steps to cut from the tail of each sequence. 
         :param case_id_counts: number of steps on each case_id
         :param input_sequences: list of sequences to be cut. 
+
+        Side effect: the predictive_df is extended with the cut sequences.
         """
         for i, case_id in enumerate(case_id_counts.index):
             count = case_id_counts.loc[case_id]
@@ -164,9 +166,7 @@ class ProcessModelManager:
         self.predictive_df=  self.predictive_df.sort_values(by=[self.case_id_key, self.case_timestamp_key])
         self.predictive_df = self.decode_df(self.predictive_df)
         #: TODO: the the sorting again by case id and timestamp --> if a 
-        # prediction goes backwards it still doesnt make a difference.
-            
-
+        # prediction goes backwards it still doesnt make a difference.       
 
     def generate_predictive_log(self, new_log_path, max_len= 15, upper = 30, non_stop = False, random_cuts = False, cut_length = 0): 
         """
@@ -201,15 +201,12 @@ class ProcessModelManager:
     
         self.predictive_df.to_csv(new_log_path, sep = ",")
 
-
     def check_too_short(self, sequences):
         lenths = [len(seq) for seq in sequences]
         for i in lenths: 
             if i<=self.config.seq_len: 
                 print("found too short sequence")
                 raise exceptions.CutTooLarge()
-
-    
 
     def decode_sequence(self, sequence):
         """
@@ -218,7 +215,6 @@ class ProcessModelManager:
         """
         sequence[self.case_activity_key] = self.config.activity_le.inverse_transform(sequence[self.case_activity_key].astype(int))
         return sequence
-
 
     def handle_nat(self, group):
         """
@@ -238,11 +234,7 @@ class ProcessModelManager:
             group.at[idx, self.case_timestamp_key] = last_valid_timestamp+ pd.Timedelta(days=i + 1)
     
         return group     
-
-
-
-
-
+    
     def decode_df(self, df):
         """
         decodes the predictive df; inverse transform timestamps and event names.
@@ -271,18 +263,15 @@ class ProcessModelManager:
         #df.to_csv("logs/predicted_df")
         return df
 
-
     def import_predictive_df(self, path):
         """
         used for importing a predictive df. 
         """
         self.predictive_df = pd.read_csv(path, sep = ",")
 
-
     def visualize(self):
         #: this way it can be accessed from outside the class.
         pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
-
 
     def heuristic_miner(self,path,  dependency_threshold=0.5, and_threshold=0.65, loop_two_threshold=0.5, view= False):
         """
@@ -306,7 +295,6 @@ class ProcessModelManager:
         pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking, file_path=path)
         pm4py.save_vis_petri_net(self.petri_net, self.initial_marking, self.final_marking, file_path = path+".png")
 
-
     def format_columns(self): 
         """
         exporting to csv changes the datetime types to object, but we need them to be 
@@ -316,7 +304,6 @@ class ProcessModelManager:
         self.predictive_df[self.case_id_key] = self.predictive_df[self.case_id_key].astype("str")
         self.predictive_df[self.case_activity_key] = self.config.activity_le.inverse_transform(self.predictive_df[self.case_activity_key].astype(int))
         self.predictive_df[self.case_activity_key] = self.predictive_df[self.case_activity_key].astype("str")
-
 
     def inductive_miner(self, path,   noise_threshold=0):
         """
@@ -366,7 +353,6 @@ class ProcessModelManager:
         )
         #pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
         pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking , file_path=path)
-
         pm4py.save_vis_petri_net(self.petri_net, self.initial_marking, self.final_marking, file_path = path+".png")
         '''
         might be irrelevant as we require to always have a case_identifier in the log input 
@@ -376,18 +362,14 @@ class ProcessModelManager:
         '''
 
     def conformance_checking_token_based_replay(self):
-
-        replayed_traces = pm4py.conformance_diagnostics_token_based_replay(self.unencoded_df,  self.petri_net, self.initial_marking, self.final_marking)
-
-        fitness = self.compute_fitness(replayed_traces)
-
-        return fitness
-
+        replayed_traces = pm4py.conformance_diagnostics_token_based_replay(
+            self.unencoded_df,  self.petri_net, self.initial_marking, self.final_marking)
+        return self.compute_fitness(replayed_traces)
     
     def compute_fitness(self, replayed_traces):
-        sum_m =  0 
+        sum_m =  0
         sum_c = 0
-        sum_r = 0 
+        sum_r = 0
         sum_p  = 0
         # TODO: multiply by trace frequency in the log.
         for trace in replayed_traces: 
@@ -396,12 +378,9 @@ class ProcessModelManager:
             sum_r += 1*trace["remaining_tokens"]
             sum_p += 1*trace["produced_tokens"]
 
-
         return 0.5*(1-(sum_m/sum_c)) + 0.5*(1-(sum_r/sum_p))
     
-
     def conformance_checking_alignments(self):
-
         aligned_traces = pm4py.conformance_diagnostics_alignments(self.unencoded_df, self.petri_net, self.initial_marking, self.final_marking)
         log_fitness = replay_fitness.evaluate(aligned_traces, variant=replay_fitness.Variants.ALIGNMENT_BASED)
         return self.compute_fitness(log_fitness)
