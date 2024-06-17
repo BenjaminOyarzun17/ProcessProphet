@@ -1,3 +1,10 @@
+"""
+this neural network model is based on the paper
+"Recurrent Marked Temporal Point Processes: Embedding Event History to Vector" by 
+Du, et al. 
+In particular, the implementation is a modified version from the repository
+`https://github.com/woshiyyya/ERPP-RMTPP.git`.
+"""
 import torch
 from torch import nn
 from torch.optim import Adam
@@ -102,6 +109,7 @@ class Net(nn.Module):
         """
         make a prediction
         :param batch: a batch containing possible more than 
+        :param pm_active: returns only the most likely prediction
         one input for doing one or more predictions
         :return:  returns two lists. the first one contains
         the timestamps of the predictions
@@ -116,9 +124,7 @@ class Net(nn.Module):
         event_pred=  event_logits.detach().cpu().numpy()
         event_pred = np.argmax(event_pred, axis=-1) #for each label find the index that maximizes the pred.
         if pm_active: 
-            #TODO: return also the prob in case that pmm_active set 
-            # to true (in the context of pred management)
-            #retevent_pred_with_indices= []
+            #: in case we just need the most likely prediction
             lst = event_logits.detach().cpu().numpy().tolist()
             last = softmax(lst[-1]).tolist() #get event logits from last run
             max_prob = max(last)

@@ -1,3 +1,6 @@
+"""
+This module supports training of the RMTPP model.
+"""
 import ProcessProphet
 import pytermgui as ptg
 import json
@@ -29,6 +32,10 @@ class ProcessProphetTrain:
     relevant to process prophet. 
     """
     def __init__(self, pp):
+        """
+        other state parameters that make sense in the context of training might also be saved 
+        here
+        """
         self.pp = pp #: reference to the PP object 
         #: after creating the object, set the main menu as start screen
         self.pp.switch_window(self.trainer_main_menu())
@@ -411,6 +418,7 @@ class ProcessProphetTrain:
                 self.emb_dim_upper, 
                 self.iterations,"",
                 ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_random_search())),"",
+                "",
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
             )
             
@@ -474,6 +482,7 @@ class ProcessProphetTrain:
                 self.emb_dim_upper, 
                 self.iterations,"",
                 ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_random_search())),"",
+                "",
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
             )
             
@@ -553,6 +562,7 @@ class ProcessProphetTrain:
                 self.emb_dim_upper, 
                 self.emb_dim_step,
                 ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_grid_search())),
+                "",
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
             ).center()
 
@@ -613,6 +623,7 @@ class ProcessProphetTrain:
                 self.emb_dim_upper, 
                 self.emb_dim_step,
                 ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_grid_search())),
+                "",
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
             ).center()
 

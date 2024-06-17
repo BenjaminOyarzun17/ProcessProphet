@@ -1,3 +1,10 @@
+"""
+this module computes the input for the RNN. It is assumed that the input
+event log is in the right format, i.e. rows are sorted by case id and timestamp, 
+and the columns are encoded properly. 
+
+It computes time differences and uses a sliding window.
+"""
 import pandas
 from tqdm import tqdm
 import numpy as np
@@ -61,7 +68,7 @@ class ATMDataset:
     def generate_sequence(self):
         """
         use the sliding window algorithm so that the sequences
-        fit in the NN. 
+        fit in the NN (this way we fit the proper tensor dimension) .
         """
         MAX_INTERVAL_VARIANCE = 1
         pbar = tqdm(total=len(self.id) - self.seq_len + 1) #tqdm is the progress bar

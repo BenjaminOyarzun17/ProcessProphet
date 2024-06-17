@@ -1,3 +1,7 @@
+"""
+This modules allows conformance checking, predictive log generation and 
+process mining.
+"""
 import ProcessProphet
 import pytermgui as ptg
 import requests
@@ -19,8 +23,13 @@ class ProcessProphetModel:
     :param pp: the ProcessProphet instance in charge of window management 
     """
     def __init__(self, pp):
+        """
+        other state parameters that make sense in the context of conformance checking might also be saved 
+        here
+        """
         self.pp = pp
         self.pp.switch_window(self.model_main_menu())
+
 
     def return_to_menu(self):
         """
@@ -45,7 +54,7 @@ class ProcessProphetModel:
         menu to select one of the process mining, conformance checking, creation of a predictive log
         or go back to the previous menu
         """
-        # container to indicate the different options
+        #: container to indicate the different options of this part of the CLI
         container = ptg.Container(
             "Select one action", 
             "", 
@@ -73,7 +82,7 @@ class ProcessProphetModel:
         -if unsuccessful an error is indicated and the user can return to the model menu
         """
         self.loading("preprocessing data...")
-        # check the file type of the input log
+        #: check the file type of the input log
         is_xes = True if self.log_name.value[-3:] == "xes"  else False
         
         params = {
@@ -98,15 +107,16 @@ class ProcessProphetModel:
             timeout =TIMEOUT
         )
         if response.status_code == 200:
-            # container to indicate successful generation of predictive log 
+            #: container to indicate successful generation of predictive log 
             data = response.json()
             container =[  
                 "predictive process model generated successfully", 
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.model_main_menu())), 
+                "",
                 ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
             ]
         else:
-            # container to indicate that an error occurred from the request to the server 
+            #: container to indicate that an error occurred from the request to the server 
             data = response.json()
             error = data["error"]
             container = [ 
@@ -131,35 +141,66 @@ class ProcessProphetModel:
         predictive log is called
         -parameters are displayed in the window
         """
-        self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
-        self.log_name=  ptg.InputField("Hospital_log.xes", prompt="log name: ")
-        self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
-        self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
-        self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
-        self.predictive_event_log_name  = ptg.InputField("predicitive_log4.csv", prompt= "predictive log name: ")
-        self.non_stop = ptg.InputField("True", prompt="run until end event: ")
-        self.upper = ptg.InputField("30", prompt="non stop upper bound: ")
-        self.random_cuts = ptg.InputField("True", prompt="use random cuts: ")
-        self.cut_length = ptg.InputField("0", prompt="cut length: ")
-        self.sep  = ptg.InputField(",", prompt= "csv separator: ")
-        container = [
-            "Enter the following params:",
-            self.model_name,
-            self.log_name,
-            self.case_id_key,
-            self.case_activity_key,
-            self.case_timestamp_key,
-            self.predictive_event_log_name,
-            self.non_stop,
-            self.upper,
-            self.random_cuts,
-            self.cut_length,
-            self.sep, 
-            ptg.Button(f"{self.pp.button_color}continue",lambda *_: self.pp.switch_window(self.get_predictive_log()) ),
-            ptg.Button(f"{self.pp.button_color}back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
-        ]
-        window = ptg.Window(*container, width = self.pp.window_width)
-        window.center()
+        if self.pp.mode== ProcessProphetMode.advanced:
+            self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
+            self.log_name=  ptg.InputField("Hospital_log.xes", prompt="log name: ")
+            self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
+            self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
+            self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
+            self.predictive_event_log_name  = ptg.InputField("predicitive_log4.csv", prompt= "predictive log name: ")
+            self.non_stop = ptg.InputField("True", prompt="run until end event: ")
+            self.upper = ptg.InputField("30", prompt="non stop upper bound: ")
+            self.random_cuts = ptg.InputField("True", prompt="use random cuts: ")
+            self.cut_length = ptg.InputField("0", prompt="cut length: ")
+            self.sep  = ptg.InputField(",", prompt= "csv separator: ")
+            container = [
+                "Enter the following params:",
+                self.model_name,
+                self.log_name,
+                self.case_id_key,
+                self.case_activity_key,
+                self.case_timestamp_key,
+                self.predictive_event_log_name,
+                self.non_stop,
+                self.upper,
+                self.random_cuts,
+                self.cut_length,
+                self.sep, 
+                ptg.Button(f"{self.pp.button_color}continue",lambda *_: self.pp.switch_window(self.get_predictive_log()) ),
+                "",
+                ptg.Button(f"{self.pp.button_color}back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
+            ]
+            window = ptg.Window(*container, width = self.pp.window_width)
+            window.center()
+        elif self.pp.mode == ProcessProphetMode.quick:
+            #: in this mode the random cuts option where 
+            # cuts are done until the end is used by default. 
+            self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
+            self.log_name=  ptg.InputField("Hospital_log.xes", prompt="log name: ")
+            self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
+            self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
+            self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
+            self.predictive_event_log_name  = ptg.InputField("predicitive_log4.csv", prompt= "predictive log name: ")
+            self.non_stop = ptg.InputField("True", prompt="run until end event: ")
+            self.upper = ptg.InputField("100", prompt="non stop upper bound: ")
+            self.random_cuts = ptg.InputField("True", prompt="use random cuts: ")
+            self.cut_length = ptg.InputField("0", prompt="cut length: ")
+            self.sep  = ptg.InputField(",", prompt= "csv separator: ")
+            container = [
+                "Enter the following params:",
+                self.model_name,
+                self.log_name,
+                self.case_id_key,
+                self.case_activity_key,
+                self.case_timestamp_key,
+                self.predictive_event_log_name,
+                self.sep, 
+                ptg.Button(f"{self.pp.button_color}continue",lambda *_: self.pp.switch_window(self.get_predictive_log()) ),
+                "",
+                ptg.Button(f"{self.pp.button_color}back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
+            ]
+            window = ptg.Window(*container, width = self.pp.window_width)
+            window.center()
         return window
         
 
@@ -198,16 +239,17 @@ class ProcessProphetModel:
         )
         if response.status_code == 200: 
             data = response.json()
-            # container to indicate successful generation of predictive process model
+            #: container to indicate successful generation of predictive process model
             container =[  
                 "predictive process model generated successfully", 
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.model_main_menu())), 
+                "",
                 ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
             ]
         else: 
             data = response.json()
             error = data["error"]
-            # container to indicate that an error occurred from the request to the server
+            #: container to indicate that an error occurred from the request to the server
             container = [ 
                 "training FAILED:",
                 "",
@@ -225,6 +267,8 @@ class ProcessProphetModel:
         user can either start the mining with the displayed default parameters or alternatively adapt the parameters to their
         own preference (e.g. select different mining algorithm)
 
+        modes are not differentiated under this option. 
+
         side effect:
         -the modified parameters are stored in a container and then the mining function is called
         -parameters are displayed in the window
@@ -241,7 +285,7 @@ class ProcessProphetModel:
         self.and_threshold= ptg.InputField("0.65", prompt= "and threshold: ")
         self.loop_two_threshold= ptg.InputField("0.5", prompt= "loop two threshold: ")
         self.noise_threshold= ptg.InputField("0", prompt= "noise threshold: ")
-        # container to store and indicate all the needed parameters
+        #: container to store and indicate all the needed parameters
         container = [
             "Enter the following params:",
             self.model_name,
@@ -256,6 +300,7 @@ class ProcessProphetModel:
             self.loop_two_threshold, 
             self.noise_threshold, 
             ptg.Button(f"{self.pp.button_color}continue",lambda *_: self.pp.switch_window(self.get_process_mining()) ),
+            "",
             ptg.Button(f"{self.pp.button_color}back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
         ]
         window = ptg.Window(*container, width = self.pp.window_width)
@@ -293,17 +338,18 @@ class ProcessProphetModel:
         )
         if response.status_code == 200: 
             data = response.json()
-            # container to indicate successful conformance checking and the computed fitness of the process model
+            #: container to indicate successful conformance checking and the computed fitness of the process model
             container =[  
                 "conformance checking ready", 
                 f"fitness: {data['fitness']}", 
                 ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.model_main_menu())), 
+                "",
                 ptg.Button(f"{self.pp.button_color}action menu", lambda *_:  self.return_to_menu())
             ]
         else: 
             data = response.json()
             error = data["error"]
-            # container to indicate that an error occurred from the request to the server
+            #: container to indicate that an error occurred from the request to the server
             container = [ 
                 "training FAILED:",
                 "",
@@ -320,6 +366,8 @@ class ProcessProphetModel:
         user can either start the conformance checking with the displayed default parameters or alternatively adapt the parameters to their
         own preference (e.g. select different conformance checking algorithm)
 
+        modes are not differentiated for this option.
+
         side effect:
         -the modified parameters are stored in a container and then the conformance checking function is called
         -parameters are displayed in the window
@@ -332,7 +380,7 @@ class ProcessProphetModel:
         self.petri_net_path= ptg.InputField("p_net1.pnml", prompt= "petri net path: ")
 
         self.conformance_technique= ptg.InputField("token",prompt= "conformance technique: ")
-        # container to store and indicate all the needed parameters
+        #: container to store and indicate all the needed parameters
         container = [
             "Enter the following params:",
             self.log_name,
@@ -342,6 +390,7 @@ class ProcessProphetModel:
             self.petri_net_path, 
             self.conformance_technique,
             ptg.Button(f"{self.pp.button_color}continue",lambda *_: self.pp.switch_window(self.get_conformance_checking()) ),
+                "",
             ptg.Button(f"{self.pp.button_color}back",lambda *_: self.pp.switch_window(self.model_main_menu()) )
         ]
         window = ptg.Window(*container, width = self.pp.window_width)

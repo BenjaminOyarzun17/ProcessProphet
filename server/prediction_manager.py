@@ -1,3 +1,20 @@
+"""
+This module is in charge of administrating prediction generation.  
+
+In particular, two kinds of predictions can be made: 
+- single predictions (one step in the future and get the most likely (event, timestamp) pair) 
+- multiple predictions (generate a predictive tree). these can be saved in a file.
+
+predictions are also decoded. 
+
+This module is also used by the `process_model_manager` module, which calls the multiple 
+prediction manager repeatedly. Since this other manager supports different options in 
+relation to how the cut sequences should be restored, the parametrized function
+`multiple_prediction_linear` is implemented; which grants some runtime benefits. 
+
+"""
+
+
 from server import loggers
 from server import exceptions
 from server import preprocessing
@@ -7,10 +24,8 @@ from server import RMTPP_torch
 from torch.utils.data import DataLoader
 import pandas as pd
 import numpy as np
-import pprint 
 import json
 import math
-import time
 import random
 import torch
 
