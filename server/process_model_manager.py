@@ -165,8 +165,6 @@ class ProcessModelManager:
 
         self.predictive_df=  self.predictive_df.sort_values(by=[self.case_id_key, self.case_timestamp_key])
         self.predictive_df = self.decode_df(self.predictive_df)
-        #: TODO: the the sorting again by case id and timestamp --> if a 
-        # prediction goes backwards it still doesnt make a difference.       
 
     def generate_predictive_log(self, new_log_path, max_len= 15, upper = 30, non_stop = False, random_cuts = False, cut_length = 0): 
         """
@@ -258,9 +256,8 @@ class ProcessModelManager:
         #: handle NaT values
         df= df.groupby(self.case_id_key, group_keys=False).apply(self.handle_nat)
         #: just in case 
-        df = df.dropna() # TODO: this might not be very clean and might wipe too much data
+        df = df.dropna() 
         #: save the generated predictive model
-        #df.to_csv("logs/predicted_df")
         return df
 
     def import_predictive_df(self, path):
@@ -371,7 +368,7 @@ class ProcessModelManager:
         sum_c = 0
         sum_r = 0
         sum_p  = 0
-        # TODO: multiply by trace frequency in the log.
+        # TODO: multiply by trace frequency in the log (there is no such function in pm4py)
         for trace in replayed_traces: 
             sum_m+= 1*trace["missing_tokens"]
             sum_c+= 1*trace["consumed_tokens"]
@@ -384,8 +381,6 @@ class ProcessModelManager:
         aligned_traces = pm4py.conformance_diagnostics_alignments(self.unencoded_df, self.petri_net, self.initial_marking, self.final_marking)
         log_fitness = replay_fitness.evaluate(aligned_traces, variant=replay_fitness.Variants.ALIGNMENT_BASED)
         return self.compute_fitness(log_fitness)
-        #return log_fitness
-        #: TODO keep reading pm4py documentation on alignments (goal: get the fitness score)
 
     def load_petri_net(self, path): 
         self.petri_net, self.initial_marking, self.final_marking = pm4py.read_pnml(path)
