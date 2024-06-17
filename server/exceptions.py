@@ -1,4 +1,9 @@
+"""
+this module provides a list of exceptions that are caused mainly due to 
+improper/invalid parameter selection. 
 
+these exceptions should be raised and handled by the user. 
+"""
 
 
 

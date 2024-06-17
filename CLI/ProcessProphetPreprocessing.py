@@ -1,3 +1,6 @@
+"""
+This modules gives access to some preprocessing functions.
+"""
 from ProcessProphet import ProcessProphet
 import pytermgui as ptg
 import os

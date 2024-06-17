@@ -1,5 +1,9 @@
 """
-This module is in charge of training the NN Model
+This module is in charge of training the NN Model and also testing it. 
+
+The generated model may be exported and also imported later on by this class.
+
+it supports manual trainig, random search and grid search. 
 """
 import time
 import pandas as pd

@@ -1,4 +1,6 @@
-import os
+"""
+this module starts the CLI
+"""
 from ProcessProphetStart import ProcessProphetStart
 from ProcessProphet import ProcessProphet
 from dotenv import load_dotenv

@@ -1,3 +1,7 @@
+"""
+This process is in charge of project creation/selection, 
+user mode selection and then action selection (training, preprocessing, prediction generation, ...)
+"""
 import pytermgui as ptg
 from ProcessProphet import ProcessProphet
 from ProcessProphetPreprocessing import ProcessProphetPreprocessing
@@ -106,7 +110,6 @@ class ProcessProphetStart:
                 "",
                 ptg.Button(f"{self.pp.button_color}Exit", lambda *_: self.pp.manager.stop())
             )
-        # TODO: is this else part needed? Dont see it being called anywhere
         else: 
             container = ptg.Container( 
                 ptg.Label(f"{message}!"),

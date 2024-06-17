@@ -1,3 +1,15 @@
+"""
+This module implements all necessary functions so that conformance checking
+can be used to analyse fitness: 
+- first, each case of the event log is cut using one of the three supported alternatives
+(from tail, random cuts with end activity detection, and random cuts while remembering the 
+removed number of sequence steps). 
+- second, the cut event log is now reconstructed using the `prediction_manager`. this
+generates an event log that consists of past data and predictions. 
+- third, a process mining algorithm (the provided options by pm4py) and conformance checking algorithm (token based, alignment based) can be used over this new event log 
+to get the fitness.
+- this module allows petri net importing and exporting, and prediction decoding.
+"""
 import pm4py
 from server  import prediction_manager
 from server  import loggers
@@ -75,7 +87,6 @@ class ProcessModelManager:
             cuts[case_id]= (count, cut, count-cut)
             input_sequences.append(sequence)
 
-            #sequence = self.decode_sequence(sequence)
             self.predictive_df= pd.concat([self.predictive_df, sequence], ignore_index = True)
 
         return case_id_counts, cuts, input_sequences 
@@ -303,6 +314,7 @@ class ProcessModelManager:
         """
         self.predictive_df[self.case_timestamp_key] = self.predictive_df[self.case_timestamp_key].astype("datetime64[ns, UTC]")
         self.predictive_df[self.case_id_key] = self.predictive_df[self.case_id_key].astype("str")
+        self.predictive_df[self.case_activity_key] = self.config.activity_le.inverse_transform(self.predictive_df[self.case_activity_key].astype(int))
         self.predictive_df[self.case_activity_key] = self.predictive_df[self.case_activity_key].astype("str")
 
 

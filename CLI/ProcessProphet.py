@@ -1,3 +1,8 @@
+"""
+module containing the state dataclass
+and the singleton in charge of supporting window transitions 
+in the CLI.
+"""
 import pytermgui as ptg
 from dataclasses import dataclass
 import os
@@ -41,9 +46,8 @@ class PPStateData:
 
 class SingletonMeta(type):
     """
-    singleton metaclass taken from https://refactoring.guru/design-patterns/singleton/python/example
+    singleton metaclass taken from `https://refactoring.guru/design-patterns/singleton/python/examples`
     """
-
     _instances = {}
 
     def __call__(cls, *args, **kwargs):
@@ -68,8 +72,8 @@ class ProcessProphet(metaclass = SingletonMeta):
         self.state = PPStateData("projects", None, False, False, False, None, None, None,None,None,None, None) 
         
         #: window manager object from pytermgui. this object handles 
-        # window lifecycle.  windows have nice properties such as
-        # being resizable. 
+        #: window lifecycle.  windows have nice properties such as
+        #: being resizable. 
         self.manager = ptg.WindowManager() 
         
         #: the current window's content

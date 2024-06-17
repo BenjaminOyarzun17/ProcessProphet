@@ -1,6 +1,21 @@
+"""
+this module is in charge of: 
+- supporting event log imports from xes/csv files. 
+- formatting the event log so that it can be later on used by the `nn_manager` module. 
+in particular, the timestamps are encoded as integers, the case id's and activity names
+are encoded, and the rows are sorted by case id and timestamp. Splitting the event log in 
+training and testing sublogs is also supported. 
+- the preprocessor also calculates important values such as the number of activities and 
+absolute frequency distribution, which are also required by the neural network's training. 
+- formatting is done automatically after importing, but this can also be deselected by 
+setting the corresponding parameter. 
+- other preprocessing operations are supported, such as replacing NaN values, adding a unique
+start / end activity to the log, and removing duplicate rows. 
 
-#import dateutil.parser
-#import dateutil
+Note that this module does not bring the event log in the input format
+for the RNN. this is done by the module `util.py` in the subpackage
+`RMTPP_torch`.
+"""
 from server import exceptions
 from server import loggers
 from server import time_precision
@@ -10,7 +25,6 @@ import pandas as pd
 import datetime as dt
 from sklearn.preprocessing import LabelEncoder
 from collections import Counter
-import pprint
 import pm4py
 
 import datetime as dt
@@ -31,15 +45,14 @@ class Preprocessing:
     def __init__(self):
         self.time_precision = None
 
-
-
         #: contains the event log path
         self.event_log_path = None
         self.event_log= None
         self.case_id_key = None 
         self.case_activity_key = None 
         self.case_timestamp_key = None 
-        self.event_df = None
+
+        self.event_df = None #: dataframe containing the event log. corresponds to the imported log and eventually also the formatted one
         self.number_classes=0
         self.absolute_frequency_distribution = None
         self.case_id_le = None

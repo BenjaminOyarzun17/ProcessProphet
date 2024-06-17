@@ -1,3 +1,6 @@
+"""
+enumeration containing the supported usermodes.
+"""
 from enum import Enum, auto
 
 

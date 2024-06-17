@@ -1,4 +1,20 @@
-from flask import Blueprint, request, send_file, make_response, jsonify, Response
+"""
+This file contains all the supported server routes by ProcessProphet. Supported routes: 
+- `/remove_duplicates`
+- `/add_unique_start_end`
+- `/replace_with_mode`
+- `/train_nn`
+- `/grid_search`
+- `/random_search`
+- `/single_prediction`
+- `/multiple_prediction`
+- `k/generate_predictive_log`
+- `/generate_predictive_process_model`
+- `/conformance`
+"""
+
+
+from flask import Blueprint, request, make_response, jsonify, Response
 from server import preprocessing
 from server import nn_manager
 from server import process_model_manager
@@ -131,7 +147,7 @@ def check_booleans_factory(params: list):
 @routes.route('/start')
 def start():
     #: just a testing route
-    return ok
+    return ok, 200
 
 @routes.route('/test')
 def test():
@@ -335,7 +351,7 @@ def generate_predictive_process_model():
         with open (f"{petri_net_path}.json", "w") as f:
             json.dump(petri_net_config,f)
         
-        return ok #the 200 here is important
+        return ok, 200 #the 200 here is important
 
 
 
@@ -518,7 +534,7 @@ def multiple_prediction():
         paths = pm.jsonify_paths()
         with open(prediction_file_name, 'w') as multi_predictions:
             json.dump(paths, multi_predictions, indent=2)
-        return ok 
+        return ok , 200
 
 
 @routes.route('/single_prediction', methods = ["POST"])
