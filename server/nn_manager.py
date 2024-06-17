@@ -14,7 +14,6 @@ from server import time_precision
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import numpy as np
-import logging
 import torch
 from collections import Counter
 import random

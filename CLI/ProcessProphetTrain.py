@@ -1,9 +1,7 @@
 """
 This module supports training of the RMTPP model.
 """
-import ProcessProphet
 import pytermgui as ptg
-import json
 import requests
 from loggers import logger_set_params_cli
 import ProcessProphetStart

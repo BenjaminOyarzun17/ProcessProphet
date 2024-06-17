@@ -1,7 +1,6 @@
 """
 This modules allows prediction generation.
 """
-from ProcessProphet import ProcessProphet
 import os
 import requests
 import pytermgui as ptg
