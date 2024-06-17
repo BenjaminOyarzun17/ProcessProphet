@@ -2,7 +2,6 @@
 This modules allows conformance checking, predictive log generation and 
 process mining.
 """
-import ProcessProphet
 import pytermgui as ptg
 import requests
 import ProcessProphetStart

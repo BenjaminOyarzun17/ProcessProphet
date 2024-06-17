@@ -15,12 +15,10 @@ from server  import prediction_manager
 from server  import loggers
 from server import exceptions
 
-import pprint
 import random
 from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
 import pandas as pd
 from tqdm import tqdm
-import time as tim
 
 class ProcessModelManager:
     def __init__(self,event_df, model, config, case_activity_key, case_id_key, case_timestamp_key  ):

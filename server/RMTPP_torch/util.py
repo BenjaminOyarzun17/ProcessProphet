@@ -5,13 +5,11 @@ and the columns are encoded properly.
 
 It computes time differences and uses a sliding window.
 """
-import pandas
 from tqdm import tqdm
 import numpy as np
 import torch
 from collections import Counter, deque
 import math
-import pprint
 
 
 
