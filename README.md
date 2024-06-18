@@ -1,15 +1,19 @@
-# Welcome to Process Prophet
+# Welcome to Process Prophet!
 
 
 # Integrate our backend into your application
-For more information, **check out the docs**!
+We implemented our backend using a flask backend. Therefore, the backend can also be integrated with 
+other frontend projects! If you are a frontend developer/data scientist willing to implement our backend
+into your project, **check out the docs**!
 [documentation site](https://benjaminoyarzun17.github.io/ProcessProphet-SPP/)
 
 
-# SPP-process-discovery
-it is recommended to install docker desktop for container management. 
-# running with docker compose
-this commands builds both containers and runs them:
+# CLI setup and installation
+We assume you have docker installed in your machine. Process prophet does support `CUDA`, however this driver must
+be configured manually in the `Dockerfile.servercuda`.
+
+## if not using CUDA
+First, build both containers and run them using docker compose:
 ```sh
 docker compose up --build
 ```
@@ -17,60 +21,29 @@ alternatively, to run in background:
 ```sh
 docker compose up --build -d
 ```
-Now, this is a necessary step to run the CLI after doing docker compose. Note that building the 
-server container usually takes a while due to the large amount of dependencies!
-ideally create another terminal and run: 
+Now, this is a necessary step to run the CLI after doing docker compose: Ideally create another terminal and run: 
 ```sh
 docker-compose exec cli sh
 ```
-this will enter the container's interactive console. Now type
+this will enter the container's interactive console. Now type:
 ```sh
 python CLI/main.py
 ```
-this will start the CLI.
 
 
-# Environment variable
-inside the CLI directory there is a `.env` file. Create inside this file an environment variable
+## if using CUDA
+First, make sure that you have the right CUDA drivers installed, and also edit the CUDA version in the `Dockerfile.servercuda`. 
+
+Run the following command to build and start both containers:
 ```sh
-SERVER_NAME=localhost
+docker-compose -f docker-compose-cuda.yaml up
 ```
-this will be changed automatically by docker compose.
 
-## building server
-(just use for testing purposes)
+Now, this is a necessary step to run the CLI after doing docker compose: Ideally create another terminal and run: 
 ```sh
-docker buildx build -f Dockerfile.server -t ppserver .
+docker-compose exec cli sh
 ```
-
-## running cli container 
-(just use for testing purposes)
+this will enter the container's interactive console. Now type:
 ```sh
-sudo docker run -v ./projects:/projects -it ppcli
-```
-this grants access to the container's terminal
-
-
-
-# to run the server locally (Achtung!!)
-```sh
-python -m server.server
-```
-this ensures to run the server as a MODULE. otherwise the imports will not work.
-
-
-# using mkdocs
-run the following command to run the documentation on local host:
-```bash
-mkdocs serve
-```
-the mkdocs config file is `mkdocs.yml`. The markdown templates are in `/docs`. 
-
-
-# installing requirements using a virtual environment: 
-run the following commands: 
-```bash
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+python CLI/main.py
 ```
