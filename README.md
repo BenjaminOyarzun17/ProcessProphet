@@ -20,6 +20,10 @@ into your project, **check out the docs**!
 [documentation site](https://benjaminoyarzun17.github.io/ProcessProphet/)
 
 
+# Check out our CLI user guide! 
+(link to be added in the near future)
+
+
 # CLI setup and installation
 We assume you have docker installed in your machine. Process prophet does support `CUDA`, however this driver must
 be configured manually in the `Dockerfile.servercuda`.
