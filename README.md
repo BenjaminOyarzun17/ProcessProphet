@@ -1,3 +1,11 @@
+# Welcome to Process Prophet
+
+
+# Integrate our backend into your application
+For more information, **check out the docs**!
+[documentation site](https://benjaminoyarzun17.github.io/ProcessProphet-SPP/)
+
+
 # SPP-process-discovery
 it is recommended to install docker desktop for container management. 
 # running with docker compose
