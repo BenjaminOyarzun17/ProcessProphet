@@ -1,5 +1,17 @@
 # Welcome to Process Prophet!
+Process prophet is a backend server that combines the power of the RMTPP model and process mining techniques. 
+In particular, a process twin is created for an existing process that is able to: 
+- simulate existing behavior.
+- make predictions for ongoing process cases. 
 
+This can provide important insights for project managers while improving decision making and resource allocation.
+
+This model can be implemented in a variety of fields, as long as you have a timestamp, case id and an event name in your data. Therefore, Process Prophet also has a wide variety of possible areas of application. 
+
+We also provide an `API` to agilize integration with other frontend interfaces. 
+
+A CLI in the form of a `terminal user interface` is also provided for endusers that just want to use our provided 
+functionalities. 
 
 # Integrate our backend into your application
 We implemented our backend using a flask backend. Therefore, the backend can also be integrated with 
@@ -29,7 +41,8 @@ this will enter the container's interactive console. Now type:
 ```sh
 python CLI/main.py
 ```
-
+This should launch:
+![Welcome Screen](welcome_screen.png)
 
 ## Run with CUDA
 First, make sure that you have the right CUDA drivers installed, and also edit the CUDA version in the `Dockerfile.servercuda`. 

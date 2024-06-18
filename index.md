@@ -10,8 +10,7 @@ This model can be implemented in a variety of fields, as long as you have a time
 
 We also provide an `API` to agilize integration with other frontend interfaces. 
 
-A CLI in the form of a `terminal user interface` is also provided for endusers that just want to use our provided 
-functionalities. 
+A CLI in the form of a `terminal user interface` is also provided for endusers that just want to use our provided functionalities. 
 
 
 
