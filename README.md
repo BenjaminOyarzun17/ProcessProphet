@@ -1,4 +1,4 @@
-# Welcome to Process Prophet!
+# Welcome to Process Prophet 🔮
 Process prophet is a backend server that combines the power of the RMTPP model and process mining techniques. 
 In particular, a process twin is created for an existing process that is able to: 
 - simulate existing behavior.
