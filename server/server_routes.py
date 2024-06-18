@@ -163,6 +163,8 @@ def conformance():
     """
     Path for conformance checking.
 
+    The POST request must have the following parameters:
+
     Args:
         is_xes (bool): Whether the input log is in XES format or not (otherwise CSV).
         case_id (str): Case ID column name.
@@ -171,6 +173,9 @@ def conformance():
         path_to_log (str): Path to the event log.
         petri_net_path (str): Path to the Petri net used for conformance checking.
         conformance_technique (str): Either "token" or "alignment". This selects the corresponding conformance checking technique.
+
+    400 Response:
+        - An object with the "error" key indicating what went wrong is sent.
 
     """
     
@@ -235,6 +240,8 @@ def generate_predictive_process_model():
     """
     Create a predictive process model, i.e., a petri net.
 
+    The POST request must have the following parameters:
+
     Args:
         is_xes (bool): Whether the input log is in XES format or not (otherwise CSV).
         case_id (str): The column name for the case ID.
@@ -246,6 +253,14 @@ def generate_predictive_process_model():
         mining_algo_config (dict): The settings for the selected process mining algorithm.
         sep (str): The column separator (used for CSV files).
         config (str): The path to the config file for the model.
+
+
+    200 response side effects:
+        - The petri net is saved in the petri_net_path. 
+        - The petri net config is saved in the petri_net_path.json.
+
+    400 Response:
+        - An object with the "error" key indicating what went wrong is sent.
     """
     if request.method == 'POST':
         #: extract the params
@@ -354,6 +369,8 @@ def generate_predictive_log():
     Generates the predictive event log by cutting all traces using the given configuration
     and by extending these cut traces with predictions. The predictive log is exported in the given path.
 
+    The POST request must have the following parameters:
+
     Args:
         is_xes (bool): Whether the input log is xes or not (otherwise csv). 
         case_id (str): Case id column name.
@@ -369,6 +386,12 @@ def generate_predictive_log():
         cut_length (int): In case of random cuts = non_stop = False, we cut from the tail of each trace 
             the last `cut_length` events. 
         upper (int): Upper bound for the number of iterations the non_stop variant should run (just for safety).
+    
+    200 response side effects:
+        - The predictive log is saved in the new log path.
+
+    400 Response:
+        - An object with the "error" key indicating what went wrong is sent.
     """
     if request.method == 'POST':
         request_config = request.get_json()
@@ -448,6 +471,8 @@ def multiple_prediction():
     """
     Given a partial trace, carry out multiple predictions and generate a file containing the multiple predictions in the given path.
 
+    The POST request must have the following parameters:
+
     Args:
         case_id (str): Case ID column name
         activity_key (str): Activity column name
@@ -458,6 +483,13 @@ def multiple_prediction():
         config (str): Path to the config file for the model
         degree (int): Branching degree of the generated prediction tree
         depth (int): Depth that the predictive tree should have
+
+
+    200 response side effects:
+        - The predictions are saved in the prediction file in the path `prediction_file_name`.
+
+    400 Response:
+        - An object with the "error" key indicating what went wrong is sent.
     """
 
     if request.method == 'POST':
@@ -528,6 +560,8 @@ def single_prediction():
     """
     Given a partial trace, perform a single prediction.
 
+    The POST request must have the following parameters:
+
     Args:
         case_id (str): Case ID column name.
         activity_key (str): Activity column name.
@@ -542,6 +576,10 @@ def single_prediction():
         predicted_time (float): Predicted next timestamp.
         predicted_event (str): Predicted next activity.
         probability (float): Probability of the event.
+
+
+    400 Response:
+        - An object with the "error" key indicating what went wrong is sent.
     """
     if request.method == 'POST':
         request_config = request.get_json()
@@ -605,8 +643,11 @@ def random_search():
     """
     Carries out random search.
 
+    The POST request must have the following parameters:
+
     Args:
         path_to_log (str): Path to the log used for training. Must not be encoded.
+        model_path (str): Path where the model should be saved.
         split (float): Float in the range [0, 1]. Represents train-test ratio. 
         case_id (str): Name of the case ID column.
         activity_key (str): Name of the activity column.
@@ -633,8 +674,12 @@ def random_search():
     Raises:
         ValueError: If any of the input parameters are invalid.
 
-    Side Effects:
-        - Saves the trained model to a file.
+    200 response side effects:
+        - The config file used for Process Prophet is saved in the model path with the extension `.config.json`.
+        - The trained model is saved in the model path. 
+
+    400 Response:
+        - An object with the "error" key indicating what went wrong is sent.
     """
     if request.method == 'POST':
         request_config = request.get_json()
@@ -739,8 +784,11 @@ def grid_search():
     """
     Carries out grid search. It only accepts POST requests. 
 
+    The POST request must have the following parameters:
+
     Args:
         path_to_log (str): Path to the log used for training. Must not be encoded.
+        model_path (str): Path where the model should be saved.
         split (float): Float in the range [0, 1] representing the train-test ratio. 
         case_id (str): Name of the case ID column.
         activity_key (str): Name of the activity column.
@@ -763,6 +811,13 @@ def grid_search():
             - `config`: The config file used for Process Prophet. 
             - `acc`: The best accuracy achieved during training.
             - `model`: A base64 encoded PT file containing the model setup ready for importing.
+
+    200 response side effects:
+        - The config file used for Process Prophet is saved in the model path with the extension `.config.json`.
+        - The trained model is saved in the model path. 
+    
+    400 Response:
+        - An object with the "error" key indicating what went wrong is sent.
     """
     if request.method == 'POST':
         request_config = request.get_json()
@@ -855,16 +910,21 @@ def grid_search():
 @check_not_present_paths_factory(["model_path"])
 def train_nn():
     """
-    Trains the RMTPP neural network.
+    Trains the RMTPP neural network using the log in `path_to_log` for training and testing. 
+    A model is generated in `model_path` and the config file is saved in `model_path` with the extension `.config.json`.
+    All trainig params are listed below. 
+
+    The POST request must have the following parameters:
 
     Args:
         path_to_log (str): Path to the log used for training. Must not be encoded.
+        model_path (str): Path where the model should be saved.
         split (float): Float in the range [0,1] representing the train-test ratio.
         case_id (str): Name of the case id column.
         activity_key (str): Name of the activity column.
         timestamp_key (str): Name of the timestamp column.
         cuda (bool): True/False indicating whether CUDA is used or not.
-        seq_len (int): Length of the sliding window used.
+        seq_len (int): Length of the sliding window used. Also affects tensor dimension.
         lr (float): Learning rate.
         batch_size (int): Batch size.
         epochs (int): Number of epochs.
@@ -873,11 +933,15 @@ def train_nn():
         hid_dim (int): Hidden layer dimension.
         mlp_dim (int): MLP dimension.
 
+    200 response side effects:
+        - The config file used for Process Prophet is saved in the model path with the extension `.config.json`.
+        - The trained model is saved in the model path. 
+
+    400 Response:
+        - An object with the "error" key indicating what went wrong is sent.
+    
     Returns:
-        dict: The response contains the following and has the following side effects:
-        config: The config file used for Process Prophet.
         acc: The training accuracy achieved.
-        model: A base64 encoded PT file containing the model setup ready for importing.
     """
     if request.method == 'POST':
 
@@ -987,15 +1051,25 @@ def load_config_from_preprocessor(config : nn_manager.Config, preprocessor : pre
 @check_not_present_paths_factory(["save_path"])
 def replace_with_mode():
     """
-    Replaces NaN's in the activity column with the median.
-    Creates a filtered event log in the specified path.
+    Replaces NaN's in the activity column with the median to the event log in in `path_to_log`.
+    Creates a filtered event log in `save_path`.
+
+    The POST request must have the following parameters:
 
     Args:
         path_to_log (str): Path to the log used for training. Must not be encoded.
+        save_path (str): Path where the processed event log is exported.
         case_id (str): Name of the case id column.
         activity_key (str): Name of the activity column.
         timestamp_key (str): Name of the timestamp column.
-        save_path (str): Path where the processed event log is exported.
+
+        
+    200 Response sideffects: 
+        - The filtered event log is saved in `save_path`.
+
+
+    400 Response:
+        - An object with the "error" key indicating what went wrong is sent.
     """
     if request.method == 'POST':
         request_config = request.get_json()
@@ -1044,16 +1118,24 @@ def replace_with_mode():
 @check_not_present_paths_factory(["save_path"])
 def add_unique_start_end():
     """
-    Adds a unique start/end activity to the log.
+    Adds a unique start/end activity to the log in `path_to_log`.
 
-    A filtered event log is created in the given path.
+    A filtered event log is created in `save_path`.
+
+    The POST request must have the following parameters:
 
     Args:
         path_to_log (str): Path to the log used for training. Must not be encoded.
+        save_path (str): Path where the processed event log is exported.
         case_id (str): Name of the case ID column.
         activity_key (str): Name of the activity column.
         timestamp_key (str): Name of the timestamp column.
-        save_path (str): Path where the processed event log is exported.
+
+    200 Response sideffects: 
+        - The filtered event log is saved in `save_path`.
+
+    400 Response:
+        - An object with the "error" key indicating what went wrong is sent.
     """
     if request.method == 'POST':
         request_config = request.get_json()
@@ -1100,24 +1182,28 @@ def add_unique_start_end():
 @check_not_present_paths_factory(["save_path"])
 def remove_duplicates():
     """
-    Removes the duplicates from the event log.
+    Removes the duplicates from the event log in `path_to_log`.
 
     This function removes the rows where the same activity happened at the same time in the same case ID.
-    A filtered event log is created in the given save path.
+    A filtered event log is created in `save_path`.
+
+    The POST request must have the following parameters:
 
     Args:
         path_to_log (str): Path to the log used for training. Must not be encoded.
+        save_path (str): Path where the processed event log is exported.
         case_id (str): Name of the case ID column.
         activity_key (str): Name of the activity column.
         timestamp_key (str): Name of the timestamp column.
-        save_path (str): Path where the processed event log is exported.
 
     Returns:
         dict: A dictionary containing the save path of the processed event log.
 
-    Raises:
-        Exception: If there is an error while importing the log or removing duplicates.
-
+    200 Response sideffects: 
+        - The filtered event log is saved in `save_path`.
+        
+    400 Response:
+        - An object with the "error" key indicating what went wrong is sent.
     """
     if request.method == 'POST':
         request_config = request.get_json()
