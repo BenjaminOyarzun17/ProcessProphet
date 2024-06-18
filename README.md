@@ -13,6 +13,12 @@ We also provide an `API` to agilize integration with other frontend interfaces.
 A CLI in the form of a `terminal user interface` is also provided for endusers that just want to use our provided 
 functionalities. 
 
+RMTPP is based on the paper [Recurrent marked temporal point processes: Embedding event history to vector.(KDD 2016)](https://www.kdd.org/kdd2016/papers/files/rpp1081-duA.pdf), and the pytorch implementation was adapted from the [this repository](https://github.com/woshiyyya/ERPP-RMTPP.git).
+
+This is a project created for the lab `Process Discovery with Python` at RWTH Aachen. 
+
+
+
 # Integrate our backend into your application
 We implemented our backend using a flask backend. Therefore, the backend can also be integrated with 
 other frontend projects! If you are a frontend developer/data scientist willing to implement our backend
