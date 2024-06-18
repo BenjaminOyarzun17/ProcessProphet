@@ -161,7 +161,8 @@ def test():
 @check_required_paths_factory(['path_to_log', "petri_net_path"])
 def conformance():
     """
-    Path for conformance checking.
+    Applies a conformance checking algorithm on the given `petri_net_path` and the log in `path_to_log`. Currently only
+    token-based replay and alignment are supported. The conformance checking technique is selected by the `conformance_technique` parameter.
 
     The POST request must have the following parameters:
 
@@ -238,7 +239,10 @@ def conformance():
 @check_not_present_paths_factory(["petri_net_path"])
 def generate_predictive_process_model():
     """
-    Create a predictive process model, i.e., a petri net.
+    Create a predictive process model, i.e., a petri net using the predictive log in `path_to_log` and the given configuration.
+    The petri net is generated using process mining algorithms such as the alpha miner, heuristic miner, inductive miner, and prefix tree miner, 
+    which can be selected using the `selected_model` parameter. The petri net is saved in the `petri_net_path` and the config file is saved in the `petri_net_path.json`.
+
 
     The POST request must have the following parameters:
 
@@ -368,6 +372,9 @@ def generate_predictive_log():
     """
     Generates the predictive event log by cutting all traces using the given configuration
     and by extending these cut traces with predictions. The predictive log is exported in the given path.
+    The cutting can be done in two ways: either by cutting the last `cut_length` events from each trace or by cutting at a random sequence index,
+    and the predictions can be made until an end marking is reached or for a fixed number of iterations.
+    A pytorch model is used for making the predictions. The generated predictive log is saved in the `new_log_path`.
 
     The POST request must have the following parameters:
 
@@ -469,7 +476,8 @@ def generate_predictive_log():
 @check_integers_factory(["degree", "depth"])
 def multiple_prediction():
     """
-    Given a partial trace, carry out multiple predictions and generate a file containing the multiple predictions in the given path.
+    A model is used for making multiple predictions. The predictions are saved in the `prediction_file_name` file.
+    A tree like structure is generated with the predictions. The tree has a depth of `depth` and a branching degree of `degree`.
 
     The POST request must have the following parameters:
 
@@ -487,6 +495,8 @@ def multiple_prediction():
 
     200 response side effects:
         - The predictions are saved in the prediction file in the path `prediction_file_name`.
+        The generated object contains a "paths" key, which is a list of objects. 
+        Each object has a list of pairs (the sequence) and a probability.
 
     400 Response:
         - An object with the "error" key indicating what went wrong is sent.
@@ -558,7 +568,7 @@ def multiple_prediction():
 @check_required_paths_factory(['path_to_log', "config", "path_to_model"])
 def single_prediction():
     """
-    Given a partial trace, perform a single prediction.
+    Given a partial trace found in `path_to_log`, perform a single prediction.
 
     The POST request must have the following parameters:
 
@@ -641,7 +651,8 @@ def single_prediction():
 @check_not_present_paths_factory(["model_path"])
 def random_search():
     """
-    Carries out random search.
+    Apply random search on the given log in `path_to_log` for training and testing. 
+    The best model is saved in `model_path`. The parameters are listed below.
 
     The POST request must have the following parameters:
 
@@ -782,7 +793,7 @@ def random_search():
 @check_not_present_paths_factory(["model_path"])
 def grid_search():
     """
-    Carries out grid search. It only accepts POST requests. 
+    Apply grid search on the given log in `path_to_log` for training and testing. The best model is saved in `model_path`.
 
     The POST request must have the following parameters:
 
