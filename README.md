@@ -5,14 +5,14 @@
 We implemented our backend using a flask backend. Therefore, the backend can also be integrated with 
 other frontend projects! If you are a frontend developer/data scientist willing to implement our backend
 into your project, **check out the docs**!
-[documentation site](https://benjaminoyarzun17.github.io/ProcessProphet-SPP/)
+[documentation site](https://benjaminoyarzun17.github.io/ProcessProphet/)
 
 
 # CLI setup and installation
 We assume you have docker installed in your machine. Process prophet does support `CUDA`, however this driver must
 be configured manually in the `Dockerfile.servercuda`.
 
-## if not using CUDA
+## Run without CUDA
 First, build both containers and run them using docker compose:
 ```sh
 docker compose up --build
@@ -31,7 +31,7 @@ python CLI/main.py
 ```
 
 
-## if using CUDA
+## Run with CUDA
 First, make sure that you have the right CUDA drivers installed, and also edit the CUDA version in the `Dockerfile.servercuda`. 
 
 Run the following command to build and start both containers:
