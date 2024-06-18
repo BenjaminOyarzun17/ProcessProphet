@@ -21,13 +21,13 @@ TIMEOUT= int(os.getenv('TIMEOUT'))
 
 class ProcessProphetTrain: 
     """
-    this class provides three basic functions: 
-    - train RNN by setting params manually 
+    This class provides three basic functions:
+    - train RNN by setting params manually
     - train RNN using grid search
     - train RNN using random search
-    each one of these options generates a `.pt` file containing the pytorch model and a 
+    Each one of these options generates a `.pt` file containing the PyTorch model and a 
     `.config.json` file containing the RNN training configuration, encoders, and other data
-    relevant to process prophet. 
+    relevant to Process Prophet.
     """
     def __init__(self, pp):
         """
@@ -63,17 +63,15 @@ class ProcessProphetTrain:
 
     def start_training(self) : 
         """
-        carries out a training request. 
+        Carries out a training request.
 
-        on successful request completion the following side effects/ outputs are expected: 
-        :return model: a model `pt` file is saved in the models folder 
-        :return config: a models `config.json` information for the server is saved in the models folder
-        as a json file. 
+        On successful request completion, the following side effects/outputs are expected:
+        - `model`: A model `.pt` file is saved in the models folder.
+        - `config`: A model's `config.json` information for the server is saved in the models folder as a JSON file.
 
-        the training statistics (time error, accuracy, recall, f1 score)  are 
-        displayed on screen. 
+        The training statistics (time error, accuracy, recall, f1 score) are displayed on the screen.
 
-        if the training is unsuccessful, the error returned by the server is displayed on the CLI. 
+        If the training is unsuccessful, the error returned by the server is displayed on the CLI.
         """
         self.loading("preprocessing data...")
         input_logs_path= self.pp.state.input_logs_path
@@ -139,69 +137,64 @@ class ProcessProphetTrain:
 
     def set_training_params(self):
         """
-        user can either start the training with the displayed default parameters or alternatively adapt the parameters to their
-        own preference
+        Sets the training parameters for the model.
 
-        side effect:
-        -the modified parameters are stored in a container and then the training function is called
-        -parameters are displayed in the window
-        -second window to display the logs contained in this project as a visual aid
-        """ 
-        self.cuda=  ptg.InputField("True", prompt="use cuda: ")
+        This method allows the user to either start the training with the displayed default parameters or adapt the parameters
+        according to their own preference.
 
-        self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
-        self.seq_len=  ptg.InputField("10", prompt="sequence length: ")
-        self.emb_dim=  ptg.InputField("32", prompt="embedding dimension: ")
-        self.hid_dim=  ptg.InputField("32", prompt="hidden dimension: ")
-        self.mlp_dim=  ptg.InputField("16", prompt="mlp dimension: ")
-        self.epochs=  ptg.InputField("10", prompt="number of epochs: ")
-        self.batch_size=  ptg.InputField("1024", prompt="batch size: ")
-        
-        self.lr=  ptg.InputField("1e-3", prompt="learning rate: ")
-        self.split=  ptg.InputField("0.9", prompt="split fraction: ")
+        Side Effects:
+        - The modified parameters are stored in a container and then the training function is called.
+        - Parameters are displayed in the window.
+        - A second window is displayed to show the logs contained in this project as a visual aid.
+        """
+        self.cuda = ptg.InputField("True", prompt="use cuda: ")
+        self.model_name = ptg.InputField("f.pt", prompt="model name: ")
+        self.seq_len = ptg.InputField("10", prompt="sequence length: ")
+        self.emb_dim = ptg.InputField("32", prompt="embedding dimension: ")
+        self.hid_dim = ptg.InputField("32", prompt="hidden dimension: ")
+        self.mlp_dim = ptg.InputField("16", prompt="mlp dimension: ")
+        self.epochs = ptg.InputField("10", prompt="number of epochs: ")
+        self.batch_size = ptg.InputField("1024", prompt="batch size: ")
+        self.lr = ptg.InputField("1e-3", prompt="learning rate: ")
+        self.split = ptg.InputField("0.9", prompt="split fraction: ")
+        self.log_name = ptg.InputField("Hospital_log.xes", prompt="log name: ")
+        self.case_id_key = ptg.InputField("case:concept:name", prompt="case id key: ")
+        self.case_activity_key = ptg.InputField("concept:name", prompt="activity key: ")
+        self.case_timestamp_key = ptg.InputField("time:timestamp", prompt="timestamp key: ")
 
-        self.log_name=  ptg.InputField("Hospital_log.xes", prompt="log name: ")
-
-        self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
-        self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
-        self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
-
-        #: contains the form for setting the parameters
-        left_container = ptg.Container( 
-            ptg.Label(f"set parameters for training"),
+        # Contains the form for setting the parameters
+        left_container = ptg.Container(
+            ptg.Label(f"Set parameters for training"),
             SERVER_NAME,
-            self.cuda , 
-            self.model_name ,
-            self.seq_len ,
-            self.emb_dim ,
-            self.hid_dim ,
-            self.mlp_dim ,
-            self.lr ,
-            self.batch_size ,
-            self.epochs ,
-            self.split, 
+            self.cuda,
+            self.model_name,
+            self.seq_len,
+            self.emb_dim,
+            self.hid_dim,
+            self.mlp_dim,
+            self.lr,
+            self.batch_size,
+            self.epochs,
+            self.split,
             self.log_name,
-            self.case_id_key, 
-            self.case_activity_key, 
+            self.case_id_key,
+            self.case_activity_key,
             self.case_timestamp_key,
             "",
             ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.start_training())),
             "",
             ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.trainer_main_menu()))
         )
-        
-        logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
-        logs = logs[:min(len(logs),4 )] #: to not overflow the terminal
 
-        #: contains a list of the logs contained in the input logs path.
+        logs = [log for log in os.listdir(self.pp.state.input_logs_path)]
+        logs = logs[:min(len(logs), 4)]  # To not overflow the terminal
+
+        # Contains a list of the logs contained in the input logs path
         right_container = ptg.Container(
             f"[underline]First {len(logs)} logs in project:", *logs
         ).center()
 
-
-
-        window = ptg.Window(ptg.Splitter(left_container, right_container), width = self.pp.window_width)
-        #window = ptg.Window(*container)
+        window = ptg.Window(ptg.Splitter(left_container, right_container), width=self.pp.window_width)
         window.center()
         return window
 
@@ -356,17 +349,17 @@ class ProcessProphetTrain:
 
     def set_random_search_params(self):
         """
-        used to set the parameters for random search training alternative
+        Used to set the parameters for random search training alternative.
 
-        this function distinguishes between quick mode and advanced mode by giving more options to customize
-        the hyperparameters in the advanced mode whereas in the base mode only the most important parameters
-        can be modified by the user
+        This function distinguishes between quick mode and advanced mode by giving more options to customize
+        the hyperparameters in the advanced mode, whereas in the base mode only the most important parameters
+        can be modified by the user.
 
         Side effects:
-        -initializes window with default parameters where th user can adjust them
-        -initializes window where all the event logs of the current project are listed that can be used
-        for the training
-        -random search can be called if the user confirms the indicated parameters
+        - Initializes window with default parameters where the user can adjust them.
+        - Initializes window where all the event logs of the current project are listed that can be used
+          for the training.
+        - Random search can be called if the user confirms the indicated parameters.
         """
         if self.pp.mode == ProcessProphetMode.advanced:
             #: show all params in case of advanced mode
@@ -498,17 +491,17 @@ class ProcessProphetTrain:
 
     def set_grid_search_params(self):
         """
-        used to set the parameters for grid search training alternative
+        Used to set the parameters for grid search training alternative.
 
-        this function distinguishes between quick mode and advanced mode by giving more options to customize
-        the hyperparameters in the advanced mode whereas in the base mode only the most important parameters
-        can be modified by the user
+        This function distinguishes between quick mode and advanced mode by giving more options to customize
+        the hyperparameters in the advanced mode, whereas in the base mode only the most important parameters
+        can be modified by the user.
 
         Side effects:
-        -initializes window with default parameters where th user can adjust them
-        -initializes window where all the event logs of the current project are listed that can be used
-        for the training
-        -grid search can be called if the user confirms the indicated parameters
+        - Initializes window with default parameters where the user can adjust them.
+        - Initializes window where all the event logs of the current project are listed that can be used
+          for the training.
+        - Grid search can be called if the user confirms the indicated parameters.
         """
         if self.pp.mode == ProcessProphetMode.advanced:
             #: show all params in case of advanced mode

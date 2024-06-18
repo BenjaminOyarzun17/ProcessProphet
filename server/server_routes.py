@@ -1,5 +1,5 @@
 """
-This file contains all the supported server routes by ProcessProphet. 
+This module contains all the supported server routes by ProcessProphet. 
 """
 
 

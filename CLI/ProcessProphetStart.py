@@ -25,19 +25,20 @@ TIMEOUT= int(os.getenv('TIMEOUT'))
 
 class ProcessProphetStart: 
     """
-    this class defines the windows for the intial part of the programm, ie: 
+    This class defines the windows for the initial part of the program, i.e.:
     - project creation
     - project selection
     - user mode selection
-    it also sets the `pp.state` path variables once a project has been created/selected.  
+    It also sets the `pp.state` path variables once a project has been created/selected.
     """
     def __init__(self, pp, start:bool= True):
         """
-        initialize ProcessProphet Object and main menu
+        Initialize ProcessProphet Object and main menu.
 
-        :param pp: the ProcessProphet instance in charge of window management
-        :param start: if set to true, we start at the very beginning ie project selection/creation. 
-        otherwise we go straight into the manager selection. 
+        Args:
+            pp (ProcessProphet): The ProcessProphet instance in charge of window management.
+            start (bool, optional): If set to True, we start at the very beginning, i.e., project selection/creation. 
+                        Otherwise, we go straight into the manager selection. Defaults to True.
         """
         self.pp = pp
         if start: 
@@ -124,26 +125,25 @@ class ProcessProphetStart:
 
     def handle_project_name_input(self):
         """
-        exception if a new project is created with a name that is already used for another project in the projects directory
-            -> user can return to this previous menu to create a new project with a different name
+        Exception if a new project is created with a name that is already used for another project in the projects directory.
+        The user can return to the previous menu to create a new project with a different name.
 
-        If there is a valid input for the new project (unique name) then all of the necessary subdirectories are created where the 
-        files needed for the different functionalities of the application are stored e.g. a subdirectory for the input log on which
-        the RNN can then be trained
-            -> user can then continue and select the mode in which he wants to work in the new project
+        If there is a valid input for the new project (unique name), then all of the necessary subdirectories are created where the 
+        files needed for the different functionalities of the application are stored. For example, a subdirectory for the input log on which
+        the RNN can then be trained.
+        The user can then continue and select the mode in which they want to work in the new project.
 
-        At the same time, the state is update (see `ProcessProphetState`)        
+        At the same time, the state is updated (see `ProcessProphetState`).
 
-        we use the following filestructure: 
-        - `projects/` : contains all projects 
-        - `projects/dummy_project/` : contains all important subfolders for `dummy_project`
-        - `projects/dummy_project/input_logs` : all input logs used for `dummy_project` should be stored in this folder
-        - `projects/dummy_project/models` :  all models use for `dummy_project` are generated in this folder
-        - `projects/dummy_project/petri_nets` :  all petri nets used for `dummy_project` are stored here
-        - `projects/dummy_project/predictive_logs` : all generated predictive logs used for `dummy_project` and conformance checking are stored here.
-        - `projects/dummy_project/partial_traces` : all input partial traces given by the user are searched inside this folder.  
-        - `projects/dummy_project/multiple_predictions_path` : all predictions created using the multiple predictions function
-        are stored here (for the `dummy_project` project). 
+        We use the following file structure: 
+        - `projects/`: Contains all projects.
+        - `projects/dummy_project/`: Contains all important subfolders for `dummy_project`.
+        - `projects/dummy_project/input_logs`: All input logs used for `dummy_project` should be stored in this folder.
+        - `projects/dummy_project/models`: All models used for `dummy_project` are generated in this folder.
+        - `projects/dummy_project/petri_nets`: All petri nets used for `dummy_project` are stored here.
+        - `projects/dummy_project/predictive_logs`: All generated predictive logs used for `dummy_project` and conformance checking are stored here.
+        - `projects/dummy_project/partial_traces`: All input partial traces given by the user are searched inside this folder.  
+        - `projects/dummy_project/multiple_predictions_path`: All predictions created using the multiple predictions function are stored here (for the `dummy_project` project).
         """
         name = self.project_name_input.value
         message = ""

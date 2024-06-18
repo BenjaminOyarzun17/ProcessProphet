@@ -8,5 +8,9 @@ plugins:
   - mkdocstrings
 
 nav: 
-  - managers.md
-  - server_routes.md
+  - Home: index.md
+  - Docs:
+    - API documentation: server_routes.md
+    - Backend: managers.md
+    - RMTPP torch: RMTPP_torch.md
+    - CLI: CLI.md

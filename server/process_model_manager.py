@@ -1,14 +1,18 @@
 """
-This module implements all necessary functions so that conformance checking
-can be used to analyse fitness: 
-- first, each case of the event log is cut using one of the three supported alternatives
-(from tail, random cuts with end activity detection, and random cuts while remembering the 
-removed number of sequence steps). 
-- second, the cut event log is now reconstructed using the `prediction_manager`. this
-generates an event log that consists of past data and predictions. 
-- third, a process mining algorithm (the provided options by pm4py) and conformance checking algorithm (token based, alignment based) can be used over this new event log 
-to get the fitness.
-- this module allows petri net importing and exporting, and prediction decoding.
+This module implements all necessary functions for conformance checking and fitness analysis.
+
+Functions:
+    - cut_event_log_tail: Cuts each case in the event log from the tail.
+    - cut_event_log_random: Cuts each case in the event log at random indices.
+    - reconstruct_event_log: Reconstructs the event log using the prediction manager.
+    - process_mining: Applies a process mining algorithm to the reconstructed event log.
+    - conformance_checking_token_based: Performs token-based conformance checking on the reconstructed event log.
+    - conformance_checking_alignment_based: Performs alignment-based conformance checking on the reconstructed event log.
+    - import_petri_net: Imports a Petri net.
+    - export_petri_net: Exports a Petri net.
+    - decode_predictions: Decodes the predictions in the event log.
+
+This module allows for the analysis of fitness by cutting the event log, reconstructing it using predictions, and applying process mining and conformance checking algorithms.
 """
 import pm4py
 from server  import prediction_manager
@@ -93,12 +97,14 @@ class ProcessModelManager:
 
     def random_cutter(self, case_id_counts, max_len, cuts, input_sequences):
         """
-        cuts the each sequence contained in input sequences at random indices. 
-        :param cuts: the cut index and cut length are preserved
-        :param case_id_counts: number of rows for each case_id
-        :max_len: max length that the input sequence can have. can be set to improve runtime 
-        TODO: allow INF for max_len
-        :param input_sequences: list of sequences to be cut. 
+        Cuts each sequence contained in input_sequences at random indices.
+        
+        Args:
+            cuts (dict): The cut index and cut length are preserved.
+            case_id_counts (pd.Series): Number of rows for each case_id.
+            max_len (int): Max length that the input sequence can have. Can be set to improve runtime.
+                   TODO: allow INF for max_len.
+            input_sequences (list): List of sequences to be cut.
         """
         for i, case_id in enumerate(case_id_counts.index):
             count = case_id_counts.loc[case_id]
@@ -172,12 +178,13 @@ class ProcessModelManager:
         - for random cuts with cut memory: random_cuts to true and non_stop to false
         - for random cuts nonstop: random_cuts to true and non_stop totrue 
 
-        :param max len: max length for the cut sequences ie max sequence input size length.
-        :param upper:  upperbound for the non stop random cutter ie how long to run before reaching end state. 
-        :param non_stop: must be set to true if the predictions are done until reaching final marking.
-        :param random_cuts: set to true to cut in random indices. 
-        :param cut_length: in case of cutting fix tail lengths, select the tail length to cut for all sequences.
-        :param upper: upper bound for how many iterations a non stop iterative predictor should run.
+        Args:
+            max len: max length for the cut sequences ie max sequence input size length.
+            upper:  upperbound for the non stop random cutter ie how long to run before reaching end state. 
+            non_stop: must be set to true if the predictions are done until reaching final marking.
+            random_cuts: set to true to cut in random indices. 
+            cut_length: in case of cutting fix tail lengths, select the tail length to cut for all sequences.
+            upper: upper bound for how many iterations a non stop iterative predictor should run.
         """
         
         case_id_counts, cuts, input_sequences, cuts = self.initialize_variables()
@@ -270,11 +277,13 @@ class ProcessModelManager:
 
     def heuristic_miner(self,path,  dependency_threshold=0.5, and_threshold=0.65, loop_two_threshold=0.5, view= False):
         """
-        run heuristic miner on the predictive log and generate a petri net.
-        :param path: path used for saving the generated petri net. 
-        :param dependency_threshold: dependency threshold parameter for heursitic miner
-        :param and_threshold:  and threshold parameter for heursitic miner
-        :param loop_two_threshold:  loop two thrshold parameter for heursitic miner
+        Run heuristic miner on the predictive log and generate a petri net.
+
+        Args:
+            path (str): Path used for saving the generated petri net.
+            dependency_threshold (float): Dependency threshold parameter for heuristic miner.
+            and_threshold (float): AND threshold parameter for heuristic miner.
+            loop_two_threshold (float): Loop two threshold parameter for heuristic miner.
         """
         self.format_columns()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_heuristics(
@@ -302,9 +311,11 @@ class ProcessModelManager:
 
     def inductive_miner(self, path,   noise_threshold=0):
         """
-        run inductive miner on the predictive log and generate a petri net.
-        :param path: path used for saving the generated petri net. 
-        :param noise_threshold: noise threshold parameter for inductive miner
+        Run inductive miner on the predictive log and generate a petri net.
+
+        Args:
+            path (str): Path used for saving the generated petri net.
+            noise_threshold (float): Noise threshold parameter for inductive miner.
         """
         self.format_columns()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_inductive(
@@ -320,8 +331,10 @@ class ProcessModelManager:
 
     def alpha_miner(self, path):
         """
-        run alpha miner on the predictive log and generate a petri net.
-        :param path: path used for saving the generated petri net. 
+        Run alpha miner on the predictive log and generate a petri net.
+
+        Args:
+            path (str): Path used for saving the generated petri net.
         """
         self.format_columns()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_alpha(
@@ -336,8 +349,10 @@ class ProcessModelManager:
 
     def prefix_tree_miner(self, path):
         """
-        run prefix tre miner on the predictive log and generate a petri net.
-        :param path: path used for saving the generated petri net. 
+        Run prefix tree miner on the predictive log and generate a petri net.
+
+        Args:
+            path (str): Path used for saving the generated petri net.
         """
         self.format_columns()
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_prefix_tree(
@@ -349,12 +364,7 @@ class ProcessModelManager:
         #pm4py.view_petri_net(self.petri_net, self.initial_marking, self.final_marking, format='svg')
         pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking , file_path=path)
         pm4py.save_vis_petri_net(self.petri_net, self.initial_marking, self.final_marking, file_path = path+".png")
-        '''
-        might be irrelevant as we require to always have a case_identifier in the log input 
-        -> correlation miner only useful if we do not have or know the case_identifier
-        def correlation_miner(self):
-        pass
-        '''
+       
 
     def conformance_checking_token_based_replay(self):
         replayed_traces = pm4py.conformance_diagnostics_token_based_replay(

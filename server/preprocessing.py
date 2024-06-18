@@ -1,16 +1,16 @@
 """
 this module is in charge of: 
-- supporting event log imports from xes/csv files. 
-- formatting the event log so that it can be later on used by the `nn_manager` module. 
-in particular, the timestamps are encoded as integers, the case id's and activity names
-are encoded, and the rows are sorted by case id and timestamp. Splitting the event log in 
-training and testing sublogs is also supported. 
-- the preprocessor also calculates important values such as the number of activities and 
-absolute frequency distribution, which are also required by the neural network's training. 
-- formatting is done automatically after importing, but this can also be deselected by 
-setting the corresponding parameter. 
-- other preprocessing operations are supported, such as replacing NaN values, adding a unique
-start / end activity to the log, and removing duplicate rows. 
+    - supporting event log imports from xes/csv files. 
+    - formatting the event log so that it can be later on used by the `nn_manager` module. 
+    in particular, the timestamps are encoded as integers, the case id's and activity names
+    are encoded, and the rows are sorted by case id and timestamp. Splitting the event log in 
+    training and testing sublogs is also supported. 
+    - the preprocessor also calculates important values such as the number of activities and 
+    absolute frequency distribution, which are also required by the neural network's training. 
+    - formatting is done automatically after importing, but this can also be deselected by 
+    setting the corresponding parameter. 
+    - other preprocessing operations are supported, such as replacing NaN values, adding a unique
+    start / end activity to the log, and removing duplicate rows. 
 
 Note that this module does not bring the event log in the input format
 for the RNN. this is done by the module `util.py` in the subpackage
@@ -81,17 +81,18 @@ class Preprocessing:
             self.import_event_log_csv(path, sep, formatting)
 
 
-    def import_event_log_xes(self, path, formatting = True): 
+    def import_event_log_xes(self, path, formatting=True):
         """
-        :param path: path where the xes file is found
-        :param case_id: column name for the case id column.
-        :param activity_key: column name for the marker column 
-        :param timestamp_key: column name for the timestamp column
-        effects:  
-        - event_df dataframe is generated. 
-        - the generated dataframe has 3 columns two of type string (case id, label) and one of type
-        datatime64.
-        - event log object: its correctnes is assumed from the pm4py lib and is therefore not tested
+        Imports an event log in XES format.
+
+        Args:
+        path (str): Path to the XES file.
+        formatting (bool, optional): If True, the event log is formatted so that it can be used by the RNN. Defaults to True.
+
+        Effects:
+        - event_df dataframe is generated.
+        - The generated dataframe has 3 columns: case id (string), label (string), and timestamp (datetime64).
+        - event log object: its correctness is assumed from the pm4py library and is therefore not tested.
         """
         self.event_df = pm4py.read.read_xes(path)
         self.event_df = pm4py.convert_to_dataframe(self.event_df)
@@ -100,14 +101,12 @@ class Preprocessing:
 
     def import_event_log_csv(self, path, sep, formatting = True): 
         """
-        this is an adapter for format_dataframe such that 
-        the event data can be properly used by the rnn model. 
+        This is an adapter for format_dataframe such that the event data can be properly used by the RNN.
 
-        :param path: path to the event log
-        :param case_id: case id column name
-        :param activity_key: activity column name
-        :param timestamp_key: timestamp column name
-        :param sep: separator
+        Args:
+            path (str): Path to the event log.
+            sep (str): Separator.
+            formatting (bool, optional): If True, the event log is formatted so that it can be used by the RNN. Defaults to True.
         """
         self.event_df= pd.read_csv(path, sep=sep)
         self.import_event_log(formatting)
@@ -115,16 +114,13 @@ class Preprocessing:
 
     def import_event_log_dataframe(self,df, case_id, activity_key, timestamp_key, formatting = True):
         """
-        this is an adapter for format_dataframe such that 
-        the event data can be properly used by the rnn model. 
+        This is an adapter for format_dataframe such that the event data can be properly used by the RNN model.
 
-        this is for the case that the data has already been imported, ie there already exists a 
-        memory instance of the event log. 
-
-        :param path: path to the event log
-        :param case_id: case id column name
-        :param activity_key: activity column name
-        :param timestamp_key: timestamp column name
+        Args:
+            path (str): Path to the event log.
+            case_id (str): Case id column name.
+            activity_key (str): Activity column name.
+            timestamp_key (str): Timestamp column name.
         """
         self.event_df = df
         self.case_id_key =  case_id
@@ -140,7 +136,7 @@ class Preprocessing:
         - remove all columns other than the three main ones
         - remove all NaN entries
         - format a dataframe using pm4py 
-        effects: 
+        Effects: 
         - rows sorted by case id and timestamp
         """
         #: returns a formated dataframe that can work with other pm4py functions
@@ -241,12 +237,12 @@ class Preprocessing:
     def split_train_test(self, train_percentage):
         """
         This is a helper function for splitting the event log into training and testing data.
-        The code is based on the pm4py ml.split_train_test function, but contains only the implementation for pd.dataframes.
-        We don't use the pm4py implementation because it requires the timestamp to be in datetime format, which is not the case for our implementation.
 
-        :param train_percentage: what percentage should be used for training
-        :returns: two event logs, one for training and one for training (dataframes). the number of classes (for the markers) also returned. the absolute
-        frequence distribution for each class in the whole event log. 
+        Args:
+            train_percentage (float): The percentage of data to be used for training.
+
+        Returns:
+            tuple: A tuple containing two event logs (dataframes) for training and testing, the number of classes (for the markers), and the absolute frequency distribution for each class in the whole event log.
         """
         if train_percentage>=1 or train_percentage<=0: 
             raise exceptions.TrainPercentageTooHigh()

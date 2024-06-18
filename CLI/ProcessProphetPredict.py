@@ -16,11 +16,10 @@ TIMEOUT= int(os.getenv('TIMEOUT'))
 class ProcessProphetPredict: 
     def __init__(self, pp):
         """
-        initialize ProcessProphet instance and prediction main menu
-        other state parameters that make sense in the context of prediction generation might also be saved 
-        here
+        Initializes a ProcessProphetPredict instance and prediction main menu.
 
-        :param pp: the ProcessProphet instance in charge of window management 
+        Args:
+            pp (ProcessProphet): The ProcessProphet instance in charge of window management.
         """
         self.pp = pp
         self.pp.switch_window(self.prediction_main_menu())
@@ -148,10 +147,10 @@ class ProcessProphetPredict:
     
     def get_multiple_prediction(self) : 
         """
-        carries out a multiple prediction request. 
+        Carries out a multiple prediction request.
 
-        side effects/ outputs: 
-        markers and timestamps of the multiple prediction are displayed in a seperate file
+        Side effects/outputs:
+        - Markers and timestamps of the multiple prediction are displayed in a separate file.
         """
         self.loading("predicting next event...")
         input_logs_path= self.pp.state.partial_traces_path

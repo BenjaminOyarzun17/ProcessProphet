@@ -1,16 +1,16 @@
 """
-This module is in charge of administrating prediction generation.  
+This module is in charge of administrating prediction generation.
 
-In particular, two kinds of predictions can be made: 
-- single predictions (one step in the future and get the most likely (event, timestamp) pair) 
+In particular, two kinds of predictions can be made:
+- single predictions (one step in the future and get the most likely (event, timestamp) pair)
 - multiple predictions (generate a predictive tree). these can be saved in a file.
 
-predictions are also decoded. 
+predictions are also decoded.
 
-This module is also used by the `process_model_manager` module, which calls the multiple 
-prediction manager repeatedly. Since this other manager supports different options in 
+This module is also used by the `process_model_manager` module, which calls the multiple
+prediction manager repeatedly. Since this other manager supports different options in
 relation to how the cut sequences should be restored, the parametrized function
-`multiple_prediction_linear` is implemented; which grants some runtime benefits. 
+`multiple_prediction_linear` is implemented; which grants some runtime benefits.
 
 """
 
@@ -32,28 +32,31 @@ import torch
 
 
 class PredictionManager: 
-    def __init__(self, model, case_id_key, activity_key, timestamp_key, config ):
+    def __init__(self, model, case_id_key, activity_key, timestamp_key, config):
         """
-        :param model: the model used for doing predictions
-        :param case_id_key: case id key of the log 
-        :param activity_key: activity key of the log
-        :param timestamp_key: timestamp key of the log
-        :param config: configuration used for training and important hyperparams.
+        Initializes the PredictionManager object.
+
+        Args:
+            model (object): The model used for doing predictions.
+            case_id_key (str): The case id key of the log.
+            activity_key (str): The activity key of the log.
+            timestamp_key (str): The timestamp key of the log.
+            config (dict): The configuration used for training and important hyperparameters.
         """
-        self.model =model  #: we assume there is an already existing model
-        self.case_id_key = case_id_key # we assume the three important columns are known
+        self.model = model  # We assume there is an already existing model.
+        self.case_id_key = case_id_key  # We assume the three important columns are known.
         self.activity_key = activity_key
         self.timestamp_key = timestamp_key
         self.config = config
-        
+
         self.current_case_id = None
         self.paths = []
-        self.decoded_paths= []
+        self.decoded_paths = []
         self.encoded_df = None
         self.recursive_event_seqs = []
         self.recursive_time_seqs = []
-        self.recursive_time_diffs= []
-        self.end_activities= {}
+        self.recursive_time_diffs = []
+        self.end_activities = {}
 
 
     def get_dummy_process(self, df, case_id_column):
@@ -155,12 +158,14 @@ class PredictionManager:
 
     def append_one_difference_array(self, lst):
         """
-        appends one difference array to self.recursive_time_diffs 
-        :param lst: list use for calculating the contiguous differences. 
+        Appends one difference array to self.recursive_time_diffs.
+
+        Args:
+            lst (list): List used for calculating the contiguous differences.
         """
-        #: extend the list by one element
+        #: Extend the list by one element
         time = np.array([lst[0]]+ lst)
-        #: get the differrnces between contiguous elements.
+        #: Get the differences between contiguous elements.
         time = np.diff(time)
         self.recursive_time_diffs= np.append(self.recursive_time_diffs, [time], axis = 0)
         
@@ -191,25 +196,28 @@ class PredictionManager:
             self.linear_iterative_predictor(depth, c_t, c_e)
         
 
-    def linear_iterative_predictor_non_stop(self, start_time, start_event, upper=float("inf")): 
+    def linear_iterative_predictor_non_stop(self, start_time, start_event, upper=float("inf")):
         """
-        :param start_time: used to mark the start of the path 
-        :param start_event: used to mark the start of the path
-        :param upper: upper bound for the amount of iterations
+        Predicts the path of events iteratively until an end activity is found or the upper bound is reached.
+
+        Args:
+            start_time (float): The start time of the path.
+            start_event: The start event of the path.
+            upper (float, optional): The upper bound for the amount of iterations. Defaults to float("inf").
         """
         c_t = start_time
         c_e = start_event
-        path = [(c_t , (1,c_e))]
+        path = [(c_t, (1, c_e))]
         i = 0
-        while not self.end_activities[c_e] and i<upper: #stop if end activity found or upper bound crossed
-            p_t, p_events = self.get_sorted_wrapper() #get prediction
-            p_pair = p_events[0] #get pair (prob, event)
-            path.append((p_t[0], (p_pair[0], p_pair[1] ))) #save to path
-            self.append_to_log(p_t[0], p_pair[1]) #update log for recusrive call
+        while not self.end_activities[c_e] and i < upper:
+            p_t, p_events = self.get_sorted_wrapper()
+            p_pair = p_events[0]
+            path.append((p_t[0], (p_pair[0], p_pair[1])))
+            self.append_to_log(p_t[0], p_pair[1])
             c_t = p_t[0]
             c_e = p_pair[0]
-            i+=1
-        self.paths.append(path) #save generated path 
+            i += 1
+        self.paths.append(path)
     
 
     def linear_iterative_predictor(self, depth, start_time, start_event): 
@@ -228,29 +236,33 @@ class PredictionManager:
         self.paths.append(path)
 
     def multiple_prediction(self, depth, degree): 
-        """
-        get a list of possible paths starting at the last 
-        timestamp and event pair.  
-        :param depth: how many steps in the future are to be predicted.
-        :param degree: how many predictions on each step are to be considered.
-        :param config: configuration used for the NN. required by ATM Dataset
-        """
-        c_t =self.encoded_df[self.timestamp_key].iloc[-1]
-        c_e =self.encoded_df[self.activity_key].iloc[-1]
+            """
+            Get a list of possible paths starting at the last timestamp and event pair.
 
-        #:load data, get windows
-        self.recursive_atm = RMTPP_torch.ATMDataset(self.config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
-        self.recursive_time_seqs = self.recursive_atm.time_seqs
-        self.recursive_event_seqs = self.recursive_atm.event_seqs
+            Args:
+                depth (int): The number of steps in the future to be predicted.
+                degree (int): The number of predictions on each step to be considered.
 
-        #:get differences
-        self.recursive_time_diffs= self.get_differences()
+            
+            This method loads data, gets windows, computes paths, and decodes paths.
+            It requires the configuration used for the NN, which is required by the ATM Dataset.
+            """
+            c_t = self.encoded_df[self.timestamp_key].iloc[-1]
+            c_e = self.encoded_df[self.activity_key].iloc[-1]
 
-        #: compute paths
-        self.backtracking_prediction_tree(c_t, c_e, 0,depth, degree,[(c_t, (1, c_e))]) 
-        
-        #: decode paths
-        self.decode_paths()
+            #:load data, get windows
+            self.recursive_atm = RMTPP_torch.ATMDataset(self.config, self.encoded_df, self.case_id_key, self.timestamp_key, self.activity_key, True)
+            self.recursive_time_seqs = self.recursive_atm.time_seqs
+            self.recursive_event_seqs = self.recursive_atm.event_seqs
+
+            #:get differences
+            self.recursive_time_diffs = self.get_differences()
+
+            #: compute paths
+            self.backtracking_prediction_tree(c_t, c_e, 0, depth, degree, [(c_t, (1, c_e))]) 
+            
+            #: decode paths
+            self.decode_paths()
 
 
     def backtracking_prediction_tree(self, c_t, c_e, c_d, depth, degree,current_path):
@@ -304,11 +316,11 @@ class PredictionManager:
 
     def append_to_log(self, time, event): 
         """
-        instead of calling ATMDataset and Dataloader on each iterative call 
-        of the prediction generator, just append a window and a difference array
-        to an existing list.  
-        :param time: newly predicted timestamp
-        :param event: newly predicted event 
+        Appends a window and a difference array to an existing list instead of calling ATMDataset and Dataloader on each iterative call of the prediction generator.
+
+        Args:
+            time (float): The newly predicted timestamp.
+            event: The newly predicted event.
         """
         last_time_seq = list(self.recursive_time_seqs[-1])
         last_event_seq = list(self.recursive_event_seqs[-1])
