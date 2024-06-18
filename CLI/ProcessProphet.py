@@ -93,21 +93,27 @@ class ProcessProphet(metaclass = SingletonMeta):
 
     def set_current_window(self, window): 
         """
-        sets the current window
-        :param window: window object, the new window.
+        Sets the current window.
+
+        Args:
+            window (object): The new window.
         """
         self.current_window = window 
     def remove_current_window(self): 
         """
-        removes the current window
-        :param window: window object, the new window.
+        Removes the current window.
+
+        Args:
+            window (object): The new window.
         """
         self.manager.remove(self.current_window)
 
     def switch_window(self, new_window):
         """
-        in charge of switching windows.  
-        :param new_window: the new window. 
+        In charge of switching windows.
+
+        Args:
+            new_window (object): The new window.
         """
         with ptg.YamlLoader() as loader: #: loads the styles from `styles.yaml`
             loader.load(CONFIG)

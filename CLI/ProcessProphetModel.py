@@ -16,15 +16,15 @@ TIMEOUT= int(os.getenv('TIMEOUT'))
 
 
 class ProcessProphetModel:
-    """
-    initialize ProcessProphet instance and model main menu
-
-    :param pp: the ProcessProphet instance in charge of window management 
-    """
+    
     def __init__(self, pp):
         """
-        other state parameters that make sense in the context of conformance checking might also be saved 
-        here
+        Initialize ProcessProphet instance and model main menu.
+
+        Args:
+            pp (ProcessProphet): The ProcessProphet instance in charge of window management.
+        
+        Other state parameters that make sense in the context of conformance checking might also be saved here.
         """
         self.pp = pp
         self.pp.switch_window(self.model_main_menu())
@@ -72,13 +72,13 @@ class ProcessProphetModel:
 
     def get_predictive_log(self): 
         """
-        sends a request to create a predictive log to the server with the previously confirmed
-        parameters
+        Sends a request to create a predictive log to the server with the previously confirmed
+        parameters.
 
-        side effects:
-        -predictive log that the RNN computed is stored in the predictive_logs directory of the current project
-        and user can return to previous menus
-        -if unsuccessful an error is indicated and the user can return to the model menu
+        Side effects:
+        - The predictive log that the RNN computed is stored in the predictive_logs directory of the current project,
+          and the user can return to previous menus.
+        - If unsuccessful, an error is indicated and the user can return to the model menu.
         """
         self.loading("preprocessing data...")
         #: check the file type of the input log
@@ -132,13 +132,12 @@ class ProcessProphetModel:
 
     def set_predictive_log(self):
         """
-        user can either start generating a predictive log with the displayed default parameters or alternatively adapt the parameters to their
-        own preference
+        User can either start generating a predictive log with the displayed default parameters or alternatively adapt the parameters to their
+        own preference.
 
-        side effect:
-        -the modified parameters are stored in a container and then the function for creating a
-        predictive log is called
-        -parameters are displayed in the window
+        Side effects:
+        - The modified parameters are stored in a container and then the function for creating a predictive log is called.
+        - Parameters are displayed in the window.
         """
         if self.pp.mode== ProcessProphetMode.advanced:
             self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
@@ -205,13 +204,12 @@ class ProcessProphetModel:
 
     def get_process_mining(self):
         """
-        sends a process mining request to the server with the previously confirmed
-        parameters
+        Sends a process mining request to the server with the previously confirmed parameters.
 
-        side effects:
-        -petri net that the mining algorithm computed is stored in the models directory of the current project
-        and user can return to previous menus
-        -if unsuccessful an error is indicated and the user can return to the model menu
+        Side effects:
+        - The petri net that the mining algorithm computed is stored in the models directory of the current project,
+          and the user can return to previous menus.
+        - If unsuccessful, an error is indicated and the user can return to the model menu.
         """
         self.loading("preprocessing data...")
         params = {
@@ -263,14 +261,14 @@ class ProcessProphetModel:
 
     def set_process_mining(self):
         """
-        user can either start the mining with the displayed default parameters or alternatively adapt the parameters to their
-        own preference (e.g. select different mining algorithm)
+        User can either start the mining with the displayed default parameters or alternatively adapt the parameters to their
+        own preference (e.g. select different mining algorithm).
 
-        modes are not differentiated under this option. 
+        Modes are not differentiated under this option.
 
-        side effect:
-        -the modified parameters are stored in a container and then the mining function is called
-        -parameters are displayed in the window
+        Side effects:
+        - The modified parameters are stored in a container and then the mining function is called.
+        - Parameters are displayed in the window.
         """
         self.model_name=  ptg.InputField("f.pt", prompt="model config: ")
         self.log_name=  ptg.InputField("predicitive_log1.csv", prompt="log name: ")
@@ -308,13 +306,11 @@ class ProcessProphetModel:
 
     def get_conformance_checking(self):
         """
-        sends a conformance checking request to the server with the previously confirmed
-        parameters
+        Sends a conformance checking request to the server with the previously confirmed parameters.
 
-        side effects:
-        -fitness of that the conformance checking algorithm computed is displayed and user can return to 
-        previous menus
-        -if unsuccessful an error is indicated and the user can return to the model menu
+        Side effects:
+        - The fitness that the conformance checking algorithm computed is displayed and the user can return to previous menus.
+        - If unsuccessful, an error is indicated and the user can return to the model menu.
         """
         self.loading("preprocessing data...")
 
@@ -362,14 +358,14 @@ class ProcessProphetModel:
 
     def set_conformance_checking(self):
         """
-        user can either start the conformance checking with the displayed default parameters or alternatively adapt the parameters to their
-        own preference (e.g. select different conformance checking algorithm)
+        User can either start the conformance checking with the displayed default parameters or alternatively adapt the parameters to their
+        own preference (e.g. select different conformance checking algorithm).
 
-        modes are not differentiated for this option.
+        Modes are not differentiated for this option.
 
-        side effect:
-        -the modified parameters are stored in a container and then the conformance checking function is called
-        -parameters are displayed in the window
+        Side effects:
+        - The modified parameters are stored in a container and then the conformance checking function is called.
+        - Parameters are displayed in the window.
         """
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
         self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")

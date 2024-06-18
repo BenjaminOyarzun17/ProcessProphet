@@ -19,39 +19,35 @@ TIMEOUT= int(os.getenv('TIMEOUT'))
 class ProcessProphetPreprocessing: 
     def __init__(self, pp):
         """
-        initialize ProcessProphet Object and Preprocessing main menu
+        Initializes a ProcessProphetPreprocessing object and sets up the preprocessing main menu.
 
-        :param pp: the ProcessProphet instance in charge of window management 
+        Args:
+            pp (ProcessProphet): The ProcessProphet instance in charge of window management.
         """
-        self.pp = pp #: reference to the ProcessProphet object
-        self.pp.switch_window(self.preprocessing_main_menu()) #: starts with the preprocessing main menu
-
-
+        self.pp = pp  # Reference to the ProcessProphet object
+        self.pp.switch_window(self.preprocessing_main_menu())  # Starts with the preprocessing main menu
+    
 
     #: this decorator is used for type checking
     @staticmethod
     def check_types(func):
         """
-        decorator that can be called to check if the file is an
-        excepted file type (xes/csv) and the file also exists in
-        the directory of the project
+        Decorator that checks if the file is an accepted file type (xes/csv) and if the file exists in the project directory.
 
-        :func: the function that check_types decorates
+        Args:
+            func: The function that `check_types` decorates.
 
-        side effect:
-        if the restrictions are not followed a new window with the
-        corresponding error is indicated
+        Returns:
+            The decorated function.
+
+        Side effects:
+            If the file type or existence restrictions are not followed, a new window with the corresponding error is indicated.
         """
         def wrapper(self, *args, **kwargs):
             """
             first it checks if the file is an excepted file type 
             (xes/csv) and the file also exists in the directory of 
             the project and then calls the original function
-
-            :*args:, :**kwargs: parameters to store an unspecified 
-            number auf arguments and keyword arguments because we dont
-            necessarily know how many arguments the function we call the
-            decorator on needs
             """
             if self.log_name.value[-3:]!="xes" and self.log_name.value[-3:] != "csv":
                 # error if file is in the wrong file type 
@@ -264,17 +260,16 @@ class ProcessProphetPreprocessing:
 
     def add_unique_start_end(self):
         """
-        This function indicates all the parameters that are needed to add unique start
-        and end activities to each trace and the user can modify them in the left side of the window
+        Indicates all the parameters needed to add unique start and end activities to each trace.
 
-        The function also indicates the first few Log file names in the current project on
-        the right side of the window
+        The user can modify these parameters in the left side of the window.
+
+        The function also displays the first few Log file names in the current project on the right side of the window.
 
         Side effects:
-        -initializes window with default parameters where the user can adjust them
-        -initializes window where all the event logs of the current project are listed that can be used
-        for the preprocessing
-        -add_unique_start_end can be called if the user confirms the indicated parameters
+        - Initializes a window with default parameters where the user can adjust them.
+        - Initializes a window where all the event logs of the current project are listed for preprocessing.
+        - Calls the `add_unique_start_end` function if the user confirms the indicated parameters.
         """ 
         self.log_name=  ptg.InputField("Hospital_log.xes", prompt="log name: ")
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
@@ -313,16 +308,16 @@ class ProcessProphetPreprocessing:
     def remove_duplicates(self):
         """
         This function indicates all the parameters that are needed to remove duplicate rows
-        and the user can modify them in the left side of the window
+        and the user can modify them in the left side of the window.
 
         The function also indicates the first few Log file names in the current project on
-        the right side of the window
+        the right side of the window.
 
         Side effects:
-        -initializes window with default parameters where the user can adjust them
-        -initializes window where all the event logs of the current project are listed that can be used
-        for the preprocessing
-        -remove_duplicates can be called if the user confirms the indicated parameters
+        - Initializes a window with default parameters where the user can adjust them.
+        - Initializes a window where all the event logs of the current project are listed that can be used
+          for the preprocessing.
+        - Calls the `remove_duplicates` function if the user confirms the indicated parameters.
         """ 
         self.log_name=  ptg.InputField("Hospital_log.xes", prompt="log name: ")
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
@@ -360,16 +355,16 @@ class ProcessProphetPreprocessing:
     def replace_nan_with_mode(self):
         """
         This function indicates all the parameters that are needed to replace NaN values
-        and the user can modify them in the left side of the window
+        and the user can modify them in the left side of the window.
 
         The function also indicates the first few Log file names in the current project on
-        the right side of the window
+        the right side of the window.
 
         Side effects:
-        -initializes window with default parameters where the user can adjust them
-        -initializes window where all the event logs of the current project are listed that can be used
-        for the preprocessing
-        -replace_nan_with_mode can be called if the user confirms the indicated parameters
+        - Initializes a window with default parameters where the user can adjust them.
+        - Initializes a window where all the event logs of the current project are listed that can be used
+          for the preprocessing.
+        - Calls the `replace_nan_with_mode` function if the user confirms the indicated parameters.
         """ 
         self.log_name=  ptg.InputField("Hospital_log.xes", prompt="log name: ")
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
@@ -406,15 +401,15 @@ class ProcessProphetPreprocessing:
 
     def preprocessing_main_menu(self):
         """
-        this function displays the main menu for the preprocessing manager. 
+        Displays the main menu for the preprocessing manager.
 
-        depending on how the data should be preprocessed the user can choose
-        one of the three alternatives
-            1. replacing NaN values in the log
-            2. removing duplicate rows in the log
-            3. adding unique start and end activities to each trace
+        Depending on how the data should be preprocessed, the user can choose
+        one of the three alternatives:
+            1. Replacing NaN values in the log.
+            2. Removing duplicate rows in the log.
+            3. Adding unique start and end activities to each trace.
 
-        it is also possible to return to the previous menu.
+        It is also possible to return to the previous menu.
         """
         replace = f"{self.pp.button_color}replace NaN in activity column with mode"
         remove= f"{self.pp.button_color}remove duplicate rows"

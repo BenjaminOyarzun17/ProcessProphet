@@ -107,14 +107,15 @@ class Net(nn.Module):
     
     def predict(self, batch, pm_active = False):
         """
-        make a prediction
-        :param batch: a batch containing possible more than 
-        :param pm_active: returns only the most likely prediction
-        one input for doing one or more predictions
-        :return:  returns two lists. the first one contains
-        the timestamps of the predictions
-        the second list the index (encoded marker) of the event that has the
-        highest probability.
+        Make a prediction.
+
+        Args:
+            batch (tuple): A batch containing one or more inputs for doing predictions.
+            pm_active (bool): If True, returns only the most likely prediction.
+
+        Returns:
+            tuple or int: If pm_active is True, returns a tuple containing the index (encoded marker) of the event that has the highest probability, the maximum probability, and the last time prediction. 
+                  If pm_active is False, returns two lists. The first list contains the timestamps of the predictions, and the second list contains the index (encoded marker) of the event that has the highest probability.
         """
         time_tensor, event_tensor = batch
         #make sure to cut out the last event/timestamp from each sequence: 
@@ -139,15 +140,13 @@ class Net(nn.Module):
 
     def predict_sorted(self, batch): 
         """
-        make a prediction
-        :param batch: a batch containing possible more than 
-        one input for doing one or more predictions
-        :return: returns two lists. the first one contains
-        the timestamps of the predictions
-        the second list contains tuples of form `(probability, event_index)`
-        this second list is sorted in descending order. Hence the 
-        first event has the highest probability. The `event_index` corresponds
-        to the encoding of a marker.
+        Make a prediction.
+
+        Args:
+            batch (tuple): A batch containing one or more inputs for doing predictions.
+
+        Returns:
+            tuple: A tuple containing two lists. The first list contains the timestamps of the predictions, and the second list contains tuples of the form `(probability, event_index)`. This second list is sorted in descending order, with the event with the highest probability at the beginning. The `event_index` corresponds to the encoding of a marker.
         """
         time_tensor, event_tensor = batch
         #make sure to cut out the last event/timestamp from each sequence: 

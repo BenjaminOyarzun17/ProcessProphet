@@ -101,8 +101,9 @@ class ATMDataset:
     @staticmethod
     def to_features(batch):
         """
-        :return: two tensors, one containing the time differences
-        between adjacent time stamps and the other one the events.  
+        Returns:
+            Two tensors: one containing the time differences between adjacent time stamps
+            and the other one containing the events.
         """
         times, events = [], []
         for time, event in batch:

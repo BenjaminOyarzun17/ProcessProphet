@@ -116,46 +116,46 @@ class NNManagement:
 
 
     def evaluate(self):
-        """
-        this is the testing function for the model. 
-        it prints out the time_error, precision, recall and f1 score.
-        :return: time_error, acc, recall, f1
-        """
-        #: main testing function
-        self.model.eval()
-        pred_times, pred_events = [], [] #inputs/training data
-        gold_times, gold_events = [], [] #targets
-        
+            """
+            This is the testing function for the model. It prints out the time_error, precision, recall, and f1 score.
 
-        for i, batch in enumerate(tqdm(self.test_loader)):
-            #batch: pair with two tensors, each containing respectively the time and event data.  
-            gold_times.append(batch[0][:, -1].numpy()) # extract for each sequence the last time stamp/ the last event
-            gold_events.append(batch[1][:, -1].numpy())
-            pred_time, pred_event = self.model.predict(batch)
-            if np.isnan(pred_times).any():
-                raise exceptions.NaNException()
-            pred_times.append(pred_time)
-            pred_events.append(pred_event)
+            Returns:
+                time_error (float): The time error.
+                acc (float): The accuracy.
+                recall (float): The recall.
+                f1 (float): The F1 score.
+            """
+            #: main testing function
+            self.model.eval()
+            pred_times, pred_events = [], [] #inputs/training data
+            gold_times, gold_events = [], [] #targets
+            
+            for i, batch in enumerate(tqdm(self.test_loader)):
+                #batch: pair with two tensors, each containing respectively the time and event data.  
+                gold_times.append(batch[0][:, -1].numpy()) # extract for each sequence the last time stamp/ the last event
+                gold_events.append(batch[1][:, -1].numpy())
+                pred_time, pred_event = self.model.predict(batch)
+                if np.isnan(pred_times).any():
+                    raise exceptions.NaNException()
+                pred_times.append(pred_time)
+                pred_events.append(pred_event)
 
-           
+            pred_times = np.concatenate(pred_times).reshape(-1)
+            print(type(pred_times))
+            gold_times = np.concatenate(gold_times).reshape(-1)
+            pred_events = np.concatenate(pred_events).reshape(-1)
+            gold_events = np.concatenate(gold_events).reshape(-1)
+            self.time_error = RMTPP_torch.abs_error(pred_times, gold_times)  #compute errors
 
-        pred_times = np.concatenate(pred_times).reshape(-1)
-        print(type(pred_times))
-        gold_times = np.concatenate(gold_times).reshape(-1)
-        pred_events = np.concatenate(pred_events).reshape(-1)
-        gold_events = np.concatenate(gold_events).reshape(-1)
-        self.time_error = RMTPP_torch.abs_error(pred_times, gold_times)  #compute errors
-
-
-        self.acc, self.recall, self.f1 = RMTPP_torch.clf_metric(pred_events, gold_events, n_class=self.config.number_classes) #get the metrics
-        print(f"time_error: {self.time_error}, PRECISION: {self.acc}, RECALL: {self.recall}, F1: {self.f1}")
-        
-        return self.time_error, self.acc, self.recall, self.f1
+            self.acc, self.recall, self.f1 = RMTPP_torch.clf_metric(pred_events, gold_events, n_class=self.config.number_classes) #get the metrics
+            print(f"time_error: {self.time_error}, PRECISION: {self.acc}, RECALL: {self.recall}, F1: {self.f1}")
+            
+            return self.time_error, self.acc, self.recall, self.f1
 
     def get_training_statistics(self):
         """
-        :return: the accuracy, recall and f1 score 
-        as a json object in string format. 
+        Returns:
+            str: The accuracy, recall, and F1 score as a JSON object in string format.
         """
         if self.acc == None and self.recall == None and self.f1 ==None: 
             raise exceptions.ModelNotTrainedYet()
@@ -204,14 +204,16 @@ class NNManagement:
     def random_search(self, search_parameters, iterations): 
         """
         Random search for the best hyperparameters. Saves the best model in the class.
-        :param search_parameters: dictionary containing the search parameters
-            - search_parameters should have the following keys:
-            * 'hid_dim': [start, end]
-            * 'mlp_dim': [start, end]
-            * 'emb_dim': [start, end]
-        :param iterations: number of iterations
-        
-        :return: the best accuracy
+
+        Args:
+            search_parameters (dict): Dictionary containing the search parameters.
+                - 'hid_dim': [start, end]
+                - 'mlp_dim': [start, end]
+                - 'emb_dim': [start, end]
+            iterations (int): Number of iterations.
+
+        Returns:
+            float: The best accuracy.
         """
         acc = 0
         best_model = None
@@ -237,13 +239,15 @@ class NNManagement:
     def grid_search(self, search_parameters): 
         """
         Grid search for the best hyperparameters.
-        :param search_parameters: dictionary containing the search parameters
-            - search_parameters should have the following keys:
-            * 'hid_dim': [start, end, step]
-            * 'mlp_dim': [start, end, step]
-            * 'emb_dim': [start, end, step]
 
-        :return: the best accuracy
+        Args:
+            search_parameters (dict): Dictionary containing the search parameters.
+            - 'hid_dim': [start, end, step]
+            - 'mlp_dim': [start, end, step]
+            - 'emb_dim': [start, end, step]
+
+        Returns:
+            float: The best accuracy.
         """
         acc = 0
         best_model = None
@@ -279,39 +283,41 @@ class NNManagement:
 
 
     def train(self):
-        """
-        This is the main training function 
-        :param train_data: train data df
-        :param test_data: test data df  
-        :param case_id: case id column name in the df
-        :param timestampt_key: timestamp key in the df
-        :param no_classes: number of known markers.
-        """
-        # we already pass the split data to de ATM loader. ATMDAtaset uses the sliding window for generating the input for training.
-        # since we are using tensors for training the sequence length remains fixed in each epoch, hence we cannot do "arbitrary length cuts" 
-        # to the training data
-        self.model =  RMTPP_torch.Net(self.config, lossweight=self.weight) #crete a NN instance
-        self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs) 
+            """
+            This is the main training function.
+
+            Args:
+                train_data (DataFrame): The training data.
+                test_data (DataFrame): The test data.
+                case_id (str): The column name of the case ID in the data.
+                timestamp_key (str): The key of the timestamp in the data.
+                no_classes (int): The number of known markers.
+            """
+            # we already pass the split data to de ATM loader. ATMDAtaset uses the sliding window for generating the input for training.
+            # since we are using tensors for training the sequence length remains fixed in each epoch, hence we cannot do "arbitrary length cuts" 
+            # to the training data
+            self.model =  RMTPP_torch.Net(self.config, lossweight=self.weight) #crete a NN instance
+            self.model.set_optimizer(total_step=len(self.train_loader) * self.config.epochs) 
 
 
-        if self.config.cuda: 
-            self.model.cuda() #GPU 
+            if self.config.cuda: 
+                self.model.cuda() #GPU 
 
-        for epc in range(self.config.epochs): #do the epochs
-            self.model.train()  
-            range_loss1 = range_loss2 = range_loss = 0
-            for i, batch in enumerate(tqdm(self.train_loader)):
-                
-                l1, l2, l = self.model.train_batch(batch) 
-                range_loss1 += l1
-                range_loss2 += l2
-                range_loss += l
+            for epc in range(self.config.epochs): #do the epochs
+                self.model.train()  
+                range_loss1 = range_loss2 = range_loss = 0
+                for i, batch in enumerate(tqdm(self.train_loader)):
+                    
+                    l1, l2, l = self.model.train_batch(batch) 
+                    range_loss1 += l1
+                    range_loss2 += l2
+                    range_loss += l
 
-                if (i + 1) % self.config.verbose_step == 0:
-                    print("time loss: ", range_loss1 / self.config.verbose_step)
-                    print("event loss:", range_loss2 / self.config.verbose_step)
-                    print("total loss:", range_loss / self.config.verbose_step)
-                    range_loss1 = range_loss2 = range_loss = 0
+                    if (i + 1) % self.config.verbose_step == 0:
+                        print("time loss: ", range_loss1 / self.config.verbose_step)
+                        print("event loss:", range_loss2 / self.config.verbose_step)
+                        print("total loss:", range_loss / self.config.verbose_step)
+                        range_loss1 = range_loss2 = range_loss = 0
 
 
-        self.evaluate()
+            self.evaluate()
