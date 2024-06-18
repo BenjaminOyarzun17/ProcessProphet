@@ -285,9 +285,7 @@ class ProcessModelManager:
             and_threshold (float): AND threshold parameter for heuristic miner.
             loop_two_threshold (float): Loop two threshold parameter for heuristic miner.
         """
-        print("ok")
         self.format_columns()
-        print("after format")
         self.petri_net, self.initial_marking, self.final_marking = pm4py.discover_petri_net_heuristics(
             self.predictive_df,
             dependency_threshold, 
@@ -297,7 +295,6 @@ class ProcessModelManager:
             timestamp_key=self.case_timestamp_key,
             case_id_key= self.case_id_key
         )
-        print("after miner")
         #: export the petri net in the given path
         pm4py.write_pnml(self.petri_net,self.initial_marking, self.final_marking, file_path=path)
         pm4py.save_vis_petri_net(self.petri_net, self.initial_marking, self.final_marking, file_path = path+".png")
