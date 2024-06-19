@@ -12,5 +12,5 @@ nav:
   - Docs:
     - API documentation: server_routes.md
     - Backend: managers.md
-    - RMTPP torch: RMTPP_torch.md
+    - RMTPP: RMTPP_torch.md
     - CLI: CLI.md
