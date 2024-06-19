@@ -1,4 +1,4 @@
-# CLI 
+# CLI documentation 
 ::: CLI.ProcessProphet
 ::: CLI.ProcessProphetStart
 ::: CLI.ProcessProphetPreprocessing
