@@ -12,6 +12,7 @@ This is a project created for the lab `Process Discovery with Python` at RWTH Aa
 
 # So... what does Process Prophet really do? 
 ![bike](bike.png)
+
 Imagine you own a bike rental service with GPS support, which can be done from a mobile application. For security reasons, you also track the current location of all your bikes. Let's say some user has rented a bike, and has been moving around the city as shown in the image. Now, you are wondering, where is it most likely that the user will park the bike and end the reservation? 
 
 You already have data from other user's past reservations, in particular, you know where the user did a turn in which intersection, and also 
