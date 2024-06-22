@@ -41,7 +41,7 @@ class PredictionManager:
             case_id_key (str): The case id key of the log.
             activity_key (str): The activity key of the log.
             timestamp_key (str): The timestamp key of the log.
-            config (dict): The configuration used for training and important hyperparameters.
+            config (Config): The configuration used for training and important hyperparameters.
         """
         self.model = model  # We assume there is an already existing model.
         self.case_id_key = case_id_key  # We assume the three important columns are known.
@@ -50,10 +50,13 @@ class PredictionManager:
         self.config = config
 
         self.current_case_id = None
-        self.paths = []
-        self.decoded_paths = []
-        self.encoded_df = None
-        self.recursive_event_seqs = []
+        self.paths = [] #: generated paths (multiple prediction generation)
+        self.decoded_paths = [] #: decoded paths (multiple prediction generation)
+        self.encoded_df = None 
+
+
+        #: the followwing arrays are used for backtracking. 
+        self.recursive_event_seqs = []  
         self.recursive_time_seqs = []
         self.recursive_time_diffs = []
         self.end_activities = {}

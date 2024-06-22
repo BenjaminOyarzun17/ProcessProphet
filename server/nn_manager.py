@@ -23,6 +23,32 @@ from enum import Enum, auto
 
 
 class Config: 
+    """
+    class containing the configuration for the model. 
+
+    Attributes:
+        seq_len (int): The sequence length used for the sliding window. 
+        emb_dim (int): The embedding dimension.
+        hid_dim (int): The hidden dimension.
+        mlp_dim (int): The MLP dimension used for the LSTM.
+        batch_size (int): The batch size.
+        alpha (float): The alpha value.
+        dropout (float): The dropout value.
+        time_precision (TimePrecision): The time precision. Only NS is supported.
+        lr (float): The learning rate.
+        epochs (int): The number of epochs.
+        importance_weight (str): The importance weight. (set to a default value as in the RMTPP implementation)
+        verbose_step (int): The verbose step, just for logging purposes.
+        cuda (bool): Whether to use the GPU.
+        absolute_frequency_distribution (Counter): The absolute frequency distribution of the classes.
+        case_id_le (LabelEncoder): The case ID label encoder.
+        activity_le (LabelEncoder): The activity label encoder.
+        exponent (int): The exponent used for the time conversion (see the preprocessing module).
+        number_classes (int): The number of possible activities in the data.
+        case_activity_key (str): The case activity key.
+        case_timestamp_key (str): The case timestamp key.
+        case_id_key (str): The case ID key.
+    """
     def __init__(self):
         self.seq_len: int= 10
         self.emb_dim: int= 1500
@@ -46,6 +72,9 @@ class Config:
         self.case_timestamp_key:str =""
         self.case_id_key:str = ""
     def asdict(self):
+        """
+        used for exporting as a dictionary 
+        """
         return {
             "time_precision": self.time_precision.name,
             "seq_len": self.seq_len,
@@ -70,6 +99,9 @@ class Config:
             "case_activity_key": self.case_activity_key
         }
     def load_config(self, dic):
+        """
+        used for importing
+        """
         self.time_precision= time_precision.TimePrecision[dic["time_precision"]] 
         self.seq_len=int(dic["seq_len"])
         self.emb_dim=int(dic["emb_dim"])
@@ -93,9 +125,15 @@ class Config:
         self.case_timestamp_key = dic["case_timestamp_key"]
 
     def encoder_to_dict(self, encoder:LabelEncoder)->dict:
+        """
+        cast the encoder to a dictionary 
+        """
         return {label:index for index, label in enumerate(encoder.classes_)} 
 
     def dict_to_encoder(self, dic:dict)->LabelEncoder:
+        """
+        cast the dictionary to an encoder
+        """
         encoder = LabelEncoder()
         encoder.classes_ = np.array(list(dic.keys()))
         return encoder
@@ -103,9 +141,9 @@ class Config:
 class NNManagement: 
     """
     This is the NNMamangement class. Provided functinality: 
-    - train the model based on the event log. 
-    - test the model based on the event log.
-    - set params. 
+        - train the model based on the event log. 
+        - test the model based on the event log.
+        - set params. 
     """
     def __init__(self, config:Config|None = None):
         self.config = Config() if config == None else config
@@ -116,41 +154,41 @@ class NNManagement:
 
 
     def evaluate(self):
-            """
-            This is the testing function for the model. It prints out the time_error, precision, recall, and f1 score.
+        """
+        This is the testing function for the model. It prints out the time_error, precision, recall, and f1 score.
 
-            Returns:
-                time_error (float): The time error.
-                acc (float): The accuracy.
-                recall (float): The recall.
-                f1 (float): The F1 score.
-            """
-            #: main testing function
-            self.model.eval()
-            pred_times, pred_events = [], [] #inputs/training data
-            gold_times, gold_events = [], [] #targets
-            
-            for i, batch in enumerate(tqdm(self.test_loader)):
-                #batch: pair with two tensors, each containing respectively the time and event data.  
-                gold_times.append(batch[0][:, -1].numpy()) # extract for each sequence the last time stamp/ the last event
-                gold_events.append(batch[1][:, -1].numpy())
-                pred_time, pred_event = self.model.predict(batch)
-                if np.isnan(pred_times).any():
-                    raise exceptions.NaNException()
-                pred_times.append(pred_time)
-                pred_events.append(pred_event)
+        Returns:
+            time_error (float): The time error.
+            acc (float): The accuracy.
+            recall (float): The recall.
+            f1 (float): The F1 score.
+        """
+        #: main testing function
+        self.model.eval()
+        pred_times, pred_events = [], [] #inputs/training data
+        gold_times, gold_events = [], [] #targets
+        
+        for i, batch in enumerate(tqdm(self.test_loader)):
+            #batch: pair with two tensors, each containing respectively the time and event data.  
+            gold_times.append(batch[0][:, -1].numpy()) # extract for each sequence the last time stamp/ the last event
+            gold_events.append(batch[1][:, -1].numpy())
+            pred_time, pred_event = self.model.predict(batch)
+            if np.isnan(pred_times).any():
+                raise exceptions.NaNException()
+            pred_times.append(pred_time)
+            pred_events.append(pred_event)
 
-            pred_times = np.concatenate(pred_times).reshape(-1)
-            print(type(pred_times))
-            gold_times = np.concatenate(gold_times).reshape(-1)
-            pred_events = np.concatenate(pred_events).reshape(-1)
-            gold_events = np.concatenate(gold_events).reshape(-1)
-            self.time_error = RMTPP_torch.abs_error(pred_times, gold_times)  #compute errors
+        pred_times = np.concatenate(pred_times).reshape(-1)
+        print(type(pred_times))
+        gold_times = np.concatenate(gold_times).reshape(-1)
+        pred_events = np.concatenate(pred_events).reshape(-1)
+        gold_events = np.concatenate(gold_events).reshape(-1)
+        self.time_error = RMTPP_torch.abs_error(pred_times, gold_times)  #compute errors
 
-            self.acc, self.recall, self.f1 = RMTPP_torch.clf_metric(pred_events, gold_events, n_class=self.config.number_classes) #get the metrics
-            print(f"time_error: {self.time_error}, PRECISION: {self.acc}, RECALL: {self.recall}, F1: {self.f1}")
-            
-            return self.time_error, self.acc, self.recall, self.f1
+        self.acc, self.recall, self.f1 = RMTPP_torch.clf_metric(pred_events, gold_events, n_class=self.config.number_classes) #get the metrics
+        print(f"time_error: {self.time_error}, PRECISION: {self.acc}, RECALL: {self.recall}, F1: {self.f1}")
+        
+        return self.time_error, self.acc, self.recall, self.f1
 
     def get_training_statistics(self):
         """
@@ -205,6 +243,8 @@ class NNManagement:
         """
         Random search for the best hyperparameters. Saves the best model in the class.
 
+        We only do this for the hid_dim, mlp_dim and emb_dim parameters. (decided arbitrarily, can be extended to other parameters as well.)
+
         Args:
             search_parameters (dict): Dictionary containing the search parameters.
                 - 'hid_dim': [start, end]
@@ -240,6 +280,8 @@ class NNManagement:
         """
         Grid search for the best hyperparameters.
 
+        We only do this for the hid_dim, mlp_dim and emb_dim parameters. (decided arbitrarily, can be extended to other parameters as well.)
+
         Args:
             search_parameters (dict): Dictionary containing the search parameters.
             - 'hid_dim': [start, end, step]
@@ -268,14 +310,22 @@ class NNManagement:
         return acc
     
     def load_data(self,train_data, test_data, case_id, timestamp_key, event_key ):
+        """
+        imports a training and testing sublogs, which were preprocessed by the preprocessing module.
+
+        it applies the sliding window algorithm to have subsequences of the same fixed length. 
+        The output is passed to the respective DataLoader object, which computes the time differences 
+        and casts the input to tensors;  generates the batches.
+        """
+
+        # apply sliding window
         train_set = RMTPP_torch.ATMDataset(self.config ,train_data, case_id,   timestamp_key, event_key ) 
         test_set =  RMTPP_torch.ATMDataset(self.config , test_data, case_id, timestamp_key, event_key)
-        # now load the data to torch tensors and generate the batches. also 
+        # generate time differences and load the data to torch tensors and generate the batches. 
         self.train_loader = DataLoader(train_set, batch_size=self.config.batch_size, shuffle=True, collate_fn= RMTPP_torch.ATMDataset.to_features)
         self.test_loader = DataLoader(test_set, batch_size=self.config.batch_size, shuffle=False, collate_fn= RMTPP_torch.ATMDataset.to_features)
 
-        #: initialize a matrix to store the importance weights
-        # that will be passed to the CrossEntropyLoss object. 
+        #: initialize a matrix to store the importance weights that will be passed to the CrossEntropyLoss object. 
         self.weight = np.ones(self.config.number_classes)
         if self.config.importance_weight:
             self.weight = train_set.importance_weight(self.config.absolute_frequency_distribution)
@@ -303,7 +353,7 @@ class NNManagement:
             if self.config.cuda: 
                 self.model.cuda() #GPU 
 
-            for epc in range(self.config.epochs): #do the epochs
+            for epc in range(self.config.epochs): #run the epochs
                 self.model.train()  
                 range_loss1 = range_loss2 = range_loss = 0
                 for i, batch in enumerate(tqdm(self.train_loader)):

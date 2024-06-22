@@ -58,18 +58,7 @@ class ProcessModelManager:
         cuts = {}
         return case_id_counts, cuts, input_sequences, cuts
 
-    """
-    def alignment_input(self, cut_length, total_traces): 
-        - cuts `cut_length` elements from the tail of each of the sampled `total_traces` traces. 
-        - the cut out subsequences are saved in a dataframe.
-        - the partial sequence (what remained after cutting) is passed as input for the pred. model
-        and `cut_length` predictions are done for each trace. 
-        - with this we can later compute alignments.  
-        this conformance chcking method should better quantify how good the model is at reconstructing 
-        past behaviour for each trace individually, without considering the part that was using for training.  
-    """
-
-
+    
 
     def tail_cutter(self, case_id_counts, cut_length, cuts, input_sequences):
         """

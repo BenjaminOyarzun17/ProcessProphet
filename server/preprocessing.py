@@ -37,9 +37,7 @@ import datetime as dt
 
 class Preprocessing: 
     """
-    This is the preprocessing unit for our server. Provided functionality:
-    - adapter for train_split_test: split the event log's data into testing and training data in the right format
-    - adapters for importing event logs: make sure the right format is used for the RNN
+    This is the preprocessing unit for our server, which implements all the above mentioned functionalities.
     """
     def __init__(self):
         self.time_precision = None
@@ -70,8 +68,20 @@ class Preprocessing:
 
 
     def handle_import(self,is_xes, path, case_id, timestamp, activity,time_precision = time_precision.TimePrecision.NS,  sep = ",", formatting = True):
-        self.time_precision = time_precision
+        """
+        handles the import of the event log. 
 
+        Args:
+            is_xes (bool): If True, the event log is in XES format. If False, it is in CSV format.
+            path (str): Path to the event log.
+            case_id (str): Case id column name.
+            timestamp (str): Timestamp column name.
+            activity (str): Activity column name.
+            time_precision (TimePrecision, optional): Time precision. Defaults to TimePrecision.NS. note that this functionality is INCOMPLETED. 
+            sep (str, optional): Separator. Defaults to ",".
+            formatting (bool, optional): If True, the event log is formatted so that it can be used by the RNN. Defaults to True. 
+        """
+        self.time_precision = time_precision
         self.case_id_key =  case_id
         self.case_activity_key =activity 
         self.case_timestamp_key =timestamp 
@@ -121,6 +131,7 @@ class Preprocessing:
             case_id (str): Case id column name.
             activity_key (str): Activity column name.
             timestamp_key (str): Timestamp column name.
+            formatting (bool, optional): If True, the event log is formatted so that it can be used by the RNN. Defaults to True.
         """
         self.event_df = df
         self.case_id_key =  case_id
@@ -138,6 +149,9 @@ class Preprocessing:
         - format a dataframe using pm4py 
         Effects: 
         - rows sorted by case id and timestamp
+
+        Args:
+            formatting (bool): If True, the event log is formatted so that it can be used by the RNN.
         """
         #: returns a formated dataframe that can work with other pm4py functions
         self.event_df = pm4py.format_dataframe(self.event_df, 
@@ -201,6 +215,11 @@ class Preprocessing:
         - encode the markers and case id's with integers (label encoding)
         - encode the timestamps
         - returns nothing, but modifies self.event_df
+        
+        The following holds for `self.event_df` after this function is called:
+            - all columns are sorted by case id and timestamp
+            - the case id and markers are encoded with integers
+            - the timestamps are encoded as floats. timezone information is removed. 
         """
         #: we encode the markers with integers (label encoding) to be consistent with the authors implementation
         self.activity_le, self.case_id_le= LabelEncoder(), LabelEncoder()
@@ -225,10 +244,10 @@ class Preprocessing:
 
 
         if self.time_precision == time_precision.TimePrecision.NS: 
-            #: nanoseconds can cause numerical instability. therefore we make the number smaller by shifting the comma.
+            #: nanoseconds can cause numerical instability. therefore we make the number smaller by shifting the comma by `exponent`
             self.exponent = self.event_df[self.case_timestamp_key].astype(str).apply(lambda x: len(x)).mean()
             self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key] / (10 ** self.exponent)
-
+            #: note that other time precisions are not supported yet. TODO
 
         # #: transform the case id and markers back into float
         self.event_df[self.case_activity_key] = self.event_df[self.case_activity_key].astype("float64")
