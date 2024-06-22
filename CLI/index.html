@@ -2753,14 +2753,14 @@ It also sets the <code>pp.state</code> path variables once a project has been cr
 <span class="sd">        At the same time, the state is updated (see `ProcessProphetState`).</span>
 
 <span class="sd">        We use the following file structure: </span>
-<span class="sd">        - `projects/`: Contains all projects.</span>
-<span class="sd">        - `projects/dummy_project/`: Contains all important subfolders for `dummy_project`.</span>
-<span class="sd">        - `projects/dummy_project/input_logs`: All input logs used for `dummy_project` should be stored in this folder.</span>
-<span class="sd">        - `projects/dummy_project/models`: All models used for `dummy_project` are generated in this folder.</span>
-<span class="sd">        - `projects/dummy_project/petri_nets`: All petri nets used for `dummy_project` are stored here.</span>
-<span class="sd">        - `projects/dummy_project/predictive_logs`: All generated predictive logs used for `dummy_project` and conformance checking are stored here.</span>
-<span class="sd">        - `projects/dummy_project/partial_traces`: All input partial traces given by the user are searched inside this folder.  </span>
-<span class="sd">        - `projects/dummy_project/multiple_predictions_path`: All predictions created using the multiple predictions function are stored here (for the `dummy_project` project).</span>
+<span class="sd">            - `projects/`: Contains all projects.</span>
+<span class="sd">            - `projects/dummy_project/`: Contains all important subfolders for `dummy_project`.</span>
+<span class="sd">            - `projects/dummy_project/input_logs`: All input logs used for `dummy_project` should be stored in this folder.</span>
+<span class="sd">            - `projects/dummy_project/models`: All models used for `dummy_project` are generated in this folder.</span>
+<span class="sd">            - `projects/dummy_project/petri_nets`: All petri nets used for `dummy_project` are stored here.</span>
+<span class="sd">            - `projects/dummy_project/predictive_logs`: All generated predictive logs used for `dummy_project` and conformance checking are stored here.</span>
+<span class="sd">            - `projects/dummy_project/partial_traces`: All input partial traces given by the user are searched inside this folder.  </span>
+<span class="sd">            - `projects/dummy_project/multiple_predictions_path`: All predictions created using the multiple predictions function are stored here (for the `dummy_project` project).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_name_input</span><span class="o">.</span><span class="n">value</span>
         <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -3087,16 +3087,21 @@ files needed for the different functionalities of the application are stored. Fo
 the RNN can then be trained.
 The user can then continue and select the mode in which they want to work in the new project.</p>
 <p>At the same time, the state is updated (see <code>ProcessProphetState</code>).</p>
-<p>We use the following file structure: 
-- <code>projects/</code>: Contains all projects.
-- <code>projects/dummy_project/</code>: Contains all important subfolders for <code>dummy_project</code>.
-- <code>projects/dummy_project/input_logs</code>: All input logs used for <code>dummy_project</code> should be stored in this folder.
-- <code>projects/dummy_project/models</code>: All models used for <code>dummy_project</code> are generated in this folder.
-- <code>projects/dummy_project/petri_nets</code>: All petri nets used for <code>dummy_project</code> are stored here.
-- <code>projects/dummy_project/predictive_logs</code>: All generated predictive logs used for <code>dummy_project</code> and conformance checking are stored here.
-- <code>projects/dummy_project/partial_traces</code>: All input partial traces given by the user are searched inside this folder.<br />
-- <code>projects/dummy_project/multiple_predictions_path</code>: All predictions created using the multiple predictions function are stored here (for the <code>dummy_project</code> project).</p>
 
+
+<details class="we-use-the-following-file-structure" open>
+  <summary>We use the following file structure</summary>
+  <ul>
+<li><code>projects/</code>: Contains all projects.</li>
+<li><code>projects/dummy_project/</code>: Contains all important subfolders for <code>dummy_project</code>.</li>
+<li><code>projects/dummy_project/input_logs</code>: All input logs used for <code>dummy_project</code> should be stored in this folder.</li>
+<li><code>projects/dummy_project/models</code>: All models used for <code>dummy_project</code> are generated in this folder.</li>
+<li><code>projects/dummy_project/petri_nets</code>: All petri nets used for <code>dummy_project</code> are stored here.</li>
+<li><code>projects/dummy_project/predictive_logs</code>: All generated predictive logs used for <code>dummy_project</code> and conformance checking are stored here.</li>
+<li><code>projects/dummy_project/partial_traces</code>: All input partial traces given by the user are searched inside this folder.  </li>
+<li><code>projects/dummy_project/multiple_predictions_path</code>: All predictions created using the multiple predictions function are stored here (for the <code>dummy_project</code> project).</li>
+</ul>
+</details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetStart.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
@@ -3180,14 +3185,14 @@ The user can then continue and select the mode in which they want to work in the
 <span class="sd">    At the same time, the state is updated (see `ProcessProphetState`).</span>
 
 <span class="sd">    We use the following file structure: </span>
-<span class="sd">    - `projects/`: Contains all projects.</span>
-<span class="sd">    - `projects/dummy_project/`: Contains all important subfolders for `dummy_project`.</span>
-<span class="sd">    - `projects/dummy_project/input_logs`: All input logs used for `dummy_project` should be stored in this folder.</span>
-<span class="sd">    - `projects/dummy_project/models`: All models used for `dummy_project` are generated in this folder.</span>
-<span class="sd">    - `projects/dummy_project/petri_nets`: All petri nets used for `dummy_project` are stored here.</span>
-<span class="sd">    - `projects/dummy_project/predictive_logs`: All generated predictive logs used for `dummy_project` and conformance checking are stored here.</span>
-<span class="sd">    - `projects/dummy_project/partial_traces`: All input partial traces given by the user are searched inside this folder.  </span>
-<span class="sd">    - `projects/dummy_project/multiple_predictions_path`: All predictions created using the multiple predictions function are stored here (for the `dummy_project` project).</span>
+<span class="sd">        - `projects/`: Contains all projects.</span>
+<span class="sd">        - `projects/dummy_project/`: Contains all important subfolders for `dummy_project`.</span>
+<span class="sd">        - `projects/dummy_project/input_logs`: All input logs used for `dummy_project` should be stored in this folder.</span>
+<span class="sd">        - `projects/dummy_project/models`: All models used for `dummy_project` are generated in this folder.</span>
+<span class="sd">        - `projects/dummy_project/petri_nets`: All petri nets used for `dummy_project` are stored here.</span>
+<span class="sd">        - `projects/dummy_project/predictive_logs`: All generated predictive logs used for `dummy_project` and conformance checking are stored here.</span>
+<span class="sd">        - `projects/dummy_project/partial_traces`: All input partial traces given by the user are searched inside this folder.  </span>
+<span class="sd">        - `projects/dummy_project/multiple_predictions_path`: All predictions created using the multiple predictions function are stored here (for the `dummy_project` project).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_name_input</span><span class="o">.</span><span class="n">value</span>
     <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -4383,8 +4388,7 @@ as a result the window is switched to the menu for selecting the mode the currre
 <span class="normal">429</span>
 <span class="normal">430</span>
 <span class="normal">431</span>
-<span class="normal">432</span>
-<span class="normal">433</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ProcessProphetPreprocessing</span><span class="p">:</span> 
+<span class="normal">432</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ProcessProphetPreprocessing</span><span class="p">:</span> 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pp</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes a ProcessProphetPreprocessing object and sets up the preprocessing main menu.</span>
@@ -4635,9 +4639,9 @@ as a result the window is switched to the menu for selecting the mode the currre
 <span class="sd">        The function also displays the first few Log file names in the current project on the right side of the window.</span>
 
 <span class="sd">        Side effects:</span>
-<span class="sd">        - Initializes a window with default parameters where the user can adjust them.</span>
-<span class="sd">        - Initializes a window where all the event logs of the current project are listed for preprocessing.</span>
-<span class="sd">        - Calls the `add_unique_start_end` function if the user confirms the indicated parameters.</span>
+<span class="sd">            - Initializes a window with default parameters where the user can adjust them.</span>
+<span class="sd">            - Initializes a window where all the event logs of the current project are listed for preprocessing.</span>
+<span class="sd">            - Calls the `add_unique_start_end` function if the user confirms the indicated parameters.</span>
 <span class="sd">        &quot;&quot;&quot;</span> 
         <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;Hospital_log.xes&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;log name: &quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;case:concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;case id key: &quot;</span><span class="p">)</span>
@@ -4682,10 +4686,10 @@ as a result the window is switched to the menu for selecting the mode the currre
 <span class="sd">        the right side of the window.</span>
 
 <span class="sd">        Side effects:</span>
-<span class="sd">        - Initializes a window with default parameters where the user can adjust them.</span>
-<span class="sd">        - Initializes a window where all the event logs of the current project are listed that can be used</span>
-<span class="sd">          for the preprocessing.</span>
-<span class="sd">        - Calls the `remove_duplicates` function if the user confirms the indicated parameters.</span>
+<span class="sd">            - Initializes a window with default parameters where the user can adjust them.</span>
+<span class="sd">            - Initializes a window where all the event logs of the current project are listed that can be used</span>
+<span class="sd">            for the preprocessing.</span>
+<span class="sd">            - Calls the `remove_duplicates` function if the user confirms the indicated parameters.</span>
 <span class="sd">        &quot;&quot;&quot;</span> 
         <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;Hospital_log.xes&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;log name: &quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;case:concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;case id key: &quot;</span><span class="p">)</span>
@@ -4729,10 +4733,10 @@ as a result the window is switched to the menu for selecting the mode the currre
 <span class="sd">        the right side of the window.</span>
 
 <span class="sd">        Side effects:</span>
-<span class="sd">        - Initializes a window with default parameters where the user can adjust them.</span>
-<span class="sd">        - Initializes a window where all the event logs of the current project are listed that can be used</span>
-<span class="sd">          for the preprocessing.</span>
-<span class="sd">        - Calls the `replace_nan_with_mode` function if the user confirms the indicated parameters.</span>
+<span class="sd">            - Initializes a window with default parameters where the user can adjust them.</span>
+<span class="sd">            - Initializes a window where all the event logs of the current project are listed that can be used</span>
+<span class="sd">            for the preprocessing.</span>
+<span class="sd">            - Calls the `replace_nan_with_mode` function if the user confirms the indicated parameters.</span>
 <span class="sd">        &quot;&quot;&quot;</span> 
         <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;Hospital_log.xes&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;log name: &quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;case:concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;case id key: &quot;</span><span class="p">)</span>
@@ -4771,11 +4775,10 @@ as a result the window is switched to the menu for selecting the mode the currre
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays the main menu for the preprocessing manager.</span>
 
-<span class="sd">        Depending on how the data should be preprocessed, the user can choose</span>
-<span class="sd">        one of the three alternatives:</span>
-<span class="sd">            1. Replacing NaN values in the log.</span>
-<span class="sd">            2. Removing duplicate rows in the log.</span>
-<span class="sd">            3. Adding unique start and end activities to each trace.</span>
+<span class="sd">        The user can choose one of the three alternatives:</span>
+<span class="sd">            - Replacing NaN values in the log.</span>
+<span class="sd">            - Removing duplicate rows in the log.</span>
+<span class="sd">            - Adding unique start and end activities to each trace.</span>
 
 <span class="sd">        It is also possible to return to the previous menu.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -4895,11 +4898,16 @@ as a result the window is switched to the menu for selecting the mode the currre
       <p>Indicates all the parameters needed to add unique start and end activities to each trace.</p>
 <p>The user can modify these parameters in the left side of the window.</p>
 <p>The function also displays the first few Log file names in the current project on the right side of the window.</p>
-<p>Side effects:
-- Initializes a window with default parameters where the user can adjust them.
-- Initializes a window where all the event logs of the current project are listed for preprocessing.
-- Calls the <code>add_unique_start_end</code> function if the user confirms the indicated parameters.</p>
 
+
+<details class="side-effects" open>
+  <summary>Side effects</summary>
+  <ul>
+<li>Initializes a window with default parameters where the user can adjust them.</li>
+<li>Initializes a window where all the event logs of the current project are listed for preprocessing.</li>
+<li>Calls the <code>add_unique_start_end</code> function if the user confirms the indicated parameters.</li>
+</ul>
+</details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetPreprocessing.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">261</span>
@@ -4953,9 +4961,9 @@ as a result the window is switched to the menu for selecting the mode the currre
 <span class="sd">    The function also displays the first few Log file names in the current project on the right side of the window.</span>
 
 <span class="sd">    Side effects:</span>
-<span class="sd">    - Initializes a window with default parameters where the user can adjust them.</span>
-<span class="sd">    - Initializes a window where all the event logs of the current project are listed for preprocessing.</span>
-<span class="sd">    - Calls the `add_unique_start_end` function if the user confirms the indicated parameters.</span>
+<span class="sd">        - Initializes a window with default parameters where the user can adjust them.</span>
+<span class="sd">        - Initializes a window where all the event logs of the current project are listed for preprocessing.</span>
+<span class="sd">        - Calls the `add_unique_start_end` function if the user confirms the indicated parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span> 
     <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;Hospital_log.xes&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;log name: &quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;case:concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;case id key: &quot;</span><span class="p">)</span>
@@ -5604,12 +5612,16 @@ show that a process is loading</p>
     <div class="doc doc-contents ">
 
       <p>Displays the main menu for the preprocessing manager.</p>
-<p>Depending on how the data should be preprocessed, the user can choose
-one of the three alternatives:
-    1. Replacing NaN values in the log.
-    2. Removing duplicate rows in the log.
-    3. Adding unique start and end activities to each trace.</p>
-<p>It is also possible to return to the previous menu.</p>
+
+
+<details class="the-user-can-choose-one-of-the-three-alternatives" open>
+  <summary>The user can choose one of the three alternatives</summary>
+  <ul>
+<li>Replacing NaN values in the log.</li>
+<li>Removing duplicate rows in the log.</li>
+<li>Adding unique start and end activities to each trace.</li>
+</ul>
+</details>      <p>It is also possible to return to the previous menu.</p>
 
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetPreprocessing.py</code></summary>
@@ -5643,16 +5655,14 @@ one of the three alternatives:
 <span class="normal">429</span>
 <span class="normal">430</span>
 <span class="normal">431</span>
-<span class="normal">432</span>
-<span class="normal">433</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">preprocessing_main_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">432</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">preprocessing_main_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Displays the main menu for the preprocessing manager.</span>
 
-<span class="sd">    Depending on how the data should be preprocessed, the user can choose</span>
-<span class="sd">    one of the three alternatives:</span>
-<span class="sd">        1. Replacing NaN values in the log.</span>
-<span class="sd">        2. Removing duplicate rows in the log.</span>
-<span class="sd">        3. Adding unique start and end activities to each trace.</span>
+<span class="sd">    The user can choose one of the three alternatives:</span>
+<span class="sd">        - Replacing NaN values in the log.</span>
+<span class="sd">        - Removing duplicate rows in the log.</span>
+<span class="sd">        - Adding unique start and end activities to each trace.</span>
 
 <span class="sd">    It is also possible to return to the previous menu.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -5697,12 +5707,17 @@ one of the three alternatives:
 and the user can modify them in the left side of the window.</p>
 <p>The function also indicates the first few Log file names in the current project on
 the right side of the window.</p>
-<p>Side effects:
-- Initializes a window with default parameters where the user can adjust them.
-- Initializes a window where all the event logs of the current project are listed that can be used
-  for the preprocessing.
-- Calls the <code>remove_duplicates</code> function if the user confirms the indicated parameters.</p>
 
+
+<details class="side-effects" open>
+  <summary>Side effects</summary>
+  <ul>
+<li>Initializes a window with default parameters where the user can adjust them.</li>
+<li>Initializes a window where all the event logs of the current project are listed that can be used
+for the preprocessing.</li>
+<li>Calls the <code>remove_duplicates</code> function if the user confirms the indicated parameters.</li>
+</ul>
+</details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetPreprocessing.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">308</span>
@@ -5757,10 +5772,10 @@ the right side of the window.</p>
 <span class="sd">    the right side of the window.</span>
 
 <span class="sd">    Side effects:</span>
-<span class="sd">    - Initializes a window with default parameters where the user can adjust them.</span>
-<span class="sd">    - Initializes a window where all the event logs of the current project are listed that can be used</span>
-<span class="sd">      for the preprocessing.</span>
-<span class="sd">    - Calls the `remove_duplicates` function if the user confirms the indicated parameters.</span>
+<span class="sd">        - Initializes a window with default parameters where the user can adjust them.</span>
+<span class="sd">        - Initializes a window where all the event logs of the current project are listed that can be used</span>
+<span class="sd">        for the preprocessing.</span>
+<span class="sd">        - Calls the `remove_duplicates` function if the user confirms the indicated parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span> 
     <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;Hospital_log.xes&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;log name: &quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;case:concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;case id key: &quot;</span><span class="p">)</span>
@@ -5813,12 +5828,17 @@ the right side of the window.</p>
 and the user can modify them in the left side of the window.</p>
 <p>The function also indicates the first few Log file names in the current project on
 the right side of the window.</p>
-<p>Side effects:
-- Initializes a window with default parameters where the user can adjust them.
-- Initializes a window where all the event logs of the current project are listed that can be used
-  for the preprocessing.
-- Calls the <code>replace_nan_with_mode</code> function if the user confirms the indicated parameters.</p>
 
+
+<details class="side-effects" open>
+  <summary>Side effects</summary>
+  <ul>
+<li>Initializes a window with default parameters where the user can adjust them.</li>
+<li>Initializes a window where all the event logs of the current project are listed that can be used
+for the preprocessing.</li>
+<li>Calls the <code>replace_nan_with_mode</code> function if the user confirms the indicated parameters.</li>
+</ul>
+</details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetPreprocessing.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">355</span>
@@ -5872,10 +5892,10 @@ the right side of the window.</p>
 <span class="sd">    the right side of the window.</span>
 
 <span class="sd">    Side effects:</span>
-<span class="sd">    - Initializes a window with default parameters where the user can adjust them.</span>
-<span class="sd">    - Initializes a window where all the event logs of the current project are listed that can be used</span>
-<span class="sd">      for the preprocessing.</span>
-<span class="sd">    - Calls the `replace_nan_with_mode` function if the user confirms the indicated parameters.</span>
+<span class="sd">        - Initializes a window with default parameters where the user can adjust them.</span>
+<span class="sd">        - Initializes a window where all the event logs of the current project are listed that can be used</span>
+<span class="sd">        for the preprocessing.</span>
+<span class="sd">        - Calls the `replace_nan_with_mode` function if the user confirms the indicated parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span> 
     <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;Hospital_log.xes&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;log name: &quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;case:concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;case id key: &quot;</span><span class="p">)</span>
@@ -6674,9 +6694,9 @@ relevant to Process Prophet.</p>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Carries out a training request.</span>
 
-<span class="sd">        On successful request completion, the following side effects/outputs are expected:</span>
-<span class="sd">        - `model`: A model `.pt` file is saved in the models folder.</span>
-<span class="sd">        - `config`: A model&#39;s `config.json` information for the server is saved in the models folder as a JSON file.</span>
+<span class="sd">        Side effects on success:</span>
+<span class="sd">            - `model`: A model `.pt` file is saved in the models folder.</span>
+<span class="sd">            - `config`: A model&#39;s `config.json` information for the server is saved in the models folder as a JSON file.</span>
 
 <span class="sd">        The training statistics (time error, accuracy, recall, f1 score) are displayed on the screen.</span>
 
@@ -6752,9 +6772,9 @@ relevant to Process Prophet.</p>
 <span class="sd">        according to their own preference.</span>
 
 <span class="sd">        Side Effects:</span>
-<span class="sd">        - The modified parameters are stored in a container and then the training function is called.</span>
-<span class="sd">        - Parameters are displayed in the window.</span>
-<span class="sd">        - A second window is displayed to show the logs contained in this project as a visual aid.</span>
+<span class="sd">            - The modified parameters are stored in a container and then the training function is called.</span>
+<span class="sd">            - Parameters are displayed in the window.</span>
+<span class="sd">            - A second window is displayed to show the logs contained in this project as a visual aid.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cuda</span> <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;use cuda: &quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;f.pt&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;model name: &quot;</span><span class="p">)</span>
@@ -6965,10 +6985,10 @@ relevant to Process Prophet.</p>
 <span class="sd">        can be modified by the user.</span>
 
 <span class="sd">        Side effects:</span>
-<span class="sd">        - Initializes window with default parameters where the user can adjust them.</span>
-<span class="sd">        - Initializes window where all the event logs of the current project are listed that can be used</span>
-<span class="sd">          for the training.</span>
-<span class="sd">        - Random search can be called if the user confirms the indicated parameters.</span>
+<span class="sd">            - Initializes window with default parameters where the user can adjust them.</span>
+<span class="sd">            - Initializes window where all the event logs of the current project are listed that can be used</span>
+<span class="sd">            for the training.</span>
+<span class="sd">            - Random search can be called if the user confirms the indicated parameters.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">ProcessProphetMode</span><span class="o">.</span><span class="n">advanced</span><span class="p">:</span>
             <span class="c1">#: show all params in case of advanced mode</span>
@@ -7107,10 +7127,10 @@ relevant to Process Prophet.</p>
 <span class="sd">        can be modified by the user.</span>
 
 <span class="sd">        Side effects:</span>
-<span class="sd">        - Initializes window with default parameters where the user can adjust them.</span>
-<span class="sd">        - Initializes window where all the event logs of the current project are listed that can be used</span>
-<span class="sd">          for the training.</span>
-<span class="sd">        - Grid search can be called if the user confirms the indicated parameters.</span>
+<span class="sd">            - Initializes window with default parameters where the user can adjust them.</span>
+<span class="sd">            - Initializes window where all the event logs of the current project are listed that can be used</span>
+<span class="sd">            for the training.</span>
+<span class="sd">            - Grid search can be called if the user confirms the indicated parameters.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">ProcessProphetMode</span><span class="o">.</span><span class="n">advanced</span><span class="p">:</span>
             <span class="c1">#: show all params in case of advanced mode</span>
@@ -7426,12 +7446,17 @@ this makes sense for example, when the user wants to make predictions after havi
 <p>This function distinguishes between quick mode and advanced mode by giving more options to customize
 the hyperparameters in the advanced mode, whereas in the base mode only the most important parameters
 can be modified by the user.</p>
-<p>Side effects:
-- Initializes window with default parameters where the user can adjust them.
-- Initializes window where all the event logs of the current project are listed that can be used
-  for the training.
-- Grid search can be called if the user confirms the indicated parameters.</p>
 
+
+<details class="side-effects" open>
+  <summary>Side effects</summary>
+  <ul>
+<li>Initializes window with default parameters where the user can adjust them.</li>
+<li>Initializes window where all the event logs of the current project are listed that can be used
+for the training.</li>
+<li>Grid search can be called if the user confirms the indicated parameters.</li>
+</ul>
+</details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetTrain.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">492</span>
@@ -7582,10 +7607,10 @@ can be modified by the user.</p>
 <span class="sd">    can be modified by the user.</span>
 
 <span class="sd">    Side effects:</span>
-<span class="sd">    - Initializes window with default parameters where the user can adjust them.</span>
-<span class="sd">    - Initializes window where all the event logs of the current project are listed that can be used</span>
-<span class="sd">      for the training.</span>
-<span class="sd">    - Grid search can be called if the user confirms the indicated parameters.</span>
+<span class="sd">        - Initializes window with default parameters where the user can adjust them.</span>
+<span class="sd">        - Initializes window where all the event logs of the current project are listed that can be used</span>
+<span class="sd">        for the training.</span>
+<span class="sd">        - Grid search can be called if the user confirms the indicated parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">ProcessProphetMode</span><span class="o">.</span><span class="n">advanced</span><span class="p">:</span>
         <span class="c1">#: show all params in case of advanced mode</span>
@@ -7734,12 +7759,17 @@ can be modified by the user.</p>
 <p>This function distinguishes between quick mode and advanced mode by giving more options to customize
 the hyperparameters in the advanced mode, whereas in the base mode only the most important parameters
 can be modified by the user.</p>
-<p>Side effects:
-- Initializes window with default parameters where the user can adjust them.
-- Initializes window where all the event logs of the current project are listed that can be used
-  for the training.
-- Random search can be called if the user confirms the indicated parameters.</p>
 
+
+<details class="side-effects" open>
+  <summary>Side effects</summary>
+  <ul>
+<li>Initializes window with default parameters where the user can adjust them.</li>
+<li>Initializes window where all the event logs of the current project are listed that can be used
+for the training.</li>
+<li>Random search can be called if the user confirms the indicated parameters.</li>
+</ul>
+</details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetTrain.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">350</span>
@@ -7890,10 +7920,10 @@ can be modified by the user.</p>
 <span class="sd">    can be modified by the user.</span>
 
 <span class="sd">    Side effects:</span>
-<span class="sd">    - Initializes window with default parameters where the user can adjust them.</span>
-<span class="sd">    - Initializes window where all the event logs of the current project are listed that can be used</span>
-<span class="sd">      for the training.</span>
-<span class="sd">    - Random search can be called if the user confirms the indicated parameters.</span>
+<span class="sd">        - Initializes window with default parameters where the user can adjust them.</span>
+<span class="sd">        - Initializes window where all the event logs of the current project are listed that can be used</span>
+<span class="sd">        for the training.</span>
+<span class="sd">        - Random search can be called if the user confirms the indicated parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">ProcessProphetMode</span><span class="o">.</span><span class="n">advanced</span><span class="p">:</span>
         <span class="c1">#: show all params in case of advanced mode</span>
@@ -8041,11 +8071,16 @@ can be modified by the user.</p>
       <p>Sets the training parameters for the model.</p>
 <p>This method allows the user to either start the training with the displayed default parameters or adapt the parameters
 according to their own preference.</p>
-<p>Side Effects:
-- The modified parameters are stored in a container and then the training function is called.
-- Parameters are displayed in the window.
-- A second window is displayed to show the logs contained in this project as a visual aid.</p>
 
+
+<details class="side-effects" open>
+  <summary>Side Effects</summary>
+  <ul>
+<li>The modified parameters are stored in a container and then the training function is called.</li>
+<li>Parameters are displayed in the window.</li>
+<li>A second window is displayed to show the logs contained in this project as a visual aid.</li>
+</ul>
+</details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetTrain.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">138</span>
@@ -8117,9 +8152,9 @@ according to their own preference.</p>
 <span class="sd">    according to their own preference.</span>
 
 <span class="sd">    Side Effects:</span>
-<span class="sd">    - The modified parameters are stored in a container and then the training function is called.</span>
-<span class="sd">    - Parameters are displayed in the window.</span>
-<span class="sd">    - A second window is displayed to show the logs contained in this project as a visual aid.</span>
+<span class="sd">        - The modified parameters are stored in a container and then the training function is called.</span>
+<span class="sd">        - Parameters are displayed in the window.</span>
+<span class="sd">        - A second window is displayed to show the logs contained in this project as a visual aid.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">cuda</span> <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;use cuda: &quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;f.pt&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;model name: &quot;</span><span class="p">)</span>
@@ -8529,10 +8564,15 @@ the user can go back to the window where the parameters are displayed</p>
     <div class="doc doc-contents ">
 
       <p>Carries out a training request.</p>
-<p>On successful request completion, the following side effects/outputs are expected:
-- <code>model</code>: A model <code>.pt</code> file is saved in the models folder.
-- <code>config</code>: A model's <code>config.json</code> information for the server is saved in the models folder as a JSON file.</p>
-<p>The training statistics (time error, accuracy, recall, f1 score) are displayed on the screen.</p>
+
+
+<details class="side-effects-on-success" open>
+  <summary>Side effects on success</summary>
+  <ul>
+<li><code>model</code>: A model <code>.pt</code> file is saved in the models folder.</li>
+<li><code>config</code>: A model's <code>config.json</code> information for the server is saved in the models folder as a JSON file.</li>
+</ul>
+</details>      <p>The training statistics (time error, accuracy, recall, f1 score) are displayed on the screen.</p>
 <p>If the training is unsuccessful, the error returned by the server is displayed on the CLI.</p>
 
             <details class="quote">
@@ -8609,9 +8649,9 @@ the user can go back to the window where the parameters are displayed</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Carries out a training request.</span>
 
-<span class="sd">    On successful request completion, the following side effects/outputs are expected:</span>
-<span class="sd">    - `model`: A model `.pt` file is saved in the models folder.</span>
-<span class="sd">    - `config`: A model&#39;s `config.json` information for the server is saved in the models folder as a JSON file.</span>
+<span class="sd">    Side effects on success:</span>
+<span class="sd">        - `model`: A model `.pt` file is saved in the models folder.</span>
+<span class="sd">        - `config`: A model&#39;s `config.json` information for the server is saved in the models folder as a JSON file.</span>
 
 <span class="sd">    The training statistics (time error, accuracy, recall, f1 score) are displayed on the screen.</span>
 
@@ -9114,8 +9154,8 @@ and will be redirected to a new window where the parameters for the chosen alter
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        carries out a single prediction request. </span>
 
-<span class="sd">        side effects/ outputs: </span>
-<span class="sd">        marker, timestamp and the probability of the single prediction are displayed</span>
+<span class="sd">        Side effects: </span>
+<span class="sd">            - marker, timestamp and the probability of the single prediction are displayed</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loading</span><span class="p">(</span><span class="s2">&quot;predicting next event...&quot;</span><span class="p">)</span>
         <span class="n">input_logs_path</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">partial_traces_path</span>
@@ -9204,8 +9244,8 @@ and will be redirected to a new window where the parameters for the chosen alter
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Carries out a multiple prediction request.</span>
 
-<span class="sd">        Side effects/outputs:</span>
-<span class="sd">        - Markers and timestamps of the multiple prediction are displayed in a separate file.</span>
+<span class="sd">        Side effects:</span>
+<span class="sd">            - Markers and timestamps of the multiple prediction are displayed in a separate file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loading</span><span class="p">(</span><span class="s2">&quot;predicting next event...&quot;</span><span class="p">)</span>
         <span class="n">input_logs_path</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">partial_traces_path</span>
@@ -9387,9 +9427,14 @@ and will be redirected to a new window where the parameters for the chosen alter
     <div class="doc doc-contents ">
 
       <p>Carries out a multiple prediction request.</p>
-<p>Side effects/outputs:
-- Markers and timestamps of the multiple prediction are displayed in a separate file.</p>
 
+
+<details class="side-effects" open>
+  <summary>Side effects</summary>
+  <ul>
+<li>Markers and timestamps of the multiple prediction are displayed in a separate file.</li>
+</ul>
+</details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetPredict.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
@@ -9448,8 +9493,8 @@ and will be redirected to a new window where the parameters for the chosen alter
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Carries out a multiple prediction request.</span>
 
-<span class="sd">    Side effects/outputs:</span>
-<span class="sd">    - Markers and timestamps of the multiple prediction are displayed in a separate file.</span>
+<span class="sd">    Side effects:</span>
+<span class="sd">        - Markers and timestamps of the multiple prediction are displayed in a separate file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">loading</span><span class="p">(</span><span class="s2">&quot;predicting next event...&quot;</span><span class="p">)</span>
     <span class="n">input_logs_path</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">partial_traces_path</span>
@@ -9515,9 +9560,14 @@ and will be redirected to a new window where the parameters for the chosen alter
     <div class="doc doc-contents ">
 
       <p>carries out a single prediction request. </p>
-<p>side effects/ outputs: 
-marker, timestamp and the probability of the single prediction are displayed</p>
 
+
+<details class="side-effects" open>
+  <summary>Side effects</summary>
+  <ul>
+<li>marker, timestamp and the probability of the single prediction are displayed</li>
+</ul>
+</details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetPredict.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 58</span>
@@ -9582,8 +9632,8 @@ marker, timestamp and the probability of the single prediction are displayed</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    carries out a single prediction request. </span>
 
-<span class="sd">    side effects/ outputs: </span>
-<span class="sd">    marker, timestamp and the probability of the single prediction are displayed</span>
+<span class="sd">    Side effects: </span>
+<span class="sd">        - marker, timestamp and the probability of the single prediction are displayed</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">loading</span><span class="p">(</span><span class="s2">&quot;predicting next event...&quot;</span><span class="p">)</span>
     <span class="n">input_logs_path</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">partial_traces_path</span>
@@ -10426,9 +10476,9 @@ process mining.</p>
 <span class="sd">        parameters.</span>
 
 <span class="sd">        Side effects:</span>
-<span class="sd">        - The predictive log that the RNN computed is stored in the predictive_logs directory of the current project,</span>
-<span class="sd">          and the user can return to previous menus.</span>
-<span class="sd">        - If unsuccessful, an error is indicated and the user can return to the model menu.</span>
+<span class="sd">            - The predictive log that the RNN computed is stored in the predictive_logs directory of the current project,</span>
+<span class="sd">            and the user can return to previous menus.</span>
+<span class="sd">            - If unsuccessful, an error is indicated and the user can return to the model menu.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loading</span><span class="p">(</span><span class="s2">&quot;preprocessing data...&quot;</span><span class="p">)</span>
         <span class="c1">#: check the file type of the input log</span>
@@ -10486,8 +10536,8 @@ process mining.</p>
 <span class="sd">        own preference.</span>
 
 <span class="sd">        Side effects:</span>
-<span class="sd">        - The modified parameters are stored in a container and then the function for creating a predictive log is called.</span>
-<span class="sd">        - Parameters are displayed in the window.</span>
+<span class="sd">            - The modified parameters are stored in a container and then the function for creating a predictive log is called.</span>
+<span class="sd">            - Parameters are displayed in the window.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">mode</span><span class="o">==</span> <span class="n">ProcessProphetMode</span><span class="o">.</span><span class="n">advanced</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;f.pt&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;model name: &quot;</span><span class="p">)</span>
@@ -10557,9 +10607,9 @@ process mining.</p>
 <span class="sd">        Sends a process mining request to the server with the previously confirmed parameters.</span>
 
 <span class="sd">        Side effects:</span>
-<span class="sd">        - The petri net that the mining algorithm computed is stored in the models directory of the current project,</span>
-<span class="sd">          and the user can return to previous menus.</span>
-<span class="sd">        - If unsuccessful, an error is indicated and the user can return to the model menu.</span>
+<span class="sd">            - The petri net that the mining algorithm computed is stored in the models directory of the current project,</span>
+<span class="sd">            and the user can return to previous menus.</span>
+<span class="sd">            - If unsuccessful, an error is indicated and the user can return to the model menu.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loading</span><span class="p">(</span><span class="s2">&quot;preprocessing data...&quot;</span><span class="p">)</span>
         <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
@@ -10617,8 +10667,8 @@ process mining.</p>
 <span class="sd">        Modes are not differentiated under this option.</span>
 
 <span class="sd">        Side effects:</span>
-<span class="sd">        - The modified parameters are stored in a container and then the mining function is called.</span>
-<span class="sd">        - Parameters are displayed in the window.</span>
+<span class="sd">            - The modified parameters are stored in a container and then the mining function is called.</span>
+<span class="sd">            - Parameters are displayed in the window.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;f.pt&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;model config: &quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;predicitive_log1.csv&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;log name: &quot;</span><span class="p">)</span>
@@ -10659,8 +10709,8 @@ process mining.</p>
 <span class="sd">        Sends a conformance checking request to the server with the previously confirmed parameters.</span>
 
 <span class="sd">        Side effects:</span>
-<span class="sd">        - The fitness that the conformance checking algorithm computed is displayed and the user can return to previous menus.</span>
-<span class="sd">        - If unsuccessful, an error is indicated and the user can return to the model menu.</span>
+<span class="sd">            - The fitness that the conformance checking algorithm computed is displayed and the user can return to previous menus.</span>
+<span class="sd">            - If unsuccessful, an error is indicated and the user can return to the model menu.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loading</span><span class="p">(</span><span class="s2">&quot;preprocessing data...&quot;</span><span class="p">)</span>
 
@@ -10714,8 +10764,8 @@ process mining.</p>
 <span class="sd">        Modes are not differentiated for this option.</span>
 
 <span class="sd">        Side effects:</span>
-<span class="sd">        - The modified parameters are stored in a container and then the conformance checking function is called.</span>
-<span class="sd">        - Parameters are displayed in the window.</span>
+<span class="sd">            - The modified parameters are stored in a container and then the conformance checking function is called.</span>
+<span class="sd">            - Parameters are displayed in the window.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;case:concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;case id key: &quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">case_activity_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;activity key: &quot;</span><span class="p">)</span>
@@ -10840,10 +10890,15 @@ process mining.</p>
     <div class="doc doc-contents ">
 
       <p>Sends a conformance checking request to the server with the previously confirmed parameters.</p>
-<p>Side effects:
-- The fitness that the conformance checking algorithm computed is displayed and the user can return to previous menus.
-- If unsuccessful, an error is indicated and the user can return to the model menu.</p>
 
+
+<details class="side-effects" open>
+  <summary>Side effects</summary>
+  <ul>
+<li>The fitness that the conformance checking algorithm computed is displayed and the user can return to previous menus.</li>
+<li>If unsuccessful, an error is indicated and the user can return to the model menu.</li>
+</ul>
+</details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetModel.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">307</span>
@@ -10901,8 +10956,8 @@ process mining.</p>
 <span class="sd">    Sends a conformance checking request to the server with the previously confirmed parameters.</span>
 
 <span class="sd">    Side effects:</span>
-<span class="sd">    - The fitness that the conformance checking algorithm computed is displayed and the user can return to previous menus.</span>
-<span class="sd">    - If unsuccessful, an error is indicated and the user can return to the model menu.</span>
+<span class="sd">        - The fitness that the conformance checking algorithm computed is displayed and the user can return to previous menus.</span>
+<span class="sd">        - If unsuccessful, an error is indicated and the user can return to the model menu.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">loading</span><span class="p">(</span><span class="s2">&quot;preprocessing data...&quot;</span><span class="p">)</span>
 
@@ -10966,11 +11021,16 @@ process mining.</p>
 
       <p>Sends a request to create a predictive log to the server with the previously confirmed
 parameters.</p>
-<p>Side effects:
-- The predictive log that the RNN computed is stored in the predictive_logs directory of the current project,
-  and the user can return to previous menus.
-- If unsuccessful, an error is indicated and the user can return to the model menu.</p>
 
+
+<details class="side-effects" open>
+  <summary>Side effects</summary>
+  <ul>
+<li>The predictive log that the RNN computed is stored in the predictive_logs directory of the current project,
+and the user can return to previous menus.</li>
+<li>If unsuccessful, an error is indicated and the user can return to the model menu.</li>
+</ul>
+</details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetModel.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 73</span>
@@ -11036,9 +11096,9 @@ parameters.</p>
 <span class="sd">    parameters.</span>
 
 <span class="sd">    Side effects:</span>
-<span class="sd">    - The predictive log that the RNN computed is stored in the predictive_logs directory of the current project,</span>
-<span class="sd">      and the user can return to previous menus.</span>
-<span class="sd">    - If unsuccessful, an error is indicated and the user can return to the model menu.</span>
+<span class="sd">        - The predictive log that the RNN computed is stored in the predictive_logs directory of the current project,</span>
+<span class="sd">        and the user can return to previous menus.</span>
+<span class="sd">        - If unsuccessful, an error is indicated and the user can return to the model menu.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">loading</span><span class="p">(</span><span class="s2">&quot;preprocessing data...&quot;</span><span class="p">)</span>
     <span class="c1">#: check the file type of the input log</span>
@@ -11106,11 +11166,16 @@ parameters.</p>
     <div class="doc doc-contents ">
 
       <p>Sends a process mining request to the server with the previously confirmed parameters.</p>
-<p>Side effects:
-- The petri net that the mining algorithm computed is stored in the models directory of the current project,
-  and the user can return to previous menus.
-- If unsuccessful, an error is indicated and the user can return to the model menu.</p>
 
+
+<details class="side-effects" open>
+  <summary>Side effects</summary>
+  <ul>
+<li>The petri net that the mining algorithm computed is stored in the models directory of the current project,
+and the user can return to previous menus.</li>
+<li>If unsuccessful, an error is indicated and the user can return to the model menu.</li>
+</ul>
+</details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetModel.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">205</span>
@@ -11172,9 +11237,9 @@ parameters.</p>
 <span class="sd">    Sends a process mining request to the server with the previously confirmed parameters.</span>
 
 <span class="sd">    Side effects:</span>
-<span class="sd">    - The petri net that the mining algorithm computed is stored in the models directory of the current project,</span>
-<span class="sd">      and the user can return to previous menus.</span>
-<span class="sd">    - If unsuccessful, an error is indicated and the user can return to the model menu.</span>
+<span class="sd">        - The petri net that the mining algorithm computed is stored in the models directory of the current project,</span>
+<span class="sd">        and the user can return to previous menus.</span>
+<span class="sd">        - If unsuccessful, an error is indicated and the user can return to the model menu.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">loading</span><span class="p">(</span><span class="s2">&quot;preprocessing data...&quot;</span><span class="p">)</span>
     <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
@@ -11377,10 +11442,15 @@ or go back to the previous menu</p>
       <p>User can either start the conformance checking with the displayed default parameters or alternatively adapt the parameters to their
 own preference (e.g. select different conformance checking algorithm).</p>
 <p>Modes are not differentiated for this option.</p>
-<p>Side effects:
-- The modified parameters are stored in a container and then the conformance checking function is called.
-- Parameters are displayed in the window.</p>
 
+
+<details class="side-effects" open>
+  <summary>Side effects</summary>
+  <ul>
+<li>The modified parameters are stored in a container and then the conformance checking function is called.</li>
+<li>Parameters are displayed in the window.</li>
+</ul>
+</details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetModel.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">359</span>
@@ -11425,8 +11495,8 @@ own preference (e.g. select different conformance checking algorithm).</p>
 <span class="sd">    Modes are not differentiated for this option.</span>
 
 <span class="sd">    Side effects:</span>
-<span class="sd">    - The modified parameters are stored in a container and then the conformance checking function is called.</span>
-<span class="sd">    - Parameters are displayed in the window.</span>
+<span class="sd">        - The modified parameters are stored in a container and then the conformance checking function is called.</span>
+<span class="sd">        - Parameters are displayed in the window.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;case:concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;case id key: &quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">case_activity_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;activity key: &quot;</span><span class="p">)</span>
@@ -11471,10 +11541,15 @@ own preference (e.g. select different conformance checking algorithm).</p>
 
       <p>User can either start generating a predictive log with the displayed default parameters or alternatively adapt the parameters to their
 own preference.</p>
-<p>Side effects:
-- The modified parameters are stored in a container and then the function for creating a predictive log is called.
-- Parameters are displayed in the window.</p>
 
+
+<details class="side-effects" open>
+  <summary>Side effects</summary>
+  <ul>
+<li>The modified parameters are stored in a container and then the function for creating a predictive log is called.</li>
+<li>Parameters are displayed in the window.</li>
+</ul>
+</details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetModel.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
@@ -11552,8 +11627,8 @@ own preference.</p>
 <span class="sd">    own preference.</span>
 
 <span class="sd">    Side effects:</span>
-<span class="sd">    - The modified parameters are stored in a container and then the function for creating a predictive log is called.</span>
-<span class="sd">    - Parameters are displayed in the window.</span>
+<span class="sd">        - The modified parameters are stored in a container and then the function for creating a predictive log is called.</span>
+<span class="sd">        - Parameters are displayed in the window.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">mode</span><span class="o">==</span> <span class="n">ProcessProphetMode</span><span class="o">.</span><span class="n">advanced</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;f.pt&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;model name: &quot;</span><span class="p">)</span>
@@ -11636,10 +11711,15 @@ own preference.</p>
       <p>User can either start the mining with the displayed default parameters or alternatively adapt the parameters to their
 own preference (e.g. select different mining algorithm).</p>
 <p>Modes are not differentiated under this option.</p>
-<p>Side effects:
-- The modified parameters are stored in a container and then the mining function is called.
-- Parameters are displayed in the window.</p>
 
+
+<details class="side-effects" open>
+  <summary>Side effects</summary>
+  <ul>
+<li>The modified parameters are stored in a container and then the mining function is called.</li>
+<li>Parameters are displayed in the window.</li>
+</ul>
+</details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetModel.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">262</span>
@@ -11693,8 +11773,8 @@ own preference (e.g. select different mining algorithm).</p>
 <span class="sd">    Modes are not differentiated under this option.</span>
 
 <span class="sd">    Side effects:</span>
-<span class="sd">    - The modified parameters are stored in a container and then the mining function is called.</span>
-<span class="sd">    - Parameters are displayed in the window.</span>
+<span class="sd">        - The modified parameters are stored in a container and then the mining function is called.</span>
+<span class="sd">        - Parameters are displayed in the window.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;f.pt&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;model config: &quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;predicitive_log1.csv&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;log name: &quot;</span><span class="p">)</span>

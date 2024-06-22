@@ -4347,11 +4347,17 @@ formatting (bool, optional): If True, the event log is formatted so that it can 
     <div class="doc doc-contents ">
 
 
-      <p>This is the NNMamangement class. Provided functinality: 
-    - train the model based on the event log. 
-    - test the model based on the event log.
-    - set params.</p>
+      <p>This is the NNMamangement class. </p>
 
+
+<details class="provided-functinality" open>
+  <summary>Provided functinality</summary>
+  <ul>
+<li>Train the model based on the event log. </li>
+<li>Test the model based on the event log.</li>
+<li>Set params.</li>
+</ul>
+</details>
               <details class="quote">
                 <summary>Source code in <code>server/nn_manager.py</code></summary>
                 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">141</span>
@@ -4586,12 +4592,18 @@ formatting (bool, optional): If True, the event log is formatted so that it can 
 <span class="normal">370</span>
 <span class="normal">371</span>
 <span class="normal">372</span>
-<span class="normal">373</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">NNManagement</span><span class="p">:</span> 
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">NNManagement</span><span class="p">:</span> 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This is the NNMamangement class. Provided functinality: </span>
-<span class="sd">        - train the model based on the event log. </span>
-<span class="sd">        - test the model based on the event log.</span>
-<span class="sd">        - set params. </span>
+<span class="sd">    This is the NNMamangement class. </span>
+
+<span class="sd">    Provided functinality: </span>
+<span class="sd">        - Train the model based on the event log. </span>
+<span class="sd">        - Test the model based on the event log.</span>
+<span class="sd">        - Set params. </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span><span class="n">Config</span><span class="o">|</span><span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span> <span class="k">if</span> <span class="n">config</span> <span class="o">==</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">config</span>
@@ -4902,10 +4914,7 @@ formatting (bool, optional): If True, the event log is formatted so that it can 
 
             <details class="quote">
               <summary>Source code in <code>server/nn_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">159</span>
 <span class="normal">160</span>
 <span class="normal">161</span>
 <span class="normal">162</span>
@@ -4937,7 +4946,10 @@ formatting (bool, optional): If True, the event log is formatted so that it can 
 <span class="normal">188</span>
 <span class="normal">189</span>
 <span class="normal">190</span>
-<span class="normal">191</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is the testing function for the model. It prints out the time_error, precision, recall, and f1 score.</span>
 
@@ -4997,10 +5009,7 @@ optimizer state dict</p>
 
             <details class="quote">
               <summary>Source code in <code>server/nn_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">226</span>
-<span class="normal">227</span>
-<span class="normal">228</span>
-<span class="normal">229</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">229</span>
 <span class="normal">230</span>
 <span class="normal">231</span>
 <span class="normal">232</span>
@@ -5011,7 +5020,10 @@ optimizer state dict</p>
 <span class="normal">237</span>
 <span class="normal">238</span>
 <span class="normal">239</span>
-<span class="normal">240</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">export_nn_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;trained_model.pt&quot;</span><span class="p">):</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">export_nn_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;trained_model.pt&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    generates the .pt file containing the generated</span>
 <span class="sd">    model. </span>
@@ -5068,10 +5080,7 @@ optimizer state dict</p>
 
             <details class="quote">
               <summary>Source code in <code>server/nn_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">196</span>
 <span class="normal">197</span>
 <span class="normal">198</span>
 <span class="normal">199</span>
@@ -5082,7 +5091,10 @@ optimizer state dict</p>
 <span class="normal">204</span>
 <span class="normal">205</span>
 <span class="normal">206</span>
-<span class="normal">207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_training_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_training_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        str: The accuracy, recall, and F1 score as a JSON object in string format.</span>
@@ -5212,10 +5224,7 @@ optimizer state dict</p>
 
             <details class="quote">
               <summary>Source code in <code>server/nn_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">279</span>
-<span class="normal">280</span>
-<span class="normal">281</span>
-<span class="normal">282</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">282</span>
 <span class="normal">283</span>
 <span class="normal">284</span>
 <span class="normal">285</span>
@@ -5243,7 +5252,10 @@ optimizer state dict</p>
 <span class="normal">307</span>
 <span class="normal">308</span>
 <span class="normal">309</span>
-<span class="normal">310</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">grid_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">search_parameters</span><span class="p">):</span> 
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">grid_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">search_parameters</span><span class="p">):</span> 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Grid search for the best hyperparameters.</span>
 
@@ -5296,10 +5308,7 @@ optimizer state dict</p>
 
             <details class="quote">
               <summary>Source code in <code>server/nn_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">212</span>
 <span class="normal">213</span>
 <span class="normal">214</span>
 <span class="normal">215</span>
@@ -5310,7 +5319,10 @@ optimizer state dict</p>
 <span class="normal">220</span>
 <span class="normal">221</span>
 <span class="normal">222</span>
-<span class="normal">223</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">import_nn_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">import_nn_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    imports a .pt file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -5349,10 +5361,7 @@ and casts the input to tensors;  generates the batches.</p>
 
             <details class="quote">
               <summary>Source code in <code>server/nn_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">312</span>
-<span class="normal">313</span>
-<span class="normal">314</span>
-<span class="normal">315</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">315</span>
 <span class="normal">316</span>
 <span class="normal">317</span>
 <span class="normal">318</span>
@@ -5368,7 +5377,10 @@ and casts the input to tensors;  generates the batches.</p>
 <span class="normal">328</span>
 <span class="normal">329</span>
 <span class="normal">330</span>
-<span class="normal">331</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">train_data</span><span class="p">,</span> <span class="n">test_data</span><span class="p">,</span> <span class="n">case_id</span><span class="p">,</span> <span class="n">timestamp_key</span><span class="p">,</span> <span class="n">event_key</span> <span class="p">):</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">train_data</span><span class="p">,</span> <span class="n">test_data</span><span class="p">,</span> <span class="n">case_id</span><span class="p">,</span> <span class="n">timestamp_key</span><span class="p">,</span> <span class="n">event_key</span> <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    imports a training and testing sublogs, which were preprocessed by the preprocessing module.</span>
 
@@ -5478,10 +5490,7 @@ and casts the input to tensors;  generates the batches.</p>
 
             <details class="quote">
               <summary>Source code in <code>server/nn_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">242</span>
-<span class="normal">243</span>
-<span class="normal">244</span>
-<span class="normal">245</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">245</span>
 <span class="normal">246</span>
 <span class="normal">247</span>
 <span class="normal">248</span>
@@ -5513,7 +5522,10 @@ and casts the input to tensors;  generates the batches.</p>
 <span class="normal">274</span>
 <span class="normal">275</span>
 <span class="normal">276</span>
-<span class="normal">277</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">random_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">search_parameters</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span> 
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">random_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">search_parameters</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span> 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Random search for the best hyperparameters. Saves the best model in the class.</span>
 
@@ -5655,10 +5667,7 @@ and casts the input to tensors;  generates the batches.</p>
 
             <details class="quote">
               <summary>Source code in <code>server/nn_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">335</span>
-<span class="normal">336</span>
-<span class="normal">337</span>
-<span class="normal">338</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">338</span>
 <span class="normal">339</span>
 <span class="normal">340</span>
 <span class="normal">341</span>
@@ -5693,7 +5702,10 @@ and casts the input to tensors;  generates the batches.</p>
 <span class="normal">370</span>
 <span class="normal">371</span>
 <span class="normal">372</span>
-<span class="normal">373</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This is the main training function.</span>
 
@@ -5764,10 +5776,15 @@ and casts the input to tensors;  generates the batches.</p>
     <div class="doc doc-contents first">
 
       <p>This module is in charge of administrating prediction generation.</p>
-<p>In particular, two kinds of predictions can be made:
-- single predictions (one step in the future and get the most likely (event, timestamp) pair)
-- multiple predictions (generate a predictive tree). these can be saved in a file.</p>
-<p>predictions are also decoded.</p>
+
+
+<details class="the-two-following-of-predictions-can-be-made" open>
+  <summary>The two following of predictions can be made</summary>
+  <ul>
+<li>single predictions (one step in the future and get the most likely (event, timestamp) pair)</li>
+<li>multiple predictions (generate a predictive tree). these can be saved in a file.</li>
+</ul>
+</details>      <p>Predictions are also decoded.</p>
 <p>This module is also used by the <code>process_model_manager</code> module, which calls the multiple
 prediction manager repeatedly. Since this other manager supports different options in
 relation to how the cut sequences should be restored, the parametrized function
