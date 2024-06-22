@@ -140,10 +140,13 @@ class Config:
 
 class NNManagement: 
     """
-    This is the NNMamangement class. Provided functinality: 
-        - train the model based on the event log. 
-        - test the model based on the event log.
-        - set params. 
+    This is the NNMamangement class. 
+    
+    Provided functinality: 
+        - Train the model based on the event log. 
+        - Test the model based on the event log.
+        - Set params. 
+        
     """
     def __init__(self, config:Config|None = None):
         self.config = Config() if config == None else config

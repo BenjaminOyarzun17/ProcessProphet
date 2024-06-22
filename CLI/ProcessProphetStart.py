@@ -136,14 +136,14 @@ class ProcessProphetStart:
         At the same time, the state is updated (see `ProcessProphetState`).
 
         We use the following file structure: 
-        - `projects/`: Contains all projects.
-        - `projects/dummy_project/`: Contains all important subfolders for `dummy_project`.
-        - `projects/dummy_project/input_logs`: All input logs used for `dummy_project` should be stored in this folder.
-        - `projects/dummy_project/models`: All models used for `dummy_project` are generated in this folder.
-        - `projects/dummy_project/petri_nets`: All petri nets used for `dummy_project` are stored here.
-        - `projects/dummy_project/predictive_logs`: All generated predictive logs used for `dummy_project` and conformance checking are stored here.
-        - `projects/dummy_project/partial_traces`: All input partial traces given by the user are searched inside this folder.  
-        - `projects/dummy_project/multiple_predictions_path`: All predictions created using the multiple predictions function are stored here (for the `dummy_project` project).
+            - `projects/`: Contains all projects.
+            - `projects/dummy_project/`: Contains all important subfolders for `dummy_project`.
+            - `projects/dummy_project/input_logs`: All input logs used for `dummy_project` should be stored in this folder.
+            - `projects/dummy_project/models`: All models used for `dummy_project` are generated in this folder.
+            - `projects/dummy_project/petri_nets`: All petri nets used for `dummy_project` are stored here.
+            - `projects/dummy_project/predictive_logs`: All generated predictive logs used for `dummy_project` and conformance checking are stored here.
+            - `projects/dummy_project/partial_traces`: All input partial traces given by the user are searched inside this folder.  
+            - `projects/dummy_project/multiple_predictions_path`: All predictions created using the multiple predictions function are stored here (for the `dummy_project` project).
         """
         name = self.project_name_input.value
         message = ""

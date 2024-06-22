@@ -65,9 +65,9 @@ class ProcessProphetTrain:
         """
         Carries out a training request.
 
-        On successful request completion, the following side effects/outputs are expected:
-        - `model`: A model `.pt` file is saved in the models folder.
-        - `config`: A model's `config.json` information for the server is saved in the models folder as a JSON file.
+        Side effects on success:
+            - `model`: A model `.pt` file is saved in the models folder.
+            - `config`: A model's `config.json` information for the server is saved in the models folder as a JSON file.
 
         The training statistics (time error, accuracy, recall, f1 score) are displayed on the screen.
 
@@ -143,9 +143,9 @@ class ProcessProphetTrain:
         according to their own preference.
 
         Side Effects:
-        - The modified parameters are stored in a container and then the training function is called.
-        - Parameters are displayed in the window.
-        - A second window is displayed to show the logs contained in this project as a visual aid.
+            - The modified parameters are stored in a container and then the training function is called.
+            - Parameters are displayed in the window.
+            - A second window is displayed to show the logs contained in this project as a visual aid.
         """
         self.cuda = ptg.InputField("True", prompt="use cuda: ")
         self.model_name = ptg.InputField("f.pt", prompt="model name: ")
@@ -356,10 +356,10 @@ class ProcessProphetTrain:
         can be modified by the user.
 
         Side effects:
-        - Initializes window with default parameters where the user can adjust them.
-        - Initializes window where all the event logs of the current project are listed that can be used
-          for the training.
-        - Random search can be called if the user confirms the indicated parameters.
+            - Initializes window with default parameters where the user can adjust them.
+            - Initializes window where all the event logs of the current project are listed that can be used
+            for the training.
+            - Random search can be called if the user confirms the indicated parameters.
         """
         if self.pp.mode == ProcessProphetMode.advanced:
             #: show all params in case of advanced mode
@@ -498,10 +498,10 @@ class ProcessProphetTrain:
         can be modified by the user.
 
         Side effects:
-        - Initializes window with default parameters where the user can adjust them.
-        - Initializes window where all the event logs of the current project are listed that can be used
-          for the training.
-        - Grid search can be called if the user confirms the indicated parameters.
+            - Initializes window with default parameters where the user can adjust them.
+            - Initializes window where all the event logs of the current project are listed that can be used
+            for the training.
+            - Grid search can be called if the user confirms the indicated parameters.
         """
         if self.pp.mode == ProcessProphetMode.advanced:
             #: show all params in case of advanced mode

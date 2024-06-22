@@ -59,8 +59,8 @@ class ProcessProphetPredict:
         """
         carries out a single prediction request. 
 
-        side effects/ outputs: 
-        marker, timestamp and the probability of the single prediction are displayed
+        Side effects: 
+            - marker, timestamp and the probability of the single prediction are displayed
         """
         self.loading("predicting next event...")
         input_logs_path= self.pp.state.partial_traces_path
@@ -149,8 +149,8 @@ class ProcessProphetPredict:
         """
         Carries out a multiple prediction request.
 
-        Side effects/outputs:
-        - Markers and timestamps of the multiple prediction are displayed in a separate file.
+        Side effects:
+            - Markers and timestamps of the multiple prediction are displayed in a separate file.
         """
         self.loading("predicting next event...")
         input_logs_path= self.pp.state.partial_traces_path

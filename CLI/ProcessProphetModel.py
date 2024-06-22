@@ -76,9 +76,9 @@ class ProcessProphetModel:
         parameters.
 
         Side effects:
-        - The predictive log that the RNN computed is stored in the predictive_logs directory of the current project,
-          and the user can return to previous menus.
-        - If unsuccessful, an error is indicated and the user can return to the model menu.
+            - The predictive log that the RNN computed is stored in the predictive_logs directory of the current project,
+            and the user can return to previous menus.
+            - If unsuccessful, an error is indicated and the user can return to the model menu.
         """
         self.loading("preprocessing data...")
         #: check the file type of the input log
@@ -136,8 +136,8 @@ class ProcessProphetModel:
         own preference.
 
         Side effects:
-        - The modified parameters are stored in a container and then the function for creating a predictive log is called.
-        - Parameters are displayed in the window.
+            - The modified parameters are stored in a container and then the function for creating a predictive log is called.
+            - Parameters are displayed in the window.
         """
         if self.pp.mode== ProcessProphetMode.advanced:
             self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
@@ -207,9 +207,9 @@ class ProcessProphetModel:
         Sends a process mining request to the server with the previously confirmed parameters.
 
         Side effects:
-        - The petri net that the mining algorithm computed is stored in the models directory of the current project,
-          and the user can return to previous menus.
-        - If unsuccessful, an error is indicated and the user can return to the model menu.
+            - The petri net that the mining algorithm computed is stored in the models directory of the current project,
+            and the user can return to previous menus.
+            - If unsuccessful, an error is indicated and the user can return to the model menu.
         """
         self.loading("preprocessing data...")
         params = {
@@ -267,8 +267,8 @@ class ProcessProphetModel:
         Modes are not differentiated under this option.
 
         Side effects:
-        - The modified parameters are stored in a container and then the mining function is called.
-        - Parameters are displayed in the window.
+            - The modified parameters are stored in a container and then the mining function is called.
+            - Parameters are displayed in the window.
         """
         self.model_name=  ptg.InputField("f.pt", prompt="model config: ")
         self.log_name=  ptg.InputField("predicitive_log1.csv", prompt="log name: ")
@@ -309,8 +309,8 @@ class ProcessProphetModel:
         Sends a conformance checking request to the server with the previously confirmed parameters.
 
         Side effects:
-        - The fitness that the conformance checking algorithm computed is displayed and the user can return to previous menus.
-        - If unsuccessful, an error is indicated and the user can return to the model menu.
+            - The fitness that the conformance checking algorithm computed is displayed and the user can return to previous menus.
+            - If unsuccessful, an error is indicated and the user can return to the model menu.
         """
         self.loading("preprocessing data...")
 
@@ -364,8 +364,8 @@ class ProcessProphetModel:
         Modes are not differentiated for this option.
 
         Side effects:
-        - The modified parameters are stored in a container and then the conformance checking function is called.
-        - Parameters are displayed in the window.
+            - The modified parameters are stored in a container and then the conformance checking function is called.
+            - Parameters are displayed in the window.
         """
         self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
         self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
