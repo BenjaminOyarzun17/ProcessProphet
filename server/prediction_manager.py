@@ -1,11 +1,11 @@
 """
 This module is in charge of administrating prediction generation.
 
-In particular, two kinds of predictions can be made:
-- single predictions (one step in the future and get the most likely (event, timestamp) pair)
-- multiple predictions (generate a predictive tree). these can be saved in a file.
+The two following of predictions can be made:
+    - single predictions (one step in the future and get the most likely (event, timestamp) pair)
+    - multiple predictions (generate a predictive tree). these can be saved in a file.
 
-predictions are also decoded.
+Predictions are also decoded.
 
 This module is also used by the `process_model_manager` module, which calls the multiple
 prediction manager repeatedly. Since this other manager supports different options in
