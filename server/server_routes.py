@@ -1,5 +1,12 @@
 """
 This module contains all the supported server routes by ProcessProphet. 
+
+A flask server is implemented that runs on port `8080` by default. This can be changed
+in the `.env` file. 
+
+The server has been designed assuming both frontend and this server share the same 
+file system, as the server writes output files directly to the indicated directories, instead of
+returning them as a response.
 """
 
 
@@ -161,8 +168,10 @@ def test():
 @check_required_paths_factory(['path_to_log', "petri_net_path"])
 def conformance():
     """
+    Server route: `/conformance`
+
     Applies a conformance checking algorithm on the given `petri_net_path` and the log in `path_to_log`. Currently only
-    token-based replay and alignment are supported. The conformance checking technique is selected by the `conformance_technique` parameter.
+    token-based replay and alignment based conformance checking are supported. The conformance checking technique is selected by the `conformance_technique` parameter.
 
     The POST request must have the following parameters:
 
@@ -173,7 +182,7 @@ def conformance():
         timestamp (str): Timestamp column name.
         path_to_log (str): Path to the event log.
         petri_net_path (str): Path to the Petri net used for conformance checking.
-        conformance_technique (str): Either "token" or "alignment". This selects the corresponding conformance checking technique.
+        conformance_technique (str): Either `"token"` or `"alignment"`. This selects the corresponding conformance checking technique.
 
     400 Response:
         - An object with the "error" key indicating what went wrong is sent.
@@ -239,6 +248,8 @@ def conformance():
 @check_not_present_paths_factory(["petri_net_path"])
 def generate_predictive_process_model():
     """
+    Server route: `/generate_predictive_process_model`
+
     Create a predictive process model, i.e., a petri net using the predictive log in `path_to_log` and the given configuration.
     The petri net is generated using process mining algorithms such as the alpha miner, heuristic miner, inductive miner, and prefix tree miner, 
     which can be selected using the `selected_model` parameter. The petri net is saved in the `petri_net_path` and the config file is saved in the `petri_net_path.json`.
@@ -370,11 +381,14 @@ def generate_predictive_process_model():
 @check_booleans_factory(["non_stop","is_xes", "random_cuts"])
 def generate_predictive_log():
     """
+    Server route: `/generate_predictive_log`
+
     Generates the predictive event log by cutting all traces using the given configuration
-    and by extending these cut traces with predictions. The predictive log is exported in the given path.
-    The cutting can be done in two ways: either by cutting the last `cut_length` events from each trace or by cutting at a random sequence index,
-    and the predictions can be made until an end marking is reached or for a fixed number of iterations.
-    A pytorch model is used for making the predictions. The generated predictive log is saved in the `new_log_path`.
+    and by extending these cut traces with predictions. The predictive log is exported to `new_log_path`.
+    The cutting can be done in two ways: either by cutting the last `cut_length` events from each trace or by cutting at a random sequence index.
+    If cutting at random indices, predictions can be made until an end marking is reached (`non_stop==True`) or for a fixed number of iterations (`non_stop= False`).
+    If `non_stop==False`, or `random_cuts==False`, each trace is extended by `cut_length` predictions.
+    A pytorch model found in `path_to_model` is used for making the predictions.
 
     The POST request must have the following parameters:
 
@@ -476,6 +490,8 @@ def generate_predictive_log():
 @check_integers_factory(["degree", "depth"])
 def multiple_prediction():
     """
+    Server route: `/multiple_prediction`
+
     A model is used for making multiple predictions. The predictions are saved in the `prediction_file_name` file.
     A tree like structure is generated with the predictions. The tree has a depth of `depth` and a branching degree of `degree`.
 
@@ -568,6 +584,8 @@ def multiple_prediction():
 @check_required_paths_factory(['path_to_log', "config", "path_to_model"])
 def single_prediction():
     """
+    Server route: `/single_prediction`
+
     Given a partial trace found in `path_to_log`, perform a single prediction.
 
     The POST request must have the following parameters:
@@ -651,6 +669,8 @@ def single_prediction():
 @check_not_present_paths_factory(["model_path"])
 def random_search():
     """
+    Server route: `/random_search`
+
     Apply random search on the given log in `path_to_log` for training and testing. 
     The best model is saved in `model_path`. The parameters are listed below.
 
@@ -793,6 +813,8 @@ def random_search():
 @check_not_present_paths_factory(["model_path"])
 def grid_search():
     """
+    Server route: `/grid_search`
+
     Apply grid search on the given log in `path_to_log` for training and testing. The best model is saved in `model_path`.
 
     The POST request must have the following parameters:
@@ -921,6 +943,8 @@ def grid_search():
 @check_not_present_paths_factory(["model_path"])
 def train_nn():
     """
+    Server route: `/train_nn`
+
     Trains the RMTPP neural network using the log in `path_to_log` for training and testing. 
     A model is generated in `model_path` and the config file is saved in `model_path` with the extension `.config.json`.
     All trainig params are listed below. 
@@ -1062,6 +1086,8 @@ def load_config_from_preprocessor(config : nn_manager.Config, preprocessor : pre
 @check_not_present_paths_factory(["save_path"])
 def replace_with_mode():
     """
+    Server route: `/replace_with_mode`
+
     Replaces NaN's in the activity column with the median to the event log in in `path_to_log`.
     Creates a filtered event log in `save_path`.
 
@@ -1129,6 +1155,8 @@ def replace_with_mode():
 @check_not_present_paths_factory(["save_path"])
 def add_unique_start_end():
     """
+    Server route: `/replace_unique_start_end`
+
     Adds a unique start/end activity to the log in `path_to_log`.
 
     A filtered event log is created in `save_path`.
@@ -1193,6 +1221,8 @@ def add_unique_start_end():
 @check_not_present_paths_factory(["save_path"])
 def remove_duplicates():
     """
+    Server route: `/remove_duplicates`
+
     Removes the duplicates from the event log in `path_to_log`.
 
     This function removes the rows where the same activity happened at the same time in the same case ID.
