@@ -694,7 +694,12 @@
 <a id="server.server_routes"></a>
     <div class="doc doc-contents first">
 
-      <p>This module contains all the supported server routes by ProcessProphet.</p>
+      <p>This module contains all the supported server routes by ProcessProphet. </p>
+<p>A flask server is implemented that runs on port <code>8080</code> by default. This can be changed
+in the <code>.env</code> file. </p>
+<p>The server has been designed assuming both frontend and this server share the same 
+file system, as the server writes output files directly to the indicated directories, instead of
+returning them as a response.</p>
 
 
 
@@ -719,7 +724,8 @@
 
     <div class="doc doc-contents ">
 
-      <p>Adds a unique start/end activity to the log in <code>path_to_log</code>.</p>
+      <p>Server route: <code>/replace_unique_start_end</code></p>
+<p>Adds a unique start/end activity to the log in <code>path_to_log</code>.</p>
 <p>A filtered event log is created in <code>save_path</code>.</p>
 <p>The POST request must have the following parameters:</p>
 
@@ -824,33 +830,7 @@
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1126</span>
-<span class="normal">1127</span>
-<span class="normal">1128</span>
-<span class="normal">1129</span>
-<span class="normal">1130</span>
-<span class="normal">1131</span>
-<span class="normal">1132</span>
-<span class="normal">1133</span>
-<span class="normal">1134</span>
-<span class="normal">1135</span>
-<span class="normal">1136</span>
-<span class="normal">1137</span>
-<span class="normal">1138</span>
-<span class="normal">1139</span>
-<span class="normal">1140</span>
-<span class="normal">1141</span>
-<span class="normal">1142</span>
-<span class="normal">1143</span>
-<span class="normal">1144</span>
-<span class="normal">1145</span>
-<span class="normal">1146</span>
-<span class="normal">1147</span>
-<span class="normal">1148</span>
-<span class="normal">1149</span>
-<span class="normal">1150</span>
-<span class="normal">1151</span>
-<span class="normal">1152</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1152</span>
 <span class="normal">1153</span>
 <span class="normal">1154</span>
 <span class="normal">1155</span>
@@ -886,12 +866,42 @@
 <span class="normal">1185</span>
 <span class="normal">1186</span>
 <span class="normal">1187</span>
-<span class="normal">1188</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/add_unique_start_end&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">1188</span>
+<span class="normal">1189</span>
+<span class="normal">1190</span>
+<span class="normal">1191</span>
+<span class="normal">1192</span>
+<span class="normal">1193</span>
+<span class="normal">1194</span>
+<span class="normal">1195</span>
+<span class="normal">1196</span>
+<span class="normal">1197</span>
+<span class="normal">1198</span>
+<span class="normal">1199</span>
+<span class="normal">1200</span>
+<span class="normal">1201</span>
+<span class="normal">1202</span>
+<span class="normal">1203</span>
+<span class="normal">1204</span>
+<span class="normal">1205</span>
+<span class="normal">1206</span>
+<span class="normal">1207</span>
+<span class="normal">1208</span>
+<span class="normal">1209</span>
+<span class="normal">1210</span>
+<span class="normal">1211</span>
+<span class="normal">1212</span>
+<span class="normal">1213</span>
+<span class="normal">1214</span>
+<span class="normal">1215</span>
+<span class="normal">1216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/add_unique_start_end&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_booleans_factory</span><span class="p">([</span><span class="s2">&quot;is_xes&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">])</span>
 <span class="nd">@check_not_present_paths_factory</span><span class="p">([</span><span class="s2">&quot;save_path&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">add_unique_start_end</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Server route: `/replace_unique_start_end`</span>
+
 <span class="sd">    Adds a unique start/end activity to the log in `path_to_log`.</span>
 
 <span class="sd">    A filtered event log is created in `save_path`.</span>
@@ -971,14 +981,7 @@ otherwise an error response is sent.  (the user should know the input is wrong)<
 
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">121</span>
 <span class="normal">122</span>
 <span class="normal">123</span>
 <span class="normal">124</span>
@@ -986,7 +989,14 @@ otherwise an error response is sent.  (the user should know the input is wrong)<
 <span class="normal">126</span>
 <span class="normal">127</span>
 <span class="normal">128</span>
-<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_booleans_factory</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span> 
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_booleans_factory</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span> 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    all parameters in the given list are checked whether they are of bool type</span>
 <span class="sd">    otherwise an error response is sent.  (the user should know the input is wrong)</span>
@@ -1024,14 +1034,7 @@ otherwise an error response is sent.  (the user should know the input is wrong)<
 
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
 <span class="normal">101</span>
 <span class="normal">102</span>
 <span class="normal">103</span>
@@ -1041,7 +1044,14 @@ otherwise an error response is sent.  (the user should know the input is wrong)<
 <span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
-<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_floats_factory</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_floats_factory</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    all parameters in the given list are checked whether they are of float type</span>
 <span class="sd">    otherwise an error response is sent.  (the user should know the input is wrong)</span>
@@ -1081,14 +1091,7 @@ otherwise an error response is sent.  (the user should know the input is wrong)<
 
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">80</span>
 <span class="normal">81</span>
 <span class="normal">82</span>
 <span class="normal">83</span>
@@ -1098,7 +1101,14 @@ otherwise an error response is sent.  (the user should know the input is wrong)<
 <span class="normal">87</span>
 <span class="normal">88</span>
 <span class="normal">89</span>
-<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_integers_factory</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_integers_factory</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    all parameters in the given list are checked whether they are of integer type</span>
 <span class="sd">    otherwise an error response is sent.  (the user should know the input is wrong)</span>
@@ -1138,14 +1148,7 @@ if it does, an error is sent as response (the user should know the input is wron
 
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">40</span>
 <span class="normal">41</span>
 <span class="normal">42</span>
 <span class="normal">43</span>
@@ -1153,7 +1156,14 @@ if it does, an error is sent as response (the user should know the input is wron
 <span class="normal">45</span>
 <span class="normal">46</span>
 <span class="normal">47</span>
-<span class="normal">48</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_not_present_paths_factory</span><span class="p">(</span><span class="n">must_not_exist</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_not_present_paths_factory</span><span class="p">(</span><span class="n">must_not_exist</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    this decorator checks in the given file paths list if each file does not exist</span>
 <span class="sd">    if it does, an error is sent as response (the user should know the input is wrong) </span>
@@ -1192,14 +1202,7 @@ if it does not, an error is sent as response  (the user should know the input is
 
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
@@ -1209,7 +1212,14 @@ if it does not, an error is sent as response  (the user should know the input is
 <span class="normal">66</span>
 <span class="normal">67</span>
 <span class="normal">68</span>
-<span class="normal">69</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_required_paths_factory</span><span class="p">(</span><span class="n">must_be_present</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_required_paths_factory</span><span class="p">(</span><span class="n">must_be_present</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    this decorator checks in the given file paths list if each file does exist. </span>
 <span class="sd">    very useful for checking if a log exists for example.</span>
@@ -1244,8 +1254,9 @@ if it does not, an error is sent as response  (the user should know the input is
 
     <div class="doc doc-contents ">
 
-      <p>Applies a conformance checking algorithm on the given <code>petri_net_path</code> and the log in <code>path_to_log</code>. Currently only
-token-based replay and alignment are supported. The conformance checking technique is selected by the <code>conformance_technique</code> parameter.</p>
+      <p>Server route: <code>/conformance</code></p>
+<p>Applies a conformance checking algorithm on the given <code>petri_net_path</code> and the log in <code>path_to_log</code>. Currently only
+token-based replay and alignment based conformance checking are supported. The conformance checking technique is selected by the <code>conformance_technique</code> parameter.</p>
 <p>The POST request must have the following parameters:</p>
 
 
@@ -1351,7 +1362,7 @@ token-based replay and alignment are supported. The conformance checking techniq
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Either "token" or "alignment". This selects the corresponding conformance checking technique.</p>
+                <p>Either <code>"token"</code> or <code>"alignment"</code>. This selects the corresponding conformance checking technique.</p>
               </div>
             </td>
             <td>
@@ -1370,14 +1381,7 @@ token-based replay and alignment are supported. The conformance checking techniq
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">167</span>
 <span class="normal">168</span>
 <span class="normal">169</span>
 <span class="normal">170</span>
@@ -1445,12 +1449,23 @@ token-based replay and alignment are supported. The conformance checking techniq
 <span class="normal">232</span>
 <span class="normal">233</span>
 <span class="normal">234</span>
-<span class="normal">235</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/conformance&quot;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/conformance&quot;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">,</span> <span class="s2">&quot;petri_net_path&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">conformance</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Server route: `/conformance`</span>
+
 <span class="sd">    Applies a conformance checking algorithm on the given `petri_net_path` and the log in `path_to_log`. Currently only</span>
-<span class="sd">    token-based replay and alignment are supported. The conformance checking technique is selected by the `conformance_technique` parameter.</span>
+<span class="sd">    token-based replay and alignment based conformance checking are supported. The conformance checking technique is selected by the `conformance_technique` parameter.</span>
 
 <span class="sd">    The POST request must have the following parameters:</span>
 
@@ -1461,7 +1476,7 @@ token-based replay and alignment are supported. The conformance checking techniq
 <span class="sd">        timestamp (str): Timestamp column name.</span>
 <span class="sd">        path_to_log (str): Path to the event log.</span>
 <span class="sd">        petri_net_path (str): Path to the Petri net used for conformance checking.</span>
-<span class="sd">        conformance_technique (str): Either &quot;token&quot; or &quot;alignment&quot;. This selects the corresponding conformance checking technique.</span>
+<span class="sd">        conformance_technique (str): Either `&quot;token&quot;` or `&quot;alignment&quot;`. This selects the corresponding conformance checking technique.</span>
 
 <span class="sd">    400 Response:</span>
 <span class="sd">        - An object with the &quot;error&quot; key indicating what went wrong is sent.</span>
@@ -1538,11 +1553,13 @@ token-based replay and alignment are supported. The conformance checking techniq
 
     <div class="doc doc-contents ">
 
-      <p>Generates the predictive event log by cutting all traces using the given configuration
-and by extending these cut traces with predictions. The predictive log is exported in the given path.
-The cutting can be done in two ways: either by cutting the last <code>cut_length</code> events from each trace or by cutting at a random sequence index,
-and the predictions can be made until an end marking is reached or for a fixed number of iterations.
-A pytorch model is used for making the predictions. The generated predictive log is saved in the <code>new_log_path</code>.</p>
+      <p>Server route: <code>/generate_predictive_log</code></p>
+<p>Generates the predictive event log by cutting all traces using the given configuration
+and by extending these cut traces with predictions. The predictive log is exported to <code>new_log_path</code>.
+The cutting can be done in two ways: either by cutting the last <code>cut_length</code> events from each trace or by cutting at a random sequence index.
+If cutting at random indices, predictions can be made until an end marking is reached (<code>non_stop==True</code>) or for a fixed number of iterations (<code>non_stop= False</code>).
+If <code>non_stop==False</code>, or <code>random_cuts==False</code>, each trace is extended by <code>cut_length</code> predictions.
+A pytorch model found in <code>path_to_model</code> is used for making the predictions.</p>
 <p>The POST request must have the following parameters:</p>
 
 
@@ -1759,18 +1776,7 @@ the last <code>cut_length</code> events. </p>
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">366</span>
-<span class="normal">367</span>
-<span class="normal">368</span>
-<span class="normal">369</span>
-<span class="normal">370</span>
-<span class="normal">371</span>
-<span class="normal">372</span>
-<span class="normal">373</span>
-<span class="normal">374</span>
-<span class="normal">375</span>
-<span class="normal">376</span>
-<span class="normal">377</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">377</span>
 <span class="normal">378</span>
 <span class="normal">379</span>
 <span class="normal">380</span>
@@ -1854,18 +1860,35 @@ the last <code>cut_length</code> events. </p>
 <span class="normal">458</span>
 <span class="normal">459</span>
 <span class="normal">460</span>
-<span class="normal">461</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/generate_predictive_log&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/generate_predictive_log&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">,</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;path_to_model&quot;</span><span class="p">])</span>
 <span class="nd">@check_not_present_paths_factory</span><span class="p">([</span><span class="s2">&quot;new_log_path&quot;</span><span class="p">])</span>
 <span class="nd">@check_integers_factory</span><span class="p">([</span><span class="s2">&quot;upper&quot;</span><span class="p">,</span> <span class="s2">&quot;cut_length&quot;</span><span class="p">])</span>
 <span class="nd">@check_booleans_factory</span><span class="p">([</span><span class="s2">&quot;non_stop&quot;</span><span class="p">,</span><span class="s2">&quot;is_xes&quot;</span><span class="p">,</span> <span class="s2">&quot;random_cuts&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">generate_predictive_log</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Server route: `/generate_predictive_log`</span>
+
 <span class="sd">    Generates the predictive event log by cutting all traces using the given configuration</span>
-<span class="sd">    and by extending these cut traces with predictions. The predictive log is exported in the given path.</span>
-<span class="sd">    The cutting can be done in two ways: either by cutting the last `cut_length` events from each trace or by cutting at a random sequence index,</span>
-<span class="sd">    and the predictions can be made until an end marking is reached or for a fixed number of iterations.</span>
-<span class="sd">    A pytorch model is used for making the predictions. The generated predictive log is saved in the `new_log_path`.</span>
+<span class="sd">    and by extending these cut traces with predictions. The predictive log is exported to `new_log_path`.</span>
+<span class="sd">    The cutting can be done in two ways: either by cutting the last `cut_length` events from each trace or by cutting at a random sequence index.</span>
+<span class="sd">    If cutting at random indices, predictions can be made until an end marking is reached (`non_stop==True`) or for a fixed number of iterations (`non_stop= False`).</span>
+<span class="sd">    If `non_stop==False`, or `random_cuts==False`, each trace is extended by `cut_length` predictions.</span>
+<span class="sd">    A pytorch model found in `path_to_model` is used for making the predictions.</span>
 
 <span class="sd">    The POST request must have the following parameters:</span>
 
@@ -1967,7 +1990,8 @@ the last <code>cut_length</code> events. </p>
 
     <div class="doc doc-contents ">
 
-      <p>Create a predictive process model, i.e., a petri net using the predictive log in <code>path_to_log</code> and the given configuration.
+      <p>Server route: <code>/generate_predictive_process_model</code></p>
+<p>Create a predictive process model, i.e., a petri net using the predictive log in <code>path_to_log</code> and the given configuration.
 The petri net is generated using process mining algorithms such as the alpha miner, heuristic miner, inductive miner, and prefix tree miner, 
 which can be selected using the <code>selected_model</code> parameter. The petri net is saved in the <code>petri_net_path</code> and the config file is saved in the <code>petri_net_path.json</code>.</p>
 <p>The POST request must have the following parameters:</p>
@@ -2144,16 +2168,7 @@ which can be selected using the <code>selected_model</code> parameter. The petri
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">237</span>
-<span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span>
-<span class="normal">241</span>
-<span class="normal">242</span>
-<span class="normal">243</span>
-<span class="normal">244</span>
-<span class="normal">245</span>
-<span class="normal">246</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">246</span>
 <span class="normal">247</span>
 <span class="normal">248</span>
 <span class="normal">249</span>
@@ -2268,11 +2283,24 @@ which can be selected using the <code>selected_model</code> parameter. The petri
 <span class="normal">358</span>
 <span class="normal">359</span>
 <span class="normal">360</span>
-<span class="normal">361</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/generate_predictive_process_model&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/generate_predictive_process_model&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">,</span> <span class="s2">&quot;config&quot;</span><span class="p">])</span>
 <span class="nd">@check_not_present_paths_factory</span><span class="p">([</span><span class="s2">&quot;petri_net_path&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">generate_predictive_process_model</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Server route: `/generate_predictive_process_model`</span>
+
 <span class="sd">    Create a predictive process model, i.e., a petri net using the predictive log in `path_to_log` and the given configuration.</span>
 <span class="sd">    The petri net is generated using process mining algorithms such as the alpha miner, heuristic miner, inductive miner, and prefix tree miner, </span>
 <span class="sd">    which can be selected using the `selected_model` parameter. The petri net is saved in the `petri_net_path` and the config file is saved in the `petri_net_path.json`.</span>
@@ -2410,7 +2438,8 @@ which can be selected using the <code>selected_model</code> parameter. The petri
 
     <div class="doc doc-contents ">
 
-      <p>Apply grid search on the given log in <code>path_to_log</code> for training and testing. The best model is saved in <code>model_path</code>.</p>
+      <p>Server route: <code>/grid_search</code></p>
+<p>Apply grid search on the given log in <code>path_to_log</code> for training and testing. The best model is saved in <code>model_path</code>.</p>
 <p>The POST request must have the following parameters:</p>
 
 
@@ -2657,27 +2686,7 @@ which can be selected using the <code>selected_model</code> parameter. The petri
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">788</span>
-<span class="normal">789</span>
-<span class="normal">790</span>
-<span class="normal">791</span>
-<span class="normal">792</span>
-<span class="normal">793</span>
-<span class="normal">794</span>
-<span class="normal">795</span>
-<span class="normal">796</span>
-<span class="normal">797</span>
-<span class="normal">798</span>
-<span class="normal">799</span>
-<span class="normal">800</span>
-<span class="normal">801</span>
-<span class="normal">802</span>
-<span class="normal">803</span>
-<span class="normal">804</span>
-<span class="normal">805</span>
-<span class="normal">806</span>
-<span class="normal">807</span>
-<span class="normal">808</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">808</span>
 <span class="normal">809</span>
 <span class="normal">810</span>
 <span class="normal">811</span>
@@ -2783,7 +2792,29 @@ which can be selected using the <code>selected_model</code> parameter. The petri
 <span class="normal">911</span>
 <span class="normal">912</span>
 <span class="normal">913</span>
-<span class="normal">914</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/grid_search&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">914</span>
+<span class="normal">915</span>
+<span class="normal">916</span>
+<span class="normal">917</span>
+<span class="normal">918</span>
+<span class="normal">919</span>
+<span class="normal">920</span>
+<span class="normal">921</span>
+<span class="normal">922</span>
+<span class="normal">923</span>
+<span class="normal">924</span>
+<span class="normal">925</span>
+<span class="normal">926</span>
+<span class="normal">927</span>
+<span class="normal">928</span>
+<span class="normal">929</span>
+<span class="normal">930</span>
+<span class="normal">931</span>
+<span class="normal">932</span>
+<span class="normal">933</span>
+<span class="normal">934</span>
+<span class="normal">935</span>
+<span class="normal">936</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/grid_search&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_booleans_factory</span><span class="p">([</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="s2">&quot;is_xes&quot;</span><span class="p">])</span>
 <span class="nd">@check_integers_factory</span><span class="p">([</span><span class="s2">&quot;seq_len&quot;</span><span class="p">,</span><span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="s2">&quot;epochs&quot;</span><span class="p">])</span>
 <span class="nd">@check_floats_factory</span><span class="p">([</span><span class="s2">&quot;lr&quot;</span><span class="p">,</span> <span class="s2">&quot;split&quot;</span><span class="p">])</span>
@@ -2791,6 +2822,8 @@ which can be selected using the <code>selected_model</code> parameter. The petri
 <span class="nd">@check_not_present_paths_factory</span><span class="p">([</span><span class="s2">&quot;model_path&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">grid_search</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Server route: `/grid_search`</span>
+
 <span class="sd">    Apply grid search on the given log in `path_to_log` for training and testing. The best model is saved in `model_path`.</span>
 
 <span class="sd">    The POST request must have the following parameters:</span>
@@ -2927,7 +2960,8 @@ which can be selected using the <code>selected_model</code> parameter. The petri
 
     <div class="doc doc-contents ">
 
-      <p>A model is used for making multiple predictions. The predictions are saved in the <code>prediction_file_name</code> file.
+      <p>Server route: <code>/multiple_prediction</code></p>
+<p>A model is used for making multiple predictions. The predictions are saved in the <code>prediction_file_name</code> file.
 A tree like structure is generated with the predictions. The tree has a depth of <code>depth</code> and a branching degree of <code>degree</code>.</p>
 <p>The POST request must have the following parameters:</p>
 
@@ -3090,21 +3124,7 @@ Each object has a list of pairs (the sequence) and a probability.</li>
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">473</span>
-<span class="normal">474</span>
-<span class="normal">475</span>
-<span class="normal">476</span>
-<span class="normal">477</span>
-<span class="normal">478</span>
-<span class="normal">479</span>
-<span class="normal">480</span>
-<span class="normal">481</span>
-<span class="normal">482</span>
-<span class="normal">483</span>
-<span class="normal">484</span>
-<span class="normal">485</span>
-<span class="normal">486</span>
-<span class="normal">487</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">487</span>
 <span class="normal">488</span>
 <span class="normal">489</span>
 <span class="normal">490</span>
@@ -3181,12 +3201,30 @@ Each object has a list of pairs (the sequence) and a probability.</li>
 <span class="normal">561</span>
 <span class="normal">562</span>
 <span class="normal">563</span>
-<span class="normal">564</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/multiple_prediction&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">564</span>
+<span class="normal">565</span>
+<span class="normal">566</span>
+<span class="normal">567</span>
+<span class="normal">568</span>
+<span class="normal">569</span>
+<span class="normal">570</span>
+<span class="normal">571</span>
+<span class="normal">572</span>
+<span class="normal">573</span>
+<span class="normal">574</span>
+<span class="normal">575</span>
+<span class="normal">576</span>
+<span class="normal">577</span>
+<span class="normal">578</span>
+<span class="normal">579</span>
+<span class="normal">580</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/multiple_prediction&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">,</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;path_to_model&quot;</span><span class="p">])</span>
 <span class="nd">@check_not_present_paths_factory</span><span class="p">([</span><span class="s1">&#39;prediction_file_name&#39;</span><span class="p">])</span>
 <span class="nd">@check_integers_factory</span><span class="p">([</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span> <span class="s2">&quot;depth&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">multiple_prediction</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Server route: `/multiple_prediction`</span>
+
 <span class="sd">    A model is used for making multiple predictions. The predictions are saved in the `prediction_file_name` file.</span>
 <span class="sd">    A tree like structure is generated with the predictions. The tree has a depth of `depth` and a branching degree of `degree`.</span>
 
@@ -3290,7 +3328,8 @@ Each object has a list of pairs (the sequence) and a probability.</li>
 
     <div class="doc doc-contents ">
 
-      <p>Apply random search on the given log in <code>path_to_log</code> for training and testing. 
+      <p>Server route: <code>/random_search</code></p>
+<p>Apply random search on the given log in <code>path_to_log</code> for training and testing. 
 The best model is saved in <code>model_path</code>. The parameters are listed below.</p>
 <p>The POST request must have the following parameters:</p>
 
@@ -3593,25 +3632,7 @@ The best model is saved in <code>model_path</code>. The parameters are listed be
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">646</span>
-<span class="normal">647</span>
-<span class="normal">648</span>
-<span class="normal">649</span>
-<span class="normal">650</span>
-<span class="normal">651</span>
-<span class="normal">652</span>
-<span class="normal">653</span>
-<span class="normal">654</span>
-<span class="normal">655</span>
-<span class="normal">656</span>
-<span class="normal">657</span>
-<span class="normal">658</span>
-<span class="normal">659</span>
-<span class="normal">660</span>
-<span class="normal">661</span>
-<span class="normal">662</span>
-<span class="normal">663</span>
-<span class="normal">664</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">664</span>
 <span class="normal">665</span>
 <span class="normal">666</span>
 <span class="normal">667</span>
@@ -3729,7 +3750,27 @@ The best model is saved in <code>model_path</code>. The parameters are listed be
 <span class="normal">779</span>
 <span class="normal">780</span>
 <span class="normal">781</span>
-<span class="normal">782</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/random_search&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">782</span>
+<span class="normal">783</span>
+<span class="normal">784</span>
+<span class="normal">785</span>
+<span class="normal">786</span>
+<span class="normal">787</span>
+<span class="normal">788</span>
+<span class="normal">789</span>
+<span class="normal">790</span>
+<span class="normal">791</span>
+<span class="normal">792</span>
+<span class="normal">793</span>
+<span class="normal">794</span>
+<span class="normal">795</span>
+<span class="normal">796</span>
+<span class="normal">797</span>
+<span class="normal">798</span>
+<span class="normal">799</span>
+<span class="normal">800</span>
+<span class="normal">801</span>
+<span class="normal">802</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/random_search&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_booleans_factory</span><span class="p">([</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="s2">&quot;is_xes&quot;</span><span class="p">])</span>
 <span class="nd">@check_integers_factory</span><span class="p">([</span><span class="s2">&quot;seq_len&quot;</span><span class="p">,</span><span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="s2">&quot;epochs&quot;</span><span class="p">,</span> <span class="s2">&quot;iterations&quot;</span><span class="p">])</span>
 <span class="nd">@check_floats_factory</span><span class="p">([</span><span class="s2">&quot;lr&quot;</span><span class="p">,</span> <span class="s2">&quot;split&quot;</span><span class="p">])</span>
@@ -3737,6 +3778,8 @@ The best model is saved in <code>model_path</code>. The parameters are listed be
 <span class="nd">@check_not_present_paths_factory</span><span class="p">([</span><span class="s2">&quot;model_path&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">random_search</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Server route: `/random_search`</span>
+
 <span class="sd">    Apply random search on the given log in `path_to_log` for training and testing. </span>
 <span class="sd">    The best model is saved in `model_path`. The parameters are listed below.</span>
 
@@ -3883,7 +3926,8 @@ The best model is saved in <code>model_path</code>. The parameters are listed be
 
     <div class="doc doc-contents ">
 
-      <p>Removes the duplicates from the event log in <code>path_to_log</code>.</p>
+      <p>Server route: <code>/remove_duplicates</code></p>
+<p>Removes the duplicates from the event log in <code>path_to_log</code>.</p>
 <p>This function removes the rows where the same activity happened at the same time in the same case ID.
 A filtered event log is created in <code>save_path</code>.</p>
 <p>The POST request must have the following parameters:</p>
@@ -4011,35 +4055,7 @@ A filtered event log is created in <code>save_path</code>.</p>
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1190</span>
-<span class="normal">1191</span>
-<span class="normal">1192</span>
-<span class="normal">1193</span>
-<span class="normal">1194</span>
-<span class="normal">1195</span>
-<span class="normal">1196</span>
-<span class="normal">1197</span>
-<span class="normal">1198</span>
-<span class="normal">1199</span>
-<span class="normal">1200</span>
-<span class="normal">1201</span>
-<span class="normal">1202</span>
-<span class="normal">1203</span>
-<span class="normal">1204</span>
-<span class="normal">1205</span>
-<span class="normal">1206</span>
-<span class="normal">1207</span>
-<span class="normal">1208</span>
-<span class="normal">1209</span>
-<span class="normal">1210</span>
-<span class="normal">1211</span>
-<span class="normal">1212</span>
-<span class="normal">1213</span>
-<span class="normal">1214</span>
-<span class="normal">1215</span>
-<span class="normal">1216</span>
-<span class="normal">1217</span>
-<span class="normal">1218</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1218</span>
 <span class="normal">1219</span>
 <span class="normal">1220</span>
 <span class="normal">1221</span>
@@ -4076,12 +4092,44 @@ A filtered event log is created in <code>save_path</code>.</p>
 <span class="normal">1252</span>
 <span class="normal">1253</span>
 <span class="normal">1254</span>
-<span class="normal">1255</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/remove_duplicates&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">1255</span>
+<span class="normal">1256</span>
+<span class="normal">1257</span>
+<span class="normal">1258</span>
+<span class="normal">1259</span>
+<span class="normal">1260</span>
+<span class="normal">1261</span>
+<span class="normal">1262</span>
+<span class="normal">1263</span>
+<span class="normal">1264</span>
+<span class="normal">1265</span>
+<span class="normal">1266</span>
+<span class="normal">1267</span>
+<span class="normal">1268</span>
+<span class="normal">1269</span>
+<span class="normal">1270</span>
+<span class="normal">1271</span>
+<span class="normal">1272</span>
+<span class="normal">1273</span>
+<span class="normal">1274</span>
+<span class="normal">1275</span>
+<span class="normal">1276</span>
+<span class="normal">1277</span>
+<span class="normal">1278</span>
+<span class="normal">1279</span>
+<span class="normal">1280</span>
+<span class="normal">1281</span>
+<span class="normal">1282</span>
+<span class="normal">1283</span>
+<span class="normal">1284</span>
+<span class="normal">1285</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/remove_duplicates&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_booleans_factory</span><span class="p">([</span><span class="s2">&quot;is_xes&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">])</span>
 <span class="nd">@check_not_present_paths_factory</span><span class="p">([</span><span class="s2">&quot;save_path&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">remove_duplicates</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Server route: `/remove_duplicates`</span>
+
 <span class="sd">    Removes the duplicates from the event log in `path_to_log`.</span>
 
 <span class="sd">    This function removes the rows where the same activity happened at the same time in the same case ID.</span>
@@ -4159,7 +4207,8 @@ A filtered event log is created in <code>save_path</code>.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Replaces NaN's in the activity column with the median to the event log in in <code>path_to_log</code>.
+      <p>Server route: <code>/replace_with_mode</code></p>
+<p>Replaces NaN's in the activity column with the median to the event log in in <code>path_to_log</code>.
 Creates a filtered event log in <code>save_path</code>.</p>
 <p>The POST request must have the following parameters:</p>
 
@@ -4264,31 +4313,7 @@ Creates a filtered event log in <code>save_path</code>.</p>
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1059</span>
-<span class="normal">1060</span>
-<span class="normal">1061</span>
-<span class="normal">1062</span>
-<span class="normal">1063</span>
-<span class="normal">1064</span>
-<span class="normal">1065</span>
-<span class="normal">1066</span>
-<span class="normal">1067</span>
-<span class="normal">1068</span>
-<span class="normal">1069</span>
-<span class="normal">1070</span>
-<span class="normal">1071</span>
-<span class="normal">1072</span>
-<span class="normal">1073</span>
-<span class="normal">1074</span>
-<span class="normal">1075</span>
-<span class="normal">1076</span>
-<span class="normal">1077</span>
-<span class="normal">1078</span>
-<span class="normal">1079</span>
-<span class="normal">1080</span>
-<span class="normal">1081</span>
-<span class="normal">1082</span>
-<span class="normal">1083</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1083</span>
 <span class="normal">1084</span>
 <span class="normal">1085</span>
 <span class="normal">1086</span>
@@ -4325,12 +4350,40 @@ Creates a filtered event log in <code>save_path</code>.</p>
 <span class="normal">1117</span>
 <span class="normal">1118</span>
 <span class="normal">1119</span>
-<span class="normal">1120</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/replace_with_mode&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">1120</span>
+<span class="normal">1121</span>
+<span class="normal">1122</span>
+<span class="normal">1123</span>
+<span class="normal">1124</span>
+<span class="normal">1125</span>
+<span class="normal">1126</span>
+<span class="normal">1127</span>
+<span class="normal">1128</span>
+<span class="normal">1129</span>
+<span class="normal">1130</span>
+<span class="normal">1131</span>
+<span class="normal">1132</span>
+<span class="normal">1133</span>
+<span class="normal">1134</span>
+<span class="normal">1135</span>
+<span class="normal">1136</span>
+<span class="normal">1137</span>
+<span class="normal">1138</span>
+<span class="normal">1139</span>
+<span class="normal">1140</span>
+<span class="normal">1141</span>
+<span class="normal">1142</span>
+<span class="normal">1143</span>
+<span class="normal">1144</span>
+<span class="normal">1145</span>
+<span class="normal">1146</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/replace_with_mode&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_booleans_factory</span><span class="p">([</span><span class="s2">&quot;is_xes&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">])</span>
 <span class="nd">@check_not_present_paths_factory</span><span class="p">([</span><span class="s2">&quot;save_path&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">replace_with_mode</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Server route: `/replace_with_mode`</span>
+
 <span class="sd">    Replaces NaN&#39;s in the activity column with the median to the event log in in `path_to_log`.</span>
 <span class="sd">    Creates a filtered event log in `save_path`.</span>
 
@@ -4404,7 +4457,8 @@ Creates a filtered event log in <code>save_path</code>.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Given a partial trace found in <code>path_to_log</code>, perform a single prediction.</p>
+      <p>Server route: <code>/single_prediction</code></p>
+<p>Given a partial trace found in <code>path_to_log</code>, perform a single prediction.</p>
 <p>The POST request must have the following parameters:</p>
 
 
@@ -4560,23 +4614,7 @@ Creates a filtered event log in <code>save_path</code>.</p>
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">567</span>
-<span class="normal">568</span>
-<span class="normal">569</span>
-<span class="normal">570</span>
-<span class="normal">571</span>
-<span class="normal">572</span>
-<span class="normal">573</span>
-<span class="normal">574</span>
-<span class="normal">575</span>
-<span class="normal">576</span>
-<span class="normal">577</span>
-<span class="normal">578</span>
-<span class="normal">579</span>
-<span class="normal">580</span>
-<span class="normal">581</span>
-<span class="normal">582</span>
-<span class="normal">583</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">583</span>
 <span class="normal">584</span>
 <span class="normal">585</span>
 <span class="normal">586</span>
@@ -4634,10 +4672,30 @@ Creates a filtered event log in <code>save_path</code>.</p>
 <span class="normal">638</span>
 <span class="normal">639</span>
 <span class="normal">640</span>
-<span class="normal">641</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/single_prediction&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">641</span>
+<span class="normal">642</span>
+<span class="normal">643</span>
+<span class="normal">644</span>
+<span class="normal">645</span>
+<span class="normal">646</span>
+<span class="normal">647</span>
+<span class="normal">648</span>
+<span class="normal">649</span>
+<span class="normal">650</span>
+<span class="normal">651</span>
+<span class="normal">652</span>
+<span class="normal">653</span>
+<span class="normal">654</span>
+<span class="normal">655</span>
+<span class="normal">656</span>
+<span class="normal">657</span>
+<span class="normal">658</span>
+<span class="normal">659</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/single_prediction&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">,</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;path_to_model&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">single_prediction</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Server route: `/single_prediction`</span>
+
 <span class="sd">    Given a partial trace found in `path_to_log`, perform a single prediction.</span>
 
 <span class="sd">    The POST request must have the following parameters:</span>
@@ -4726,7 +4784,8 @@ Creates a filtered event log in <code>save_path</code>.</p>
 
     <div class="doc doc-contents ">
 
-      <p>Trains the RMTPP neural network using the log in <code>path_to_log</code> for training and testing. 
+      <p>Server route: <code>/train_nn</code></p>
+<p>Trains the RMTPP neural network using the log in <code>path_to_log</code> for training and testing. 
 A model is generated in <code>model_path</code> and the config file is saved in <code>model_path</code> with the extension <code>.config.json</code>.
 All trainig params are listed below. </p>
 <p>The POST request must have the following parameters:</p>
@@ -4995,29 +5054,7 @@ All trainig params are listed below. </p>
 
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 916</span>
-<span class="normal"> 917</span>
-<span class="normal"> 918</span>
-<span class="normal"> 919</span>
-<span class="normal"> 920</span>
-<span class="normal"> 921</span>
-<span class="normal"> 922</span>
-<span class="normal"> 923</span>
-<span class="normal"> 924</span>
-<span class="normal"> 925</span>
-<span class="normal"> 926</span>
-<span class="normal"> 927</span>
-<span class="normal"> 928</span>
-<span class="normal"> 929</span>
-<span class="normal"> 930</span>
-<span class="normal"> 931</span>
-<span class="normal"> 932</span>
-<span class="normal"> 933</span>
-<span class="normal"> 934</span>
-<span class="normal"> 935</span>
-<span class="normal"> 936</span>
-<span class="normal"> 937</span>
-<span class="normal"> 938</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 938</span>
 <span class="normal"> 939</span>
 <span class="normal"> 940</span>
 <span class="normal"> 941</span>
@@ -5106,7 +5143,31 @@ All trainig params are listed below. </p>
 <span class="normal">1024</span>
 <span class="normal">1025</span>
 <span class="normal">1026</span>
-<span class="normal">1027</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/train_nn&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">1027</span>
+<span class="normal">1028</span>
+<span class="normal">1029</span>
+<span class="normal">1030</span>
+<span class="normal">1031</span>
+<span class="normal">1032</span>
+<span class="normal">1033</span>
+<span class="normal">1034</span>
+<span class="normal">1035</span>
+<span class="normal">1036</span>
+<span class="normal">1037</span>
+<span class="normal">1038</span>
+<span class="normal">1039</span>
+<span class="normal">1040</span>
+<span class="normal">1041</span>
+<span class="normal">1042</span>
+<span class="normal">1043</span>
+<span class="normal">1044</span>
+<span class="normal">1045</span>
+<span class="normal">1046</span>
+<span class="normal">1047</span>
+<span class="normal">1048</span>
+<span class="normal">1049</span>
+<span class="normal">1050</span>
+<span class="normal">1051</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/train_nn&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_booleans_factory</span><span class="p">([</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="s2">&quot;is_xes&quot;</span><span class="p">])</span>
 <span class="nd">@check_integers_factory</span><span class="p">([</span><span class="s2">&quot;seq_len&quot;</span><span class="p">,</span> <span class="s2">&quot;emb_dim&quot;</span><span class="p">,</span> <span class="s2">&quot;hid_dim&quot;</span><span class="p">,</span> <span class="s2">&quot;mlp_dim&quot;</span><span class="p">,</span> <span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="s2">&quot;epochs&quot;</span><span class="p">])</span>
 <span class="nd">@check_floats_factory</span><span class="p">([</span><span class="s2">&quot;lr&quot;</span><span class="p">,</span> <span class="s2">&quot;split&quot;</span><span class="p">])</span>
@@ -5114,6 +5175,8 @@ All trainig params are listed below. </p>
 <span class="nd">@check_not_present_paths_factory</span><span class="p">([</span><span class="s2">&quot;model_path&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">train_nn</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Server route: `/train_nn`</span>
+
 <span class="sd">    Trains the RMTPP neural network using the log in `path_to_log` for training and testing. </span>
 <span class="sd">    A model is generated in `model_path` and the config file is saved in `model_path` with the extension `.config.json`.</span>
 <span class="sd">    All trainig params are listed below. </span>
