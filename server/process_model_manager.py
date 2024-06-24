@@ -69,20 +69,20 @@ class ProcessModelManager:
 
         Side effect: the predictive_df is extended with the cut sequences.
         """
-        for i, case_id in enumerate(case_id_counts.index):
+        for case_id in case_id_counts.index:
             count = case_id_counts.loc[case_id]
             cut = random.randint(1, count)
             cut = count-min(cut_length, cut)
-            sequence = self.event_df[self.event_df[self.case_id_key]==case_id]  
+            sequence = self.event_df[self.event_df[self.case_id_key]==case_id]
             sequence = sequence.iloc[:cut]
-            if len(sequence) <= self.config.seq_len: 
+            if len(sequence) <= self.config.seq_len:
                 continue
             cuts[case_id]= (count, cut, count-cut)
             input_sequences.append(sequence)
 
             self.predictive_df= pd.concat([self.predictive_df, sequence], ignore_index = True)
 
-        return case_id_counts, cuts, input_sequences 
+        return case_id_counts, cuts, input_sequences
 
     def random_cutter(self, case_id_counts, max_len, cuts, input_sequences):
         """
