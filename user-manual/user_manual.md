@@ -135,9 +135,11 @@ Due to the client-server architecture of the application it is necessary to firs
 python -m server.server 
 ```
 As a result the terminal should look like this, showing the IP-address and also the used port:
+![Server](images/pp_server_terminal.png)
 
 
 In this terminal window you will also see the sent requests caused by interacting with the CLI and e.g. the progress of a training request:
+![Server request](images/pp_request.png)
 
 #### Starting the CLI
 After successfully setting up a local host server, you need to open a new terminal, where the environment (either via conda or a python virtual environment) has to be activated. In the new terminal execute this command to start the command line interface:
