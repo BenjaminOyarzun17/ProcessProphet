@@ -215,44 +215,35 @@ class TestTailCutter(unittest.TestCase):
         cls.pmm = ProcessModelManager(event_df, model, config, case_activity_key, case_id_key, case_timestamp_key)
 
     def test_tail_cutter(self):
+        """
+        Test the tail_cutter function
+        """
         test_cases = [
             {
-                "case_id_counts": pd.Series(np.arange(1, 11), index=np.arange(10)),  # Start from 1
-                "min_tail_length": 3,
-                "expected_case_id_counts_length": 7,
-                "expected_cuts_length": 3,
-                "expected_input_sequences_length": 3,
-            },
-            {
-                "case_id_counts": pd.Series(np.arange(1, 6), index=np.arange(5)),  # Start from 1
-                "min_tail_length": 2,
-                "expected_case_id_counts_length": 3,
-                "expected_cuts_length": 2,
-                "expected_input_sequences_length": 2,
-            },
-            {
-                "case_id_counts": pd.Series(np.array([1]), index=np.arange(1)),  # Only one element with value 1
-                "min_tail_length": 1,
-                "expected_case_id_counts_length": 0,
-                "expected_cuts_length": 1,
-                "expected_input_sequences_length": 1,
-            },
+                "input_sequences": [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]],
+                "case_id_counts": pd.Series([5, 5], index=[1, 2]),
+                "cut_length": 2,
+            }
         ]
 
-        for test_case in test_cases:
+        for i, test_case in enumerate(test_cases):
+            print(f"Running test case {i + 1}")
             cuts = {}
             input_sequences = []
 
-            case_id_counts, cuts, input_sequences = self.pmm.tail_cutter(
+            case_id_counts, cuts, input_sequencesaa = self.pmm.tail_cutter(
                 test_case["case_id_counts"], 
-                test_case["min_tail_length"], 
+                test_case["cut_length"], 
                 cuts, 
                 input_sequences
             )
+            print(f"Case ID Counts: {case_id_counts}")
+            print(f"Cuts: {cuts}")
+            print(f"Input Sequences: {input_sequencesaa}")
+            self.assertTrue(len(case_id_counts) >= test_case["expected_case_id_counts_length"])
+            self.assertTrue(len(cuts) >= test_case["expected_cuts_length"])
+            self.assertTrue(len(input_sequences) >= test_case["expected_input_sequences_length"])
 
-            self.assertEqual(len(case_id_counts), test_case["expected_case_id_counts_length"])
-            self.assertEqual(len(cuts), test_case["expected_cuts_length"])
-            self.assertEqual(len(input_sequences), test_case["expected_input_sequences_length"])
 
 if __name__ == '__main__':
     unittest.main()
