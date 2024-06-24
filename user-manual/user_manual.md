@@ -268,7 +268,15 @@ The output is then the decoded timestamp, marker, and also its probability:
 
 #### Multiple predictions
 To offer more flexibility to the user, the application allows generating multiple predictions instead of just the next predicted event. This can be achieved by specifying two additional parameters: depth and degree. The depth parameter determines the number of consecutive events to be predicted. On the other hand, the degree parameter controls the number of top predictions (with the highest probability) to consider. For example, with a degree of 3, the application creates three sequences in a tree-like structure for each prediction step, where each sequence ends with one of the three highest probable event-time pairs.
-The output is a list of all predictive sequences.
+The output is a list of all predictive sequences in a json file. This file can be found in the `multiple_predictions_path` directory of the current project.
+```
+projects/
+└── project_name/
+    ├── multiple_predictions_path/
+
+```
+The first event of each path is always the last event of the partial trace. So if there is a multiple prediction request with `depth = 1` and `degree = 3` the generated json file will look like this:
+![Multi Prediction](images/pp_multi.png)
 
 ### Conformance Checking 
 #### Motivation
