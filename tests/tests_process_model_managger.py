@@ -238,8 +238,8 @@ class TestTailCutter(unittest.TestCase):
                 input_sequences
             )
             print(f"Case ID Counts: {case_id_counts}")
-            print(f"Cuts: {cuts}")
             print(f"Input Sequences: {input_sequencesaa}")
+            print(f"Cuts: {cuts}")
             self.assertTrue(len(case_id_counts) >= test_case["expected_case_id_counts_length"])
             self.assertTrue(len(cuts) >= test_case["expected_cuts_length"])
             self.assertTrue(len(input_sequences) >= test_case["expected_input_sequences_length"])
