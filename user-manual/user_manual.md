@@ -261,6 +261,7 @@ projects/
 To generate single predictions, the system calculates the next marker and its corresponding timestamp based on the partial trace provided by the user. The user needs to specify the model and the partial trace from the directory to be used for the prediction computation.
 
 The output is then the decoded timestamp, marker, and also its probability:
+![Single Prediction](images/pp_single_pred_example.png)
 
 
 #### Multiple predictions
