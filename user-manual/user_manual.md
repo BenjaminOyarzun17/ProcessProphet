@@ -379,3 +379,12 @@ This one of the biggest problems that we had during development and while adapti
 
 ### The box containing ProcessProphet's contents is too small, or is overflowing. How can I fix this? 
 If you are on a unix system, mouse support should be provided for your standard terminal. Therefore, just drag one of the sides of the box to expand the container! NOTE that this will not work on windows, as the windows terminal/ powershell does not fully support the mouse API used by PytermGUI. You can also try decreasing the font using `Ctrl + -`.
+
+### Why should I do conformance checking?
+Conformance checking tells you how much your future is like your past. This could show you if you are going to earn more or less and show you potential problems within your current system. We support token based 
+coformance checking and alignment based. Checkout the [wikipedia](https://en.wikipedia.org/wiki/Conformance_checking) articles. 
+
+### How do I interpret the forecast results?
+The forecast results rely completely on the data you have collected and handed to the tool, so there won’t be any new activities included. In fact, the predictions will only work for partial traces that contain markers that have been seen before. Keep this in mind!  The forecast tells you what is most likely to happen depending on your past.
+
+ 
