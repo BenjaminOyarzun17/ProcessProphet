@@ -291,7 +291,7 @@ projects/
 To generate single predictions, the system calculates the next marker and its corresponding timestamp based on the partial trace provided by the user. The user needs to specify the model and the partial trace from the directory to be used for the prediction computation.
 
 The output is then the decoded timestamp, marker, and also its probability:
-![Single Prediction](images/pp_single_pred_example.png)
+![Single Prediction](images/pp_single_pred_example2.png)
 
 
 #### Multiple predictions
@@ -303,7 +303,7 @@ projects/
     ├── multiple_predictions_path/
 
 ```
-The first event of each path is always the last event of the partial trace. So if there is a multiple prediction request with `depth = 1` and `degree = 3` the generated json file will look like this:
+Because the first event of each path is always the last event of the partial trace, the newly predicted paths are always `depth` + 1 long. So if there is a multiple prediction request with `depth = 1` and `degree = 3` the generated json file will look like this:
 ![Multi Prediction](images/pp_mult_new.png)
 
 ### Conformance Checking 
