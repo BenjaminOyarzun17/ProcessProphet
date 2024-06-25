@@ -47,7 +47,7 @@ In particular, Process Prophet has two main components:
 - an API for programmers who want to implement our functionality into their projects.
 
 ## The CLI
-For more details, check out the user guide!
+For more details, check out the [user manual](https://github.com/BenjaminOyarzun17/ProcessProphet/blob/main/user-manual/user_manual.md)!
 
 # Integrate our backend into your application
 
