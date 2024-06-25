@@ -192,9 +192,9 @@ After selecting the mode, you will be presented with the main screen, which disp
 
 ### Import and Filter Log	
 
-New event logs are imported with the filesystem through the project directory. The supported file formats are CSV and XES. Just place your file into the `input_logs` folder using your favourite file explorer.
+New event logs are imported with the filesystem through the project directory. The supported file formats are CSV and XES. Just place your file into the `input_logs` folder.
 
-**Event log file format**: make sure that your file as an activity column, a case identifier column and a timestamp column. The activity and timestamp values caracterize an event in a case. Timestamp should be encoded
+**Event log file format**: make sure that your file as an activity column, a case identifier column and a timestamp column. The activity and timestamp values characterize an event in a case. Timestamp should be encoded
 as datetime types, in particular, see panda's `datetime64` type: [pandas website](https://pandas.pydata.org/). The case identifiers should be integer values.
 
 ```
@@ -205,9 +205,9 @@ projects/
 
 The imported files can be preprocessed in the `import and filter log` section, which can be found from the main screen. 
 The supported preprocessing functionalities are: 
-replacing NaN values with the mode value in the log
-removing duplicate rows 
-adding a unique start and end activity
+* replacing NaN values with the mode value in the log
+* removing duplicate rows 
+* adding a unique start and end activity
 
 ### Train Neural Network
 You can run predictions either with an already trained neural network model, or you can train a new neural network. To import a nn-model, you need to place the `.pt` file into the `models` subdirectory, alongside the `.config.json` file that contains hyperparameters used for training that model. 
