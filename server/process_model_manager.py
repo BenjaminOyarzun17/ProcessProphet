@@ -16,7 +16,6 @@ This module allows for the analysis of fitness by cutting the event log, reconst
 """
 import pm4py
 from server  import prediction_manager
-from server  import loggers
 from server import exceptions
 
 import random

@@ -7,7 +7,6 @@ it supports manual trainig, random search and grid search.
 """
 import pandas as pd
 from server import RMTPP_torch
-from server import loggers
 from server import exceptions
 from server import time_precision
 
@@ -134,6 +133,7 @@ class Config:
         """
         cast the dictionary to an encoder
         """
+
         encoder = LabelEncoder()
         encoder.classes_ = np.array(list(dic.keys()))
         return encoder

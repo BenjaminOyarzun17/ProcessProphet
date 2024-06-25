@@ -17,7 +17,6 @@ for the RNN. this is done by the module `util.py` in the subpackage
 `RMTPP_torch`.
 """
 from server import exceptions
-from server import loggers
 from server import time_precision
 
 import random
@@ -194,7 +193,6 @@ class Preprocessing:
         
 
 
-        #loggers.logger_import_event_log.debug(self.event_df.iloc[:30])
 
         self.encode_df_columns()
 
@@ -222,9 +220,26 @@ class Preprocessing:
             - the timestamps are encoded as floats. timezone information is removed. 
         """
         #: we encode the markers with integers (label encoding) to be consistent with the authors implementation
-        self.activity_le, self.case_id_le= LabelEncoder(), LabelEncoder()
-        self.event_df[self.case_activity_key] = self.activity_le.fit_transform(self.event_df[self.case_activity_key])
-        self.event_df[self.case_id_key] = self.case_id_le.fit_transform(self.event_df[self.case_id_key])
+
+        #: only initialize the encoders, if they dont exist yet
+
+
+
+        if self.activity_le == None: 
+            self.activity_le = LabelEncoder()
+            self.event_df[self.case_activity_key] = self.activity_le.fit_transform(self.event_df[self.case_activity_key])
+        else: 
+            #: this will not overwrite the existing le
+            self.event_df[self.case_activity_key] = self.activity_le.transform(self.event_df[self.case_activity_key])
+
+        if self.case_id_le == None:
+            self.case_id_le = LabelEncoder()
+            self.event_df[self.case_id_key] = self.case_id_le.fit_transform(self.event_df[self.case_id_key])
+            #: the other case is not necessary. the language encoders are only passed
+            # to the preprocessor when doing predictions (not when creating a predictive log)
+            # the case id is not used for making predicitons; and also does not make sense for
+            # ongoing cases (in terms of using past behaviour to predict future behaviour)
+
 
         #: get the number of classes
         self.number_classes = len(self.event_df[self.case_activity_key].unique()) 

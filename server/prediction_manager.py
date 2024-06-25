@@ -15,7 +15,6 @@ relation to how the cut sequences should be restored, the parametrized function
 """
 
 
-from server import loggers
 from server import exceptions
 from server import preprocessing
 from server import RMTPP_torch
@@ -94,9 +93,7 @@ class PredictionManager:
         preprocessor is in charge of doing the
         reading/importing from csv, xes, commandline, etc...
         """
-        preprocessor = preprocessing.Preprocessing()
-        preprocessor.import_event_log_dataframe(df, self.case_id_key, self.activity_key, self.timestamp_key)
-        self.encoded_df = preprocessor.event_df
+        self.encoded_df = df
 
         #: check case id uniqueness
         if not self.check_input_uniqueness():
@@ -353,6 +350,8 @@ class PredictionManager:
         for path in self.paths: 
             encoded_events = [event_index for _, (_, event_index) in path]
             encoded_events = list(map(int, encoded_events))
+            di = self.config.encoder_to_dict(self.config.activity_le)
+
             decoded_events = self.config.activity_le.inverse_transform(encoded_events)
 
             decoded_path= [(time, (prob, event)) for (time, (prob, _)), event in zip(path, decoded_events) ]
@@ -365,6 +364,8 @@ class PredictionManager:
         since the nn calculates lambda*(t), which is 
         the probability of the last predicted event happening
         in the predicted time t. 
+
+        paths markers are assumed to be decoded. 
         """
         ans = {
             "paths": []
@@ -408,11 +409,21 @@ class PredictionManager:
         reading/importing from csv, xes, commandline, etc...
         it is assumed that the event log contains only one case id.
         """
+
+        """
         preprocessor = preprocessing.Preprocessing()
+
+        #; its important to pass the existing encoders to avoid recomputation of the language encoders!
+
         preprocessor.import_event_log_dataframe(df, self.case_id_key, self.activity_key, self.timestamp_key)
-        
+
         self.encoded_df= preprocessor.event_df 
+        """
+        self.encoded_df = df
         self.current_case_id= self.encoded_df[self.case_id_key].sample(n = 1).values[0]
+        
+
+        di = self.config.encoder_to_dict(self.config.activity_le)
         if not linear: 
             """
             case backtracking needed; never called by prediction manager.  
