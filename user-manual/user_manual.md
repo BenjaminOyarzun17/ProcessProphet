@@ -328,7 +328,7 @@ The 'encoding' of the process twin as an event log works as follows: The process
 | cut length | The number of event-time pairs that are cut from the original sequences |
 
 #### Run Process Mining
-Now with the predictive event log you can run process discovery algorithms to get process models out of it, which is required for conformance checking. ProcessProphet supports the typical process discovery algorithms, namely `heuristic_miner`, `inductive_miner`, `alpha_miner` and the `prefix_tree_miner`.
+Now with the predictive event log you can run process discovery algorithms to get process models out of it, which is required for conformance checking. ProcessProphet supports the typical process discovery algorithms, namely `heuristic_miner`, `inductive_miner`, `alpha_miner` and the `prefix_tree_miner`. For further explanations of the parameters and process mining in general, have a look at the documention of [pm4py](https://pm4py.fit.fraunhofer.de/static/assets/api/2.7.11/index.html).
 
 ![Process Mining](images/pp_run_process_mining.png)
 
