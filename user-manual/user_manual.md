@@ -235,9 +235,9 @@ For training a new neural network, it is mandatory to place your event log data 
 
 #### Training with Hyperparameter Tuning
 
-With grid search you need to select upper bound, lower bound and step size, for the parameters #todo 
-With random search you need to only select upper and lower bounds for the parameters.
-While hyper parameter tuning can be beneficial, especially for users without the necessary expertise to select the right hyperparameters, it is much more computationally expensive than training with manually selected hyperparameters.
+With grid search you need to select upper bound, lower bound and step size, for the parameters `hidden dimension`, `mlp dimension` and `embedding dimension`.
+With random search you need to only select upper and lower bounds for the same parameters.
+While hyperparameter tuning can be beneficial, especially for users without the necessary expertise to select the right hyperparameters, it is much more computationally expensive than training with manually selected hyperparameters.
 
 #### Manual Training
 
@@ -262,7 +262,7 @@ With manual training you are able to set the hyperparameters yourself. The train
 
 ![Manual Training Screen](images/pp_manual_training.png)
 
-After training is completed, the training statistics are being displayed. They include the accuracy, recall, f1-score, and also the time error #TODO.
+After training is completed, the training statistics are being displayed. They include the accuracy, recall, f1-score, and also the time error, which represents the error in the time encoding.
 
 ![Training Statistics](images/pp_training_statistics.png)
 
@@ -333,7 +333,7 @@ Now with the predictive event log you can run process discovery algorithms to ge
 ![Process Mining](images/pp_run_process_mining.png)
 
 #### Run Conformance Checking
-The generated process model can now be used to run conformance checking. The supported conformance checking algorithms are: `token_based_replay` and #TODO.
+The generated process model can now be used to run conformance checking. The supported conformance checking algorithms are: `token_based_replay` and `alignment_based`.
 
 ![Run Conformance Checking](images/pp_run_conformance_checking.png)
 
