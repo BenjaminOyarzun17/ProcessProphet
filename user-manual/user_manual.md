@@ -26,6 +26,8 @@ This is a project created for the lab `Process Discovery with Python` at RWTH Aa
     - [Quick vs. Advanced Mode](#quick-vs-advanced-mode)
     - [Main Screen](#main-screen)
     - [Import and Filter Log](#import-and-filter-log)
+        - [Import](#import)
+        - [Preprocessing](#preprocessing)
     - [Train Neural Network](#train-neural-network)
         - [Training with Hyperparameter Tuning](#training-with-hyperparameter-tuning)
         - [Manual Training](#manual-training)
@@ -188,6 +190,8 @@ After selecting the mode, you will be presented with the main screen, which disp
 
 ### Import and Filter Log	
 
+#### Import
+
 New event logs are imported with the filesystem through the project directory. The supported file formats are CSV and XES. Just place your file into the `input_logs` folder.
 
 ```
@@ -209,6 +213,7 @@ as datetime types, in particular, see panda's `datetime64` type: [pandas website
 | 2       | Approve       | 2023-01-02 10:30:00 |
 
 
+#### Preprocessing
 The imported files can be preprocessed in the `import and filter log` section, which can be found from the main screen. 
 The supported preprocessing functionalities are: 
 * replacing `NaN` values with the mode value in the log
@@ -266,6 +271,13 @@ After training is completed, the training statistics are being displayed. They i
 With a trained model in the **models** directory, you are now able to make predictions. This can be seen as the core functionality of ProcessProphet. Based on an incomplete process sequence (partial trace) you can create either a single prediction (e.g. a single time-marker pair), or multiple predictions.
 
 **Partial trace format**: The partial traces should be in a `.csv` file and must contain an activity column, a timestamp column, and a case column. These columns should belong to the same case, so the case column requires the same value for all rows (it can be any integer number). 
+This is an example for a partial trace:
+
+| case_id | case_activity | timestamp           |
+| ------- | ------------- | ------------------- |
+| 1       | Start         | 2023-01-01 08:00:00 |
+| 1       | Check1        | 2023-01-01 09:00:00 |
+| 1       | Check2        | 2023-01-01 10:00:00 |
 
 To make predictions, place a partial trace in the **partial_traces** directory, which will be used to predict the next events and timestamps.
 ```
