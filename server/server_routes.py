@@ -643,12 +643,12 @@ def single_prediction():
 
 
         #: import partial trace
-        preprocessor2 = preprocessing.Preprocessing()
+        preprocessor = preprocessing.Preprocessing()
         try: 
             #: do this to avoid recomputing the language encoders
-            preprocessor2.activity_le = config.activity_le
-            preprocessor2.case_id_le= config.case_id_le
-            preprocessor2.handle_import(False, path_to_log, case_id, timestamp, activity,sep=",", formatting=True)
+            preprocessor.activity_le = config.activity_le
+            preprocessor.case_id_le= config.case_id_le
+            preprocessor.handle_import(False, path_to_log, case_id, timestamp, activity,sep=",", formatting=True)
 
         except Exception as e: 
             #: notify error
@@ -672,7 +672,7 @@ def single_prediction():
         #: do the prediction
         try:
             time, event, prob = pm.single_prediction_dataframe(
-                preprocessor2.event_df
+                preprocessor.event_df
             )
         except Exception as e: 
             #: notify error

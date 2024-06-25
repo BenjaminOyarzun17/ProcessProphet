@@ -259,6 +259,7 @@ class Preprocessing:
 
 
         if self.time_precision == time_precision.TimePrecision.NS: 
+            
             #: nanoseconds can cause numerical instability. therefore we make the number smaller by shifting the comma by `exponent`
             self.exponent = self.event_df[self.case_timestamp_key].astype(str).apply(lambda x: len(x)).mean()
             self.event_df[self.case_timestamp_key] = self.event_df[self.case_timestamp_key] / (10 ** self.exponent)
