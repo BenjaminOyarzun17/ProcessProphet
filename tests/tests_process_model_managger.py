@@ -35,123 +35,123 @@ class TestHelperFunctions(unittest.TestCase):
         # Create instance of ProcessModelManager
         cls.pmm = ProcessModelManager(event_df, model, config, case_activity_key, case_id_key, case_timestamp_key)
 
-    # def test_check_too_short(self):
-    #     """
-    #     Test the check_too_short function
-    #     """
-    #     old_conf_len = self.pmm.config.seq_len
-    #     self.pmm.config.seq_len = 3
+    def test_check_too_short(self):
+        """
+        Test the check_too_short function
+        """
+        old_conf_len = self.pmm.config.seq_len
+        self.pmm.config.seq_len = 3
 
-    #     # To short cases
-    #     case1 = [[1, 2], [4, 5, 6]]
-    #     case2 = [[1, 2, 3], [4, 5], [7, 8, 9]]
-    #     case3 = [[1, 2, 3], [4, 5, 6], []]
-    #     short_cases = [case1, case2, case3]
+        # To short cases
+        case1 = [[1, 2], [4, 5, 6]]
+        case2 = [[1, 2, 3], [4, 5], [7, 8, 9]]
+        case3 = [[1, 2, 3], [4, 5, 6], []]
+        short_cases = [case1, case2, case3]
 
-    #     # Not too short cases
-    #     case4 = [[1, 2, 3], [4, 5, 6]]
-    #     case5 = [[1, 2, 3, 3, 4, 2], [4, 5, 6, 2], [7, 8, 9]]
-    #     case6 = [[1, 2, 3], [4, 5, 6], [7, 8, 9, 1, 1, 1]]
-    #     not_short_cases = [case4, case5, case6]
+        # Not too short cases
+        case4 = [[1, 2, 3], [4, 5, 6]]
+        case5 = [[1, 2, 3, 3, 4, 2], [4, 5, 6, 2], [7, 8, 9]]
+        case6 = [[1, 2, 3], [4, 5, 6], [7, 8, 9, 1, 1, 1]]
+        not_short_cases = [case4, case5, case6]
 
-    #     for case in short_cases:
-    #         self.assertTrue(self.pmm.check_too_short(case))
+        for case in short_cases:
+            self.assertTrue(self.pmm.check_too_short(case))
         
-    #     for case in not_short_cases:
-    #         self.assertFalse(self.pmm.check_too_short(case))
+        for case in not_short_cases:
+            self.assertFalse(self.pmm.check_too_short(case))
 
-    #     self.pmm.config.seq_len = old_conf_len
+        self.pmm.config.seq_len = old_conf_len
         
 
-    # def test_decode_df(self):
-    #     """
-    #     Test the decode_df function
-    #     """
-    #     # setup Label Encoders
-    #     class ActivityEncoder:
-    #         def inverse_transform(self, activities):
-    #             return ['Activity ' + str(activity) for activity in activities]
+    def test_decode_df(self):
+        """
+        Test the decode_df function
+        """
+        # setup Label Encoders
+        class ActivityEncoder:
+            def inverse_transform(self, activities):
+                return ['Activity ' + str(activity) for activity in activities]
             
-    #     class CaseIdEncoder:
-    #         def inverse_transform(self, case_ids):
-    #             return ['Case ' + str(case_id) for case_id in case_ids]
+        class CaseIdEncoder:
+            def inverse_transform(self, case_ids):
+                return ['Case ' + str(case_id) for case_id in case_ids]
             
-    #     old_activity_le = self.pmm.config.activity_le
-    #     old_case_id_le = self.pmm.config.case_id_le
-    #     self.pmm.config.activity_le = ActivityEncoder()
-    #     self.pmm.config.case_id_le = CaseIdEncoder()
+        old_activity_le = self.pmm.config.activity_le
+        old_case_id_le = self.pmm.config.case_id_le
+        self.pmm.config.activity_le = ActivityEncoder()
+        self.pmm.config.case_id_le = CaseIdEncoder()
 
-    #     old_exponent = self.pmm.config.exponent
-    #     self.pmm.config.exponent = 0
+        old_exponent = self.pmm.config.exponent
+        self.pmm.config.exponent = 0
 
-    #     # define test cases
-    #     case1 = pd.DataFrame({
-    #         'case_id': [1, 2, 3],
-    #         'activity': [1, 2, 3],
-    #         'timestamp': [1, 2, 3]
-    #         # 'timestamp': pd.date_range(start='1/1/2022', periods=3)
-    #     })
-    #     expected_case1 = pd.DataFrame({
-    #         'case_id': ['Case 1', 'Case 2', 'Case 3'],
-    #         'activity': ['Activity 1', 'Activity 2', 'Activity 3'],
-    #         'timestamp': pd.Series([1, 2, 3]).astype('datetime64[ns, UTC]')
-    #     })
+        # define test cases
+        case1 = pd.DataFrame({
+            'case_id': [1, 2, 3],
+            'activity': [1, 2, 3],
+            'timestamp': [1, 2, 3]
+            # 'timestamp': pd.date_range(start='1/1/2022', periods=3)
+        })
+        expected_case1 = pd.DataFrame({
+            'case_id': ['Case 1', 'Case 2', 'Case 3'],
+            'activity': ['Activity 1', 'Activity 2', 'Activity 3'],
+            'timestamp': pd.Series([1, 2, 3]).astype('datetime64[ns, UTC]')
+        })
 
-    #     case2 = pd.DataFrame({
-    #         'case_id': [4, 5, 6],
-    #         'activity': [4, 5, 6],
-    #         'timestamp': [1, 2, 3]
-    #     })
-    #     expected_case2 = pd.DataFrame({
-    #         'case_id': ['Case 4', 'Case 5', 'Case 6'],
-    #         'activity': ['Activity 4', 'Activity 5', 'Activity 6'],
-    #         'timestamp': pd.Series([1, 2, 3]).astype('datetime64[ns, UTC]')
-    #     })
+        case2 = pd.DataFrame({
+            'case_id': [4, 5, 6],
+            'activity': [4, 5, 6],
+            'timestamp': [1, 2, 3]
+        })
+        expected_case2 = pd.DataFrame({
+            'case_id': ['Case 4', 'Case 5', 'Case 6'],
+            'activity': ['Activity 4', 'Activity 5', 'Activity 6'],
+            'timestamp': pd.Series([1, 2, 3]).astype('datetime64[ns, UTC]')
+        })
 
-    #     case3 = pd.DataFrame({
-    #         'case_id': [1],
-    #         'activity': [1],
-    #         'timestamp': [1]
-    #     })
-    #     expected_case3 = pd.DataFrame({
-    #         'case_id': ['Case 1'],
-    #         'activity': ['Activity 1'],
-    #         'timestamp': pd.Series([1]).astype('datetime64[ns, UTC]')
-    #     })
+        case3 = pd.DataFrame({
+            'case_id': [1],
+            'activity': [1],
+            'timestamp': [1]
+        })
+        expected_case3 = pd.DataFrame({
+            'case_id': ['Case 1'],
+            'activity': ['Activity 1'],
+            'timestamp': pd.Series([1]).astype('datetime64[ns, UTC]')
+        })
 
-    #     case4 = pd.DataFrame({
-    #         'case_id': [1, 2],
-    #         'activity': [1, 2],
-    #         'timestamp': [1, 2]
-    #     })
-    #     expected_case4 = pd.DataFrame({
-    #         'case_id': ['Case 1', 'Case 2'],
-    #         'activity': ['Activity 1', 'Activity 2'],
-    #         'timestamp': pd.Series([1, 2]).astype('datetime64[ns, UTC]')
-    #     })
+        case4 = pd.DataFrame({
+            'case_id': [1, 2],
+            'activity': [1, 2],
+            'timestamp': [1, 2]
+        })
+        expected_case4 = pd.DataFrame({
+            'case_id': ['Case 1', 'Case 2'],
+            'activity': ['Activity 1', 'Activity 2'],
+            'timestamp': pd.Series([1, 2]).astype('datetime64[ns, UTC]')
+        })
 
-    #     case5 = pd.DataFrame({
-    #         'case_id': [1, 1, 1, 8, 3, 3, 3, 3, 4, 3, 1],
-    #         'activity': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-    #         'timestamp': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-    #     })
-    #     expected_case5 = pd.DataFrame({
-    #         'case_id': ['Case 1', 'Case 1', 'Case 1', 'Case 8', 'Case 3', 'Case 3', 'Case 3', 'Case 3', 'Case 4', 'Case 3', 'Case 1'],
-    #         'activity': ['Activity 1', 'Activity 2', 'Activity 3', 'Activity 4', 'Activity 5', 'Activity 6', 'Activity 7', 'Activity 8', 'Activity 9', 'Activity 10', 'Activity 11'],
-    #         'timestamp': pd.Series([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]).astype('datetime64[ns, UTC]')
-    #     })
+        case5 = pd.DataFrame({
+            'case_id': [1, 1, 1, 8, 3, 3, 3, 3, 4, 3, 1],
+            'activity': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            'timestamp': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        })
+        expected_case5 = pd.DataFrame({
+            'case_id': ['Case 1', 'Case 1', 'Case 1', 'Case 8', 'Case 3', 'Case 3', 'Case 3', 'Case 3', 'Case 4', 'Case 3', 'Case 1'],
+            'activity': ['Activity 1', 'Activity 2', 'Activity 3', 'Activity 4', 'Activity 5', 'Activity 6', 'Activity 7', 'Activity 8', 'Activity 9', 'Activity 10', 'Activity 11'],
+            'timestamp': pd.Series([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]).astype('datetime64[ns, UTC]')
+        })
         
-    #     cases = [case1, case2, case3, case4, case5]
-    #     expected_cases = [expected_case1, expected_case2, expected_case3, expected_case4, expected_case5]
+        cases = [case1, case2, case3, case4, case5]
+        expected_cases = [expected_case1, expected_case2, expected_case3, expected_case4, expected_case5]
 
-    #     for i, case in enumerate(cases):
-    #         decoded_df = self.pmm.decode_df(case)
-    #         self.assertTrue(decoded_df.equals(expected_cases[i]))
+        for i, case in enumerate(cases):
+            decoded_df = self.pmm.decode_df(case)
+            self.assertTrue(decoded_df.equals(expected_cases[i]))
 
-    #     # Reset the config
-    #     self.pmm.config.activity_le = old_activity_le
-    #     self.pmm.config.case_id_le = old_case_id_le
-    #     self.pmm.config.exponent = old_exponent
+        # Reset the config
+        self.pmm.config.activity_le = old_activity_le
+        self.pmm.config.case_id_le = old_case_id_le
+        self.pmm.config.exponent = old_exponent
 
 
     def test_handle_nat(self):
@@ -218,11 +218,26 @@ class TestTailCutter(unittest.TestCase):
         """
         Test the tail_cutter function
         """
+        self.pmm.event_df = pd.DataFrame({
+            'case_id': [1, 1, 1, 1, 2, 2, 2, 2, 2, 2],
+            'activity': [1, 2, 3, 1, 4, 5, 6, 7, 8, 2],
+            'timestamp': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        })
+        self.pmm.config.seq_len = 1
+
+
         test_cases = [
             {
-                "input_sequences": [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]],
-                "case_id_counts": pd.Series([5, 5], index=[1, 2]),
+                "case_id_counts": self.pmm.event_df['case_id'].value_counts(),
                 "cut_length": 2,
+            },
+            {
+                "case_id_counts": self.pmm.event_df['case_id'].value_counts(),
+                "cut_length": 1,
+            },
+            {
+                "case_id_counts": self.pmm.event_df['case_id'].value_counts(),
+                "cut_length": 0,
             }
         ]
 
@@ -231,18 +246,21 @@ class TestTailCutter(unittest.TestCase):
             cuts = {}
             input_sequences = []
 
-            case_id_counts, cuts, input_sequencesaa = self.pmm.tail_cutter(
-                test_case["case_id_counts"], 
-                test_case["cut_length"], 
+            case_id_counts, cuts, input_sequences = self.pmm.tail_cutter(
+                test_case["case_id_counts"],
+                test_case["cut_length"],
                 cuts, 
                 input_sequences
             )
-            print(f"Case ID Counts: {case_id_counts}")
-            print(f"Input Sequences: {input_sequencesaa}")
-            print(f"Cuts: {cuts}")
-            self.assertTrue(len(case_id_counts) >= test_case["expected_case_id_counts_length"])
-            self.assertTrue(len(cuts) >= test_case["expected_cuts_length"])
-            self.assertTrue(len(input_sequences) >= test_case["expected_input_sequences_length"])
+
+            for cut in cuts.values():
+                # check if the cut has the right length
+                self.assertTrue(len(cut) >= (test_case["cut_length"]))
+            for case_id in self.pmm.event_df.case_id.unique():
+                self.assertTrue(case_id in cuts.keys())
+
+                # check if the predictive df contains the right cut length
+                self.assertTrue(self.pmm.predictive_df[self.pmm.predictive_df['case_id'] == case_id].shape[0] >= test_case["cut_length"])
 
 
 if __name__ == '__main__':
