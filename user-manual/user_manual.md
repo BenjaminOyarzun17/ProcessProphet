@@ -368,4 +368,8 @@ Yes, ProcessProphet can run without CUDA. However, for optimal performance, espe
 ### What should I do if the predictions are inaccurate?
 You can retrain the model using different hyperparameters and try to optimize the input data by using the given preprocessing functions. Furthermore it can be helpful to use larger event logs for the training.
 
+### What are the percentage/probability values obtained after making a single/multiple predictions?
+Both represent the percentage representation of the obtained logit of the last prediction made, in relation to the marker. Therefore, it tells us how sure the RNN is that the output marker is correct given the past sequence of time - marker pairs. 
+
+
 
