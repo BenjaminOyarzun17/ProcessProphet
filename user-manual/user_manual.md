@@ -286,7 +286,7 @@ projects/
 
 ```
 The first event of each path is always the last event of the partial trace. So if there is a multiple prediction request with `depth = 1` and `degree = 3` the generated json file will look like this:
-![Multi Prediction](images/pp_multi.png)
+![Multi Prediction](images/pp_mult_new.png)
 
 ### Conformance Checking 
 #### Motivation
