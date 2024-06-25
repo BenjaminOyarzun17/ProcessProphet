@@ -42,7 +42,6 @@ This is a project created for the lab `Process Discovery with Python` at RWTH Aa
         - [Run Process Mining](#run-process-mining)
         - [Run Conformance Checking](#run-conformance-checking)  
 - [FAQ](#faq)
-- [Glossary and Index](#glossary-and-index)
 
 
 ## Getting Started
@@ -350,4 +349,20 @@ To prevent this error there are always default values for modifiable parameters 
 
 ## FAQ
 
-## Glossary and Index (?)
+
+### How do I install ProcessProphet?
+To install ProcessProphet, follow the installation guide provided in the "Getting Started" section. Ensure you have the required dependencies installed on your system.
+
+### What types of files can I use for process mining?
+ProcessProphet supports event logs in CSV and XES format. Ensure your event log follows the required structure as mentioned in the "Import and Filter Log" section.
+
+### How do I make predictions with ProcessProphet?
+To make predictions, navigate to the "Make Predictions" section and follow the instructions for either single or multiple predictions. Ensure you have a trained model and a partial trace ready in the specified directories.
+
+### What should I do if I encounter a datatype error?
+If you encounter a datatype error, first check the default values provided for modifiable parameters to ensure your input matches the expected format. If the error persists, refer to the "Troubleshooting" section for more detailed guidance.
+
+### Can ProcessProphet run without CUDA?
+Yes, ProcessProphet can run without CUDA. However, for optimal performance, especially when processing large datasets or training complex models, using CUDA is recommended. See the "Docker Deployment" section for instructions on running with or without CUDA.
+
+
