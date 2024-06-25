@@ -17,6 +17,7 @@ from server import process_model_manager
 from server import prediction_manager
 from server import exceptions
 from functools import wraps
+from server import loggers
 import os
 import json
 import torch
@@ -529,19 +530,11 @@ def multiple_prediction():
         path_to_log = str(request_config['path_to_log'])
         prediction_file_name= str(request_config['prediction_file_name'])
 
-        preprocessor = preprocessing.Preprocessing()
+     
 
-        #: import the partial trace
-        try: 
-            #: formatting avoided, just a quick import. we assume the input is a csv with "," as separator
-            preprocessor.handle_import(False, path_to_log, case_id, timestamp, activity,sep=",", formatting=False )
-        except Exception as e: 
-            #: notify error
-            return {"error": str(e)}, 400
 
-        input_df = preprocessor.event_df
 
-        cuda = False
+
 
         #: import the RNN model and its config
         path_to_model = str(request_config["path_to_model"])
@@ -549,7 +542,24 @@ def multiple_prediction():
         with open (request_config["config"], "r") as f:
             dic = json.load(f)
             dic["time_precision"] = "NS"
+        
         config.load_config(dic)
+
+
+        # ;import partial trace
+        preprocessor2 = preprocessing.Preprocessing()
+        try: 
+            #: do this to avoid recompiting the language encoders
+            preprocessor2.activity_le = config.activity_le
+            preprocessor2.case_id_le= config.case_id_le
+            preprocessor2.handle_import(False, path_to_log, case_id, timestamp, activity,sep=",", formatting=True)
+
+        except Exception as e: 
+            #: notify error
+            return {"error": str(e)}, 400
+
+
+
         neural_manager = nn_manager.NNManagement(config)
         neural_manager.import_nn_model(path_to_model)
 
@@ -562,13 +572,17 @@ def multiple_prediction():
             timestamp, 
             config
         )
+
+
         #: do the predictions
         try: 
             pm.multiple_prediction_dataframe(
                 depth, 
                 degree, 
-                input_df
+                preprocessor2.event_df
             )
+            
+            pm.encoded_df = preprocessor2.event_df
         except Exception as e: 
             #: notify error
             return {"error": f"{str(e)}"},400 
@@ -616,17 +630,7 @@ def single_prediction():
         activity= str(request_config["activity_key"])
         timestamp= str(request_config["timestamp_key"])
         path_to_log = str(request_config['path_to_log'])
-        preprocessor = preprocessing.Preprocessing()
-
-        #: import partial trace
-        try: 
-            #: formatting set to false, we just want to do a quick import
-            preprocessor.handle_import(False, path_to_log, case_id, timestamp, activity,sep=",", formatting=False )
-        except Exception as e: 
-            #: notify errors
-            return {"error": str(e)}, 400
-
-        input_df = preprocessor.event_df
+       
 
 
         #: load the RNN model and config (language encoders, params, ...)
@@ -636,6 +640,23 @@ def single_prediction():
             dic = json.load(f)
             dic["time_precision"] = "NS"
         config.load_config(dic)
+
+
+        #: import partial trace
+        preprocessor2 = preprocessing.Preprocessing()
+        try: 
+            #: do this to avoid recomputing the language encoders
+            preprocessor2.activity_le = config.activity_le
+            preprocessor2.case_id_le= config.case_id_le
+            preprocessor2.handle_import(False, path_to_log, case_id, timestamp, activity,sep=",", formatting=True)
+
+        except Exception as e: 
+            #: notify error
+            return {"error": str(e)}, 400
+
+
+
+
         neural_manager = nn_manager.NNManagement(config)
         neural_manager.import_nn_model(path_to_model)
 
@@ -650,7 +671,9 @@ def single_prediction():
 
         #: do the prediction
         try:
-            time, event, prob = pm.single_prediction_dataframe(input_df)
+            time, event, prob = pm.single_prediction_dataframe(
+                preprocessor2.event_df
+            )
         except Exception as e: 
             #: notify error
             return {"error": f"{str(e)}"},400 
