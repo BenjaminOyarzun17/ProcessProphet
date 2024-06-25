@@ -180,7 +180,7 @@ projects/
 The directory structure is important for several functionalities of ProcessProphet and will be further explained in the following.
 
 ### Quick Mode vs. Advanced Mode
-Upon launching the application, you will be prompted to choose between Quick Mode and Advanced Mode. Quick Mode provides default parameters for ease of use, while Advanced Mode offers additional options and parameters for more user with a more technical background. Advanced Mode includes features such as manual parameter setting in training and adjustable parameters in grid search. It is recommended for users with prior experience in process mining and neural networks, but the main functionalities are also available in Quick Mode.
+Upon launching the application, you will be prompted to choose between Quick Mode and Advanced Mode. Quick Mode provides default parameters for ease of use, while Advanced Mode offers additional options and parameters for users with a more technical background. Advanced Mode includes features such as manual parameter setting in training and adjustable parameters in grid search. It is recommended for users with prior experience in process mining and neural networks, but the main functionalities are also available in Quick Mode.
 
 ![Select Mode](images/pp_select_easy_or_advanced.png)
 
@@ -206,7 +206,7 @@ removing duplicate rows
 adding a unique start and end activity
 
 ### Train Neural Network
-You can run predictions either with an already trained neural network model, or you can train a new neural network. To import a nn-model, you need to place the `.pt` file into the `models` subdirectory
+You can run predictions either with an already trained neural network model, or you can train a new neural network. To import a nn-model, you need to place the `.pt` file into the `models` subdirectory, alongside the `.pt.json` file that contains hyperparameters used for training that model. 
 ```
 projects/
 └── project_name/
@@ -254,6 +254,9 @@ After training is completed, the training statistics are being displayed. They i
 
 ### Make Predictions
 With a trained model in the **models** directory, you are now able to make predictions. This can be seen as the core functionality of ProcessProphet. Based on an incomplete process sequence you can create either a single prediction (e.g. a single time-marker pair), or multiple predictions.
+
+**Input format**: Make sure that the partial traces contains an activity column, and also a timestamp column. All of these must belong to the same case. Therefore, a case column must also be set with the same value for all rows (this can be chosen arbitrarily, as long as it is an integer number).
+
 To make predictions, place a partial trace in the **partial_traces** directory, which will be used to predict the next events and timestamps.
 ```
 projects/
