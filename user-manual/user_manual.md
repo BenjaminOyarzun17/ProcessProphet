@@ -103,7 +103,7 @@ python CLI/main.py
 
 
 ### Run locally
-You need to first install the dependencies. You can do it via conda or python venv.
+You need to first install the dependencies. You can do it via conda or python venv. Unfortunately it is not possible to run the application locally in terminal if you are using `Windows` as an operating system as the `PytermGUI` package is only compatible with `MacOS` or `Linux`. However one can just use `Docker` like previously explained or e.g. a `Linux` subsystem.
 
 #### Using Conda Environment
 You can install the environment from the environment.yml file, and activate the environment with the following commands:
@@ -120,10 +120,6 @@ python -m venv venv
 In the next step you need to activate your virtual environment and install the needed dependencies for the project. For the operating systems Linux and MacOS you need to execute this command:
 ```sh
 source venv/bin/activate 
-```
-and for Windows this command:
-```sh
-venv\Scripts\activate 
 ```
 After the virtual environment is activated use the following command to install the required packages:
 ```sh
