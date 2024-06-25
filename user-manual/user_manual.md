@@ -176,7 +176,7 @@ projects/
     └── predictive_logs/
 
 ```
-The directory structure is important for several functionalities of ProcessProphet and will be further explained in the following.
+If the user wants to work on a project from another device it is also possible to insert the project directory into `projects/` under the circumstance that all the subdirectories exist and are named as above, as the directory structure is important for several functionalities of ProcessProphet and will be further explained in the following.
 
 ### Quick Mode vs. Advanced Mode
 Upon launching the application, you will be prompted to choose between Quick Mode and Advanced Mode. Quick Mode provides default parameters for ease of use, while Advanced Mode offers additional options and parameters for users with a more technical background. Advanced Mode includes features such as manual parameter setting in training and adjustable parameters in grid search. It is recommended for users with prior experience in process mining and neural networks, but the main functionalities are also available in Quick Mode.
