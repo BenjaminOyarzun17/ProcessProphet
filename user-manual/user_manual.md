@@ -374,4 +374,5 @@ Both represent the percentage representation of the obtained logit of the last p
 ### How do I handle large datasets in ProcessProphet?
 If you want to train the RNN on a larger event log it is highly recommended to enable CUDA (if the hardware allows it), as this allows the GPU to compute the tensor operations making it a lot more efficient compared to using the CPU for these computations. 
 
-
+### What do I do if I encounter NaN / NaT outputs?
+This one of the biggest problems that we had during development and while adapting the paper's implementation. It is very related with the way that we convert timestamps to integers. You can try to change the hyperparameters, sometimes increasing the training dimensions helps. 
