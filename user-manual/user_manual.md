@@ -371,5 +371,7 @@ You can retrain the model using different hyperparameters and try to optimize th
 ### What are the percentage/probability values obtained after making a single/multiple predictions?
 Both represent the percentage representation of the obtained logit of the last prediction made, in relation to the marker. Therefore, it tells us how sure the RNN is that the output marker is correct given the past sequence of time - marker pairs. 
 
+### How do I handle large datasets in ProcessProphet?
+If you want to train the RNN on a larger event log it is highly recommended to enable CUDA (if the hardware allows it), as this allows the GPU to compute the tensor operations making it a lot more efficient compared to using the CPU for these computations. 
 
 
