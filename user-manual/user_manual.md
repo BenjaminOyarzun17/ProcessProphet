@@ -366,6 +366,6 @@ If you encounter a datatype error, first check the default values provided for m
 Yes, ProcessProphet can run without CUDA. However, for optimal performance, especially when processing large datasets or training complex models, using CUDA is recommended. See the "Docker Deployment" section for instructions on running with or without CUDA.
 
 ### What should I do if the predictions are inaccurate?
-You can retrain the model using different hyperparameters and try to optimize th input data by using the given preprocessing functions.
+You can retrain the model using different hyperparameters and try to optimize the input data by using the given preprocessing functions. Furthermore it can be helpful to use larger event logs for the training.
 
 
