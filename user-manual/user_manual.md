@@ -376,3 +376,6 @@ If you want to train the RNN on a larger event log it is highly recommended to e
 
 ### What do I do if I encounter NaN / NaT outputs?
 This one of the biggest problems that we had during development and while adapting the paper's implementation. It is very related with the way that we convert timestamps to integers. You can try to change the hyperparameters, sometimes increasing the training dimensions helps. 
+
+### The box containing ProcessProphet's contents is too small, or is overflowing. How can I fix this? 
+If you are on a unix system, mouse support should be provided for your standard terminal. Therefore, just drag one of the sides of the box to expand the container! NOTE that this will not work on windows, as the windows terminal/ powershell does not fully support the mouse API used by PytermGUI.
