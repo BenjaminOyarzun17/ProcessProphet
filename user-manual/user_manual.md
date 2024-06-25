@@ -255,7 +255,7 @@ After training is completed, the training statistics are being displayed. They i
 ### Make Predictions
 With a trained model in the **models** directory, you are now able to make predictions. This can be seen as the core functionality of ProcessProphet. Based on an incomplete process sequence you can create either a single prediction (e.g. a single time-marker pair), or multiple predictions.
 
-**Input format**: Make sure that the partial traces contains an activity column, and also a timestamp column. All of these must belong to the same case. Therefore, a case column must also be set with the same value for all rows (this can be chosen arbitrarily, as long as it is an integer number).
+**Partial trace format**: Make sure that the partial traces contains an activity column, and also a timestamp column. All of these must belong to the same case. Therefore, a case column must also be set with the same value for all rows (this can be chosen arbitrarily, as long as it is an integer number). The partial trace should be in a `.csv` file. 
 
 To make predictions, place a partial trace in the **partial_traces** directory, which will be used to predict the next events and timestamps.
 ```
