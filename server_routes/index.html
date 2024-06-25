@@ -830,30 +830,7 @@ returning them as a response.</p>
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1152</span>
-<span class="normal">1153</span>
-<span class="normal">1154</span>
-<span class="normal">1155</span>
-<span class="normal">1156</span>
-<span class="normal">1157</span>
-<span class="normal">1158</span>
-<span class="normal">1159</span>
-<span class="normal">1160</span>
-<span class="normal">1161</span>
-<span class="normal">1162</span>
-<span class="normal">1163</span>
-<span class="normal">1164</span>
-<span class="normal">1165</span>
-<span class="normal">1166</span>
-<span class="normal">1167</span>
-<span class="normal">1168</span>
-<span class="normal">1169</span>
-<span class="normal">1170</span>
-<span class="normal">1171</span>
-<span class="normal">1172</span>
-<span class="normal">1173</span>
-<span class="normal">1174</span>
-<span class="normal">1175</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1175</span>
 <span class="normal">1176</span>
 <span class="normal">1177</span>
 <span class="normal">1178</span>
@@ -894,7 +871,30 @@ returning them as a response.</p>
 <span class="normal">1213</span>
 <span class="normal">1214</span>
 <span class="normal">1215</span>
-<span class="normal">1216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/add_unique_start_end&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">1216</span>
+<span class="normal">1217</span>
+<span class="normal">1218</span>
+<span class="normal">1219</span>
+<span class="normal">1220</span>
+<span class="normal">1221</span>
+<span class="normal">1222</span>
+<span class="normal">1223</span>
+<span class="normal">1224</span>
+<span class="normal">1225</span>
+<span class="normal">1226</span>
+<span class="normal">1227</span>
+<span class="normal">1228</span>
+<span class="normal">1229</span>
+<span class="normal">1230</span>
+<span class="normal">1231</span>
+<span class="normal">1232</span>
+<span class="normal">1233</span>
+<span class="normal">1234</span>
+<span class="normal">1235</span>
+<span class="normal">1236</span>
+<span class="normal">1237</span>
+<span class="normal">1238</span>
+<span class="normal">1239</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/add_unique_start_end&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_booleans_factory</span><span class="p">([</span><span class="s2">&quot;is_xes&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">])</span>
 <span class="nd">@check_not_present_paths_factory</span><span class="p">([</span><span class="s2">&quot;save_path&quot;</span><span class="p">])</span>
@@ -981,8 +981,7 @@ otherwise an error response is sent.  (the user should know the input is wrong)<
 
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">121</span>
-<span class="normal">122</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">122</span>
 <span class="normal">123</span>
 <span class="normal">124</span>
 <span class="normal">125</span>
@@ -996,7 +995,8 @@ otherwise an error response is sent.  (the user should know the input is wrong)<
 <span class="normal">133</span>
 <span class="normal">134</span>
 <span class="normal">135</span>
-<span class="normal">136</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_booleans_factory</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span> 
+<span class="normal">136</span>
+<span class="normal">137</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_booleans_factory</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span> 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    all parameters in the given list are checked whether they are of bool type</span>
 <span class="sd">    otherwise an error response is sent.  (the user should know the input is wrong)</span>
@@ -1034,8 +1034,7 @@ otherwise an error response is sent.  (the user should know the input is wrong)<
 
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
-<span class="normal">101</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
 <span class="normal">102</span>
 <span class="normal">103</span>
 <span class="normal">104</span>
@@ -1051,7 +1050,8 @@ otherwise an error response is sent.  (the user should know the input is wrong)<
 <span class="normal">114</span>
 <span class="normal">115</span>
 <span class="normal">116</span>
-<span class="normal">117</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_floats_factory</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<span class="normal">117</span>
+<span class="normal">118</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_floats_factory</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    all parameters in the given list are checked whether they are of float type</span>
 <span class="sd">    otherwise an error response is sent.  (the user should know the input is wrong)</span>
@@ -1091,8 +1091,7 @@ otherwise an error response is sent.  (the user should know the input is wrong)<
 
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">80</span>
-<span class="normal">81</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">81</span>
 <span class="normal">82</span>
 <span class="normal">83</span>
 <span class="normal">84</span>
@@ -1108,7 +1107,8 @@ otherwise an error response is sent.  (the user should know the input is wrong)<
 <span class="normal">94</span>
 <span class="normal">95</span>
 <span class="normal">96</span>
-<span class="normal">97</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_integers_factory</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<span class="normal">97</span>
+<span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_integers_factory</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    all parameters in the given list are checked whether they are of integer type</span>
 <span class="sd">    otherwise an error response is sent.  (the user should know the input is wrong)</span>
@@ -1148,8 +1148,7 @@ if it does, an error is sent as response (the user should know the input is wron
 
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">40</span>
-<span class="normal">41</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
 <span class="normal">42</span>
 <span class="normal">43</span>
 <span class="normal">44</span>
@@ -1163,7 +1162,8 @@ if it does, an error is sent as response (the user should know the input is wron
 <span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
-<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_not_present_paths_factory</span><span class="p">(</span><span class="n">must_not_exist</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<span class="normal">55</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_not_present_paths_factory</span><span class="p">(</span><span class="n">must_not_exist</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    this decorator checks in the given file paths list if each file does not exist</span>
 <span class="sd">    if it does, an error is sent as response (the user should know the input is wrong) </span>
@@ -1202,8 +1202,7 @@ if it does not, an error is sent as response  (the user should know the input is
 
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
-<span class="normal">60</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
 <span class="normal">63</span>
@@ -1219,7 +1218,8 @@ if it does not, an error is sent as response  (the user should know the input is
 <span class="normal">73</span>
 <span class="normal">74</span>
 <span class="normal">75</span>
-<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_required_paths_factory</span><span class="p">(</span><span class="n">must_be_present</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<span class="normal">76</span>
+<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_required_paths_factory</span><span class="p">(</span><span class="n">must_be_present</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    this decorator checks in the given file paths list if each file does exist. </span>
 <span class="sd">    very useful for checking if a log exists for example.</span>
@@ -1381,8 +1381,7 @@ token-based replay and alignment based conformance checking are supported. The c
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">167</span>
-<span class="normal">168</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">168</span>
 <span class="normal">169</span>
 <span class="normal">170</span>
 <span class="normal">171</span>
@@ -1458,7 +1457,8 @@ token-based replay and alignment based conformance checking are supported. The c
 <span class="normal">241</span>
 <span class="normal">242</span>
 <span class="normal">243</span>
-<span class="normal">244</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/conformance&quot;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">244</span>
+<span class="normal">245</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/conformance&quot;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">,</span> <span class="s2">&quot;petri_net_path&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">conformance</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1776,8 +1776,7 @@ the last <code>cut_length</code> events. </p>
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">377</span>
-<span class="normal">378</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">378</span>
 <span class="normal">379</span>
 <span class="normal">380</span>
 <span class="normal">381</span>
@@ -1874,7 +1873,8 @@ the last <code>cut_length</code> events. </p>
 <span class="normal">472</span>
 <span class="normal">473</span>
 <span class="normal">474</span>
-<span class="normal">475</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/generate_predictive_log&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">475</span>
+<span class="normal">476</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/generate_predictive_log&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">,</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;path_to_model&quot;</span><span class="p">])</span>
 <span class="nd">@check_not_present_paths_factory</span><span class="p">([</span><span class="s2">&quot;new_log_path&quot;</span><span class="p">])</span>
 <span class="nd">@check_integers_factory</span><span class="p">([</span><span class="s2">&quot;upper&quot;</span><span class="p">,</span> <span class="s2">&quot;cut_length&quot;</span><span class="p">])</span>
@@ -2168,8 +2168,7 @@ which can be selected using the <code>selected_model</code> parameter. The petri
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">246</span>
-<span class="normal">247</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">247</span>
 <span class="normal">248</span>
 <span class="normal">249</span>
 <span class="normal">250</span>
@@ -2294,7 +2293,8 @@ which can be selected using the <code>selected_model</code> parameter. The petri
 <span class="normal">369</span>
 <span class="normal">370</span>
 <span class="normal">371</span>
-<span class="normal">372</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/generate_predictive_process_model&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">372</span>
+<span class="normal">373</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/generate_predictive_process_model&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">,</span> <span class="s2">&quot;config&quot;</span><span class="p">])</span>
 <span class="nd">@check_not_present_paths_factory</span><span class="p">([</span><span class="s2">&quot;petri_net_path&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">generate_predictive_process_model</span><span class="p">():</span>
@@ -2686,30 +2686,7 @@ which can be selected using the <code>selected_model</code> parameter. The petri
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">808</span>
-<span class="normal">809</span>
-<span class="normal">810</span>
-<span class="normal">811</span>
-<span class="normal">812</span>
-<span class="normal">813</span>
-<span class="normal">814</span>
-<span class="normal">815</span>
-<span class="normal">816</span>
-<span class="normal">817</span>
-<span class="normal">818</span>
-<span class="normal">819</span>
-<span class="normal">820</span>
-<span class="normal">821</span>
-<span class="normal">822</span>
-<span class="normal">823</span>
-<span class="normal">824</span>
-<span class="normal">825</span>
-<span class="normal">826</span>
-<span class="normal">827</span>
-<span class="normal">828</span>
-<span class="normal">829</span>
-<span class="normal">830</span>
-<span class="normal">831</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">831</span>
 <span class="normal">832</span>
 <span class="normal">833</span>
 <span class="normal">834</span>
@@ -2814,7 +2791,30 @@ which can be selected using the <code>selected_model</code> parameter. The petri
 <span class="normal">933</span>
 <span class="normal">934</span>
 <span class="normal">935</span>
-<span class="normal">936</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/grid_search&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">936</span>
+<span class="normal">937</span>
+<span class="normal">938</span>
+<span class="normal">939</span>
+<span class="normal">940</span>
+<span class="normal">941</span>
+<span class="normal">942</span>
+<span class="normal">943</span>
+<span class="normal">944</span>
+<span class="normal">945</span>
+<span class="normal">946</span>
+<span class="normal">947</span>
+<span class="normal">948</span>
+<span class="normal">949</span>
+<span class="normal">950</span>
+<span class="normal">951</span>
+<span class="normal">952</span>
+<span class="normal">953</span>
+<span class="normal">954</span>
+<span class="normal">955</span>
+<span class="normal">956</span>
+<span class="normal">957</span>
+<span class="normal">958</span>
+<span class="normal">959</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/grid_search&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_booleans_factory</span><span class="p">([</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="s2">&quot;is_xes&quot;</span><span class="p">])</span>
 <span class="nd">@check_integers_factory</span><span class="p">([</span><span class="s2">&quot;seq_len&quot;</span><span class="p">,</span><span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="s2">&quot;epochs&quot;</span><span class="p">])</span>
 <span class="nd">@check_floats_factory</span><span class="p">([</span><span class="s2">&quot;lr&quot;</span><span class="p">,</span> <span class="s2">&quot;split&quot;</span><span class="p">])</span>
@@ -3124,8 +3124,7 @@ Each object has a list of pairs (the sequence) and a probability.</li>
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">487</span>
-<span class="normal">488</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">488</span>
 <span class="normal">489</span>
 <span class="normal">490</span>
 <span class="normal">491</span>
@@ -3217,7 +3216,21 @@ Each object has a list of pairs (the sequence) and a probability.</li>
 <span class="normal">577</span>
 <span class="normal">578</span>
 <span class="normal">579</span>
-<span class="normal">580</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/multiple_prediction&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span>
+<span class="normal">583</span>
+<span class="normal">584</span>
+<span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/multiple_prediction&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">,</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;path_to_model&quot;</span><span class="p">])</span>
 <span class="nd">@check_not_present_paths_factory</span><span class="p">([</span><span class="s1">&#39;prediction_file_name&#39;</span><span class="p">])</span>
 <span class="nd">@check_integers_factory</span><span class="p">([</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span> <span class="s2">&quot;depth&quot;</span><span class="p">])</span>
@@ -3262,19 +3275,11 @@ Each object has a list of pairs (the sequence) and a probability.</li>
         <span class="n">path_to_log</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">request_config</span><span class="p">[</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">])</span>
         <span class="n">prediction_file_name</span><span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">request_config</span><span class="p">[</span><span class="s1">&#39;prediction_file_name&#39;</span><span class="p">])</span>
 
-        <span class="n">preprocessor</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">Preprocessing</span><span class="p">()</span>
 
-        <span class="c1">#: import the partial trace</span>
-        <span class="k">try</span><span class="p">:</span> 
-            <span class="c1">#: formatting avoided, just a quick import. we assume the input is a csv with &quot;,&quot; as separator</span>
-            <span class="n">preprocessor</span><span class="o">.</span><span class="n">handle_import</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_to_log</span><span class="p">,</span> <span class="n">case_id</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">activity</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">formatting</span><span class="o">=</span><span class="kc">False</span> <span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span> 
-            <span class="c1">#: notify error</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)},</span> <span class="mi">400</span>
 
-        <span class="n">input_df</span> <span class="o">=</span> <span class="n">preprocessor</span><span class="o">.</span><span class="n">event_df</span>
 
-        <span class="n">cuda</span> <span class="o">=</span> <span class="kc">False</span>
+
+
 
         <span class="c1">#: import the RNN model and its config</span>
         <span class="n">path_to_model</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">request_config</span><span class="p">[</span><span class="s2">&quot;path_to_model&quot;</span><span class="p">])</span>
@@ -3282,7 +3287,24 @@ Each object has a list of pairs (the sequence) and a probability.</li>
         <span class="k">with</span> <span class="nb">open</span> <span class="p">(</span><span class="n">request_config</span><span class="p">[</span><span class="s2">&quot;config&quot;</span><span class="p">],</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">dic</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
             <span class="n">dic</span><span class="p">[</span><span class="s2">&quot;time_precision&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;NS&quot;</span>
+
         <span class="n">config</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">dic</span><span class="p">)</span>
+
+
+        <span class="c1"># ;import partial trace</span>
+        <span class="n">preprocessor2</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">Preprocessing</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span> 
+            <span class="c1">#: do this to avoid recompiting the language encoders</span>
+            <span class="n">preprocessor2</span><span class="o">.</span><span class="n">activity_le</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">activity_le</span>
+            <span class="n">preprocessor2</span><span class="o">.</span><span class="n">case_id_le</span><span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">case_id_le</span>
+            <span class="n">preprocessor2</span><span class="o">.</span><span class="n">handle_import</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_to_log</span><span class="p">,</span> <span class="n">case_id</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">activity</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span> 
+            <span class="c1">#: notify error</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)},</span> <span class="mi">400</span>
+
+
+
         <span class="n">neural_manager</span> <span class="o">=</span> <span class="n">nn_manager</span><span class="o">.</span><span class="n">NNManagement</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
         <span class="n">neural_manager</span><span class="o">.</span><span class="n">import_nn_model</span><span class="p">(</span><span class="n">path_to_model</span><span class="p">)</span>
 
@@ -3295,13 +3317,17 @@ Each object has a list of pairs (the sequence) and a probability.</li>
             <span class="n">timestamp</span><span class="p">,</span> 
             <span class="n">config</span>
         <span class="p">)</span>
+
+
         <span class="c1">#: do the predictions</span>
         <span class="k">try</span><span class="p">:</span> 
             <span class="n">pm</span><span class="o">.</span><span class="n">multiple_prediction_dataframe</span><span class="p">(</span>
                 <span class="n">depth</span><span class="p">,</span> 
                 <span class="n">degree</span><span class="p">,</span> 
-                <span class="n">input_df</span>
+                <span class="n">preprocessor2</span><span class="o">.</span><span class="n">event_df</span>
             <span class="p">)</span>
+
+            <span class="n">pm</span><span class="o">.</span><span class="n">encoded_df</span> <span class="o">=</span> <span class="n">preprocessor2</span><span class="o">.</span><span class="n">event_df</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span> 
             <span class="c1">#: notify error</span>
             <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">},</span><span class="mi">400</span> 
@@ -3632,30 +3658,7 @@ The best model is saved in <code>model_path</code>. The parameters are listed be
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">664</span>
-<span class="normal">665</span>
-<span class="normal">666</span>
-<span class="normal">667</span>
-<span class="normal">668</span>
-<span class="normal">669</span>
-<span class="normal">670</span>
-<span class="normal">671</span>
-<span class="normal">672</span>
-<span class="normal">673</span>
-<span class="normal">674</span>
-<span class="normal">675</span>
-<span class="normal">676</span>
-<span class="normal">677</span>
-<span class="normal">678</span>
-<span class="normal">679</span>
-<span class="normal">680</span>
-<span class="normal">681</span>
-<span class="normal">682</span>
-<span class="normal">683</span>
-<span class="normal">684</span>
-<span class="normal">685</span>
-<span class="normal">686</span>
-<span class="normal">687</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">687</span>
 <span class="normal">688</span>
 <span class="normal">689</span>
 <span class="normal">690</span>
@@ -3770,7 +3773,30 @@ The best model is saved in <code>model_path</code>. The parameters are listed be
 <span class="normal">799</span>
 <span class="normal">800</span>
 <span class="normal">801</span>
-<span class="normal">802</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/random_search&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">802</span>
+<span class="normal">803</span>
+<span class="normal">804</span>
+<span class="normal">805</span>
+<span class="normal">806</span>
+<span class="normal">807</span>
+<span class="normal">808</span>
+<span class="normal">809</span>
+<span class="normal">810</span>
+<span class="normal">811</span>
+<span class="normal">812</span>
+<span class="normal">813</span>
+<span class="normal">814</span>
+<span class="normal">815</span>
+<span class="normal">816</span>
+<span class="normal">817</span>
+<span class="normal">818</span>
+<span class="normal">819</span>
+<span class="normal">820</span>
+<span class="normal">821</span>
+<span class="normal">822</span>
+<span class="normal">823</span>
+<span class="normal">824</span>
+<span class="normal">825</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/random_search&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_booleans_factory</span><span class="p">([</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="s2">&quot;is_xes&quot;</span><span class="p">])</span>
 <span class="nd">@check_integers_factory</span><span class="p">([</span><span class="s2">&quot;seq_len&quot;</span><span class="p">,</span><span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="s2">&quot;epochs&quot;</span><span class="p">,</span> <span class="s2">&quot;iterations&quot;</span><span class="p">])</span>
 <span class="nd">@check_floats_factory</span><span class="p">([</span><span class="s2">&quot;lr&quot;</span><span class="p">,</span> <span class="s2">&quot;split&quot;</span><span class="p">])</span>
@@ -4055,30 +4081,7 @@ A filtered event log is created in <code>save_path</code>.</p>
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1218</span>
-<span class="normal">1219</span>
-<span class="normal">1220</span>
-<span class="normal">1221</span>
-<span class="normal">1222</span>
-<span class="normal">1223</span>
-<span class="normal">1224</span>
-<span class="normal">1225</span>
-<span class="normal">1226</span>
-<span class="normal">1227</span>
-<span class="normal">1228</span>
-<span class="normal">1229</span>
-<span class="normal">1230</span>
-<span class="normal">1231</span>
-<span class="normal">1232</span>
-<span class="normal">1233</span>
-<span class="normal">1234</span>
-<span class="normal">1235</span>
-<span class="normal">1236</span>
-<span class="normal">1237</span>
-<span class="normal">1238</span>
-<span class="normal">1239</span>
-<span class="normal">1240</span>
-<span class="normal">1241</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1241</span>
 <span class="normal">1242</span>
 <span class="normal">1243</span>
 <span class="normal">1244</span>
@@ -4122,7 +4125,30 @@ A filtered event log is created in <code>save_path</code>.</p>
 <span class="normal">1282</span>
 <span class="normal">1283</span>
 <span class="normal">1284</span>
-<span class="normal">1285</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/remove_duplicates&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">1285</span>
+<span class="normal">1286</span>
+<span class="normal">1287</span>
+<span class="normal">1288</span>
+<span class="normal">1289</span>
+<span class="normal">1290</span>
+<span class="normal">1291</span>
+<span class="normal">1292</span>
+<span class="normal">1293</span>
+<span class="normal">1294</span>
+<span class="normal">1295</span>
+<span class="normal">1296</span>
+<span class="normal">1297</span>
+<span class="normal">1298</span>
+<span class="normal">1299</span>
+<span class="normal">1300</span>
+<span class="normal">1301</span>
+<span class="normal">1302</span>
+<span class="normal">1303</span>
+<span class="normal">1304</span>
+<span class="normal">1305</span>
+<span class="normal">1306</span>
+<span class="normal">1307</span>
+<span class="normal">1308</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/remove_duplicates&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_booleans_factory</span><span class="p">([</span><span class="s2">&quot;is_xes&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">])</span>
 <span class="nd">@check_not_present_paths_factory</span><span class="p">([</span><span class="s2">&quot;save_path&quot;</span><span class="p">])</span>
@@ -4313,30 +4339,7 @@ Creates a filtered event log in <code>save_path</code>.</p>
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1083</span>
-<span class="normal">1084</span>
-<span class="normal">1085</span>
-<span class="normal">1086</span>
-<span class="normal">1087</span>
-<span class="normal">1088</span>
-<span class="normal">1089</span>
-<span class="normal">1090</span>
-<span class="normal">1091</span>
-<span class="normal">1092</span>
-<span class="normal">1093</span>
-<span class="normal">1094</span>
-<span class="normal">1095</span>
-<span class="normal">1096</span>
-<span class="normal">1097</span>
-<span class="normal">1098</span>
-<span class="normal">1099</span>
-<span class="normal">1100</span>
-<span class="normal">1101</span>
-<span class="normal">1102</span>
-<span class="normal">1103</span>
-<span class="normal">1104</span>
-<span class="normal">1105</span>
-<span class="normal">1106</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1106</span>
 <span class="normal">1107</span>
 <span class="normal">1108</span>
 <span class="normal">1109</span>
@@ -4376,7 +4379,30 @@ Creates a filtered event log in <code>save_path</code>.</p>
 <span class="normal">1143</span>
 <span class="normal">1144</span>
 <span class="normal">1145</span>
-<span class="normal">1146</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/replace_with_mode&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">1146</span>
+<span class="normal">1147</span>
+<span class="normal">1148</span>
+<span class="normal">1149</span>
+<span class="normal">1150</span>
+<span class="normal">1151</span>
+<span class="normal">1152</span>
+<span class="normal">1153</span>
+<span class="normal">1154</span>
+<span class="normal">1155</span>
+<span class="normal">1156</span>
+<span class="normal">1157</span>
+<span class="normal">1158</span>
+<span class="normal">1159</span>
+<span class="normal">1160</span>
+<span class="normal">1161</span>
+<span class="normal">1162</span>
+<span class="normal">1163</span>
+<span class="normal">1164</span>
+<span class="normal">1165</span>
+<span class="normal">1166</span>
+<span class="normal">1167</span>
+<span class="normal">1168</span>
+<span class="normal">1169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/replace_with_mode&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_booleans_factory</span><span class="p">([</span><span class="s2">&quot;is_xes&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">])</span>
 <span class="nd">@check_not_present_paths_factory</span><span class="p">([</span><span class="s2">&quot;save_path&quot;</span><span class="p">])</span>
@@ -4614,21 +4640,7 @@ Creates a filtered event log in <code>save_path</code>.</p>
 </details>
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">583</span>
-<span class="normal">584</span>
-<span class="normal">585</span>
-<span class="normal">586</span>
-<span class="normal">587</span>
-<span class="normal">588</span>
-<span class="normal">589</span>
-<span class="normal">590</span>
-<span class="normal">591</span>
-<span class="normal">592</span>
-<span class="normal">593</span>
-<span class="normal">594</span>
-<span class="normal">595</span>
-<span class="normal">596</span>
-<span class="normal">597</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">597</span>
 <span class="normal">598</span>
 <span class="normal">599</span>
 <span class="normal">600</span>
@@ -4690,7 +4702,30 @@ Creates a filtered event log in <code>save_path</code>.</p>
 <span class="normal">656</span>
 <span class="normal">657</span>
 <span class="normal">658</span>
-<span class="normal">659</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/single_prediction&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">659</span>
+<span class="normal">660</span>
+<span class="normal">661</span>
+<span class="normal">662</span>
+<span class="normal">663</span>
+<span class="normal">664</span>
+<span class="normal">665</span>
+<span class="normal">666</span>
+<span class="normal">667</span>
+<span class="normal">668</span>
+<span class="normal">669</span>
+<span class="normal">670</span>
+<span class="normal">671</span>
+<span class="normal">672</span>
+<span class="normal">673</span>
+<span class="normal">674</span>
+<span class="normal">675</span>
+<span class="normal">676</span>
+<span class="normal">677</span>
+<span class="normal">678</span>
+<span class="normal">679</span>
+<span class="normal">680</span>
+<span class="normal">681</span>
+<span class="normal">682</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/single_prediction&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_required_paths_factory</span><span class="p">([</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">,</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;path_to_model&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">single_prediction</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -4726,17 +4761,7 @@ Creates a filtered event log in <code>save_path</code>.</p>
         <span class="n">activity</span><span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">request_config</span><span class="p">[</span><span class="s2">&quot;activity_key&quot;</span><span class="p">])</span>
         <span class="n">timestamp</span><span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">request_config</span><span class="p">[</span><span class="s2">&quot;timestamp_key&quot;</span><span class="p">])</span>
         <span class="n">path_to_log</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">request_config</span><span class="p">[</span><span class="s1">&#39;path_to_log&#39;</span><span class="p">])</span>
-        <span class="n">preprocessor</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">Preprocessing</span><span class="p">()</span>
 
-        <span class="c1">#: import partial trace</span>
-        <span class="k">try</span><span class="p">:</span> 
-            <span class="c1">#: formatting set to false, we just want to do a quick import</span>
-            <span class="n">preprocessor</span><span class="o">.</span><span class="n">handle_import</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_to_log</span><span class="p">,</span> <span class="n">case_id</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">activity</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">formatting</span><span class="o">=</span><span class="kc">False</span> <span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span> 
-            <span class="c1">#: notify errors</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)},</span> <span class="mi">400</span>
-
-        <span class="n">input_df</span> <span class="o">=</span> <span class="n">preprocessor</span><span class="o">.</span><span class="n">event_df</span>
 
 
         <span class="c1">#: load the RNN model and config (language encoders, params, ...)</span>
@@ -4746,6 +4771,23 @@ Creates a filtered event log in <code>save_path</code>.</p>
             <span class="n">dic</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
             <span class="n">dic</span><span class="p">[</span><span class="s2">&quot;time_precision&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;NS&quot;</span>
         <span class="n">config</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">dic</span><span class="p">)</span>
+
+
+        <span class="c1">#: import partial trace</span>
+        <span class="n">preprocessor</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">Preprocessing</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span> 
+            <span class="c1">#: do this to avoid recomputing the language encoders</span>
+            <span class="n">preprocessor</span><span class="o">.</span><span class="n">activity_le</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">activity_le</span>
+            <span class="n">preprocessor</span><span class="o">.</span><span class="n">case_id_le</span><span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">case_id_le</span>
+            <span class="n">preprocessor</span><span class="o">.</span><span class="n">handle_import</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_to_log</span><span class="p">,</span> <span class="n">case_id</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">activity</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">formatting</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span> 
+            <span class="c1">#: notify error</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)},</span> <span class="mi">400</span>
+
+
+
+
         <span class="n">neural_manager</span> <span class="o">=</span> <span class="n">nn_manager</span><span class="o">.</span><span class="n">NNManagement</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
         <span class="n">neural_manager</span><span class="o">.</span><span class="n">import_nn_model</span><span class="p">(</span><span class="n">path_to_model</span><span class="p">)</span>
 
@@ -4760,7 +4802,9 @@ Creates a filtered event log in <code>save_path</code>.</p>
 
         <span class="c1">#: do the prediction</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">time</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">prob</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">single_prediction_dataframe</span><span class="p">(</span><span class="n">input_df</span><span class="p">)</span>
+            <span class="n">time</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">prob</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">single_prediction_dataframe</span><span class="p">(</span>
+                <span class="n">preprocessor</span><span class="o">.</span><span class="n">event_df</span>
+            <span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span> 
             <span class="c1">#: notify error</span>
             <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">},</span><span class="mi">400</span> 
@@ -5054,30 +5098,7 @@ All trainig params are listed below. </p>
 
             <details class="quote">
               <summary>Source code in <code>server/server_routes.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 938</span>
-<span class="normal"> 939</span>
-<span class="normal"> 940</span>
-<span class="normal"> 941</span>
-<span class="normal"> 942</span>
-<span class="normal"> 943</span>
-<span class="normal"> 944</span>
-<span class="normal"> 945</span>
-<span class="normal"> 946</span>
-<span class="normal"> 947</span>
-<span class="normal"> 948</span>
-<span class="normal"> 949</span>
-<span class="normal"> 950</span>
-<span class="normal"> 951</span>
-<span class="normal"> 952</span>
-<span class="normal"> 953</span>
-<span class="normal"> 954</span>
-<span class="normal"> 955</span>
-<span class="normal"> 956</span>
-<span class="normal"> 957</span>
-<span class="normal"> 958</span>
-<span class="normal"> 959</span>
-<span class="normal"> 960</span>
-<span class="normal"> 961</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 961</span>
 <span class="normal"> 962</span>
 <span class="normal"> 963</span>
 <span class="normal"> 964</span>
@@ -5167,7 +5188,30 @@ All trainig params are listed below. </p>
 <span class="normal">1048</span>
 <span class="normal">1049</span>
 <span class="normal">1050</span>
-<span class="normal">1051</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/train_nn&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="normal">1051</span>
+<span class="normal">1052</span>
+<span class="normal">1053</span>
+<span class="normal">1054</span>
+<span class="normal">1055</span>
+<span class="normal">1056</span>
+<span class="normal">1057</span>
+<span class="normal">1058</span>
+<span class="normal">1059</span>
+<span class="normal">1060</span>
+<span class="normal">1061</span>
+<span class="normal">1062</span>
+<span class="normal">1063</span>
+<span class="normal">1064</span>
+<span class="normal">1065</span>
+<span class="normal">1066</span>
+<span class="normal">1067</span>
+<span class="normal">1068</span>
+<span class="normal">1069</span>
+<span class="normal">1070</span>
+<span class="normal">1071</span>
+<span class="normal">1072</span>
+<span class="normal">1073</span>
+<span class="normal">1074</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@routes</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/train_nn&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
 <span class="nd">@check_booleans_factory</span><span class="p">([</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="s2">&quot;is_xes&quot;</span><span class="p">])</span>
 <span class="nd">@check_integers_factory</span><span class="p">([</span><span class="s2">&quot;seq_len&quot;</span><span class="p">,</span> <span class="s2">&quot;emb_dim&quot;</span><span class="p">,</span> <span class="s2">&quot;hid_dim&quot;</span><span class="p">,</span> <span class="s2">&quot;mlp_dim&quot;</span><span class="p">,</span> <span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="s2">&quot;epochs&quot;</span><span class="p">])</span>
 <span class="nd">@check_floats_factory</span><span class="p">([</span><span class="s2">&quot;lr&quot;</span><span class="p">,</span> <span class="s2">&quot;split&quot;</span><span class="p">])</span>

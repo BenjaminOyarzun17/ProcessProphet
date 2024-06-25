@@ -9107,8 +9107,7 @@ and will be redirected to a new window where the parameters for the chosen alter
 <span class="normal">236</span>
 <span class="normal">237</span>
 <span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ProcessProphetPredict</span><span class="p">:</span> 
+<span class="normal">239</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ProcessProphetPredict</span><span class="p">:</span> 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pp</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes a ProcessProphetPredict instance and prediction main menu.</span>
@@ -9218,24 +9217,23 @@ and will be redirected to a new window where the parameters for the chosen alter
 <span class="sd">        &quot;&quot;&quot;</span>
 
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">ProcessProphetMode</span><span class="o">.</span><span class="n">advanced</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;f.pt&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;model name: &quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;partial_input.csv&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;log name: &quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;case:concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;case id key: &quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">case_activity_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;activity key: &quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">case_timestamp_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;time:timestamp&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;timestamp key: &quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;f.pt&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;model name: &quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;partial_input.csv&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;log name: &quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;case:concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;case id key: &quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">case_activity_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;activity key: &quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">case_timestamp_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;time:timestamp&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;timestamp key: &quot;</span><span class="p">)</span>
 
-            <span class="n">container</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">ptg</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;set parameters for prediction&quot;</span><span class="p">),</span> 
-                <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="p">,</span> 
-                <span class="bp">self</span><span class="o">.</span><span class="n">case_activity_key</span><span class="p">,</span> 
-                <span class="bp">self</span><span class="o">.</span><span class="n">case_timestamp_key</span><span class="p">,</span>
-                <span class="n">ptg</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">button_color</span><span class="si">}</span><span class="s2">continue&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">switch_window</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_single_prediction</span><span class="p">())),</span>
-                <span class="n">ptg</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">button_color</span><span class="si">}</span><span class="s2">back&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">switch_window</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prediction_main_menu</span><span class="p">()))</span>
-                <span class="p">]</span>
-            <span class="c1"># display the container with the parameters</span>
+        <span class="n">container</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">ptg</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;set parameters for prediction&quot;</span><span class="p">),</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="p">,</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">case_activity_key</span><span class="p">,</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">case_timestamp_key</span><span class="p">,</span>
+            <span class="n">ptg</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">button_color</span><span class="si">}</span><span class="s2">continue&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">switch_window</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_single_prediction</span><span class="p">())),</span>
+            <span class="n">ptg</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">button_color</span><span class="si">}</span><span class="s2">back&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">switch_window</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prediction_main_menu</span><span class="p">()))</span>
+            <span class="p">]</span>
+        <span class="c1"># display the container with the parameters</span>
         <span class="n">window</span> <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">Window</span><span class="p">(</span><span class="o">*</span><span class="n">container</span><span class="p">)</span>
         <span class="n">window</span><span class="o">.</span><span class="n">center</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">window</span>
@@ -9437,7 +9435,8 @@ and will be redirected to a new window where the parameters for the chosen alter
 </details>
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetPredict.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">147</span>
+<span class="normal">148</span>
 <span class="normal">149</span>
 <span class="normal">150</span>
 <span class="normal">151</span>
@@ -9488,8 +9487,7 @@ and will be redirected to a new window where the parameters for the chosen alter
 <span class="normal">196</span>
 <span class="normal">197</span>
 <span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_multiple_prediction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span> 
+<span class="normal">199</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_multiple_prediction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span> 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Carries out a multiple prediction request.</span>
 
@@ -9804,11 +9802,11 @@ and will be redirected to a new window where the parameters for the chosen alter
 
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetPredict.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">236</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">235</span>
+<span class="normal">236</span>
 <span class="normal">237</span>
 <span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">return_to_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">239</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">return_to_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    returns to p.p. start</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -9836,7 +9834,8 @@ modify the given parameters for multiple predictions which are then stored in th
 
             <details class="quote">
               <summary>Source code in <code>CLI/ProcessProphetPredict.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">202</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">201</span>
+<span class="normal">202</span>
 <span class="normal">203</span>
 <span class="normal">204</span>
 <span class="normal">205</span>
@@ -9867,8 +9866,7 @@ modify the given parameters for multiple predictions which are then stored in th
 <span class="normal">230</span>
 <span class="normal">231</span>
 <span class="normal">232</span>
-<span class="normal">233</span>
-<span class="normal">234</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_multiple_prediction_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">233</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_multiple_prediction_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    function to display the default values for a multiple prediction and grants the user access to </span>
 <span class="sd">    modify the given parameters for multiple predictions which are then stored in the container and also displayed in the current window</span>
@@ -9950,8 +9948,7 @@ modify the given parameters for multiple predictions which are then stored in th
 <span class="normal">142</span>
 <span class="normal">143</span>
 <span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_single_prediction_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_single_prediction_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    user can modify the given parameters for a single prediction which are then stored in the container and also displayed in the current window</span>
 
@@ -9959,24 +9956,23 @@ modify the given parameters for multiple predictions which are then stored in th
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">ProcessProphetMode</span><span class="o">.</span><span class="n">advanced</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;f.pt&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;model name: &quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;partial_input.csv&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;log name: &quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;case:concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;case id key: &quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">case_activity_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;activity key: &quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">case_timestamp_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;time:timestamp&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;timestamp key: &quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;f.pt&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;model name: &quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;partial_input.csv&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;log name: &quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;case:concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;case id key: &quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">case_activity_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;activity key: &quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">case_timestamp_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;time:timestamp&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;timestamp key: &quot;</span><span class="p">)</span>
 
-        <span class="n">container</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">ptg</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;set parameters for prediction&quot;</span><span class="p">),</span> 
-            <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="p">,</span> 
-            <span class="bp">self</span><span class="o">.</span><span class="n">case_activity_key</span><span class="p">,</span> 
-            <span class="bp">self</span><span class="o">.</span><span class="n">case_timestamp_key</span><span class="p">,</span>
-            <span class="n">ptg</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">button_color</span><span class="si">}</span><span class="s2">continue&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">switch_window</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_single_prediction</span><span class="p">())),</span>
-            <span class="n">ptg</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">button_color</span><span class="si">}</span><span class="s2">back&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">switch_window</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prediction_main_menu</span><span class="p">()))</span>
-            <span class="p">]</span>
-        <span class="c1"># display the container with the parameters</span>
+    <span class="n">container</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">ptg</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;set parameters for prediction&quot;</span><span class="p">),</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">case_activity_key</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">case_timestamp_key</span><span class="p">,</span>
+        <span class="n">ptg</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">button_color</span><span class="si">}</span><span class="s2">continue&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">switch_window</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_single_prediction</span><span class="p">())),</span>
+        <span class="n">ptg</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">button_color</span><span class="si">}</span><span class="s2">back&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">_</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">switch_window</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prediction_main_menu</span><span class="p">()))</span>
+        <span class="p">]</span>
+    <span class="c1"># display the container with the parameters</span>
     <span class="n">window</span> <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">Window</span><span class="p">(</span><span class="o">*</span><span class="n">container</span><span class="p">)</span>
     <span class="n">window</span><span class="o">.</span><span class="n">center</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">window</span>
@@ -10545,7 +10541,7 @@ process mining.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;case:concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;case id key: &quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">case_activity_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;activity key: &quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">case_timestamp_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;time:timestamp&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;timestamp key: &quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">predictive_event_log_name</span>  <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;predicitive_log4.csv&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span> <span class="s2">&quot;predictive log name: &quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">predictive_event_log_name</span>  <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;predicitive_log1.csv&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span> <span class="s2">&quot;predictive log name: &quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">non_stop</span> <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;run until end event: &quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;30&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;non stop upper bound: &quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">random_cuts</span> <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;use random cuts: &quot;</span><span class="p">)</span>
@@ -11636,7 +11632,7 @@ own preference.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">case_id_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;case:concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;case id key: &quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">case_activity_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;concept:name&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;activity key: &quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">case_timestamp_key</span><span class="o">=</span>  <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;time:timestamp&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;timestamp key: &quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">predictive_event_log_name</span>  <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;predicitive_log4.csv&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span> <span class="s2">&quot;predictive log name: &quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predictive_event_log_name</span>  <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;predicitive_log1.csv&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span> <span class="s2">&quot;predictive log name: &quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">non_stop</span> <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;run until end event: &quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;30&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;non stop upper bound: &quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_cuts</span> <span class="o">=</span> <span class="n">ptg</span><span class="o">.</span><span class="n">InputField</span><span class="p">(</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;use random cuts: &quot;</span><span class="p">)</span>
