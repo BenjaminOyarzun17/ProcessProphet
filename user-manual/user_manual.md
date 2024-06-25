@@ -303,7 +303,7 @@ projects/
     ├── multiple_predictions_path/
 
 ```
-Because the first event of each path is always the last event of the partial trace, the newly predicted paths are always `depth` + 1 long. So if there is a multiple prediction request with `depth = 1` and `degree = 3` the generated json file will look like this:
+Because the first event of each path is always the last event of the partial trace, the newly predicted paths are always `depth + 1` long. So if there is a multiple prediction request with `depth = 1` and `degree = 3` the generated json file will look like this:
 ![Multi Prediction](images/pp_mult_new.png)
 
 ### Conformance Checking 
