@@ -193,6 +193,9 @@ After selecting the mode, you will be presented with the main screen, which disp
 
 New event logs are imported with the filesystem through the project directory. The supported file formats are CSV and XES. Just place your file into the `input_logs` folder using your favourite file explorer.
 
+**Event log file format**: make sure that your file as an activity column, a case identifier column and a timestamp column. The activity and timestamp values caracterize an event in a case. Timestamp should be encoded
+as datetime types, in particular, see panda's `datetime64` type: [pandas website](https://pandas.pydata.org/). The case identifiers should be integer values.
+
 ```
 projects/
 └── project_name/
@@ -206,7 +209,7 @@ removing duplicate rows
 adding a unique start and end activity
 
 ### Train Neural Network
-You can run predictions either with an already trained neural network model, or you can train a new neural network. To import a nn-model, you need to place the `.pt` file into the `models` subdirectory, alongside the `.pt.json` file that contains hyperparameters used for training that model. 
+You can run predictions either with an already trained neural network model, or you can train a new neural network. To import a nn-model, you need to place the `.pt` file into the `models` subdirectory, alongside the `.config.json` file that contains hyperparameters used for training that model. 
 ```
 projects/
 └── project_name/
@@ -214,7 +217,7 @@ projects/
 ```
 Then it can be selected later when making predictions. This is also the place where you can find your trained model after training.
 
-For training a new neural network, it is mandatory to import your data first as described in the previous step. Then you can choose between manual training and training with hyperparameter tuning, specifically grid search and random search. 
+For training a new neural network, it is mandatory to place your event log data in the corresponding folder as described in the previous step. Then you can choose between manual training and training with hyperparameter tuning, specifically grid search and random search. 
 
 ![Select Training Mode](images/pp_train_nn_screen.png)
 

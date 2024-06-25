@@ -145,7 +145,7 @@ class ProcessProphetModel:
             self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
             self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
             self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
-            self.predictive_event_log_name  = ptg.InputField("predicitive_log4.csv", prompt= "predictive log name: ")
+            self.predictive_event_log_name  = ptg.InputField("predicitive_log1.csv", prompt= "predictive log name: ")
             self.non_stop = ptg.InputField("True", prompt="run until end event: ")
             self.upper = ptg.InputField("30", prompt="non stop upper bound: ")
             self.random_cuts = ptg.InputField("True", prompt="use random cuts: ")
