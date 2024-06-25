@@ -74,6 +74,7 @@ python CLI/main.py
 ```
 
 This should launch:
+
 ![Welcome Screen](images/pp_welcome_screen.png)
 
 ### Run with CUDA
@@ -142,7 +143,7 @@ In this terminal window you will also see the sent requests caused by interactin
 ![Server request](images/pp_request.png)
 
 #### Starting the CLI
-After successfully setting up a local host server, you need to open a new terminal, where the environment (either via conda or a python virtual environment) has to be activated. In the new terminal execute this command to start the command line interface:
+After successfully setting up a local host server, you need to open a **new terminal**, where the environment (either via conda or a python virtual environment) has to be activated. In the new terminal execute this command to start the command line interface:
 ```sh
 python CLI/main.py
 ```
@@ -153,10 +154,10 @@ If every step was followed you should now be able to see the CLI of the applicat
 When starting the application, this should be the first screen. Here you can either choose to create a completely new project or continue working on a previous project that was already created with the application. 
 ![Start Screen](images/pp_welcome_screen.png)
 
-In the first case a new window will be opened where you can enter the name of the new project, and also see the file path where the new project will be stored. It is important to choose a name that is not already taken in the project's directory, otherwise it will cause an error that will also be indicated. After pressing the “Create project” button the application will create a new directory in the shown path with the entered name and within this directory are more directories where e.g. the computed petri nets or predictions are stored. 
+In the first case a new window will be opened where you can enter the name of the new project, and also see the file path where the new project will be stored. It is important to choose a name that is not already taken in the project's directory, otherwise it will cause an error that will also be indicated. After pressing the `Create project` button the application will create a new directory in the shown path with the entered name and within this directory are more directories where e.g. the computed petri nets or predictions are stored. 
 ![Create Project](images/pp_create_new_project.png)
 
-If you decide to load an existing project you get an overview of the existing projects on the right side of the new window. On the left side you can enter which project you want to load. After pressing the “Select” button the application can access the files in the subdirectories of this project e.g. to compute a prediction.
+If you decide to load an existing project you get an overview of the existing projects on the right side of the new window. On the left side you can enter which project you want to load. After pressing the `Select` button the application can access the files in the subdirectories of this project e.g. to compute a prediction.
 
 ![Select Project](images/pp_load_existing_project.png)
 
@@ -179,7 +180,7 @@ projects/
 The directory structure is important for several functionalities of ProcessProphet and will be further explained in the following.
 
 ### Quick Mode vs. Advanced Mode
-Upon launching the application, you will be prompted to choose between Quick Mode and Advanced Mode. Quick Mode provides default parameters for ease of use, while Advanced Mode offers additional options and parameters for more experienced users. Advanced Mode includes features such as manual parameter setting in training and adjustable parameters in grid search. It is recommended for users with prior experience in process mining and neural networks, but the main functionalities are also available in Quick Mode.
+Upon launching the application, you will be prompted to choose between Quick Mode and Advanced Mode. Quick Mode provides default parameters for ease of use, while Advanced Mode offers additional options and parameters for more user with a more technical background. Advanced Mode includes features such as manual parameter setting in training and adjustable parameters in grid search. It is recommended for users with prior experience in process mining and neural networks, but the main functionalities are also available in Quick Mode.
 
 ![Select Mode](images/pp_select_easy_or_advanced.png)
 
@@ -189,7 +190,9 @@ After selecting the mode, you will be presented with the main screen, which disp
 
 
 ### Import and Filter Log	
-New event logs are imported with the filesystem through the project directory. The supported file formats are CSV and XES. Just place your file into the `input_logs` folder
+
+New event logs are imported with the filesystem through the project directory. The supported file formats are CSV and XES. Just place your file into the `input_logs` folder using your favourite file explorer.
+
 ```
 projects/
 └── project_name/
