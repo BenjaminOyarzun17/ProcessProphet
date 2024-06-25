@@ -123,24 +123,23 @@ class ProcessProphetPredict:
         """
 
 
-        if self.pp.mode == ProcessProphetMode.advanced:
-            self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
-            self.log_name=  ptg.InputField("partial_input.csv", prompt="log name: ")
-            self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
-            self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
-            self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
+        self.model_name=  ptg.InputField("f.pt", prompt="model name: ")
+        self.log_name=  ptg.InputField("partial_input.csv", prompt="log name: ")
+        self.case_id_key=  ptg.InputField("case:concept:name", prompt="case id key: ")
+        self.case_activity_key=  ptg.InputField("concept:name", prompt="activity key: ")
+        self.case_timestamp_key=  ptg.InputField("time:timestamp", prompt="timestamp key: ")
 
-            container = [
-                ptg.Label(f"set parameters for prediction"), 
-                self.model_name ,
-                self.log_name,
-                self.case_id_key, 
-                self.case_activity_key, 
-                self.case_timestamp_key,
-                ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.get_single_prediction())),
-                ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
-                ]
-            # display the container with the parameters
+        container = [
+            ptg.Label(f"set parameters for prediction"), 
+            self.model_name ,
+            self.log_name,
+            self.case_id_key, 
+            self.case_activity_key, 
+            self.case_timestamp_key,
+            ptg.Button(f"{self.pp.button_color}continue", lambda *_: self.pp.switch_window(self.get_single_prediction())),
+            ptg.Button(f"{self.pp.button_color}back", lambda *_: self.pp.switch_window(self.prediction_main_menu()))
+            ]
+        # display the container with the parameters
         window = ptg.Window(*container)
         window.center()
         return window

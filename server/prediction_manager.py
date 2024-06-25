@@ -130,10 +130,17 @@ class PredictionManager:
 
         # decode the timestamp
         timestamps = self.encoded_df[self.timestamp_key].copy()
-        timestamps = timestamps*self.config.exponent
-        timestamps.iloc[0]= timestamps.iloc[0]+ time_pred
+
+
+        timestamps = timestamps*(10**(self.config.exponent))
+
+        #: this -5 displacement is used to tackle the accuacy problem. it is set
+        # arbitrarily.
+        time_pred = time_pred*(10**(self.config.exponent-5)) 
+
+        timestamps.iloc[-1]= timestamps.iloc[-1]+ time_pred
         timestamps = timestamps.astype("datetime64[ns]")
-        new_time = timestamps.iloc[0]
+        new_time = timestamps.iloc[-1]
 
         ans = {
             "predicted_time":str(new_time), 
@@ -378,8 +385,10 @@ class PredictionManager:
             first_time, (first_percentage, first_event) = path[0]
             rest = path[1:]
 
+            print(first_time)
+            first_time = first_time*(10**self.config.exponent)
             #: rescale the timedeltas
-            rest_times = [math.ceil(time*self.config.exponent) for time, (prob, event) in rest] 
+            rest_times = [math.ceil(time*(10**(self.config.exponent-5))) for time, (prob, event) in rest] 
             for i in range(1,len(rest_times)-1):  #:calculate cumsum
                 rest_times[i] = rest_times[i]+ rest_times[i-1] 
 
