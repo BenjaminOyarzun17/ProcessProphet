@@ -36,7 +36,8 @@ This is a project created for the lab `Process Discovery with Python` at RWTH Aa
         - [Motivation](#motivation)
         - [Create Predictive Event Log](#create-predictive-event-log)
         - [Run Process Mining](#run-process-mining)
-        - [Run Conformance Checking](#run-conformance-checking)
+        - [Run Conformance Checking](#run-conformance-checking)  
+- [FAQ](#faq)
 - [Glossary and Index](#glossary-and-index)
 
 
@@ -256,9 +257,9 @@ After training is completed, the training statistics are being displayed. They i
 
 
 ### Make Predictions
-With a trained model in the **models** directory, you are now able to make predictions. This can be seen as the core functionality of ProcessProphet. Based on an incomplete process sequence you can create either a single prediction (e.g. a single time-marker pair), or multiple predictions.
+With a trained model in the **models** directory, you are now able to make predictions. This can be seen as the core functionality of ProcessProphet. Based on an incomplete process sequence (partial trace) you can create either a single prediction (e.g. a single time-marker pair), or multiple predictions.
 
-**Partial trace format**: Make sure that the partial traces contains an activity column, and also a timestamp column. All of these must belong to the same case. Therefore, a case column must also be set with the same value for all rows (this can be chosen arbitrarily, as long as it is an integer number). The partial trace should be in a `.csv` file. 
+**Partial trace format**: The partial traces should be in a `.csv` file and must contain an activity column, a timestamp column, and a case column. These columns should belong to the same case, so the case column requires the same value for all rows (it can be any integer number). 
 
 To make predictions, place a partial trace in the **partial_traces** directory, which will be used to predict the next events and timestamps.
 ```
@@ -291,7 +292,7 @@ The first event of each path is always the last event of the partial trace. So i
 #### Motivation
 An additional feature of ProcessProphet is the ability to compare predicted process sequences from the process twin with real processes using [conformance checking](https://en.wikipedia.org/wiki/Conformance_checking). Conformance checking is a powerful process mining technique that allows for the comparison of different process models. It returns a fitness score of how well the observed behavior aligns with a given process model. 
 
-This functionality can provide a deeper understanding of the process data, although its interpretation can be somewhat ambiguous. If the process twin is well-fitted to the data (high accuracy, f1...), the computed fitness score can indicate the certainty of processes in the event log. However, it's important to note that the fitness score is also heavily dependent on the quality of the predictions. If the model is poorly fitted, the score may lose its meaning.
+This feature offers a more comprehensive analysis of the process data, although its interpretation can be somewhat ambiguous. When the process twin accurately represents the data (with high accuracy and f1-score), the computed fitness score can indicate the certainty of processes in the event log. However, it is crucial to consider that the fitness score is also influenced by the quality of the predictions. If the model is not well-fitted, the score may become less meaningful.
 
 
 To apply conformance checking on the process twin (which is the trained neural network), you first have to represent the process twin as an event log. This is then used to create a process model using process mining techniques. The resulting process model can then be used to run the conformance checking.
