@@ -317,6 +317,12 @@ The generated process model can now be used to run conformance checking. The sup
 
 
 ## Troubleshooting
+### Wrong Datatypes for Parameters
+As the datatype of the parameters are not directly specified in the input windows it could happen that a an input has the wrong datatype like in the following where the depth input is incorrectly modified as  a string:
+![Wrong Input type](images/pp_wrong_input.png)
+
+To prevent this error there are always default values for modifiable parameters so that one can understands what a correct input looks like. However if there is still a datatype error in the request to the server the CLI indicates this with a new window stating the error like this:
+![Error](images/pp_error.png)
 
 ## FAQ
 
