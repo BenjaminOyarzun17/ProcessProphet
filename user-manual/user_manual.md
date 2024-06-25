@@ -1,7 +1,7 @@
 # ProcessProphet 🔮
 
 ## About
-The aim of ProcessProphet is to overcome one of the fundamental limitations of [process mining](https://en.wikipedia.org/wiki/Process_mining) techniques: they are limited by retrospective models, thus failing to provide forecasts related to future or ongoing process instances. ProcessProphet consists of two subsystems: a backend server with a well defined API and a lightweight CLI frontend.
+The aim of ProcessProphet is to overcome one of the fundamental limitations of [process mining](https://en.wikipedia.org/wiki/Process_mining) techniques: they are limited by retrospective models, thus failing to provide forecasts related to future or ongoing process instances. ProcessProphet consists of two subsystems: a backend server with a well defined [API](https://benjaminoyarzun17.github.io/ProcessProphet/) and a lightweight CLI frontend.
 
 Its three main objectives are: 
 * generate a **process twin** to accurately represent an existing business process. 
